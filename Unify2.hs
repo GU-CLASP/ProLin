@@ -9,11 +9,7 @@
 {-# LANGUAGE TypeApplications #-}
 
 module Unify2 where
-
 import Expr
-import qualified Data.Map as M
-import Data.Map (Map)
-import Control.Monad
 type a + b = Either a b
 
 data Constraint v w where
@@ -24,7 +20,8 @@ data Constraint v w where
 
 
 class Eq v => Enumerable v where
-  decide :: v -> (v -> Next w,Next w -> v)
+  splitType :: v -> (forall w. Enumerable w => (v -> Next w) -> (Next w -> v) -> k) -> k
+  decide :: v -> Zero + v
 
 h1 :: Exp (Next (v + (z + w))) -> Exp (v + (Next z + w))
 h1 = fmap $ \case
@@ -47,38 +44,38 @@ applyOneSubst d t (u :=: v) = (u >>= f) :=: v
              There x' -> V (Left x')
         f (Right w) = V (Right w)
 
-unify :: forall v w. Enumerable v => Eq w => [Constraint v w] -> Maybe (Subst v w)
+data MayS v t where
+  NothingS :: MayS v t
+  JustS :: (v -> Exp (v' + t)) -> MayS v t
+
+
+unify :: forall v w. Enumerable v => Eq w => [Constraint v w] -> MayS v w
 -- Invariant: the substitution is already applied
-unify [] = Just []
+unify [] = JustS (V . Left)
 unify ((App args1 :=: App args2):constraints)
   | length args1 == length args2 = unify (zipWith (:=:) args1 args2++constraints) 
-  | otherwise = Nothing
+  | otherwise = NothingS
 unify ((Pi _ dom bod :=: Pi _ dom' bod'):constraints)
   = unify ((dom:=:dom'):(h1 bod :=:h2 bod'):constraints)
 unify ((V (Right x) :=: V x'):constraints)
   | x == x' = unify constraints
-  | x /= x' = Nothing
-unify ((V (Left x) :=: t):constraints)
+  | x /= x' = NothingS
+unify ((V (Left x) :=: t):constraints) 
   -- | x `occursIn` t = Nothing
   -- | otherwise
-  = case sequenceA t of
-      Left _ -> Nothing
-      Right t' -> ((x,t') :) <$> unify (map (applyOneSubst into t') constraints)
-  where (into,outof) = decide x
-unify (_:_) = Nothing
+  = splitType x $ \into outof -> case sequenceA t of
+      Left _ -> NothingS
+      Right t' -> case unify (map (applyOneSubst into t') constraints) of
+        NothingS -> NothingS
+        JustS f -> JustS $ \x' -> case into x' of
+          There y -> f y
+          Here _ -> fmap Right t'
+unify (_:_) = NothingS
 
 -- | Identity (nothing is substituted)
 -- idSubst = M.empty
 
 
-unify2 :: forall v w. Eq w => Enumerable v => Exp (v+w) -> Exp w -> Maybe (Subst v w)
+unify2 :: forall v w. Eq w => Enumerable v => Exp (v+w) -> Exp w -> MayS v w
 unify2 s t = unify @v @w [(:=:) @v @w @Zero ((Right <$>) <$> s)  (Right <$> t)]
 
-liftW :: Applicative m => (v -> m v) -> Either w v -> m (Either w v)
-liftW f (Right v) = Right <$> f v
-liftW _ (Left v) = pure (Left v)
-
-type Subst v z = [(v,Exp z)]
-
-data PSubst a w where
-  PSubst :: (a -> a' + w) -> Subst a' w -> PSubst a w

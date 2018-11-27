@@ -21,6 +21,7 @@ ruleApplies :: Rule (v+w) -> Context w -> [Exp w]
 ruleApplies r [] = [r]
 ruleApplies (Pi v dom body) ctx = do
   s <- anyUnify dom ctx
-  map (_ s) ctx
+  applySubst s $ _
+  -- map (_ s) ctx
 
   -- ruleApplies body ctx
