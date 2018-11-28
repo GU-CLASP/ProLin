@@ -10,7 +10,7 @@
 
 module Unify2 where
 import Expr
-
+import Control.Monad
 data Constraint v w where
   -- v : meta variables to unify
   -- z : variables that can unify only to themselves
@@ -34,16 +34,16 @@ applyOneSubst d t (u :=: v) = (u >>= f) :=: v
 
 -- | A partial substitution from v to t. Unsubstituted variables are left in v'
 data PSubs v t where
-  PSubs :: Enumerable v' => (v' -> v) -> (v -> Exp (v' + t)) -> PSubs v t
+  PSubs :: Enumerable v' => (v' -> v) -> (v -> Next v') -> (v -> Exp (v' + t)) -> PSubs v t
 
 applySubst :: PSubs v w -> Exp (v+w) -> (forall v'. Enumerable v' => Exp (v'+w) -> k) -> k
-applySubst (PSubs _out subs) e k = k $ e >>= \case
+applySubst (PSubs _ _ subs) e k = k $ e >>= \case
                                         Left x -> subs x
                                         Right x -> V (Right x)
 
 unify :: forall v w. Enumerable v => Eq w => [Constraint v w] -> Maybe (PSubs v w)
 -- Invariant: the substitution is already applied
-unify [] = Just (PSubs id (V . Left))
+unify [] = Just (PSubs id There (V . Left))
 unify ((App args1 :=: App args2):constraints)
   | length args1 == length args2 = unify (zipWith (:=:) args1 args2++constraints) 
   | otherwise = Nothing
@@ -58,7 +58,7 @@ unify ((V (Left x) :=: t):constraints)
   = splitType x $ \into outof -> case sequenceA t of
       Left _ -> Nothing
       Right t' -> flip fmap (unify (map (applyOneSubst into t') constraints)) $ \case
-        (PSubs outof' f) -> PSubs (outof . outof') $ \x' -> case into x' of
+        (PSubs outof' into' f) -> PSubs (outof . outof') (into' <=< into) $ \x' -> case into x' of
           There y -> f y
           Here -> fmap Right t'
 unify (_:_) = Nothing

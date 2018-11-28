@@ -17,6 +17,10 @@ import Data.Traversable
 import Data.Monoid
 
 data Next v = Here | There {fromThere :: v} deriving (Eq, Functor,Show)
+instance Monad Next where
+  Here >>= _ = Here
+  There x >>= f = f x
+
 type a + b = Either a b
 
 mapLeft :: (a -> c) -> a + b -> c + b
