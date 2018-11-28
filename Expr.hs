@@ -18,6 +18,11 @@ import Data.Monoid
 
 data Next v = Here | There {fromThere :: v} deriving (Eq, Functor,Show)
 type a + b = Either a b
+
+mapLeft :: (a -> c) -> a + b -> c + b
+mapLeft f (Left x) = Left (f x)
+mapLeft f (Right x) = Right x
+
 pushLeft :: Next (z + w) -> Next z + w
 pushLeft = \case
      (Here) -> Left (Here)
@@ -28,7 +33,7 @@ pushRight :: Next (z + w) -> z + Next w
 pushRight = \case
      (Here) -> Right(Here)
      (There (Right x)) -> Right (There x)
-     There (Left x) -> Left (x)
+     There (Left x) -> Left x
 
 class Eq v => Enumerable v where
   splitType :: v -> (forall w. Enumerable w => (v -> Next w) -> (w -> v) -> k) -> k
@@ -70,9 +75,10 @@ instance Applicative Next where
   _ <*> Here = Here
   There f <*> There a = There (f a)
 
+data Mult = One | Zero deriving (Eq,Show)
 
 data Exp v where
-  Pi :: String -> (Exp v) -> (Exp (Next v)) -> Exp v
+  Pi :: (String,Mult) -> (Exp v) -> (Exp (Next v)) -> Exp v
   App :: [Exp v]  -> Exp v
   Con :: String -> Exp v
   V :: v -> Exp v

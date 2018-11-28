@@ -36,7 +36,7 @@ applyOneSubst d t (u :=: v) = (u >>= f) :=: v
 data PSubs v t where
   PSubs :: Enumerable v' => (v' -> v) -> (v -> Exp (v' + t)) -> PSubs v t
 
-applySubst :: PSubs v w -> Exp (v+w) -> (forall v'. Exp (v'+w) -> k) -> k
+applySubst :: PSubs v w -> Exp (v+w) -> (forall v'. Enumerable v' => Exp (v'+w) -> k) -> k
 applySubst (PSubs _out subs) e k = k $ e >>= \case
                                         Left x -> subs x
                                         Right x -> V (Right x)
