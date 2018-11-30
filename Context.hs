@@ -86,6 +86,13 @@ type AnyRule = Rule Zero
 applyRule :: AnyRule -> R -> [R]
 applyRule r (R metas avail) = ruleApplies False (\case <$> r) metas avail
 
+applyAnyRule :: [AnyRule] -> [R] -> [R]
+applyAnyRule rs ctxs = do
+  r <- rs
+  ctx <- ctxs
+  applyRule r ctx
+
+
 mkResult :: Eq w => Enumerable v => Exp (v+w) -> Metas v w -> Avail v w -> R
 mkResult e m a = R (r (id,wk) <$> m) (("ruleApp",Here,wk e):(r (There,wk) <$> a))
   where wk = (mapRight There <$>)
@@ -100,19 +107,25 @@ prettyR (R m a) =      hang 2 "metas" (hcat [text n <+> ":" <+> pretty (nm <$> e
              Nothing -> error "found unknown name!"
              Just x -> x
 
-exampleRule :: Exp Zero
-exampleRule = foral "x" $ \x -> (Con "A" @@ x)  ⊸ (Con "B" @@ (Con "S" @@ x))
+exampleRules :: [Exp Zero]
+exampleRules =
+  [foral "x" $ \x -> (Con "A" @@ x)  ⊸ (Con "B" @@ (Con "S" @@ x)) -- ∀x. A x ⊸ B (S x)
+  ,foral "x" $ \x -> (Con "B" @@ x)  ⊸ (Con "A" @@ (Con "S" @@ x)) -- ∀x. B x ⊸ A (S x)
+  ]
 
 
-exampleContext :: R
-exampleContext = R @Zero @(Next Zero) [] [("a",Here,(Con "A" @@ Con "Z"))]
+exampleContext :: [R]
+exampleContext = [R @Zero @(Next Zero) [] [("a",Here,(Con "A" @@ Con "Z"))]]
 
 instance Show R where
   show = render . prettyR
 
+twice :: (b -> b) -> b -> b
+twice f = f . f
+
 test :: [R]
-test = applyRule exampleRule exampleContext
+test = twice (applyAnyRule exampleRules) exampleContext
 
 -- >>> test
--- [metas  lins ruleApp : B (S Z)]
+-- [metas  lins ruleApp : A (S (S Z))]
 
