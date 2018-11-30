@@ -46,6 +46,9 @@ applySubst (PSubs _ _ subs) e k = k $ e >>= \case
 unify :: forall v w. Enumerable v => Eq w => [Constraint v w] -> Maybe (PSubs v w)
 -- Invariant: the substitution is already applied
 unify [] = Just (PSubs id There (V . Left))
+unify ((Con x :=: Con x'):constraints)
+  | x == x' = unify constraints
+  | x /= x' = Nothing
 unify ((App args1 :=: App args2):constraints)
   | length args1 == length args2 = unify (zipWith (:=:) args1 args2++constraints) 
   | otherwise = Nothing
@@ -59,10 +62,9 @@ unify ((V (Left x) :=: V (Left x')):constraints) -- completely fixed vars; must 
 unify ((V (Right (Right x)) :=: V (Right (Right x'))):constraints) -- two fixed vars
   | x == x' = unify constraints
   | x /= x' = Nothing
-unify ((t :=: V (Right (Left x))):constraints) = unify ((V (Right (Left x)) :=: t):constraints)
 unify ((V (Right (Left x)) :=: t):constraints) -- metavar
   = splitType x $ \into outof ->  -- find the variable that we want to substitute (Here; iso is given by into;outof)
-     case sequenceA t of  -- there cannot be any non-unifyable variables in substituted term.
+    case sequenceA t of  -- there cannot be any non-unifyable variables in substituted term.
       Left _ -> Nothing -- (or it would escape)
       Right t' -> case sequenceA (pullLeft . mapLeft into <$> t') of -- occurs check
        Here -> Nothing
@@ -75,16 +77,20 @@ unify ((V (Right (Left x)) :=: t):constraints) -- metavar
                 ) >>= \case
                     Left v' -> f v'
                     Right w -> V (Right w)
+unify ((t :=: V (Right (Left x))):constraints) = unify ((V (Right (Left x)) :=: t):constraints)
 unify (_:_) = Nothing
 
 
 unify2 :: forall v w. Eq w => Enumerable v => Exp (v+w) -> Exp (v+w) -> Maybe (PSubs v w)
 unify2 s t = unify @v @w [(:=:) @v @w @Zero (Right <$> s)  (Right <$> t)]
 
-Just test1 = unify2 (V (Left "a")) (V (Right "x")) 
-Just test2 = unify2 (V (Left "a")) (App [V (Left "x"), V (Right "y")]) 
-Just test3 = unify2 (App [(Con "arst"),(V (Left "a"))]) (App [V (Left "b"), V (Right "y")]) 
+Just test0 = unify2 @String @() (V (Left "a")) (V (Left "b"))
+Just test1 = unify2 (V (Left "a")) (V (Right "x"))
+Just test2 = unify2 (V (Left "a")) (App [V (Left "x"), V (Right "y")])
+Just test3 = unify2 (App [(Con "arst"),(V (Left "a"))]) (App [V (Left "b"), V (Right "y")])
+Just test4 = unify2 (App [(V (Right "arst")),(V (Left "a")),V (Left "a")]) (App [V (Left "b"), V (Left "c"), V (Left "b")])
 
--- >>> putStrLn $ showSubs ["a","b"] test3
--- "a" => V (Right "y")
--- "b" => Con "arst"
+-- >>> putStrLn $ showSubs ["a","b","c"] test4
+-- "a" => V (Right "arst")
+-- "b" => V (Right "arst")
+-- "c" => V (Right "arst")

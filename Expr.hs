@@ -1,3 +1,4 @@
+{-# LANGUAGE EmptyDataDecls #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE TypeSynonymInstances #-}
 {-# LANGUAGE TypeOperators #-}
@@ -17,6 +18,7 @@ import Control.Monad
 import Data.Foldable
 import Data.Traversable
 import Data.Monoid
+import Pretty
 
 data Next v = Here | There {fromThere :: v} deriving (Eq, Functor,Show)
 instance Monad Next where
@@ -25,9 +27,18 @@ instance Monad Next where
 
 type a + b = Either a b
 
+(⊗) :: (t1 -> a) -> (t2 -> b) -> (t1, t2) -> (a, b)
+(f ⊗ g) (a,b) = (f a, g b)
+
+(⊕) :: (t1 -> a) -> (t2 -> b) -> Either t1 t2 -> Either a b
+(f ⊕ _) (Left x) = Left (f x)
+(_ ⊕ g) (Right x) = Right (g x)
+
 mapLeft :: (a -> c) -> a + b -> c + b
-mapLeft f (Left x) = Left (f x)
-mapLeft _ (Right x) = Right x
+mapLeft f = f ⊕ id
+
+mapRight :: (t2 -> b) -> Either a t2 -> Either a b
+mapRight f = id ⊕ f
 
 pullLeft :: (Next z + w) -> Next (z + w)
 pullLeft (Left Here) = Here
@@ -100,6 +111,45 @@ data Exp v where
   V :: v -> Exp v
   deriving (Eq, Functor,Show)
 
+
+(@@) :: Exp v -> Exp v -> Exp v
+t @@ u = App [t,u]
+
+(-->) :: Exp v -> Exp v -> Exp v
+a --> b = Pi ("_",Zero) a (There <$> b)
+
+(⊸) :: Exp v -> Exp v -> Exp v
+a ⊸ b = Pi ("_",One) a (There <$> b)
+
+foral :: String -> (Exp (Next v) -> Exp (Next v)) -> Exp v
+foral nm f = Pi (nm,Zero) (Con "∗") (f (V Here))
+
+
+instance Pretty (Exp String) where
+  pretty = prettyE 0
+
+fnArgs :: Exp a -> [Exp a]
+fnArgs (App (u:vs)) = fnArgs u ++ vs
+fnArgs x = [x]
+
+prettyE :: Int -> Exp String -> D
+prettyE ctx t0 = case t0 of
+  (V x) -> text x
+  (App _) -> pp 4 (\p -> hang 2 (p u) ((sep . map (prettyE 5)) vs))
+    where (u:vs) = fnArgs t0
+  (Con k) -> text k
+  (Pi (nm,mult) dom body) -> case sequenceA body of
+      There body' -> (prettyE 2 dom) <+> arrow </> prettyE 3 body'
+      Here -> withVar nm $ \nm' -> parens (text nm' <+> text ":" <+> pretty dom) <+> arrow </> prettyE 3 (f nm' <$> body)
+    where arrow = text $ case mult of
+            One -> "-o"
+            Zero -> "->"
+          f nm' Here = nm'
+          f _ (There x) = x
+ where pp :: Int -> ((Exp String -> D) -> D) -> D
+       pp opPrec k = prn opPrec (k (prettyE opPrec))
+       prn opPrec = (if opPrec < ctx then parens else id)
+
 instance Applicative Exp where
   (<*>) = ap
   pure = V
@@ -135,3 +185,16 @@ freeVars = toList
 occursIn :: Eq v => v -> Exp v -> Bool
 occursIn v e = getAny (foldMap (Any . (== v)) e )
 
+
+tests :: [String]
+tests = (render . pretty) <$> [(Pi ("x",One) (V "A") (V (There "B")))
+                              ,(Pi ("x",Zero) (V "A") (V (There "B")))
+                              ,(Pi ("x",One) (V "A") (App [(V (There "B")),(V Here)]))
+                              ,(Pi ("x",Zero) (V "A") (App [(V (There "B")),(V Here)]))]
+
+
+-- >>> mapM_ putStrLn tests
+-- A -o B
+-- A -> B
+-- (x : A) -o B x
+-- (x : A) -> B x
