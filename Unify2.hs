@@ -9,6 +9,7 @@
 {-# LANGUAGE TypeApplications #-}
 
 module Unify2 where
+import Types
 import Expr
 import Control.Monad
 data Constraint v w where

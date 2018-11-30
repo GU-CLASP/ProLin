@@ -14,6 +14,7 @@ module Context where
 import Unify2
 import Expr
 import Pretty
+import Types
 
 data Entry w = Entry w (Exp w) deriving Functor
 type Context w = [Entry w] -- things available in a context.
@@ -30,10 +31,6 @@ consume e c = do
   case unify2 e e' of
     Just s -> return (s,ctx')
     Nothing -> fail "oparst"
-
-data Vector v a where
-  VNil :: Vector v Zero
-  (:*) :: a -> Vector v a -> Vector (Next v) a
 
 type Metas v w = [(String,v,Exp (v+w))]
 type Avail v w = [(String,w,Exp (v+w))]
