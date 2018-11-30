@@ -12,29 +12,31 @@ module Unify2 where
 import Expr
 import Control.Monad
 data Constraint v w where
+  -- z : variables that we can not unify to
   -- v : meta variables to unify
-  -- z : variables that can unify only to themselves
   -- w : variables that we can unify to
-  (:=:) :: forall v w z. Eq z => Exp (v+(z+w)) -> Exp (z+w) -> Constraint v w
+  (:=:) :: forall v w z. Eq z => Exp (z+(v+(w))) -> Exp (z+(v+w)) -> Constraint v w
 
 
-h1 :: Exp (Next (v + (z + w))) -> Exp (v + (Next z + w))
-h1 = fmap (fmap pushLeft . pushRight)
 
-h2 :: Exp (Next (z + w)) -> Exp (Next z + w)
-h2 = fmap pushLeft
-
-applyOneSubst :: forall v v' w. Eq v => (v -> Next v') -> Exp w -> Constraint v w ->Constraint v' w
-applyOneSubst d t (u :=: v) = (u >>= f) :=: v
-  where f :: v + (z + w) -> Exp (v' + (z + w))
-        f (Left x) = case d x of
-             Here -> (Right . Right) <$> t
-             There x' -> V (Left x')
-        f (Right w) = V (Right w)
+applyOneSubst :: forall v v' w. Eq v => (v -> Next v') -> Exp (v'+w) -> Constraint v w -> Constraint v' w
+applyOneSubst d t (u :=: v) = (u >>= f) :=: (v >>= f)
+  where f :: z + (v + w) -> Exp (z + (v' + w))
+        f (Right (Left x)) = case d x of
+             Here -> Right <$> t -- substitute
+             There x' -> V (Right (Left x'))
+        f (Left x)= V (Left x)
+        f (Right (Right x)) = V (Right (Right x))
 
 -- | A partial substitution from v to t. Unsubstituted variables are left in v'
 data PSubs v t where
-  PSubs :: Enumerable v' => (v' -> v) -> (v -> Next v') -> (v -> Exp (v' + t)) -> PSubs v t
+  PSubs :: Enumerable v' => (v' -> v) ->
+                            (v -> Next v') -> -- substitued variables mapped to "Here"
+                            (v -> Exp (v' + t)) -> -- apply substitution.
+                            PSubs v t
+
+showSubs :: (Show t, Show v) => [v] -> (PSubs v t) -> String
+showSubs xs (PSubs o _i s) = unlines [show x ++ " => " ++ show (mapLeft o <$> (s x)) | x <- xs]
 
 applySubst :: PSubs v w -> Exp (v+w) -> (forall v'. Enumerable v' => Exp (v'+w) -> k) -> k
 applySubst (PSubs _ _ subs) e k = k $ e >>= \case
@@ -48,25 +50,41 @@ unify ((App args1 :=: App args2):constraints)
   | length args1 == length args2 = unify (zipWith (:=:) args1 args2++constraints) 
   | otherwise = Nothing
 unify ((Pi _ dom bod :=: Pi _ dom' bod'):constraints)
-  = unify ((dom:=:dom'):(h1 bod :=:h2 bod'):constraints)
-unify ((V (Right x) :=: V x'):constraints)
+  = unify ((dom:=:dom'):(h bod :=:h bod'):constraints)
+     where h :: Exp (Next (z + (v + w))) -> Exp (Next z + (v + w))
+           h = fmap pushLeft
+unify ((V (Left x) :=: V (Left x')):constraints) -- completely fixed vars; must be equal
   | x == x' = unify constraints
   | x /= x' = Nothing
-unify ((V (Left x) :=: t):constraints) 
-  -- | x `occursIn` t = Nothing
-  -- | otherwise
-  = splitType x $ \into outof -> case sequenceA t of
-      Left _ -> Nothing
-      Right t' -> flip fmap (unify (map (applyOneSubst into t') constraints)) $ \case
-        (PSubs outof' into' f) -> PSubs (outof . outof') (into' <=< into) $ \x' -> case into x' of
-          There y -> f y
-          Here -> fmap Right t'
+unify ((V (Right (Right x)) :=: V (Right (Right x'))):constraints) -- two fixed vars
+  | x == x' = unify constraints
+  | x /= x' = Nothing
+unify ((t :=: V (Right (Left x))):constraints) = unify ((V (Right (Left x)) :=: t):constraints)
+unify ((V (Right (Left x)) :=: t):constraints) -- metavar
+  = splitType x $ \into outof ->  -- find the variable that we want to substitute (Here; iso is given by into;outof)
+     case sequenceA t of  -- there cannot be any non-unifyable variables in substituted term.
+      Left _ -> Nothing -- (or it would escape)
+      Right t' -> case sequenceA (pullLeft . mapLeft into <$> t') of -- occurs check
+       Here -> Nothing
+       There t'' -> flip fmap (unify (map (applyOneSubst into t'') constraints)) $ \case
+        (PSubs outof' into' f) -> -- compose the substitutions
+          PSubs (outof . outof') (into' <=< into) $ \x' ->
+             (case into x' of
+                Here -> t''
+                There v' -> V (Left v')
+                ) >>= \case
+                    Left v' -> f v'
+                    Right w -> V (Right w)
 unify (_:_) = Nothing
 
--- | Identity (nothing is substituted)
--- idSubst = M.empty
 
+unify2 :: forall v w. Eq w => Enumerable v => Exp (v+w) -> Exp (v+w) -> Maybe (PSubs v w)
+unify2 s t = unify @v @w [(:=:) @v @w @Zero (Right <$> s)  (Right <$> t)]
 
-unify2 :: forall v w. Eq w => Enumerable v => Exp (v+w) -> Exp w -> Maybe (PSubs v w)
-unify2 s t = unify @v @w [(:=:) @v @w @Zero ((Right <$>) <$> s)  (Right <$> t)]
+Just test1 = unify2 (V (Left "a")) (V (Right "x")) 
+Just test2 = unify2 (V (Left "a")) (App [V (Left "x"), V (Right "y")]) 
+Just test3 = unify2 (App [(Con "arst"),(V (Left "a"))]) (App [V (Left "b"), V (Right "y")]) 
 
+-- >>> putStrLn $ showSubs ["a","b"] test3
+-- "a" => V (Right "y")
+-- "b" => Con "arst"

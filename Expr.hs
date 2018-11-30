@@ -1,3 +1,5 @@
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE TypeSynonymInstances #-}
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE EmptyCase #-}
 {-# LANGUAGE InstanceSigs #-}
@@ -25,7 +27,12 @@ type a + b = Either a b
 
 mapLeft :: (a -> c) -> a + b -> c + b
 mapLeft f (Left x) = Left (f x)
-mapLeft f (Right x) = Right x
+mapLeft _ (Right x) = Right x
+
+pullLeft :: (Next z + w) -> Next (z + w)
+pullLeft (Left Here) = Here
+pullLeft (Left (There x)) = There (Left x)
+pullLeft (Right x) = There (Right x)
 
 pushLeft :: Next (z + w) -> Next z + w
 pushLeft = \case
@@ -43,6 +50,11 @@ class Eq v => Enumerable v where
   splitType :: v -> (forall w. Enumerable w => (v -> Next w) -> (w -> v) -> k) -> k
    -- splitType x $ \f g --- f x = Here ∧ if f x == There y, g y == x
   enumAll :: [v]
+
+instance Enumerable String where
+  splitType x k = k (\y -> if x == y then Here else There y) id
+  enumAll = []
+
 
 instance Enumerable v => Enumerable (Next v) where
   splitType Here k = k @v id There
