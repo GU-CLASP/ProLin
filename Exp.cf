@@ -1,0 +1,25 @@
+entrypoints Exp ;
+
+comment "--" ;
+comment "{-" "-}" ;
+
+DeclType.   Decl ::= AIdent ":" Exp ;
+separator   Decl ";" ;
+
+Fun.      Exp1 ::= Exp2 "->" Exp1 ;
+LFun.     Exp1 ::= Exp2 "-o" Exp1 ;
+Pi.       Exp1 ::= "(" PseudoTDecl ")" "->" Exp1 ;
+LinPi.    Exp1 ::= "(" PseudoTDecl ")" "-o" Exp1 ;
+App.      Exp2 ::= Exp2 Exp3 ;
+Var.      Exp3 ::= AIdent ;
+U.        Exp3 ::= "Type" ;
+coercions Exp 3 ;
+
+
+-- Nonempty telescopes with Exp:s, this is hack to avoid ambiguities
+-- in the grammar when parsing Pi
+PseudoTDecl.  PseudoTDecl ::=  Exp ":" Exp ;
+
+position token AIdent ((letter|'_'|'`')(letter|digit|'\''|'_')*) ;
+terminator AIdent "" ;
+
