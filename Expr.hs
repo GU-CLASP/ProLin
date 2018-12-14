@@ -25,7 +25,7 @@ import Types as Expr
 data Mult = One | Zero deriving (Eq,Show)
 
 data Exp v where
-  Pi :: (String,Mult) -> (Exp v) -> (Exp (Next v)) -> Exp v
+  Pi :: (String,Mult) -> Exp v -> Exp (Next v) -> Exp v
   App :: [Exp v]  -> Exp v
   Con :: String -> Exp v
   V :: v -> Exp v
