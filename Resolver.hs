@@ -1,3 +1,4 @@
+{-# LANGUAGE GADTs #-}
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE ScopedTypeVariables #-}
@@ -5,12 +6,14 @@
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE LambdaCase #-}
 
-module Parser where
+module Resolver where
 
 import Expr
 import Types
 import qualified Exp.Abs as CF
-
+import Data.Char
+import Context
+import Control.Arrow (second)
 
 -- tail recursive form to transform a sequence of applications
 -- App (App (App u v) ...) w  into (u, [v, …, w])
@@ -58,12 +61,27 @@ parse e0 f = case e0 of
      (CF.Pi t b) -> parsePi Zero t b f
      (CF.LinPi t b) -> parsePi One t b f
      (CF.App a b) -> App [parse a f,parse b f]
-     (CF.Var (CF.AIdent ((_line,_col),x))) -> V (f x)
+     (CF.Var (CF.AIdent ((_line,_col),x@(y:_))))
+       | isUpper y -> Con x
+       | otherwise -> V (f x)
      (CF.Fun a b) -> Pi ("_",Zero) (parse a f) (There <$> parse b f)
      (CF.LFun a b) -> Pi ("_",One) (parse a f) (There <$> parse b f)
 
+data Ctx where
+  Ctx :: forall w. (Eq w) =>
+       [(String,(w,Exp (w)))] -> -- context
+       Ctx -- each result may introduce a different number of metavariables (v)
 
+resolveExp :: (String -> Either String a) -> CF.Exp -> Either String (Exp a)
+resolveExp f = sequenceA . flip parse f
 
-
-resolve :: CF.Exp -> Either String (Exp a)
-resolve = sequenceA . flip parse (\nm -> Left ("variable not declared: " ++ nm))
+resolveModule :: [CF.Decl] -> (Ctx, [(String,Exp Zero)]) -> Either String (Ctx, [(String,Exp Zero)])
+resolveModule [] c = return c
+resolveModule (CF.DeclRule (CF.AIdent ((_line,_col),x)) e:ds) (cx,rs) = do
+  e' <- flip resolveExp e $ \nm -> Left ("variable not declared: " ++ nm)
+  resolveModule ds (cx,(x,e'):rs)
+resolveModule ((CF.DeclCtx (CF.AIdent ((_line,_col),x)) e):ds) (Ctx ctx,rs) = do
+  e' <- flip resolveExp e $ \nm -> case lookup nm ctx of
+    Nothing -> Left ("variable not declared: " ++ nm)
+    Just (w,_) -> Right w
+  resolveModule ds (Ctx ((x,(Here,There <$> e')):(second (There ⊗ (There <$>)) <$> ctx)),rs)

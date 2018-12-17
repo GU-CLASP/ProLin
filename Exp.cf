@@ -1,9 +1,12 @@
-entrypoints Exp ;
+entrypoints Modul ;
 
 comment "--" ;
 comment "{-" "-}" ;
 
-DeclType.   Decl ::= AIdent ":" Exp ;
+Mod. Modul ::= [Decl];
+
+DeclRule.   Decl ::= AIdent ":" Exp ;
+DeclCtx.    Decl ::= AIdent "::" Exp ;
 separator   Decl ";" ;
 
 Fun.      Exp1 ::= Exp2 "->" Exp1 ;

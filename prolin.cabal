@@ -11,7 +11,7 @@ category:            Dependent Types
 build-type:          Custom
 cabal-version:       >=1.10
 
-executable ttr
+executable pli
   main-is:             Main.hs
   other-modules:       Exp.Lex, Exp.Par
   other-extensions:    TupleSections, ParallelListComp, CPP, MagicHash, GeneralizedNewtypeDeriving, EmptyDataDecls
