@@ -1,7 +1,9 @@
 
+-- rules
 s1 : (x : Ind) -> A x -o B (S x);
 s2 : (x : Ind) -> B x -o A (S x);
 
+-- context
 i :: Ind;
 a :: A i;
 

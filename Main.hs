@@ -28,6 +28,16 @@ loadModule f s = do
           Right ds -> return $ ds
 
 
+run :: (Eq w) => Int -> (w -> String) -> R w -> [(String, AnyRule)] -> IO ()
+run 0 _lkNM _r _rs = putStrLn "DONE (no fuel)"
+run n lkNM r rs = do
+  putStrLn "-------------------"
+  putStrLn "State:"
+  putStrLn (showR lkNM r)
+  case applyAnyRule rs [r] of
+    [] -> putStrLn "No rule applies."
+    (r':_) -> run (n-1) lkNM r' rs
+
 main :: IO ()
 main = do
   [arg] <- getArgs
@@ -36,9 +46,8 @@ main = do
     Left err -> error err
     Right (Ctx cx,rs) -> do
       let r0 = mkR @Zero [] ((\(_nm,(x,e)) -> (V (Right x),Right <$> e)) <$> cx)
-        --((\(nm,(x,e)) -> (V (Right x),Right <$> e)) <$> cx)
           lkNM v = case lookup v [(x,nm) | (nm,(x,_e)) <- cx] of
             Just y -> y
             Nothing -> error "lkNM: panic"
-      forM_ ((applyAnyRule rs [r0])) $ \r -> putStrLn (showR lkNM r)
+      run 10 lkNM r0 rs
 
