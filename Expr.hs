@@ -31,6 +31,8 @@ data Exp v where
   V :: v -> Exp v
   deriving (Eq, Functor,Show)
 
+app :: Exp v -> Exp v -> Exp v
+app t u = App [t,u]
 
 (@@) :: Exp v -> Exp v -> Exp v
 t @@ u = App [t,u]

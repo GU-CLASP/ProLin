@@ -35,6 +35,10 @@ main = do
   case loadModule arg f of
     Left err -> error err
     Right (Ctx cx,rs) -> do
-      let r0 = R @Zero [] ((\(nm,(x,e)) -> (nm,x,Right <$> e)) <$> cx)
-      print (applyAnyRule (map snd rs) [r0])
+      let r0 = mkR @Zero [] ((\(_nm,(x,e)) -> (V (Right x),Right <$> e)) <$> cx)
+        --((\(nm,(x,e)) -> (V (Right x),Right <$> e)) <$> cx)
+          lkNM v = case lookup v [(x,nm) | (nm,(x,_e)) <- cx] of
+            Just y -> y
+            Nothing -> error "lkNM: panic"
+      forM_ ((applyAnyRule rs [r0])) $ \r -> putStrLn (showR lkNM r)
 
