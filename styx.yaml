@@ -1,6 +1,6 @@
 nixpkgs:
   url: https://github.com/NixOS/nixpkgs-channels/archive/nixos-18.03.tar.gz
-  # url: https://github.com/NixOS/nixpkgs-channels/archive/nixos-17.09.tar.gz
+# url: https://github.com/NixOS/nixpkgs-channels/archive/nixos-17.09.tar.gz
 
 local-packages:
   ttr:
@@ -8,7 +8,8 @@ local-packages:
   # pretty-compact:
   #   location: ../../prettiest/
 
-nix-deps: bnfc
+nix-deps:
+  - BNFC
 
 source-deps:
   pretty-compact:
