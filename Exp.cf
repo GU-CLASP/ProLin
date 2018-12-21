@@ -16,6 +16,7 @@ LinPi.    Exp1 ::= "(" PseudoTDecl ")" "-o" Exp1 ;
 App.      Exp2 ::= Exp2 Exp3 ;
 Var.      Exp3 ::= AIdent ;
 U.        Exp3 ::= "Type" ;
+Rec.      Exp3 ::= "[" [Decl] "]";
 coercions Exp 3 ;
 
 

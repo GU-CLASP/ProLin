@@ -37,17 +37,18 @@ type Avail v w = [(Exp (v+w) -- term
                   ,Exp (v+w) -- type
                   )]
 
-mkR :: forall v w. (Enumerable v) =>
-       Metas v w -> -- metavariables introduced
-       Avail v w -> -- context
-       R w
-mkR = R
+-- mkR :: forall v w. (Enumerable v) =>
+--        Metas v w -> -- metavariables introduced
+--        Avail v w -> -- context
+--        R w
+-- mkR = R
 
-data R w where
-  R :: forall v w. (Enumerable v) =>
+data R  where
+  R :: forall v w. (Enumerable v, Eq w) =>
+       (w -> String) -> -- names of context variables
        Metas v w -> -- metavariables introduced
        Avail v w -> -- context
-       R w -- each result may introduce a different number of metavariables (v)
+       R  -- each result may introduce a different number of metavariables (v)
 
 
 freshMeta :: Next v + w
@@ -57,20 +58,25 @@ freshMeta = Left Here
 wkMeta :: (v + b) -> Next v + b
 wkMeta = mapLeft There
 
+wkCtx :: (v + b) -> v + Next b
+wkCtx = mapRight There
+
+
 -- | Apply a rule.
 
 -- v is the set of free variables introduced by the matching process.
 -- w are the variables of the context.
 -- metaTypes: types of the meta variables.
-ruleApplies :: Eq w => Enumerable v => Bool -> Exp (v+w) -> Rule (v+w) -> Metas v w -> Avail v w -> [R w]
-ruleApplies consumed e (Pi (_v,Zero) dom body) metaTypes ctx =
+ruleApplies :: Eq w => Enumerable v
+  => (w -> String) -> Bool -> Exp (v+w) -> Rule (v+w) -> Metas v w -> Avail v w -> [R]
+ruleApplies wN consumed e (Pi (_v,Zero) dom body) metaTypes ctx =
   -- something is needed zero times. So, we create a metavariable
-  ruleApplies consumed ((wkMeta <$> e) `app` V freshMeta) 
+  ruleApplies wN consumed ((wkMeta <$> e) `app` V freshMeta) 
              (pushLeft <$> body)
              (("_",Here,wkMeta <$> dom) -- new meta
                :[(nm,There v,wkMeta <$> t) | (nm,v,t) <- metaTypes])
              [(wkMeta <$> w,wkMeta <$> t) | (w,t) <- ctx]
-ruleApplies _consumed e (Pi (_v,One) dom body) metaTypes ctx = do
+ruleApplies wN _consumed e (Pi (_v,One) dom body) metaTypes ctx = do
   -- something is needed one time
   (t0,PSubs _ o s,ctx') <- consume dom ctx -- see if the domain can be satisfied in the context
   let s' = \case
@@ -81,31 +87,45 @@ ruleApplies _consumed e (Pi (_v,One) dom body) metaTypes ctx = do
       s'' = \case
                Left x -> wkMeta <$> s x -- meta: substitute; weaken.
                Right y -> V (Right y) -- regular old var; leave that
-  ruleApplies True (app e t0 >>= s'')
+  ruleApplies wN True (app e t0 >>= s'')
               (body >>= s')
               [(nm,There v,t >>= s'') | (nm,o -> There v,t) <- metaTypes]
               [(w >>= s'',t >>= s'') | (w,t) <- ctx']
-ruleApplies consumed e r metaTypes ctx
-  | consumed = return $ mkResult e r metaTypes ctx -- not a Pi, we have a new thing to put in the context.
+ruleApplies wN True e (Rec fs) metaTypes ctx = return $ applyRec wN e fs metaTypes ctx
+ruleApplies wN consumed e r metaTypes ctx
+  | consumed = return $ R wN (metaTypes) ((e,r):ctx)   -- not a Pi, we have a new thing to put in the context.
   | otherwise = []
+
+applyRec :: Eq w => Enumerable v
+         => (w -> String)
+         -> Exp (v + w)
+         -> Tele (v + w)
+         -> Metas v w
+         -> Avail v w
+         -> R
+applyRec w _ TNil metaTypes ctx = R w metaTypes ctx
+applyRec w e (TCons (x,One) f fs) metaTypes ctx
+  = applyRec w' (wkCtx <$> e)
+               (pushRight <$> fs)
+               [(nm,v,wkCtx <$> t) | (nm,v,t) <- metaTypes] (both (wkCtx <$>) <$>((e,f):ctx))
+    where w' (Here) = x
+          w' (There y) = w y
+ -- metaTypes ((e,f):ctx)
 
 type AnyRule = Rule Zero
 
-applyRule :: Eq w => String -> AnyRule -> R w -> [R w]
-applyRule ruleName r (R metas avail) = ruleApplies False (Con ruleName) (\case <$> r) metas avail
+applyRule :: String -> AnyRule -> R -> [R]
+applyRule ruleName r (R wN metas avail) = ruleApplies wN False (Con ruleName) (\case <$> r) metas avail
 
-applyAnyRule :: Eq w => [(String,AnyRule)] -> [R w] -> [R w]
+applyAnyRule :: [(String,AnyRule)] -> [R] -> [R]
 applyAnyRule rs ctxs = do
   (ruleName,r) <- rs
   ctx <- ctxs
   applyRule ruleName r ctx
 
 
-mkResult :: Eq w => Enumerable v => Exp (v+w) -> Exp (v+w) -> Metas v w -> Avail v w -> R w
-mkResult e t metas avail = R (metas) ((e,t):avail)
-
-prettyR :: (w -> String) ->  R w -> D
-prettyR ctxNames (R m a)
+prettyR :: R -> D
+prettyR  (R ctxNames m a)
   = vcat [hang 2 "metas" (vcat [text n <+> ":" <+> pretty (nm <$> e) | (n,_,e) <- m])
          ,hang 2 "lins"  (vcat [pretty (nm <$> e) <+> ":" <+> pretty (nm <$> t) | (e,t) <- a])]
      where names = [(v,n) | (n,v,_) <- m]
@@ -113,7 +133,6 @@ prettyR ctxNames (R m a)
            nm (Left v) = case lookup v names of
              Nothing -> error "found unknown name!"
              Just x -> x
-             
 
 exampleRules :: [Exp Zero]
 exampleRules =
@@ -125,8 +144,8 @@ exampleRules =
 -- exampleContext :: [R]
 -- exampleContext = [R @Zero @(Next Zero) [] [("a",Here,(Con "A" @@ Con "Z"))]]
 
-showR :: (w -> String) -> R w -> String
-showR f = render . prettyR f
+instance Show R where
+  show = render . prettyR
 
 twice :: (b -> b) -> b -> b
 twice f = f . f

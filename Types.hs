@@ -27,6 +27,7 @@ data Vector v a where
 
 type a + b = Either a b
 
+both f = f ⊗ f
 (⊗) :: (t1 -> a) -> (t2 -> b) -> (t1, t2) -> (a, b)
 (f ⊗ g) (a,b) = (f a, g b)
 
@@ -39,6 +40,7 @@ mapLeft f = f ⊕ id
 
 mapRight :: (t2 -> b) -> Either a t2 -> Either a b
 mapRight f = id ⊕ f
+
 
 pullLeft :: (Next z + w) -> Next (z + w)
 pullLeft (Left Here) = Here

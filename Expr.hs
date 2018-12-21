@@ -24,7 +24,13 @@ import Types as Expr
 
 data Mult = One | Zero deriving (Eq,Show)
 
+data Tele v where
+  TCons :: (String,Mult) -> Exp v -> Tele (Next v) -> Tele v
+  TNil  :: Tele v
+  deriving (Eq, Functor,Show)
+
 data Exp v where
+  Rec :: Tele v -> Exp v
   Pi :: (String,Mult) -> Exp v -> Exp (Next v) -> Exp v
   App :: [Exp v]  -> Exp v
   Con :: String -> Exp v

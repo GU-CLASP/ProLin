@@ -55,6 +55,12 @@ parsePi mult t b f = case pseudoTele [t] of
        Just tele -> binds mult tele (parse b) f
        Nothing   -> error "Telescope malformed in Pi"
 
+parseRec :: forall a. [CF.Decl] -> (String -> Either String a) -> Tele (Either String a)
+parseRec (CF.DeclRule (CF.AIdent ((_line,_col),x)) e:ds) f = 
+  let e' = parse e f
+      t' = parseRec ds (extend f x)
+  in TCons (x,Zero) e' (sequenceA <$> t')
+
 parse :: forall a. CF.Exp -> (String -> Either String a) -> Exp (Either String a)
 parse e0 f = case e0 of
      CF.U -> Con "Type"
@@ -66,6 +72,7 @@ parse e0 f = case e0 of
        | otherwise -> V (f x)
      (CF.Fun a b) -> Pi ("_",Zero) (parse a f) (There <$> parse b f)
      (CF.LFun a b) -> Pi ("_",One) (parse a f) (There <$> parse b f)
+     (CF.Rec fs) -> Rec (parseRec fs f)
 
 data Ctx where
   Ctx :: forall w. (Eq w) =>
