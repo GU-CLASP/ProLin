@@ -12,7 +12,6 @@ import Expr
 import Types
 import qualified Exp.Abs as CF
 import Data.Char
-import Context
 import Control.Arrow (second)
 
 -- tail recursive form to transform a sequence of applications
@@ -56,10 +55,15 @@ parsePi mult t b f = case pseudoTele [t] of
        Nothing   -> error "Telescope malformed in Pi"
 
 parseRec :: forall a. [CF.Decl] -> (String -> Either String a) -> Tele (Either String a)
+parseRec (CF.DeclCtx (CF.AIdent ((_line,_col),x)) e:ds) f = 
+  let e' = parse e f
+      t' = parseRec ds (extend f x)
+  in TCons (x,One) e' (sequenceA <$> t')
 parseRec (CF.DeclRule (CF.AIdent ((_line,_col),x)) e:ds) f = 
   let e' = parse e f
       t' = parseRec ds (extend f x)
   in TCons (x,Zero) e' (sequenceA <$> t')
+parseRec [] _ = TNil
 
 parse :: forall a. CF.Exp -> (String -> Either String a) -> Exp (Either String a)
 parse e0 f = case e0 of
@@ -67,6 +71,7 @@ parse e0 f = case e0 of
      (CF.Pi t b) -> parsePi Zero t b f
      (CF.LinPi t b) -> parsePi One t b f
      (CF.App a b) -> App [parse a f,parse b f]
+     (CF.Var (CF.AIdent ((_line,_col),[]))) -> error "parse: panic: empty ident"
      (CF.Var (CF.AIdent ((_line,_col),x@(y:_))))
        | isUpper y -> Con x
        | otherwise -> V (f x)

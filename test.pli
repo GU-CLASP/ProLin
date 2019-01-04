@@ -1,7 +1,8 @@
 
 -- rules
 s1 : (x : Ind) -> A x -o B (S x);
-s2 : (x : Ind) -> B x -o A (S x);
+s2 : (x : Ind) -> B x -o [main :: A (S x) ; other :: C x];
+-- mkMeta : (x : Ind) -> (y : Ind) -> A x -o B y;
 
 -- context
 i :: Ind;

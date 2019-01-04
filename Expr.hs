@@ -82,30 +82,45 @@ instance Applicative Exp where
   (<*>) = ap
   pure = V
 
+substTele :: forall v w. Tele v -> (v -> Exp w) -> Tele w
+substTele e f = case e of
+     (TCons s a b) -> TCons s (a >>= f) (substTele b (wkM f))
+     TNil -> TNil
+
 instance Monad Exp where
   (>>=) :: forall v w. Exp v -> (v -> Exp w) -> Exp w
   e >>= f = case e of
+    (Rec r) -> Rec (substTele r f)
     (V x) -> f x
     (App args) -> App (map (>>= f) args)
     (Con k) -> Con k
-    (Pi s dom bod) -> Pi s (dom >>= f) (bod >>= f')
-      where f' :: Next v -> Exp (Next w)
-            f' (Here) = V (Here)
-            f' (There x) = fmap There (f x)
+    (Pi s dom bod) -> Pi s (dom >>= f) (bod >>= wkM f)
+    
+wkM :: (t -> Exp v) -> Next t -> Exp (Next v)
+wkM _ (Here) = V (Here)
+wkM f (There x) = fmap There (f x)
 
+instance Foldable Tele where
+  foldMap = foldMapDefault
 instance Foldable Exp where
   foldMap = foldMapDefault
 
+instance Traversable Tele where
+  traverse f = \case
+     (TCons s a b) -> TCons s <$> traverse f a <*> traverse (wkT f) b
+     TNil -> pure TNil
 instance Traversable Exp where
   traverse f = \case
     App xs -> App <$> traverse (traverse f) xs
     Con k -> pure (Con k)
     V x -> V <$> f x
-    Pi s dom bod -> Pi s <$> traverse f dom <*> traverse f' bod
-     where f' = \case
-                  Here -> pure (Here)
-                  There x -> fmap There (f x)
+    Pi s dom bod -> Pi s <$> traverse f dom <*> traverse (wkT f) bod
+    Rec r -> Rec <$> traverse f r
 
+wkT :: Applicative f => (t -> f v) -> Next t -> f (Next v)
+wkT f = \case
+                  Here -> pure Here
+                  There x -> fmap There (f x)
 
 freeVars :: Exp v -> [v]
 freeVars = toList
