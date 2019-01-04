@@ -64,18 +64,24 @@ wkCtx = mapRight There
 
 -- | Apply a rule.
 
+findFreshName :: Int -> String -> [String] -> String
+findFreshName n x xs | candidate `elem` xs = findFreshName (n+1) x xs
+                     | otherwise = candidate
+  where candidate = x ++ show n
+
 -- v is the set of free variables introduced by the matching process.
 -- w are the variables of the context.
 -- metaTypes: types of the meta variables.
 ruleApplies :: Eq w => Enumerable v
   => (w -> String) -> Bool -> Exp (v+w) -> Rule (v+w) -> Metas v w -> Avail v w -> [R]
-ruleApplies wN consumed e (Pi (_v,Zero) dom body) metaTypes ctx =
+ruleApplies wN consumed e (Pi (vNm,Zero) dom body) metaTypes ctx =
   -- something is needed zero times. So, we create a metavariable
   ruleApplies wN consumed ((wkMeta <$> e) `app` V freshMeta) 
              (pushLeft <$> body)
-             (("_",Here,wkMeta <$> dom) -- new meta
+             ((findFreshName 0 vNm metaNames,Here,wkMeta <$> dom) -- new meta
                :[(nm,There v,wkMeta <$> t) | (nm,v,t) <- metaTypes])
              [(wkMeta <$> w,wkMeta <$> t) | (w,t) <- ctx]
+  where metaNames = [nm | (nm,_,_) <- metaTypes]
 ruleApplies wN _consumed e (Pi (_v,One) dom body) metaTypes ctx = do
   -- something is needed one time
   (t0,PSubs _ o s,ctx') <- consume dom ctx -- see if the domain can be satisfied in the context
