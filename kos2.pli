@@ -1,0 +1,36 @@
+-- rules
+qud_push : (a:Type) -> (x:a -> Prop) -> LatestMove (Ask x)
+   -o [c1 :: QUD x; c2 :: Ready];
+ans :  (a : Type) -> (answer:a) -> (q:a->Prop) -> (proof:q answer)
+   -o QUD q -o Agenda (Assert answer proof);
+
+
+-- context
+is :: Object -> Name -> Prop;
+
+cl001 :: Object;
+cup  :: Name;
+p2 :: is cl001 cup;
+lm :: LatestMove (Ask (is cl001));
+lm2 :: LatestMove (Greeting);
+
+
+
+
+
+
+-- Question :: (A:Type) -> (A -> Prop) -> Move
+-- Greeting :: Move
+
+-- Answer :: (A:Type) -> (Q:A->Prop) -> (a:A) -> (q: Q a) -> Move
+
+-- ans : (pred : Type -> Prop) -> (obj : Type) -> (a:obj) -> (b:Type)
+--    -> (q: (pred obj b)) -o QUD (pred obj) -o Ok;
+--Agenda (Assert obj pred a q);
+
+-- p1 :: See cl001;
+
+--r : (q:Type) -> (a : Object) -> QUD (q a) -o Ok
+
+
+
