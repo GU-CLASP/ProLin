@@ -93,13 +93,11 @@ ruleApplies wN _consumed e (Pi (_v,One) dom body) metaTypes ctx = do
   (t0,PSubs _ o s,ctx') <- consume dom ctx -- see if the domain can be satisfied in the context
   -- it does: we need to substitute the consumed thing
   let s' = \case
-              Here -> t0 >>= s'' -- the variable bound by Pi; left alone by subst.
-              There x -> case x of
-                 Left y -> s y -- meta var; substitute according to unifier
-                 Right y -> V (Right y) -- regular old var; leave that
+              Here -> t0 >>= s'' -- the variable bound by Pi (unknown to unifier). Substituted by the context element.
+              There x -> s'' x
       s'' = \case
                Left x -> s x -- meta: substitute according to unifier
-               Right y -> V (Right y) -- regular old var; leave that
+               Right y -> V (Right y) -- regular old var; leave it alone
   ruleApplies wN True (app e t0 >>= s'')
               (body >>= s')
               [(nm,v,t >>= s'') | (nm,o -> There v,t) <- metaTypes]
