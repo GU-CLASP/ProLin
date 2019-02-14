@@ -72,8 +72,14 @@ findFreshName n x xs | candidate `elem` xs = findFreshName (n+1) x xs
 -- v is the set of free variables introduced by the matching process.
 -- w are the variables of the context.
 -- metaTypes: types of the meta variables.
-ruleApplies :: Eq w => Enumerable v
-  => (w -> String) -> Bool -> Exp (v+w) -> Rule (v+w) -> Metas v w -> Avail v w -> [R]
+ruleApplies :: Eq w => Enumerable v => Show v
+  => (w -> String) -- | user-friendly names for w
+  -> Bool -- | was there anything consumed at all?
+  -> Exp (v+w) -- | constructed expression
+  -> Rule (v+w) -- | rule considered
+  -> Metas v w -- | metas
+  -> Avail v w -- | context
+  -> [R]
 ruleApplies wN consumed e (Pi (vNm,Zero) dom body) metaTypes ctx =
   -- something is needed zero times. So, we create a metavariable
   ruleApplies wN consumed ((wkMeta <$> e) `app` V freshMeta) 
@@ -85,17 +91,18 @@ ruleApplies wN consumed e (Pi (vNm,Zero) dom body) metaTypes ctx =
 ruleApplies wN _consumed e (Pi (_v,One) dom body) metaTypes ctx = do
   -- something is needed one time
   (t0,PSubs _ o s,ctx') <- consume dom ctx -- see if the domain can be satisfied in the context
+  -- it does: we need to substitute the consumed thing
   let s' = \case
-              Here -> V (Left Here) -- new meta variable; left alone by subst.
-              There x -> wkMeta <$> case x of
-                 Left y -> s y -- old meta var; substitute that
+              Here -> t0 >>= s'' -- the variable bound by Pi; left alone by subst.
+              There x -> case x of
+                 Left y -> s y -- meta var; substitute according to unifier
                  Right y -> V (Right y) -- regular old var; leave that
       s'' = \case
-               Left x -> wkMeta <$> s x -- meta: substitute; weaken.
+               Left x -> s x -- meta: substitute according to unifier
                Right y -> V (Right y) -- regular old var; leave that
   ruleApplies wN True (app e t0 >>= s'')
               (body >>= s')
-              [(nm,There v,t >>= s'') | (nm,o -> There v,t) <- metaTypes]
+              [(nm,v,t >>= s'') | (nm,o -> There v,t) <- metaTypes]
               [(w >>= s'',t >>= s'') | (w,t) <- ctx']
 ruleApplies wN True e (Rec fs) metaTypes ctx = return $ applyRec wN e fs metaTypes ctx
 ruleApplies wN consumed e r metaTypes ctx
@@ -137,7 +144,7 @@ prettyR  (R ctxNames m a)
      where names = [(v,n) | (n,v,_) <- m]
            nm (Right v) = ctxNames v
            nm (Left v) = case lookup v names of
-             Nothing -> error "found unknown name!"
+             Nothing -> error ("found unknown name for meta:" ++ show v)
              Just x -> x
 
 exampleRules :: [Exp Zero]
