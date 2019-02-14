@@ -1,8 +1,8 @@
 -- rules
-qud_push : (a:Type) -> (x:a -> Prop) -> LatestMove (Ask x)
+qudPush : (a:Type) -> (x:a -> Prop) -> LatestMove (Ask x)
    -o [c1 :: QUD x; c2 :: Ready];
 ans :  (a : Type) -> (answer:a) -> (q:a->Prop) -> (proof:q answer)
-   -o QUD q -o Agenda (Assert answer proof);
+   -o QUD q -o Agenda (Assert answer);
 
 
 -- context
@@ -12,8 +12,7 @@ cl001 :: Object;
 cup  :: Name;
 p2 :: is cl001 cup;
 lm :: LatestMove (Ask (is cl001));
-lm2 :: LatestMove (Greeting);
-
+lm2 :: LatestMove (Greeting); 
 
 
 
@@ -34,3 +33,4 @@ lm2 :: LatestMove (Greeting);
 
 
 
+----- asdasd 
