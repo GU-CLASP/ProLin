@@ -59,7 +59,7 @@ pushRight = \case
      (There (Right x)) -> Right (There x)
      There (Left x) -> Left x
 
-class Eq v => Enumerable v where
+class (Show v,Eq v) => Enumerable v where
   splitType :: v -> (forall w. Enumerable w => (v -> Next w) -> (w -> v) -> k) -> k
    -- splitType x $ \f g --- f x = Here ∧ if f x == There y, g y == x
   enumAll :: [v]
