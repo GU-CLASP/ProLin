@@ -19,3 +19,24 @@
 -S- What bus or tram are you interested in? 
 -U- Bus 55.
 -S- The next bus 55 towards Lindholmen is in 6 minutes. The one towards Science Park is in 10 minutes. 
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~ Grammar
+
+
+Hi, when is the next bus 55 from Götaplatsen?
+
+vehicle ::= bus | tram
+place ::= Götaplatsen | Skälltorpsvägen | Johanneberg
+       | Lindholmen | Science Park
+thanks ::= *thank*
+
+request ::= * (when|what) * next [clarification]
+
+clarification ::= to <place>
+               |  from <place>
+               | (<vehicle>)? <number>
+
+

@@ -9,6 +9,7 @@ local-packages:
 
 nix-deps:
   - BNFC
+  - parsek
 
 source-deps:
   pretty-compact:
