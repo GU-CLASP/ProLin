@@ -1,0 +1,30 @@
+-S- Hi! Let's cook teriyaki chicken?
+-U- Hi. Sure!
+-S- You will need: 2 tbsp toasted sesame oil, 6 skinless and boneless chicken thighs, sliced
+-U- Ok.
+-S- 2 large garlic cloves, crushed
+-U- Ok.
+-S- 1 thumb-sized piece ginger, grated.
+-U- ...ok!
+-S- 50g runny honey and 30ml light soy sauce
+-U- ok, what else?
+-S- 1 tbsp rice wine vinegar. 1 tbsp sesame seeds, to serve. 4 spring onions, shredded, to serve.
+-S- Do you have all these?
+-U- Yes. 
+-S- Let's start cooking.
+-S- Heat the oil in a non-stick pan over a medium heat. Tell me when it is heated.
+-U- It's ready!
+-S- Add the chicken and fry for 7 mins, or until golden. Tell me when it is ready!
+[can be also timer or conversation about other topic...]
+-U- Ready!
+-S- Add the garlic and ginger and fry for 2 mins. Tell me when it is done.
+-U- Done.
+-S- Stir in the honey, soy sauce, vinegar and 100ml water. Ok?
+-U- Ok.
+-S- Have you done it?
+-U- Yes!
+-S- Bring to the boil and cook for 2 - 5 mins over a medium heat until the chicken is sticky and coated in a thick sauce. 
+-U- Okay...
+-U- Ok, it is done!
+-S- Excellent! Scatter over the spring onions and sesame seeds, then you can serve the chicken!
+-U- Thank you!

@@ -1,20 +1,28 @@
 -- rules
 qudPush : (a:Type) -> (x:a -> Prop) -> LatestMove (Ask x)
-   -o [c1 :: QUD x; c2 :: Ready];
-ans :  (a : Type) -> (answer:a) -> (q:a->Prop) -> (proof:q answer)
-   -o QUD q -o Agenda (Assert answer);
+   -o [c1 :: QUD x; c2 :: TTake];
+answer :  (a : Type) -> (answer:a) -> (q:a->Prop) -> (proof:q answer)
+   -o QUD q -o Agenda (Assert (q answer));
+fulfillAgenda : (x:Type) -> (Agenda x) -o TTake -o TRelease;
+assertQudInc : (x:Prop) -> LatestMove (Assert x) -o [c1 :: QUD x; c2 :: TTake]; -- why not ?x 
+acknowledge : (x:Prop) -> QUD x -o Agenda (ACK);
+train : (x:Object) -> (y:Name) -> (pred:Object->Name->Prop) -> QUD (pred x y) -o Train x y;
+--greeting : TRelease -o UserLM NoMoves -> QUD Empty -> [f1 :: TTake; f2 :: Agenda (Greeting)];
 
 
 -- context
 is :: Object -> Name -> Prop;
-
 cl001 :: Object;
 cup  :: Name;
 p2 :: is cl001 cup;
-lm :: LatestMove (Ask (is cl001));
-lm2 :: LatestMove (Greeting); 
-
-
+lm :: LatestMove (Ask (is cl001)); -- NLU (...)
+--lm2 :: LatestMove (Greeting); 
+--lm :: LatestMove (Assert (is cl001 cup));
+--a1 :: Agenda (Greeting);
+--turn :: TRelease;
+--c1 :: LatestMove NoMoves;
+--c2 :: QUD Empty;
+-- c3 :: QNUD Empty;
 
 
 
@@ -25,12 +33,9 @@ lm2 :: LatestMove (Greeting);
 
 -- ans : (pred : Type -> Prop) -> (obj : Type) -> (a:obj) -> (b:Type)
 --    -> (q: (pred obj b)) -o QUD (pred obj) -o Ok;
---Agenda (Assert obj pred a q);
+-- Agenda (Assert obj pred a q);
 
 -- p1 :: See cl001;
 
---r : (q:Type) -> (a : Object) -> QUD (q a) -o Ok
+-- r : (q:Type) -> (a : Object) -> QUD (q a) -o Ok
 
-
-
------ asdasd 
