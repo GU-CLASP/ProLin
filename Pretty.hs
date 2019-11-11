@@ -50,8 +50,9 @@ instance Show D where
 class Pretty a where
   pretty :: a -> D
 
+instance Semigroup D where
+  (<>) = liftM2 (<>)
 instance Monoid D where
-  mappend = liftM2 (<>)
   mempty = return mempty
 
 showy :: Show a => a -> D

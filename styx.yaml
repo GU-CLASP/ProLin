@@ -1,11 +1,11 @@
 nixpkgs:
-  url: https://github.com/NixOS/nixpkgs-channels/archive/nixos-18.03.tar.gz
+  url: https://github.com/NixOS/nixpkgs-channels/archive/nixos-19.09.tar.gz
 
 local-packages:
   prolin:
     location: .
   # pretty-compact:
-  #   location: ../../prettiest/
+  #   location: ../../prettiest
 
 nix-deps:
   - BNFC
@@ -14,4 +14,4 @@ nix-deps:
 source-deps:
   pretty-compact:
     location: https://github.com/jyp/prettiest.git
-    revision: d24b3d5ccbd185eb8458133f80f1eb5570c3ecbe
+    revision: 844c00638e01acaec8e31aacbc8918f79d51caff
