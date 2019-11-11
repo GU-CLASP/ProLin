@@ -40,6 +40,9 @@ data Exp v where
 app :: Exp v -> Exp v -> Exp v
 app t u = App [t,u]
 
+apps :: Foldable t => Exp v -> t (Exp v) -> Exp v
+apps t = foldl app t
+
 (@@) :: Exp v -> Exp v -> Exp v
 t @@ u = App [t,u]
 

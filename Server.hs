@@ -13,6 +13,7 @@ managerLoop :: R -> [(String, AnyRule)] -> IO (String, R)
 managerLoop r rs = do
   putStrLn "-------------------"
   putStrLn "State:"
+  print r
   case pullOutputFromContext r of
     Just (r',outMsg) -> return (show outMsg,r')
     Nothing -> case applyAnyRule rs [r] of
@@ -29,15 +30,23 @@ clientLoop h r rs = do
    case m of
      Left _ -> hPutStrLn h "I did not quite get that ..."
      Right p -> do
+       putStrLn ("Got: " ++ show p)
+       let p' = encode p
+       putStrLn ("Encoded as: " ++ show p')
        -- Push p in the context so the manager can deal with it.
-       (reply,r') <- managerLoop (pushInContext (Con "p",encode p) r) rs
+       (reply,r') <- managerLoop (pushInContext (Con "p",Con "Message" `app` (p')) r) rs
        hPutStrLn h reply
        clientLoop h r' rs
 
-debugServer :: IO ()
-debugServer =  do
-  serve (Host "127.0.0.1") "8000" $ \(connectionSocket, remoteAddr) -> do
+startServer :: IO ()
+startServer =  do
+  putStrLn ("starting server on port " ++ port)
+  serve (Host "127.0.0.1") port $ \(connectionSocket, remoteAddr) -> do
     putStrLn $ "TCP connection established from " ++ show remoteAddr
     (r,rs) <- loadAndPrepareModule "transport.pli"
     h <- socketToHandle connectionSocket ReadWriteMode
     clientLoop h r rs
+  where port = "8000"
+
+main :: IO ()
+main = startServer
