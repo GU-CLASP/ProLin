@@ -102,11 +102,13 @@ ruleApplies wN _consumed e (Pi (_v,One) dom body) metaTypes ctx = do
               (body >>= s')
               [(nm,v,t >>= s'') | (nm,o -> There v,t) <- metaTypes]
               [(w >>= s'',t >>= s'') | (w,t) <- ctx']
-ruleApplies wN True e (Rec fs) metaTypes ctx = return $ applyRec wN e fs metaTypes ctx
+ruleApplies wN True e (Rec fs) metaTypes ctx = return $ applyRec wN e fs metaTypes ctx -- a record: put all the components in the context
 ruleApplies wN consumed e r metaTypes ctx
   | consumed = return $ R wN (metaTypes) ((e,r):ctx)   -- not a Pi, we have a new thing to put in the context.
   | otherwise = []
 
+-- | Put all the components of the telescope in the context.
+-- FIXME: projections!
 applyRec :: Eq w => Enumerable v
          => (w -> String)
          -> Exp (v + w)
@@ -121,7 +123,6 @@ applyRec w e (TCons (x,One) f fs) metaTypes ctx
                [(nm,v,wkCtx <$> t) | (nm,v,t) <- metaTypes] (both (wkCtx <$>) <$>((e,f):ctx))
     where w' (Here) = x
           w' (There y) = w y
- -- metaTypes ((e,f):ctx)
 
 type AnyRule = Rule Zero
 
@@ -170,3 +171,12 @@ twice f = f . f
 pushInContext :: (Exp Zero,Exp Zero) -> R -> R
 pushInContext x (R wN metas ctx) = R wN metas (both (exNihilo <$>) x:ctx)
 
+
+pullOutputFromContext :: R -> Maybe (R,Exp Zero)
+pullOutputFromContext r = case applyRule "pull" pullRule r of
+  [] -> Nothing
+  (R _ _ []:_) -> error "pullOutputFromContext: panic: could pull but nothing remains in the context"
+  (R wN metas ((_pullTerm,msg):avails):_) -> case isClosed msg of
+    Nothing -> error "manager attempted to output a message with free variables."
+    Just msg' -> Just (R wN metas avails,msg')
+  where pullRule = foral "m" $ \msg -> (Con "Output" @@ msg) ⊸ msg

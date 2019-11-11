@@ -9,14 +9,15 @@ import Context
 import HaskToProlin
 import Expr
 
-managerLoop :: R -> [(String, AnyRule)] -> IO ([Char], R)
+managerLoop :: R -> [(String, AnyRule)] -> IO (String, R)
 managerLoop r rs = do
   putStrLn "-------------------"
   putStrLn "State:"
-  -- TODO: check for something to output to the user
-  case applyAnyRule rs [r] of
-    [] -> return ("Tell me more!",r) -- nothing to do any more
-    (r':_) -> managerLoop r' rs
+  case pullOutputFromContext r of
+    Just (r',outMsg) -> return (show outMsg,r')
+    Nothing -> case applyAnyRule rs [r] of
+      [] -> return ("Tell me more!",r) -- nothing to do any more
+      (r':_) -> managerLoop r' rs
 
 
 clientLoop :: Handle -> R -> [(String, AnyRule)] -> IO ()

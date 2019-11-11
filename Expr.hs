@@ -128,6 +128,8 @@ freeVars = toList
 occursIn :: Eq v => v -> Exp v -> Bool
 occursIn v e = getAny (foldMap (Any . (== v)) e )
 
+isClosed :: Exp v -> Maybe (Exp Zero)
+isClosed = traverse $ \_ -> Nothing
 
 tests :: [String]
 tests = (render . pretty) <$> [(Pi ("x",One) (V "A") (V (There "B")))
