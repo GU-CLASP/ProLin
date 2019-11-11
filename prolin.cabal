@@ -14,11 +14,13 @@ build-type:          Custom
 custom-setup
   setup-depends:
     base  >= 4.5,
-    Cabal >= 2.4
+    Cabal >= 2.4,
+    directory,
+    process
 
 executable pli
   main-is:             Server.hs
-  other-modules:       Exp.Lex, Exp.Par, HaskToProlin, Context, Expr
+  other-modules:       Exp.Lex, Exp.Par, HaskToProlin, Context, Expr, Exp.Abs Exp.ErrM Resolver TopLevel TransportationParser Types
   other-extensions:    TupleSections, ParallelListComp, CPP, MagicHash, GeneralizedNewtypeDeriving, EmptyDataDecls
    -- other-modules:       Exp.Lex, Exp.Par
   build-depends:       base >= 4.5 && < 5, transformers >= 0.3, mtl >= 2.1,

@@ -67,14 +67,15 @@ parseRec [] _ = TNil
 
 parse :: forall a. CF.Exp -> (String -> Either String a) -> Exp (Either String a)
 parse e0 f = case e0 of
-     CF.U -> Con "Type"
+     CF.U -> Con (Symbol "Type")
      (CF.Pi t b) -> parsePi Zero t b f
      (CF.LinPi t b) -> parsePi One t b f
      (CF.App a b) -> App [parse a f,parse b f]
      (CF.Var (CF.AIdent ((_line,_col),[]))) -> error "parse: panic: empty ident"
      (CF.Var (CF.AIdent ((_line,_col),x@(y:_))))
-       | isUpper y -> Con x
+       | isUpper y -> Con (Symbol x)
        | otherwise -> V (f x)
+     (CF.StrLit x) -> Con (String x)
      (CF.Fun a b) -> Pi ("_",Zero) (parse a f) (There <$> parse b f)
      (CF.LFun a b) -> Pi ("_",One) (parse a f) (There <$> parse b f)
      (CF.Rec fs) -> Rec (parseRec fs f)

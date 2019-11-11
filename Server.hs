@@ -34,7 +34,7 @@ clientLoop h r rs = do
        let p' = encode p
        putStrLn ("Encoded as: " ++ show p')
        -- Push p in the context so the manager can deal with it.
-       (reply,r') <- managerLoop (pushInContext (Con "p",Con "Message" `app` (p')) r) rs
+       (reply,r') <- managerLoop (pushInContext (Symb "p",Symb "Message" `app` (p')) r) rs
        hPutStrLn h reply
        clientLoop h r' rs
 

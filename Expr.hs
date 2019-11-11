@@ -11,6 +11,7 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE PatternSynonyms #-}
 
 module Expr where
 
@@ -29,13 +30,18 @@ data Tele v where
   TNil  :: Tele v
   deriving (Eq, Functor,Show)
 
+data Constant = Symbol String | String String | Int Int deriving (Eq,Show)
+
 data Exp v where
   Rec :: Tele v -> Exp v
   Pi :: (String,Mult) -> Exp v -> Exp (Next v) -> Exp v
   App :: [Exp v]  -> Exp v
-  Con :: String -> Exp v
+  Con :: Constant -> Exp v
   V :: v -> Exp v
   deriving (Eq, Functor,Show)
+
+pattern Symb :: forall v. String -> Exp v
+pattern Symb x = Con (Symbol x)
 
 app :: Exp v -> Exp v -> Exp v
 app t u = App [t,u]
@@ -53,7 +59,7 @@ a --> b = Pi ("_",Zero) a (There <$> b)
 a ⊸ b = Pi ("_",One) a (There <$> b)
 
 foral :: String -> (Exp (Next v) -> Exp (Next v)) -> Exp v
-foral nm f = Pi (nm,Zero) (Con "∗") (f (V Here))
+foral nm f = Pi (nm,Zero) (Con (Symbol "∗")) (f (V Here))
 
 
 instance Pretty (Exp String) where
@@ -68,7 +74,9 @@ prettyE ctx t0 = case t0 of
   (V x) -> text x
   (App _) -> pp 4 (\p -> hang 2 (p u) ((sep . map (prettyE 5)) vs))
     where (u:vs) = fnArgs t0
-  (Con k) -> text k
+  (Con (Symbol k)) -> text k
+  (Con (String k)) -> text (show k)
+  (Con (Int k)) -> text (show k)
   (Pi (nm,mult) dom body) -> case sequenceA body of
       There body' -> (prettyE 2 dom) <+> arrow </> prettyE 3 body'
       Here -> withVar nm $ \nm' -> parens (text nm' <+> text ":" <+> pretty dom) <+> arrow </> prettyE 3 (f nm' <$> body)

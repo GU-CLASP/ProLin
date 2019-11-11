@@ -17,10 +17,10 @@ import Data.Proxy
 import Types (Zero)
 
 instance Encode String where
-  encode s = Con s
+  encode s = Con (String s)
 
 instance Encode Int where
-  encode s = Con (show s) -- ugh
+  encode s = Con (String (show s)) -- ugh
 
 class Encode a where
   encode :: a -> Exp Zero
@@ -41,7 +41,7 @@ instance (Encode' f, Encode' g) => Encode' (f :+: g) where
   encode' (R1 x) = encode' x
 
 instance (KnownSymbol consName,EncodeMany f) => Encode' (C1 ('MetaCons consName 'PrefixI isRecord) f) where
-  encode' (M1 x) = Con (symbolVal (Proxy @consName)) `apps` encodeMany x
+  encode' (M1 x) = Con (Symbol (symbolVal (Proxy @consName))) `apps` encodeMany x
 
 instance (EncodeMany f, EncodeMany g) => EncodeMany (f :*: g) where
   encodeMany  (l :*: r) = encodeMany l ++ encodeMany r

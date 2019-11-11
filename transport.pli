@@ -1,4 +1,4 @@
 -- rules
-greeting : Message Thanks -o Output YouReWelcomePunyHuman
+greeting : Message Thanks -o Output "you are welcome, puny human"
 
 

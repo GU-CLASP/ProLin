@@ -127,7 +127,7 @@ applyRec w e (TCons (x,One) f fs) metaTypes ctx
 type AnyRule = Rule Zero
 
 applyRule :: String -> AnyRule -> R -> [R]
-applyRule ruleName r (R wN metas avail) = ruleApplies wN False (Con ruleName) (\case <$> r) metas avail
+applyRule ruleName r (R wN metas avail) = ruleApplies wN False (Symb ruleName) (\case <$> r) metas avail
 
 applyAnyRule :: [(String,AnyRule)] -> [R] -> [R]
 applyAnyRule rs ctxs = do
@@ -148,8 +148,8 @@ prettyR  (R ctxNames m a)
 
 exampleRules :: [Exp Zero]
 exampleRules =
-  [foral "x" $ \x -> (Con "A" @@ x)  ⊸ (Con "B" @@ (Con "S" @@ x)) -- ∀x. A x ⊸ B (S x)
-  ,foral "x" $ \x -> (Con "B" @@ x)  ⊸ (Con "A" @@ (Con "S" @@ x)) -- ∀x. B x ⊸ A (S x)
+  [foral "x" $ \x -> (Symb "A" @@ x)  ⊸ (Symb "B" @@ (Symb "S" @@ x)) -- ∀x. A x ⊸ B (S x)
+  ,foral "x" $ \x -> (Symb "B" @@ x)  ⊸ (Symb "A" @@ (Symb "S" @@ x)) -- ∀x. B x ⊸ A (S x)
   ]
 
 
@@ -179,4 +179,4 @@ pullOutputFromContext r = case applyRule "pull" pullRule r of
   (R wN metas ((_pullTerm,msg):avails):_) -> case isClosed msg of
     Nothing -> error "manager attempted to output a message with free variables."
     Just msg' -> Just (R wN metas avails,msg')
-  where pullRule = foral "m" $ \msg -> (Con "Output" @@ msg) ⊸ msg
+  where pullRule = foral "m" $ \msg -> (Symb "Output" @@ msg) ⊸ msg

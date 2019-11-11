@@ -88,7 +88,7 @@ unify2 s t = unify @v @w [(:=:) @v @w @Zero (Right <$> s)  (Right <$> t)]
 Just test0 = unify2 @String @() (V (Left "a")) (V (Left "b"))
 Just test1 = unify2 (V (Left "a")) (V (Right "x"))
 Just test2 = unify2 (V (Left "a")) (App [V (Left "x"), V (Right "y")])
-Just test3 = unify2 (App [(Con "arst"),(V (Left "a"))]) (App [V (Left "b"), V (Right "y")])
+Just test3 = unify2 (App [(Symb "arst"),(V (Left "a"))]) (App [V (Left "b"), V (Right "y")])
 Just test4 = unify2 (App [(V (Right "arst")),(V (Left "a")),V (Left "a")]) (App [V (Left "b"), V (Left "c"), V (Left "b")])
 
 -- >>> putStrLn $ showSubs ["a","b","c"] test4
