@@ -1,1 +1,1 @@
-((nil . ((dante-methods . (nix)))))
+((nil . ((dante-methods . (new-nix)))))

@@ -1,3 +1,6 @@
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE TypeSynonymInstances #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE RecordWildCards #-}
 
 
@@ -7,6 +10,8 @@ import Text.ParserCombinators.Parsek
 import Data.Char
 import Data.Function
 import Data.Maybe
+import HaskToProlin
+import GHC.Generics
 
 type P = Parser Char
 
@@ -33,16 +38,19 @@ thanks = do
   _ <- string "thank"
   return ()
 
-data Clarification = To String | From String | With Int deriving Show
+data Clarification = To String | From String | With Int deriving (Show,Generic)
+instance Encode Clarification
 
 clarification :: Parser Char Clarification
 clarification =  (To <$> (string "to " >> place))
               <|> (From <$> (string "from " >> place))
               <|> (With <$> (vehicle >> munch1 (not . isDigit) >> integer))
 
+instance Encode Request
 data Request = Request {reqTo :: Maybe String
                        ,reqFrom :: Maybe String
-                       ,reqWith :: Maybe Int} deriving Show
+                       ,reqWith :: Maybe Int} deriving (Show,Generic)
+
 emptyRequest :: Request
 emptyRequest = Request Nothing Nothing Nothing
 addToRequest :: Clarification -> Request -> Request
@@ -61,7 +69,8 @@ request = do
   cs <- sepBy1 clarification anything
   return (makeRequest cs)
 
-data Message = Thanks | Req Request | Clarify Clarification deriving Show
+data Message = Thanks | Req Request | Clarify Clarification deriving (Show,Generic)
+instance Encode Message
 
 reqScore :: Request -> Int
 reqScore (Request a b c) = length $ filter id $ [isJust a, isJust b, isJust c]
@@ -100,6 +109,9 @@ parseTest msg = bests <$> parse message allResults (map toLower msg)
 -- Right (Req (Request {reqTo = Nothing, reqFrom = Just "science park", reqWith = Just 55}))
 
 
--- Local Variables:
--- dante-methods: (styx)
--- End:
+errToMaybe :: Either a b -> Maybe b
+errToMaybe (Left _) = Nothing
+errToMaybe (Right a) = Just a
+
+-- >>> encode (errToMaybe (parseTest "Hey! When is the next fucking bus 55 from Science park, you stupid machine?"))
+-- App [Con "Just",App [Con "Req",App [Con "Request",App [Con "Nothing"],App [Con "Just",Con "science park"],App [Con "Just",Con "55"]]]]
