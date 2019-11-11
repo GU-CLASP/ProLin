@@ -27,7 +27,9 @@ data Vector v a where
 
 type a + b = Either a b
 
+both :: (t1 -> b) -> (t1, t1) -> (b, b)
 both f = f ⊗ f
+
 (⊗) :: (t1 -> a) -> (t2 -> b) -> (t1, t2) -> (a, b)
 (f ⊗ g) (a,b) = (f a, g b)
 
@@ -88,6 +90,9 @@ instance Enumerable v => Enumerable (Next v) where
 -- There (There (There Here))
 
 data Zero
+exNihilo :: Zero -> a
+exNihilo = \case
+
 
 instance Enumerable Zero where
   enumAll = []

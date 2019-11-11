@@ -14,6 +14,7 @@ import GHC.Generics
 import GHC.TypeLits
 import Expr
 import Data.Proxy
+import Types (Zero)
 
 instance Encode String where
   encode s = Con s
@@ -22,16 +23,16 @@ instance Encode Int where
   encode s = Con (show s) -- ugh
 
 class Encode a where
-  encode :: a -> Exp ()
-  default encode :: (Generic a, Encode' (Rep a)) => a -> Exp ()
+  encode :: a -> Exp Zero
+  default encode :: (Generic a, Encode' (Rep a)) => a -> Exp Zero
   encode x = encode' (from x)
 
 
 class Encode' f where
-  encode' :: f p -> Exp ()
+  encode' :: f p -> Exp Zero
 
 class EncodeMany f where
-  encodeMany :: f p -> [Exp ()]
+  encodeMany :: f p -> [Exp Zero]
 
 instance Encode' x => Encode' (D1 meta x) where
   encode' (M1 x) = encode' x

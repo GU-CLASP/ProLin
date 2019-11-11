@@ -167,3 +167,6 @@ twice f = f . f
 -- >>> test
 -- [metas  lins ruleApp : A (S (S Z))]
 
+pushInContext :: (Exp Zero,Exp Zero) -> R -> R
+pushInContext x (R wN metas ctx) = R wN metas (both (exNihilo <$>) x:ctx)
+

@@ -40,13 +40,13 @@ loadAndPrepareModule fname = do
     Right (cx,rs) -> (prepareContext cx,rs)
 
 -- | run fuel lookupName initialState rules
-run :: Int -> R -> [(String, AnyRule)] -> IO ()
-run 0  _r _rs = putStrLn "DONE (no fuel)"
+run :: Int -> R -> [(String, AnyRule)] -> IO Bool
+run 0  _r _rs = return False
 run n  r rs = do
   putStrLn "-------------------"
   putStrLn "State:"
   print r
   case applyAnyRule rs [r] of
-    [] -> putStrLn "No rule applies."
+    [] -> return True
     (r':_) -> run (n-1)  r' rs
 

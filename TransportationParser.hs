@@ -4,7 +4,7 @@
 {-# LANGUAGE RecordWildCards #-}
 
 
-module TransportationParser where
+module TransportationParser (parseTop) where
 
 import Text.ParserCombinators.Parsek
 import Data.Char
@@ -95,8 +95,9 @@ message = (Req <$> request) <|>
           (pure Thanks <* thanks) <|>
           (Clarify <$> (anything *> clarification) <* anything)
 
-parseTest :: [Char] -> ParseResult Char Message
-parseTest msg = bests <$> parse message allResults (map toLower msg) 
+parseTop :: [Char] -> ParseResult Char Message
+parseTop msg = bests <$> parse message allResults (map toLower msg) 
+
 
 -- >>> parseTest "thank you!!!"
 -- Right Thanks
