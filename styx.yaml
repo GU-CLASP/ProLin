@@ -14,4 +14,4 @@ nix-deps:
 source-deps:
   pretty-compact:
     location: https://github.com/jyp/prettiest.git
-    revision: 844c00638e01acaec8e31aacbc8918f79d51caff
+    revision: 3ef1954f045b026c9842cac51549203370088120
