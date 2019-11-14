@@ -1,4 +1,18 @@
 -- rules
-greeting : Message Thanks -o Output "you are welcome, puny human"
+greeting : Message Thanks -o Output "you are welcome, puny human";
+receive : (to : String) -> (from : String) -> (with : String) ->
+          Message (Req (Request to from with)) -o [d' :: Destination to; s' :: Source from; m' :: Means with; s' :: Started];
+
+receiveDestination : (dst : String) -> Message (Clarify (To dst)) -o Destination Nothing -o Destination (Just dst);
+
+crDestination : Started -o Destination Nothing -o [msg :: Output "where do you want to go to?"; d' :: Destination Nothing];
+crSource : Started -o Source Nothing -o [msg :: Output "Where do you want to start from?"; d' :: Source Nothing];
+crMeans : Started -o Means Nothing -o [msg :: Output "What bus or tram are you interested in?"; d' :: Means Nothing];
+
+gogogo : (to from with : String) ->
+         Destination (Just to) -o Source (Just from) -o Means (Just with) -o Output "I know exactly what you want. But I won't tell youuuu!"
+
+-- initial state
+
 
 
