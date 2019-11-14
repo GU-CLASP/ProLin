@@ -117,6 +117,7 @@ applyRec :: Eq w => Enumerable v
          -> Avail v w
          -> R
 applyRec w _ TNil metaTypes ctx = R w metaTypes ctx
+applyRec w e (TCons (x,Zero) f fs) metaTypes ctx = error "ZERO"
 applyRec w e (TCons (x,One) f fs) metaTypes ctx
   = applyRec w' (wkCtx <$> e)
                (pushRight <$> fs)

@@ -8,18 +8,13 @@ import TopLevel
 import Context
 import HaskToProlin
 import Expr
+import Data.Maybe (maybe)
 
-managerLoop :: R -> [(String, AnyRule)] -> IO (String, R)
-managerLoop r rs = do
-  putStrLn "-------------------"
-  putStrLn "State:"
-  print r
+extractOutput :: R -> (Maybe String,R)
+extractOutput r =
   case pullOutputFromContext r of
-    Just (r',outMsg) -> return (show outMsg,r')
-    Nothing -> case applyAnyRule rs [r] of
-      [] -> return ("Tell me more!",r) -- nothing to do any more
-      (r':_) -> managerLoop r' rs
-
+    Just (r',outMsg) -> (Just (show outMsg),r')
+    Nothing -> (Nothing,r)
 
 clientLoop :: Handle -> R -> [(String, AnyRule)] -> IO ()
 clientLoop h r rs = do
@@ -34,9 +29,10 @@ clientLoop h r rs = do
        let p' = encode p
        putStrLn ("Encoded as: " ++ show p')
        -- Push p in the context so the manager can deal with it.
-       (reply,r') <- managerLoop (pushInContext (Symb "p",Symb "Message" `app` (p')) r) rs
-       hPutStrLn h reply
-       clientLoop h r' rs
+       r' <- run 20 (pushInContext (Symb "p",Symb "Message" `app` (p')) r) rs
+       let (reply,r'') = extractOutput r'
+       hPutStrLn h (maybe "Tell me more..." id reply)
+       clientLoop h r'' rs
 
 startServer :: IO ()
 startServer =  do
