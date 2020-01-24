@@ -1,1 +1,3 @@
 - "Plans, Actions and Dialogues using Linear Logic", Lucas Dixon, Alan Smaill, Tracy Tsang
+  https://dream.inf.ed.ac.uk/projects/dialoguell/dialoguell.pdf
+
