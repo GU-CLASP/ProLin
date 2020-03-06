@@ -1,0 +1,68 @@
+* Typing considerations
+** Propositions
+- Kos ::
+- TTR :: 
+- ProLinKos :: Prop
+** Questions
+- Kos ::
+- TTR ::
+- ProLinKos :: 
+
+** FACTS
+- Kos :: facts are propositions
+- TTR :: 
+- ProLinKos :: 
+** QUD
+- Kos :: questions with a special order (‘conversational precedency’,
+  MaxQUD) and potentially co-dependent
+- TTR ::
+- ProLinKos :: 
+** MOVES (and LATEST-MOVE)
+- Kos :: locutionary propostions: proposition + linguistic sign (speech act?)
+- TTR ::
+- ProLinKos ::
+* Conversational rules
+** Turn-taking (21)
+it seems that this can be encoded in other rules
+*** no turn change
+*** turn-change
+*** turnholder-underspecified
+** Greeting and parting (20, 22, 25, 26)
+*** greeting
+*** countergreeting
+*** parting
+*** counterparting
+*** disengaging
+** Asking, asserting, answering, accepting
+*** Free speech
+*** Asking
+**** Kos
+#+begin_example
+LatestMove.Cont = Ask(A,q): IllocProp
+1. A: push q onto QUD; release turn
+2. B: push q onto QUD; take turn; make q-specific–utterance
+#+end_example
+**** ProLinKos
+*** Asserting
+**** Kos
+#+begin_example
+1. LatestMove.Cont = Assert(A, p): IllocProp
+2. A: push p? onto QUD, release turn
+3. B: push p? onto QUD, take turn; Option 1: Discuss p?,
+   Option 2: Accept p
+#+end_example
+*** Assertion checking and confirming
+*** Answering?
+
+*** Accepting 
+**** Kos
+#+begin_example
+1. LatestMove.Cont = Accept(B,p) : IllocProp
+2. B: increment FACTS with p; pop p? from QUD;
+3. A: increment FACTS with p; pop p? from QUD;
+#+end_example
+*** Fact update / QUD downdate
+** Grounding and CRification
+** NSUs
+
+
