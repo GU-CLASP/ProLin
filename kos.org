@@ -64,5 +64,8 @@ LatestMove.Cont = Ask(A,q): IllocProp
 *** Fact update / QUD downdate
 ** Grounding and CRification
 ** NSUs
-
+* Would be nice to test/implement
+- Presuppositions (given that X / since we know that X). X should be added into facts. 
+- Question accomodation (A: when? B: as cheap as possible). ?x.cheapest(x) should be added to QUD. 
+- Enthymemes (A: why? B: because it is (...) )
 
