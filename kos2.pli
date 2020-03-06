@@ -1,14 +1,27 @@
 -- rules
-qudPush : (a:Type) -> (x:a -> Prop) -> LatestMove (Ask x)
-   -o [c1 :: QUD x; c2 :: TTake];
-answer :  (a : Type) -> (answer:a) -> (q:a->Prop) -> (proof:q answer)
-   -o QUD q -o Agenda (Assert (q answer));
-fulfillAgenda : (x:Type) -> (Agenda x) -o TTake -o TRelease;
-assertQudInc : (x:Prop) -> LatestMove (Assert x) -o [c1 :: QUD x; c2 :: TTake]; -- why not ?x 
-acknowledge : (x:Prop) -> QUD x -o Agenda (ACK);
-train : (x:Object) -> (y:Name) -> (pred:Object->Name->Prop) -> QUD (pred x y) -o Train x y;
---greeting : TRelease -o UserLM NoMoves -> QUD Empty -> [f1 :: TTake; f2 :: Agenda (Greeting)];
+-- Note: inputs come as "LatestMove"
 
+qudPush : (a:Type) -> (x:a -> Prop) -> LatestMove (Ask x)
+   -o [c1 :: QUD (Q a x)];
+processAnswer :  (a : Type) -> (answer:a) -> (q:a->Prop) -> LatestMove (Answer (Q a q) answer p)
+   -o QUD (Q a q) -o [newFact :: (q a); _ :: Output (Ack ??? )];
+produceAnswer :  (a : Type) -> (answer:a) -> (q:a->Prop) -> (proof:q answer)
+   -o QUD (Q a q) -o [_ :: Output (Answer (Q a p) answer proof)];
+-- fulfillAgenda : (x:Move) -> (Agenda x) -o TTake -o [r :: TRelease; o :: Output x];
+assertQudInc1 : (x:Prop) -> LatestMove (Assert x) -o    [c2 :: TTake; isFact :: x; _ :: Output (Ack x)]; -- take the assertion as fact immediately
+assertQudInc2 : (x:Prop) -> LatestMove (Assert x) -o    [c2 :: TTake; QUD (Q Bool (\a -> if a then x else not x)); _ :: Output (Confirmation x)]; -- confirmation request
+train : (x:Object) -> (y:Name) -> (pred:Object->Name->Prop) -> QUD (pred x y) -o Train x y;
+--greeting : TRelease -o UserLM NoMoves -> QUD Empty -> [f1 :: TTake; f2 :: Output Greeting];
+
+-- Bool :: Type
+-- True :: Prop
+-- Q :: (a : Type) -o (p : A -o Prop) -o Question; (This interpreted as does it exist x:A such that p(x))
+-- Answer :: (q :: Question) -> (x : q.a) -> q.p x -> Move
+-- Ask :: (a -> Prop) -o Move
+-- QUD :: Question -o Type
+-- LatestMove :: Move -o Type
+-- Agenda ::   Move -o Type
+-- Assert :: Prop -o Move
 
 -- context
 is :: Object -> Name -> Prop;
