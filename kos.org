@@ -1,33 +1,34 @@
 * Typing considerations
 ** Propositions
 - Kos ::
-- TTR :: 
+  - Prop = [sit : Record; sit-type : RecordType]
+  - propostion p=[sit = s0, sit-type = ST0] is true iff s0 : ST0
+  
 - ProLinKos :: Prop
 ** Questions
-- Kos ::
-- TTR ::
-- ProLinKos :: 
+- Kos :: function that maps a record into a proposition (e.g. 3.39)
+- ProLinKos :: follows AixDial
+** Answers
+- Kos :: ?
+- ProLinKos :: follows AixDial
 
 ** FACTS
 - Kos :: facts are propositions
-- TTR :: 
 - ProLinKos :: 
 ** QUD
 - Kos :: questions with a special order (‘conversational precedency’,
   MaxQUD) and potentially co-dependent
-- TTR ::
 - ProLinKos :: 
 ** MOVES (and LATEST-MOVE)
 - Kos :: locutionary propostions: proposition + linguistic sign (speech act?)
-- TTR ::
 - ProLinKos ::
 * Conversational rules
-** Turn-taking (21)
+** Turn-taking (4.21)
 it seems that this can be encoded in other rules
 *** no turn change
 *** turn-change
 *** turnholder-underspecified
-** Greeting and parting (20, 22, 25, 26)
+** Greeting and parting (4.20, 4.22, 4.25, 4.26)
 *** greeting
 *** countergreeting
 *** parting
