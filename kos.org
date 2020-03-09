@@ -87,7 +87,15 @@ LatestMove.Cont = Ask(A,q): IllocProp
 1. A: push q onto QUD; release turn
 2. B: push q onto QUD; take turn; make q-specific–utterance
 #+end_example
+A and B might have different sets of QUDs
 **** ProLinKos
+
+qudPush : HaveTurn -o NextMove (Ask q) -o [c1 :: QUD (Q a x); _ : Utter(Ask q)];
+
+hearQuestion : Hear (Ask q) -o [c1 :: QUD q; _ : HaveTurn];
+produceAnswer : HaveTurn -o (a : Type) -> (answer:a) -> (q:a->Prop) -> (proof:q answer)
+   -o QUD (Q a q) -o [_ :: Utter (Answer (Q a p) answer proof)];
+
 *** Asserting
 **** Kos
 #+begin_example
