@@ -57,14 +57,16 @@
   2. QUD NeedReturnFlight whenDoYouWantToComeBack
      - whenDoYouWantToComeBack = Q Date (\x -> wantToComeBack(you,x))
  
-              
+       
 ** MOVES (and LATEST-MOVE)
 - Kos :: locutionary propostions: proposition + linguistic sign (speech act?)
 - ProLinKos ::
-    Move :: Type
-    Ask :: Question -> Move
-    Assert :: Prop -> Move
-    AnswerMove :: Answer -> Move
+  #+BEGIN_EXAMPLE
+  Move :: Type
+  Ask :: Question -> Move
+  Assert :: Prop -> Move
+  AnswerMove :: Answer -> Move
+  #+END_EXAMPLE
 
 * Conversational rules
 ** Turn-taking (4.21)
@@ -89,11 +91,12 @@ LatestMove.Cont = Ask(A,q): IllocProp
 #+end_example
 A and B might have different sets of QUDs
 **** ProLinKos
-
-1. qudPush : HaveTurn -o NextMove (Ask q) -o [c1 :: QUD (Q a x); _ : Utter(Ask q)];
-2. hearQuestion : Hear (Ask q) -o [c1 :: QUD q; _ : HaveTurn];
-3. produceAnswer : HaveTurn -o (a : Type) -> (answer:a) -> (q:a->Prop) -> (proof:q answer)
+#+BEGIN_EXAMPLE
+qudPush : HaveTurn -o NextMove (Ask q) -o [c1 :: QUD (Q a x); _ : Utter(Ask q)];
+hearQuestion : Hear (Ask q) -o [c1 :: QUD q; _ : HaveTurn];
+produceAnswer : HaveTurn -o (a : Type) -> (answer:a) -> (q:a->Prop) -> (proof:q answer)
    -o QUD (Q a q) -o [_ :: Utter (Answer (Q a p) answer proof)];
+#+END_EXAMPLE
 
 *** Asserting
 **** Kos
