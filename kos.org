@@ -41,21 +41,21 @@
 - ProLinKos :: follows AixDial
   For an answer of (Q A P) we need two things: a:A and p : P (a).
   1. Answer = [ q :: Question; a :: q.A; p :: q.P a]
-  2. Exmaple = [q = whereDoYouLive, a = Paris; p = ... proof ... ; ]
+  2. Example = [q = whereDoYouLive, a = Paris; p = ... proof ... ; ]
 ** QUD
 - Kos :: questions with a special order (‘conversational precedency’,
   MaxQUD) and potentially co-dependent
-- ProLinKos :: We currently have at most one QUD. If we wanted many,
-               we'd like to have some dependencies between them. One
-               way is to make the QUD dependend on some proposition
-               being a fact or not.
+- ProLinKos ::
+  We currently have at most one QUD. If we wanted many, we'd like to
+  have some dependencies between them. One way is to make the QUD
+  dependend on some proposition being a fact or not.
 
-               So, QUD :: Prop -> Question -> Type.
+  So, QUD :: Prop -> Question -> Type.
 
-               Example:
-                 1. QUD True (Q Bool (\x -> if x then NeedReturnFlight else NoNeedReturnFlight)
-                 2. QUD NeedReturnFlight whenDoYouWantToComeBack
-                    whenDoYouWantToComeBack = Q Date (\x -> wantToComeBack(you,x))
+  Example:
+  1. QUD True (Q Bool (\x -> if x then NeedReturnFlight else NoNeedReturnFlight)
+  2. QUD NeedReturnFlight whenDoYouWantToComeBack
+     - whenDoYouWantToComeBack = Q Date (\x -> wantToComeBack(you,x))
  
               
 ** MOVES (and LATEST-MOVE)
@@ -90,10 +90,9 @@ LatestMove.Cont = Ask(A,q): IllocProp
 A and B might have different sets of QUDs
 **** ProLinKos
 
-qudPush : HaveTurn -o NextMove (Ask q) -o [c1 :: QUD (Q a x); _ : Utter(Ask q)];
-
-hearQuestion : Hear (Ask q) -o [c1 :: QUD q; _ : HaveTurn];
-produceAnswer : HaveTurn -o (a : Type) -> (answer:a) -> (q:a->Prop) -> (proof:q answer)
+1. qudPush : HaveTurn -o NextMove (Ask q) -o [c1 :: QUD (Q a x); _ : Utter(Ask q)];
+2. hearQuestion : Hear (Ask q) -o [c1 :: QUD q; _ : HaveTurn];
+3. produceAnswer : HaveTurn -o (a : Type) -> (answer:a) -> (q:a->Prop) -> (proof:q answer)
    -o QUD (Q a q) -o [_ :: Utter (Answer (Q a p) answer proof)];
 
 *** Asserting
@@ -106,7 +105,6 @@ produceAnswer : HaveTurn -o (a : Type) -> (answer:a) -> (q:a->Prop) -> (proof:q 
 #+end_example
 *** Assertion checking and confirming
 *** Answering?
-
 *** Accepting 
 **** Kos
 #+begin_example
