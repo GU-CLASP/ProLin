@@ -1,27 +1,71 @@
 * Typing considerations
+** FACTS
+- Kos ::
+- ProLinKos ::
+  - A fact is something that was agreed upon.
+  - In our logic, we represent facts as propositions which have a
+    proof. For this to work need that we have a proof exactly when the
+    participants agree on a proposition.
+
+    This requires in particular that the participants pre-agree on the
+    rules of the logic! Indeed, Let us assume that we have
+    1. p : A -> B
+    2. q : A
+
+    Then we also have p(q) : B. Therefore, according to our defintion,
+    p(q) is witnessing that the participants agreed on B, even though
+    they never needed to discuss that (they only discussed A and A ->
+    B). (ACCORDING TO TTR! But perhaps we don't need this for ProLin,
+    because the unification isn't creating that complicated proofs.)
+
 ** Propositions
 - Kos ::
   - Prop = [sit : Record; sit-type : RecordType]
   - propostion p=[sit = s0, sit-type = ST0] is true iff s0 : ST0
-  
-- ProLinKos :: Prop
+
+- ProLinKos ::
+  - Prop = Prop
+  - A proposition A : Prop is agreed upon iff. there is a proof t of type A.
 ** Questions
 - Kos :: function that maps a record into a proposition (e.g. 3.39)
 - ProLinKos :: follows AixDial
+  We have a constructor:
+  1. Question :: Type
+  2. Q :: (A : Type) -> (P : A -> Prop) -> Question
+  Or even better
+  1. Question = [A :: Type; P :: A -> Prop]
+  2. Example: whereDoYouLive = [A = City, P = λx. live_in(x,you)] (, means "where do you live?")
+
 ** Answers
 - Kos :: ?
 - ProLinKos :: follows AixDial
-
-** FACTS
-- Kos :: facts are propositions
-- ProLinKos :: 
+  For an answer of (Q A P) we need two things: a:A and p : P (a).
+  1. Answer = [ q :: Question; a :: q.A; p :: q.P a]
+  2. Exmaple = [q = whereDoYouLive, a = Paris; p = ... proof ... ; ]
 ** QUD
 - Kos :: questions with a special order (‘conversational precedency’,
   MaxQUD) and potentially co-dependent
-- ProLinKos :: 
+- ProLinKos :: We currently have at most one QUD. If we wanted many,
+               we'd like to have some dependencies between them. One
+               way is to make the QUD dependend on some proposition
+               being a fact or not.
+
+               So, QUD :: Prop -> Question -> Type.
+
+               Example:
+                 1. QUD True (Q Bool (\x -> if x then NeedReturnFlight else NoNeedReturnFlight)
+                 2. QUD NeedReturnFlight whenDoYouWantToComeBack
+                    whenDoYouWantToComeBack = Q Date (\x -> wantToComeBack(you,x))
+ 
+              
 ** MOVES (and LATEST-MOVE)
 - Kos :: locutionary propostions: proposition + linguistic sign (speech act?)
 - ProLinKos ::
+    Move :: Type
+    Ask :: Question -> Move
+    Assert :: Prop -> Move
+    AnswerMove :: Answer -> Move
+
 * Conversational rules
 ** Turn-taking (4.21)
 it seems that this can be encoded in other rules
