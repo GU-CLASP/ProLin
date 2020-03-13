@@ -122,4 +122,72 @@ produceAnswer : HaveTurn -o (a : Type) -> (answer:a) -> (q:a->Prop) -> (proof:q 
 - Presuppositions (given that X / since we know that X). X should be added into facts. 
 - Question accomodation (A: when? B: as cheap as possible). ?x.cheapest(x) should be added to QUD. 
 - Enthymemes (A: why? B: because it is (...) )
+* Side sequences
+
+** Examples
+*** Ex1
+A: Do you like shopping?
+B: Alone or with someone?
+A: With someone.
+B: Yes. 
+
+*** Ex2
+
+"Where should we go tonight? What are the restaurants in the area?"
+
+*** Ex3
+
+-U- Hi, what's next from Götaplatsen? 
+-S- What bus or tram are you interested in? 
+-U- Bus 18 to Johanneberg. 
+-S- It is in 5 minutes. 
+
+*** Ex4
+
+A: Is Jack working on the project?
+B: Who is Jack?
+
+*** Ex5
+
+A: Do you want to go to the UK?
+B: Do I need a visa?
+A: Yes you do.
+B: No, I'll go somewhere else then.
+
+** Theory
+- What happens here is that we embed a q/a pair before being able to
+  answer the 1st question.
+
+- One possible way to explain this is that the answer to the original
+  question is too long; so the clarification question allows to narrow
+  down the final answer. This is very clean in Ex3. We could list all
+  the trams/busses/etc. currently on the road, but that is too much
+  information, and so we narrow down until we can give a sensibly
+  concise answer. Likewise Ex2. For Ex1; this works too, but it may
+  also be explained as a way to hide information or simply as a delay
+  question (out loud thinking). For Ex4. we could list all people
+  working on the project (and that would answer the
+  question). However, another possible answer would be "I don't know",
+  and so the theory fails here. (Ex5: "If I need a visa then I want;
+  otherwise no." would be ok, but not necessary.)
+
+  If the long answer is in the form (A ∧ C ∧ D ∧ E ∧ F) and we have
+  question [X:Type; P:X->Prop], such that X is a small set and P(x) is
+  incompatible with several cases, then asking this question makes
+  sense.
+
+  Example: If the long answer is in the form (if c then A else B), then we can ask
+  (x=Bool; P = \x -> if c then A else B); then the followup answer is either A or B.
+
+- Other theory for Ex4. The question is breaking presuppositions. A
+  thinks that B knows about Jack. But B doesnt, and dialogue
+  conventions are that entities should be in the common ground, so he
+  is making that clear. 
+
+  In the Vasttrafik example, it could be if the user is asking about
+  an unknown bus stop. The system should try to figure out what the
+  user wants, instead of saying that there is no bus to the stop in
+  question.
+
+
 
