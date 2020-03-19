@@ -1,7 +1,7 @@
 -- rules
 greeting : Message Thanks -o Output "you are welcome, puny human";
 
-receive : (to : String) -> (from : String) -> (with : String) ->
+receive : (to : Maybe String) -> (from : Maybe String) -> (with : Maybe String) ->
           Message (Req (Request to from with)) -o [d' :: Destination to; s' :: Source from; m' :: Means with; s' :: Started];
 
 receiveDestination : (dst : String) -> Message (Clarify (To dst)) -o Destination Nothing -o Destination (Just dst);

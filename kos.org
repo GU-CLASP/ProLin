@@ -197,15 +197,48 @@ B: No, I'll go somewhere else then.
 - QUD precondition [A : Type; P : A → Type]
 - System tries to answer that but cannot -->
   - Ask side question: [B : Type; Q : B → Type]
-  - Prepare plan:      (x:B) -> (q : P x) -> Do (Answer (f x) (proof x q))
+  # - Prepare plan:      (x:B) -> (q : P x) -> Do (Answer (f x) (proof x q))
   - f : B -> A, which maps answers of the side question answers of the originial question.
 
-Example:
+*** Example, Shopping
 
   original question = Q Bool (λx.  if x then      likeShopping(participantB,environment) 
                                         else  not likeShopping(participantB,environment))
-  sideQuestion = Q Bool (λx.  if x then environment = withSomeOne else environment = alone)
+  data InWhatEnvironment = Alone | WithSomeOne
+  sideQuestion = Q InWhatEnvironment (λx. environment = x)
   plan is specified with f, and proof:
-    - f = λx-> if x then True else False
-  
+    - f = λx-> case x of WithSomeOne -> True; Alone -> False
+    - P becomes likeShopping(participantB,WithSomeOne)
+           or   likeShopping(participantB,Alone)
+
+*** Example, Vasttrafik
+
+receive : (to : String) -> (from : String) -> (with : String) ->
+          Message (Req (RequestTo to)) -o -- "I want to go to Johanneberg"
+          QUD (Q ([to' : String; from' : String; with' : String; when : String])
+                  (λa. BusTable to from with when ∧ to = to' ∧ ... ))
+
+Note that to/from/with are metavariables that can be unified later on.
+
+Unique q is a oracle that checks if there is a unique answer to the question.
+
+QUD q -o (p : Unique q) -> Answer (Q A P) p
+
+If we try to expand it:
+
+using (~>) to mean a unique element of that type
+
+(A : Type) -> (P : A -> Type) -> QUD (Q A P) -o (x : A) ~> (p : P x) -> AnswerMove (Q A P) (Answer A P x p)
+
+ (to actually run the rule we need that x is a ground term (there is no metavariables in its value))
+
+If the above rule fails, then you need to initiate a side question:
+
+(to : String) -> (from : String) -> (with : String) !~>  
+QUD (Q ([to' : String; from' : String; with' : String; when : String])
+                  (λa. BusTable to from with when ∧ to = to' ∧ ... ))  -- has to be there but can be released
+  ->o Ask (Q String (λx -> with = x)) -- "What bus/tram are you interested in"
+
+where !~> indicates that the rule should fire only when the argument is NOT ground term
+ (->o) is the linear arrow which releases its argument.
 
