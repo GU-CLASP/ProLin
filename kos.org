@@ -154,7 +154,7 @@ B: Do I need a visa?
 A: Yes you do.
 B: No, I'll go somewhere else then.
 
-** Theory
+** Informal Theory
 - What happens here is that we embed a q/a pair before being able to
   answer the 1st question.
 
@@ -190,4 +190,22 @@ B: No, I'll go somewhere else then.
   question.
 
 
+
+** Formalisation of side sequences
+
+
+- QUD precondition [A : Type; P : A → Type]
+- System tries to answer that but cannot -->
+  - Ask side question: [B : Type; Q : B → Type]
+  - Prepare plan:      (x:B) -> (q : P x) -> Do (Answer (f x) (proof x q))
+  - f : B -> A, which maps answers of the side question answers of the originial question.
+
+Example:
+
+  original question = Q Bool (λx.  if x then      likeShopping(participantB,environment) 
+                                        else  not likeShopping(participantB,environment))
+  sideQuestion = Q Bool (λx.  if x then environment = withSomeOne else environment = alone)
+  plan is specified with f, and proof:
+    - f = λx-> if x then True else False
+  
 

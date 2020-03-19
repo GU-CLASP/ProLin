@@ -3,17 +3,31 @@
 -U- Thank you!
 -S- You're welcome. 
 
+
+
 -U- Hi, what's next from Götaplatsen? 
 -S- What bus or tram are you interested in? 
 -U- Bus 18 to Johanneberg. 
 -S- It is in 5 minutes. 
+
+
+
+-U- Hi, what's next from Lindholmen?
+-S- Do you want to go towards Johanneberg or to Eketrägatan?
+-U- Johanneberg.
+-S- It's in 2 minutes.
+(Assuming there is just one line here.)
+
+-U- Hi, what's next from Lindholmen?
+-S- Towards Johanneberg the bus is in 5 minutes; in the other direction it's in 15 minutes.
+
 
 -U- Hi, what's next from Götaplatsen?
 -S- What bus or tram are you interested in? 
 -U- Bus 18.
 -S- To Johanneberg or Skälltorpsvägen?
 -U- To Johanneberg.
--S- It's in 5 minutes. 
+-S- It's in 5 minutes.
 
 -U- Hi, what's next from Götaplatsen?
 -S- What bus or tram are you interested in? 
