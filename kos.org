@@ -214,9 +214,11 @@ B: No, I'll go somewhere else then.
 *** Example, Vasttrafik
 
 receive : (to : String) -> (from : String) -> (with : String) ->
-          Message (Req (RequestTo to)) -o -- "I want to go to Johanneberg"
+          Message (Req (RequestTo to)) -o
+              -- "I want to go to Johanneberg"
+              -- "How can one go to Johanneberg?"
           QUD (Q ([to' : String; from' : String; with' : String; when : String])
-                  (λa. BusTable to from with when ∧ to = to' ∧ ... ))
+                  (λa. BusTable to from with when ∧ to = to' ∧ from = from' ∧ with = with' ))
 
 Note that to/from/with are metavariables that can be unified later on.
 
