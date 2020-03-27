@@ -24,7 +24,8 @@ import Types as Expr
 
 
 data DoesRelease = Keep | Release deriving (Eq,Show)
-data Mult = One DoesRelease | Zero deriving (Eq,Show)
+data Unicity = AnyUnicity | Unique | NonUnique deriving (Eq,Show)
+data Mult = One DoesRelease Unicity | Zero deriving (Eq,Show)
 
 data Tele v where
   TCons :: (String,Mult) -> Exp v -> Tele (Next v) -> Tele v
@@ -57,7 +58,7 @@ t @@ u = App [t,u]
 a --> b = Pi ("_",Zero) a (There <$> b)
 
 (⊸) :: Exp v -> Exp v -> Exp v
-a ⊸ b = Pi ("_",One Keep) a (There <$> b)
+a ⊸ b = Pi ("_",One Keep AnyUnicity) a (There <$> b)
 
 foral :: String -> (Exp (Next v) -> Exp (Next v)) -> Exp v
 foral nm f = Pi (nm,Zero) (Con (Symbol "∗")) (f (V Here))
@@ -69,6 +70,12 @@ instance Pretty (Exp String) where
 fnArgs :: Exp a -> [Exp a]
 fnArgs (App (u:vs)) = fnArgs u ++ vs
 fnArgs x = [x]
+
+showUnicity :: Unicity -> [Char]
+showUnicity = \case
+  AnyUnicity -> ""
+  Unique -> "!"
+  NonUnique -> "?"
 
 prettyE :: Int -> Exp String -> D
 prettyE ctx t0 = case t0 of
@@ -82,8 +89,8 @@ prettyE ctx t0 = case t0 of
       There body' -> (prettyE 2 dom) <+> arrow </> prettyE 3 body'
       Here -> withVar nm $ \nm' -> parens (text nm' <+> text ":" <+> pretty dom) <+> arrow </> prettyE 3 (f nm' <$> body)
     where arrow = text $ case mult of
-            One Keep -> "-o"
-            One Release -> "-*"
+            One Keep    u -> showUnicity u ++ "-o"
+            One Release u -> showUnicity u ++ "-*"
             Zero -> "->"
           f nm' Here = nm'
           f _ (There x) = x
@@ -145,9 +152,9 @@ isClosed :: Exp v -> Maybe (Exp Zero)
 isClosed = traverse $ \_ -> Nothing
 
 tests :: [String]
-tests = (render . pretty) <$> [(Pi ("x",One Keep) (V "A") (V (There "B")))
+tests = (render . pretty) <$> [(Pi ("x",One Keep AnyUnicity) (V "A") (V (There "B")))
                               ,(Pi ("x",Zero) (V "A") (V (There "B")))
-                              ,(Pi ("x",One Keep) (V "A") (App [(V (There "B")),(V Here)]))
+                              ,(Pi ("x",One Keep AnyUnicity) (V "A") (App [(V (There "B")),(V Here)]))
                               ,(Pi ("x",Zero) (V "A") (App [(V (There "B")),(V Here)]))]
 
 

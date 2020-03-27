@@ -18,6 +18,7 @@ import Pretty
 import Types
 import Data.Monoid
 import Data.Either (isRight)
+import Control.Monad (guard)
 
 data Entry w = Entry w (Exp w) deriving Functor
 type Context w = [Entry w] -- things available in a context.
@@ -73,6 +74,9 @@ findFreshName n x xs | candidate `elem` xs = findFreshName (n+1) x xs
                      | otherwise = candidate
   where candidate = x ++ show n
 
+isGround :: Exp (v+w) -> Bool
+isGround = getAll . foldMap (All . isRight)
+
 -- v is the set of free variables introduced by the matching process.
 -- w are the variables of the context.
 -- metaTypes: types of the meta variables.
@@ -92,9 +96,13 @@ ruleApplies wN consumed e (Pi (vNm,Zero) dom body) metaTypes ctx =
                :[(nm,There v,wkMeta <$> t) | (nm,v,t) <- metaTypes])
              [(wkMeta <$> w,wkMeta <$> t) | (w,t) <- ctx]
   where metaNames = [nm | (nm,_,_) <- metaTypes]
-ruleApplies wN _consumed e (Pi (_v,One keep) dom body) metaTypes ctx = do
+ruleApplies wN _consumed e (Pi (_v,One keep unicity) dom body) metaTypes ctx = do
+  let solutions = consume dom ctx -- see if the domain can be satisfied in the context
   -- something is needed one time
-  ((t0,ty0),PSubs _ o s,ctx') <- consume dom ctx -- see if the domain can be satisfied in the context
+  ((t0,ty0),PSubs _ o s,ctx') <- solutions
+  case unicity of
+    AnyUnicity -> return ()
+    Unique -> guard (length solutions == 1)
   -- it does: we need to substitute the consumed thing
   let s' = \case
               Here -> t0 >>= s'' -- the variable bound by Pi (unknown to unifier). Substituted by the context element.
@@ -123,7 +131,7 @@ applyRec :: Eq w => Enumerable v
          -> R
 applyRec w _ TNil metaTypes ctx = R w metaTypes ctx
 applyRec w e (TCons (x,Zero) f fs) metaTypes ctx = error "ZERO"
-applyRec w e (TCons (x,One _) f fs) metaTypes ctx
+applyRec w e (TCons (x,One _ _) f fs) metaTypes ctx
   = applyRec w' (wkCtx <$> e)
                (pushRight <$> fs)
                [(nm,v,wkCtx <$> t) | (nm,v,t) <- metaTypes] (both (wkCtx <$>) <$>((e,f):ctx))
