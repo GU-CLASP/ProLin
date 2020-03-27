@@ -11,8 +11,10 @@ separator   Decl ";" ;
 
 Fun.      Exp1 ::= Exp2 "->" Exp1 ;
 LFun.     Exp1 ::= Exp2 "-o" Exp1 ;
+LFunR.    Exp1 ::= Exp2 "-*" Exp1 ;
 Pi.       Exp1 ::= "(" PseudoTDecl ")" "->" Exp1 ;
 LinPi.    Exp1 ::= "(" PseudoTDecl ")" "-o" Exp1 ;
+LinPiR.   Exp1 ::= "(" PseudoTDecl ")" "-*" Exp1 ;
 App.      Exp2 ::= Exp2 Exp3 ;
 Var.      Exp3 ::= AIdent ;
 StrLit.   Exp3 ::= String ;

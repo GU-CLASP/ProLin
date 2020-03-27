@@ -58,7 +58,7 @@ parseRec :: forall a. [CF.Decl] -> (String -> Either String a) -> Tele (Either S
 parseRec (CF.DeclCtx (CF.AIdent ((_line,_col),x)) e:ds) f = 
   let e' = parse e f
       t' = parseRec ds (extend f x)
-  in TCons (x,One) e' (sequenceA <$> t')
+  in TCons (x,One Keep) e' (sequenceA <$> t')
 parseRec (CF.DeclRule (CF.AIdent ((_line,_col),x)) e:ds) f = 
   let e' = parse e f
       t' = parseRec ds (extend f x)
@@ -69,7 +69,8 @@ parse :: forall a. CF.Exp -> (String -> Either String a) -> Exp (Either String a
 parse e0 f = case e0 of
      CF.U -> Con (Symbol "Type")
      (CF.Pi t b) -> parsePi Zero t b f
-     (CF.LinPi t b) -> parsePi One t b f
+     (CF.LinPi t b)  -> parsePi (One Keep) t b f
+     (CF.LinPiR t b) -> parsePi (One Release) t b f
      (CF.App a b) -> App [parse a f,parse b f]
      (CF.Var (CF.AIdent ((_line,_col),[]))) -> error "parse: panic: empty ident"
      (CF.Var (CF.AIdent ((_line,_col),x@(y:_))))
@@ -77,7 +78,8 @@ parse e0 f = case e0 of
        | otherwise -> V (f x)
      (CF.StrLit x) -> Con (String x)
      (CF.Fun a b) -> Pi ("_",Zero) (parse a f) (There <$> parse b f)
-     (CF.LFun a b) -> Pi ("_",One) (parse a f) (There <$> parse b f)
+     (CF.LFun a b) -> Pi ("_",One Keep) (parse a f) (There <$> parse b f)
+     (CF.LFunR a b) -> Pi ("_",One Release) (parse a f) (There <$> parse b f)
      (CF.Rec fs) -> Rec (parseRec fs f)
 
 data Ctx where

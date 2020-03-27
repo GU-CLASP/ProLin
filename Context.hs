@@ -1,3 +1,4 @@
+{-# LANGUAGE PartialTypeSignatures #-}
 {-# LANGUAGE EmptyCase #-}
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE ViewPatterns #-}
@@ -15,6 +16,8 @@ import Unify2
 import Expr
 import Pretty
 import Types
+import Data.Monoid
+import Data.Either (isRight)
 
 data Entry w = Entry w (Exp w) deriving Functor
 type Context w = [Entry w] -- things available in a context.
@@ -25,11 +28,12 @@ select [] = []
 select (x:xs) = (x,xs):[(y,x:ys) | (y,ys) <- select xs]
 
 -- | Consume a variable of type @e@ from the context.
-consume :: Eq w => Enumerable v => Exp (v+w) -> Avail v w -> [(Exp (v+w),PSubs v w,Avail v w)]
+-- Return a triple with: Term, Substitution, Rest of the context.
+consume :: Eq w => Enumerable v => Exp (v+w) -> Avail v w -> [((Exp (v+w),Exp (v+w)),PSubs v w,Avail v w)]
 consume e c = do
   ((t,e'),ctx') <- select c
   case unify2 e e' of
-    Just s -> return (t,s,ctx')
+    Just s -> return ((t,e'),s,ctx')
     Nothing -> fail "oparst"
 
 type Metas v w = [(String,v,Exp (v+w))]
@@ -88,9 +92,9 @@ ruleApplies wN consumed e (Pi (vNm,Zero) dom body) metaTypes ctx =
                :[(nm,There v,wkMeta <$> t) | (nm,v,t) <- metaTypes])
              [(wkMeta <$> w,wkMeta <$> t) | (w,t) <- ctx]
   where metaNames = [nm | (nm,_,_) <- metaTypes]
-ruleApplies wN _consumed e (Pi (_v,One) dom body) metaTypes ctx = do
+ruleApplies wN _consumed e (Pi (_v,One keep) dom body) metaTypes ctx = do
   -- something is needed one time
-  (t0,PSubs _ o s,ctx') <- consume dom ctx -- see if the domain can be satisfied in the context
+  ((t0,ty0),PSubs _ o s,ctx') <- consume dom ctx -- see if the domain can be satisfied in the context
   -- it does: we need to substitute the consumed thing
   let s' = \case
               Here -> t0 >>= s'' -- the variable bound by Pi (unknown to unifier). Substituted by the context element.
@@ -101,7 +105,8 @@ ruleApplies wN _consumed e (Pi (_v,One) dom body) metaTypes ctx = do
   ruleApplies wN True (app e t0 >>= s'')
               (body >>= s')
               [(nm,v,t >>= s'') | (nm,o -> There v,t) <- metaTypes]
-              [(w >>= s'',t >>= s'') | (w,t) <- ctx']
+              ([(t0 >>= s'', ty0 >>= s'') | keep == Release] ++
+               [(w >>= s'',t >>= s'') | (w,t) <- ctx'] )
 ruleApplies wN True e (Rec fs) metaTypes ctx = return $ applyRec wN e fs metaTypes ctx -- a record: put all the components in the context
 ruleApplies wN consumed e r metaTypes ctx
   | consumed = return $ R wN (metaTypes) ((e,r):ctx)   -- not a Pi, we have a new thing to put in the context.
@@ -118,7 +123,7 @@ applyRec :: Eq w => Enumerable v
          -> R
 applyRec w _ TNil metaTypes ctx = R w metaTypes ctx
 applyRec w e (TCons (x,Zero) f fs) metaTypes ctx = error "ZERO"
-applyRec w e (TCons (x,One) f fs) metaTypes ctx
+applyRec w e (TCons (x,One _) f fs) metaTypes ctx
   = applyRec w' (wkCtx <$> e)
                (pushRight <$> fs)
                [(nm,v,wkCtx <$> t) | (nm,v,t) <- metaTypes] (both (wkCtx <$>) <$>((e,f):ctx))
@@ -152,7 +157,6 @@ exampleRules =
   [foral "x" $ \x -> (Symb "A" @@ x)  ⊸ (Symb "B" @@ (Symb "S" @@ x)) -- ∀x. A x ⊸ B (S x)
   ,foral "x" $ \x -> (Symb "B" @@ x)  ⊸ (Symb "A" @@ (Symb "S" @@ x)) -- ∀x. B x ⊸ A (S x)
   ]
-
 
 -- exampleContext :: [R]
 -- exampleContext = [R @Zero @(Next Zero) [] [("a",Here,(Con "A" @@ Con "Z"))]]
