@@ -1,0 +1,6 @@
+
+rulA : (x : A) -* B;
+rulB : A -o B -o C;
+
+a :: A;
+
