@@ -39,14 +39,18 @@ loadAndPrepareModule fname = do
     Left err -> error err
     Right (cx,rs) -> (prepareContext cx,rs)
 
--- | run fuel lookupName initialState rules
+-- | run fuel initialState lookupName rules
 run :: Int -> R -> [(String, AnyRule)] -> IO R
-run 0  r _rs = return r
+run 0  r _rs = do
+  putStrLn "No more fuel"
+  return r
 run n  r rs = do
   putStrLn "-------------------"
   putStrLn "State:"
   print r
   case applyAnyRule rs [r] of
-    [] -> return r
+    [] -> do
+      putStrLn "No more rules to apply"
+      return r
     (r':_) -> run (n-1) r' rs
 
