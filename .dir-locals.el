@@ -1,1 +1,3 @@
-((nil . ((dante-methods . (new-nix)))))
+((nil .
+   ((dante-methods . (new-nix))
+    (dante-target . "pli"))))
