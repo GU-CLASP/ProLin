@@ -18,12 +18,12 @@ import Pretty
 import Types
 import Data.Monoid
 import Data.Either (isRight)
-import Control.Monad (guard)
-
+-- import Control.Monad (guard)
+import Data.List (transpose, nub)
+import Data.Maybe (isJust)
 data Entry w = Entry w (Exp w) deriving Functor
 type Context w = [Entry w] -- things available in a context.
 type Rule = Exp
-
 select :: [a] -> [(a,[a])]
 select [] = []
 select (x:xs) = (x,xs):[(y,x:ys) | (y,ys) <- select xs]
@@ -47,6 +47,7 @@ type Avail v w = [(Exp (v+w) -- term
 --        Avail v w -> -- context
 --        R w
 -- mkR = R
+
 
 data R  where
   R :: forall v w. (Enumerable v, Eq w) =>
@@ -83,27 +84,28 @@ isGround = getAll . foldMap (All . isRight)
 ruleApplies :: Eq w => Enumerable v => Show v
   => (w -> String) -- | user-friendly names for w
   -> Bool -- | was there anything consumed at all?
+  -> [(Unicity,Exp (v+w))]  -- | arguments passed to the rule (so far)
   -> Exp (v+w) -- | constructed expression
   -> Rule (v+w) -- | rule considered
   -> Metas v w -- | metas
   -> Avail v w -- | context
-  -> [R]
-ruleApplies wN consumed e (Pi (vNm,Zero) dom body) metaTypes ctx =
+  -> [([(Unicity,Maybe (Exp Zero))],R)]
+ruleApplies wN consumed args e (Pi (vNm,Zero unicity) dom body) metaTypes ctx =
   -- something is needed zero times. So, we create a metavariable
-  ruleApplies wN consumed ((wkMeta <$> e) `app` V freshMeta) 
+  ruleApplies wN consumed
+             ((unicity,V (Left Here)):(fmap (wkMeta <$>) `map` args)) ((wkMeta <$> e) `app` V freshMeta) -- args
              (pushLeft <$> body)
              ((findFreshName 0 vNm metaNames,Here,wkMeta <$> dom) -- new meta
                :[(nm,There v,wkMeta <$> t) | (nm,v,t) <- metaTypes])
              [(wkMeta <$> w,wkMeta <$> t) | (w,t) <- ctx]
   where metaNames = [nm | (nm,_,_) <- metaTypes]
-ruleApplies wN _consumed e (Pi (_v,One keep unicity) dom body) metaTypes ctx = do
+ruleApplies wN _consumed args e (Pi (_v,One keep) dom body) metaTypes ctx = do
   let solutions = consume dom ctx -- see if the domain can be satisfied in the context
-  -- something is needed one time
   ((t0,ty0),PSubs _ o s,ctx') <- solutions
-  case unicity of
-    AnyUnicity -> return ()
-    Unique -> guard (length solutions == 1)
-    NonUnique -> guard (length solutions > 1)
+  -- case unicity of
+  --   AnyUnicity -> return ()
+  --   Unique -> guard (length solutions == 1)
+  --   NonUnique -> guard (length solutions > 1)
   -- it does: we need to substitute the consumed thing
   let s' = \case
               Here -> t0 >>= s'' -- the variable bound by Pi (unknown to unifier). Substituted by the context element.
@@ -111,15 +113,20 @@ ruleApplies wN _consumed e (Pi (_v,One keep unicity) dom body) metaTypes ctx = d
       s'' = \case
                Left x -> s x -- meta: substitute according to unifier
                Right y -> V (Right y) -- regular old var; leave it alone
-  ruleApplies wN True (app e t0 >>= s'')
+  ruleApplies wN True
+              (map (fmap (>>= s'')) args)
+              (app e t0 >>= s'')
               (body >>= s')
               [(nm,v,t >>= s'') | (nm,o -> There v,t) <- metaTypes]
               ([(t0 >>= s'', ty0 >>= s'') | keep == Release] ++
                [(w >>= s'',t >>= s'') | (w,t) <- ctx'] )
-ruleApplies wN True e (Rec fs) metaTypes ctx = return $ applyRec wN e fs metaTypes ctx -- a record: put all the components in the context
-ruleApplies wN consumed e r metaTypes ctx
-  | consumed = return $ R wN (metaTypes) ((e,r):ctx)   -- not a Pi, we have a new thing to put in the context.
+ruleApplies wN True args e (Rec fs) metaTypes ctx = return $ (collapseArgs args,applyRec wN e fs metaTypes ctx) -- a record: put all the components in the context
+ruleApplies wN consumed args e r metaTypes ctx
+  | consumed = return $ (collapseArgs args,R wN metaTypes ((e,r):ctx))   -- not a Pi, we have a new thing to put in the context.
   | otherwise = []
+
+collapseArgs :: [(Unicity, Exp v)] -> [(Unicity, Maybe (Exp Zero))]
+collapseArgs = map (fmap isClosed)
 
 -- | Put all the components of the telescope in the context.
 -- FIXME: projections!
@@ -131,8 +138,8 @@ applyRec :: Eq w => Enumerable v
          -> Avail v w
          -> R
 applyRec w _ TNil metaTypes ctx = R w metaTypes ctx
-applyRec w e (TCons (x,Zero) f fs) metaTypes ctx = error "ZERO"
-applyRec w e (TCons (x,One _ _) f fs) metaTypes ctx
+applyRec _ _ (TCons (_,Zero _) _f _fs) _metaTypes _ctx = error "ZERO"
+applyRec w e (TCons (x,One _) f fs) metaTypes ctx
   = applyRec w' (wkCtx <$> e)
                (pushRight <$> fs)
                [(nm,v,wkCtx <$> t) | (nm,v,t) <- metaTypes] (both (wkCtx <$>) <$>((e,f):ctx))
@@ -142,7 +149,21 @@ applyRec w e (TCons (x,One _ _) f fs) metaTypes ctx
 type AnyRule = Rule Zero
 
 applyRule :: String -> AnyRule -> R -> [R]
-applyRule ruleName r (R wN metas avail) = ruleApplies wN False (Symb ruleName) (\case <$> r) metas avail
+applyRule ruleName r (R wN metas avail) = if unicityCheck ass then results else []
+  where (ass,results) = unzip (ruleApplies wN False [] (Symb ruleName) (\case <$> r) metas avail)
+
+unicityCheck :: Eq a => [[(Unicity, Maybe a)]] -> Bool
+unicityCheck [] = True
+unicityCheck ass@(as:_) = all ((== length as) . length) ass && all consistentUnicity (transpose ass)
+
+consistentUnicity :: Eq a => [(Unicity, Maybe a)] -> Bool
+consistentUnicity [] = True
+consistentUnicity uvs@((u,v):_) = case u of
+              AnyUnicity -> True
+              Unique -> length (nub vs) == 1 && isJust v
+              NonUnique -> length (nub vs) > 1
+  where (_us,vs) = unzip uvs
+
 
 applyAnyRule :: [(String,AnyRule)] -> [R] -> [R]
 applyAnyRule rs ctxs = do

@@ -228,19 +228,21 @@ QUD q -o (p : Unique q) -> Answer (Q A P) p
 
 If we try to expand it:
 
-using (~>) to mean a unique element of that type
+using !-> to mean a unique, ground element of that type
 
-(A : Type) -> (P : A -> Type) -> QUD (Q A P) -o (x : A) ~> (p : P x) -> AnswerMove (Q A P) (Answer A P x p)
+(A : Type) -> (P : A -> Type) -> QUD (Q A P) -o (a : [x : A; p :* P x]) !-> AnswerMove (Q A P) (Answer A P a)
+
+But we don't want a unique A, we want a unique A such that p :* P x holds. It's unclear how to implement that at the moment.
 
  (to actually run the rule we need that x is a ground term (there is no metavariables in its value))
 
 If the above rule fails, then you need to initiate a side question:
 
-(to : String) -> (from : String) -> (with : String) !~>  
+(to : String) -> (from : String) -> (with : String) ?->
 QUD (Q ([to' : String; from' : String; with' : String; when : String])
-                  (λa. BusTable to from with when ∧ to = to' ∧ ... ))  -- has to be there but can be released
-  ->o Ask (Q String (λx -> with = x)) -- "What bus/tram are you interested in"
+                  (λa. BusTable to from with when ∧ to = to' ∧ ... ))
+ -* Ask (Q String (λx -> with = x)) -- "What bus/tram are you interested in"
 
-where !~> indicates that the rule should fire only when the argument is NOT ground term
- (->o) is the linear arrow which releases its argument.
+where ?-> indicates that the rule should fire only when the argument is NOT ground term
+ (-*) is the linear arrow which releases its argument.
 
