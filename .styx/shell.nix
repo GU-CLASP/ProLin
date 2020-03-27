@@ -29,7 +29,8 @@ pkgs.stdenv.mkDerivation {
   name = "my-haskell-env-0";
   buildInputs = [ ghc ];
   shellHook = ''
- export LANG=en_US.UTF-8
- eval $(egrep ^export ${ghc}/bin/ghc)
+export LOCALE_ARCHIVE=/usr/lib/locale/locale-archive
+export LC_ALL=en_US.UTF-8
+eval $(egrep ^export ${ghc}/bin/ghc)
 '';
 }
