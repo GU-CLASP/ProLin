@@ -12,13 +12,16 @@ module Unify2 where
 import Types
 import Expr
 import Control.Monad
+
 data Constraint v w where
   -- z : variables that we can not unify to
   -- v : meta variables to unify
   -- w : variables that we can unify to
-  (:=:) :: forall v w z. Eq z => Exp (z+(v+(w))) -> Exp (z+(v+w)) -> Constraint v w
+  (:=:) :: forall v w z. (Show z,Eq z) => Exp (z+(v+(w))) -> Exp (z+(v+w)) -> Constraint v w
 
 
+instance (Show v, Show w) => Show (Constraint v w) where
+  show (x :=: y) = show x ++ show y
 
 applyOneSubst :: forall v v' w. Eq v => (v -> Next v') -> Exp (v'+w) -> Constraint v w -> Constraint v' w
 applyOneSubst d t (u :=: v) = (u >>= f) :=: (v >>= f)
@@ -63,7 +66,9 @@ unify ((V (Left x) :=: V (Left x')):constraints) -- completely fixed vars; must 
 unify ((V (Right (Right x)) :=: V (Right (Right x'))):constraints) -- two fixed vars
   | x == x' = unify constraints
   | x /= x' = Nothing
-unify ((V (Right (Left x)) :=: t):constraints) -- metavar
+unify ((V (Right (Left x)) :=: V (Right (Left x'))):constraints) -- two equal metavars, special case needed because of occurs check
+  | x == x' = unify constraints
+unify ((V (Right (Left x)) :=: t):constraints) -- metavar;
   = splitType x $ \into outof ->  -- find the variable that we want to substitute (Here; iso is given by into;outof)
     case sequenceA t of  -- there cannot be any non-unifyable variables in substituted term.
       Left _ -> Nothing -- (or it would escape)
@@ -81,17 +86,28 @@ unify ((V (Right (Left x)) :=: t):constraints) -- metavar
 unify ((t :=: V (Right (Left x))):constraints) = unify ((V (Right (Left x)) :=: t):constraints)
 unify (_:_) = Nothing
 
+mkUnificationProblem :: forall v w. Exp (v+w) -> Exp (v+w) -> Constraint v w
+mkUnificationProblem s t = (:=:) @v @w @Zero (Right <$> s)  (Right <$> t)
 
 unify2 :: forall v w. Eq w => Enumerable v => Exp (v+w) -> Exp (v+w) -> Maybe (PSubs v w)
-unify2 s t = unify @v @w [(:=:) @v @w @Zero (Right <$> s)  (Right <$> t)]
+unify2 s t = unify [mkUnificationProblem s t]
 
 Just test0 = unify2 @String @() (V (Left "a")) (V (Left "b"))
 Just test1 = unify2 (V (Left "a")) (V (Right "x"))
 Just test2 = unify2 (V (Left "a")) (App [V (Left "x"), V (Right "y")])
 Just test3 = unify2 (App [(Symb "arst"),(V (Left "a"))]) (App [V (Left "b"), V (Right "y")])
 Just test4 = unify2 (App [(V (Right "arst")),(V (Left "a")),V (Left "a")]) (App [V (Left "b"), V (Left "c"), V (Left "b")])
+Just test5 = unify2 @String @String (Symb "Q" @@ V (Left "a") @@ (Symb "R" {-@@    Symb "X"  -}@@     Symb "Y"))
+                                    (Symb "Q" @@ V (Left "a") @@ (Symb "R" {-@@ V (Left "a") -}@@  V (Left "b")))
 
--- >>> putStrLn $ showSubs ["a","b","c"] test4
--- "a" => V (Right "arst")
--- "b" => V (Right "arst")
--- "c" => V (Right "arst")
+-- >>> mkUnificationProblem (Symb "Q" @@ V (Left "a") {-@@ (Symb "R" {-@@    Symb "X"  -}@@     Symb "Y")-}) (Symb "Q" @@ V (Left "a") {-@@ (Symb "R" {-@@ V (Left "a") -}@@  V (Left "b"))-})
+-- <interactive>:479:2-184: warning: [-Wtype-defaults]
+--     • Defaulting the following constraint to type ‘()’
+--         Show w0 arising from a use of ‘print’
+--     • In a stmt of an interactive GHCi command: print it
+-- App [Con (Symbol "Q"),V (Right (Left "a"))]App [Con (Symbol "Q"),V (Right (Left "a"))]
+
+-- >>> putStrLn $ showSubs ["a","b","c"] test5
+-- "a" => V (Left "a")
+-- "b" => Con (Symbol "Y")
+-- "c" => V (Left "c")
