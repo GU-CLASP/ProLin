@@ -103,6 +103,7 @@ ruleApplies wN _consumed e (Pi (_v,One keep unicity) dom body) metaTypes ctx = d
   case unicity of
     AnyUnicity -> return ()
     Unique -> guard (length solutions == 1)
+    NonUnique -> guard (length solutions > 1)
   -- it does: we need to substitute the consumed thing
   let s' = \case
               Here -> t0 >>= s'' -- the variable bound by Pi (unknown to unifier). Substituted by the context element.

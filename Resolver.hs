@@ -87,6 +87,7 @@ parse e0 f = case e0 of
      (CF.LFun a b) -> parseFun f (One Keep AnyUnicity) a b
      (CF.LFunR a b) -> parseFun f (One Release AnyUnicity) a b
      (CF.LFunRU a b) -> parseFun f (One Release Unique) a b
+     (CF.LFunRN a b) -> parseFun f (One Release NonUnique) a b
      (CF.Rec fs) -> Rec (parseRec fs f)
 
 data Ctx where
