@@ -89,7 +89,7 @@ ruleApplies :: Eq w => Enumerable v => Show v
   -> Rule (v+w) -- | rule considered
   -> Metas v w -- | metas
   -> Avail v w -- | context
-  -> [([(Unicity,Maybe (Exp Zero))],R)]
+  -> [([(Unicity,Maybe (Exp Zero))],Maybe (Exp Zero),R)]
 ruleApplies wN consumed args e (Pi (vNm,Zero unicity) dom body) metaTypes ctx =
   -- something is needed zero times. So, we create a metavariable
   ruleApplies wN consumed
@@ -102,10 +102,6 @@ ruleApplies wN consumed args e (Pi (vNm,Zero unicity) dom body) metaTypes ctx =
 ruleApplies wN _consumed args e (Pi (_v,One keep) dom body) metaTypes ctx = do
   let solutions = consume dom ctx -- see if the domain can be satisfied in the context
   ((t0,ty0),PSubs _ o s,ctx') <- solutions
-  -- case unicity of
-  --   AnyUnicity -> return ()
-  --   Unique -> guard (length solutions == 1)
-  --   NonUnique -> guard (length solutions > 1)
   -- it does: we need to substitute the consumed thing
   let s' = \case
               Here -> t0 >>= s'' -- the variable bound by Pi (unknown to unifier). Substituted by the context element.
@@ -120,10 +116,11 @@ ruleApplies wN _consumed args e (Pi (_v,One keep) dom body) metaTypes ctx = do
               [(nm,v,t >>= s'') | (nm,o -> There v,t) <- metaTypes]
               ([(t0 >>= s'', ty0 >>= s'') | keep == Release] ++
                [(w >>= s'',t >>= s'') | (w,t) <- ctx'] )
-ruleApplies wN True args e (Rec fs) metaTypes ctx = return $ (collapseArgs args,applyRec wN e fs metaTypes ctx) -- a record: put all the components in the context
+ruleApplies wN True args e (Rec fs) metaTypes ctx = return $ (collapseArgs args,Nothing,applyRec wN e fs metaTypes ctx) -- a record: put all the components in the context
 ruleApplies wN consumed args e r metaTypes ctx
-  | consumed = return $ (collapseArgs args,R wN metaTypes ((e,r):ctx))   -- not a Pi, we have a new thing to put in the context.
+  | consumed = return $ (collapseArgs args,isClosed r,R wN metaTypes ((e,r):ctx))   -- not a Pi, we have a new thing to put in the context.
   | otherwise = []
+
 
 collapseArgs :: [(Unicity, Exp v)] -> [(Unicity, Maybe (Exp Zero))]
 collapseArgs = map (fmap isClosed)
@@ -148,9 +145,20 @@ applyRec w e (TCons (x,One _) f fs) metaTypes ctx
 
 type AnyRule = Rule Zero
 
+addSimpleResult :: String -> Exp Zero -> R -> R
+addSimpleResult nm r = pushInContext (Con (Symbol nm),r) 
+
 applyRule :: String -> AnyRule -> R -> [R]
-applyRule ruleName r (R wN metas avail) = if unicityCheck ass then results else []
-  where (ass,results) = unzip (ruleApplies wN False [] (Symb ruleName) (\case <$> r) metas avail)
+applyRule ruleName r state@(R wN metas avail) =
+  if unicityCheck ass
+  then if any (==NonUnique) (map fst $ concat ass)
+       -- Here we had a non-unique result. Then we cannot apply the substitution (because we'd be chosing one of the non-unique things). So we instead add the end state --- which itself should be unique
+       then case nub simpleResults of
+              [Just simpleResult] -> [addSimpleResult ruleName simpleResult state]
+              _ -> error "Simple result is not unique or not closed in non-unique rule application"
+       else results
+  else []
+  where (ass,simpleResults,results) = unzip3 (ruleApplies wN False [] (Symb ruleName) (\case <$> r) metas avail)
 
 unicityCheck :: Eq a => [[(Unicity, Maybe a)]] -> Bool
 unicityCheck [] = True
