@@ -90,6 +90,22 @@ ruleApplies :: Eq w => Enumerable v => Show v
   -> Metas v w -- | metas
   -> Avail v w -- | context
   -> [([(Unicity,Maybe (Exp Zero))],Maybe (Exp Zero),R)]
+ruleApplies wN consumed args e (Pi ("_",Zero _) (EQUAL ty1 ty2) body) metaTypes ctx =
+  case nextNoOccur body of
+    Here -> fail "equality variable occurs"
+    There body' -> case unify2 ty1 ty2 of
+      Nothing -> fail "can't unify"
+      Just (PSubs _ o s) ->
+        let s'' = \case
+                     Left x -> s x -- meta: substitute according to unifier
+                     Right y -> V (Right y) -- regular old var; leave it alone
+        in ruleApplies wN consumed
+           (map (fmap (>>= s'')) args)
+           (app e (Con (Symbol "eq")) >>= s'')
+           (body' >>= s'')
+              [(nm,v,t >>= s'') | (nm,o -> There v,t) <- metaTypes]
+              ([(w >>= s'',t >>= s'') | (w,t) <- ctx] )
+
 ruleApplies wN consumed args e (Pi (vNm,Zero unicity) dom body) metaTypes ctx =
   -- something is needed zero times. So, we create a metavariable
   ruleApplies wN consumed
