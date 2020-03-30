@@ -1,5 +1,6 @@
 
-rulA : (x : A) !-* A;
+rulA : (x : A) !-> P x -* P (Suc x);
+-- rulB : (x : A) !-> P x -* P x;
 
-a :: A;
+a :: P Zero;
 

@@ -1,15 +1,14 @@
 
 
-
-
 startQuestion : Start -o (x:XX) -> (a:AA) -> Candidate x (R x a);
-canAnswer : (x:XX) -> (p : Prop) -> Candidate x p -o p !-* Answer x;
-unclear   : (x:XX) -> (a:AA) -> Candidate x (R x a) -o R x a ?-* CR;
+canAnswer : (x:XX) !-> (p : Prop) -> Candidate x p -o p -* Answer x;
+unclear   : (x:XX) ?-> (p : Prop) -> Candidate x p -*  p -* CR;
 
-clarification : (xIn:XX) -> (xOut:XX) -> CR -o Candidate xIn p -o Canditate xOut (R xOut A)
-
+clarification : (x:XX) -> (a:AA) -> (a0:AA) -> CR -o Clarify a -o Candidate x (R x a0) -o Candidate x (R x a);
 
 isStart :: Start;
+
+cl :: Clarify B;
 
 fact1 :: R X A;
 fact2 :: R Y B;
