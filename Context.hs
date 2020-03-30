@@ -184,9 +184,9 @@ consistentUnicity :: Eq a => [(Unicity, Maybe a)] -> Bool
 consistentUnicity [] = True
 consistentUnicity uvs@((u,v):_) = case u of
               AnyUnicity -> True
-              Unique -> length (nub vs) == 1 && isJust v
-              NonUnique -> length (nub vs) > 1
-  where (_us,vs) = unzip uvs
+              Unique -> length vs == 1 && isJust v
+              NonUnique -> Nothing `elem` vs || length vs > 1 
+  where (_us,nub -> vs) = unzip uvs
 
 
 applyAnyRule :: [(String,AnyRule)] -> [R] -> [R]
