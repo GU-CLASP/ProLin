@@ -9,7 +9,8 @@
        (modify-syntax-entry ?\n ">" st)
        st))
 
-(setq pli-operators-regexp (regexp-opt '(":" "::" "->" "-o" "[" "]" "(" ")") t))
+(setq pli-operators-regexp (regexp-opt '(":" "::" "-*" "!->" "?->" "->" "-o" "[" "]" "(" ")"
+					 ) t))
 (setq pli-constant-regexp "[A-Z][[:word:]]+")
 (setq pli-def-regexp "^[a-z][[:word:]]+")
 
