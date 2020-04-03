@@ -196,10 +196,11 @@ applyAnyRule rs ctxs = do
   applyRule ruleName r ctx
 
 
-prettyR :: R -> D
-prettyR  (R ctxNames m a)
+prettyR :: Bool -> R -> D
+prettyR showTerms (R ctxNames m a)
   = vcat [hang 2 "metas" (vcat [text n <+> ":" <+> pretty (nm <$> e) | (n,_,e) <- m])
-         ,hang 2 "lins"  (vcat [pretty (nm <$> e) <+> ":" <+> pretty (nm <$> t) | (e,t) <- a])]
+         ,hang 2 "lins"  (vcat [(if showTerms then ((pretty (nm <$> e) <+> ":") <+>) else id)
+                                (pretty (nm <$> t)) | (e,t) <- a])]
      where names = [(v,n) | (n,v,_) <- m]
            nm (Right v) = ctxNames v
            nm (Left v) = case lookup v names of
@@ -216,7 +217,7 @@ exampleRules =
 -- exampleContext = [R @Zero @(Next Zero) [] [("a",Here,(Con "A" @@ Con "Z"))]]
 
 instance Show R where
-  show = render . prettyR
+  show = render . prettyR False
 
 twice :: (b -> b) -> b -> b
 twice f = f . f
