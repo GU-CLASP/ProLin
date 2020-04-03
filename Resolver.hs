@@ -77,6 +77,7 @@ parse e0 f = case e0 of
      (CF.PiN t b) -> parsePi (Zero NonUnique) t b f
      (CF.PiU t b) -> parsePi (Zero Unique) t b f
      (CF.LinPi t b)  -> parsePi (One Keep) t b f
+     (CF.LinPiR t b)  -> parsePi (One Release) t b f
      (CF.App a b) -> App [parse a f,parse b f]
      (CF.Var (CF.AIdent ((_line,_col),[]))) -> error "parse: panic: empty ident"
      (CF.Var (CF.AIdent ((_line,_col),x@(y:_))))
