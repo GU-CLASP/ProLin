@@ -13,18 +13,18 @@ qudPush : (t : Time) -> (p : Prop) -> (q : Question t p) -> LU (Ask q) -o QUD Ma
 
 -- 2. assumption for straight answer: there is only one bus nr
 straightAnswer : (t:Time) -> (d:Dest) -> (s:Src) -> (n : Bus) !-> QUD Max (Question t (TT n t d s))  
-  -o TT n t d s -* [_ :: LG (Answer (Question t (TT n t d s)) t Prf); _ :: FACTS (TT n t d s)];
+  -o (prf : TT n t d s) -* [_ :: LG (Answer (Question t (TT n t d s)) t prf); _ :: FACTS (TT n t d s)];
 --    ^ this should be general perhaps...
 
 systemSideSeq : (t:Time) -> (d:Dest) -> (s:Src) -> (n : Bus) ?-> QUD Max (Question t (TT n t d s))   
   -* TT n t d s -* SS;
 runSideSeq : (t:Time) -> (d:Dest) -> (s:Src) -> (n : Bus) -> SS -o QUD Max (Question t (TT n t d s))
 	   -o [_ :: QUD Min (Question t (TT n t d s)); _ :: QUD Max (Question n (WantBus n))];
-userReply : (n : Bus) -> (n1 : Bus) -> (prf:NLU1) -o (QUD Max (Question n (WantBus n)))
-  -o LU (Answer (Question n (WantBus n)) n1 prf) -o FACTS (WantBus n1);
+userReply : (n : Bus) -> (n1 : Bus) -> (prf:NLU1 n1) -o (QUD Max (Question n (WantBus n)))
+  -o [_ :: LU (Answer (Question n (WantBus n)) n1 prf); _ :: FACTS (WantBus n1)];
 
 foo : (t:Time) -> (d:Dest) -> (s:Src) -> (n : Bus) -> FACTS (WantBus n) 
-  -* QUD Min (Question t (TT n t d s)) -* QUD Max (Question t (TT n t d s));
+  -* QUD Min (Question t (TT n t d s)) -o QUD Max (Question t (TT n t d s));
   
 
 
@@ -33,7 +33,7 @@ foo : (t:Time) -> (d:Dest) -> (s:Src) -> (n : Bus) -> FACTS (WantBus n)
 -- - no FACTS 
 
 nlu0 :: NLU0;
-nlu1 :: NLU1;
+nlu1 :: NLU1 B18;
 
 -- Timetable: (n:NR, t:MinToNext, d:Destination, s:Station)
 item1 :: TT B52 T0 Skogome Gotaplatsen;
