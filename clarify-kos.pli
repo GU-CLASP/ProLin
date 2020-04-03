@@ -1,0 +1,45 @@
+
+
+-- -U- When is a bus from Götaplatsen? (NLU0)  ?t.TT(n,t,d,Gotaplatsen)
+-- -S- What bus are you interested in? 
+-- -U- Bus 18 [to Johanneberg].  (NLU1)
+-- -S- It is in 1 minute. 
+
+
+-- 1. integrate LU (last *user* utterance) with a question into QUD
+startQuestion : (t:Time) -> (d:Dest) -> (n : Bus) -> (prf:NLU0)
+  -o LU (Ask (Question t (TT n t d Gotaplatsen)));
+qudPush : (t : Time) -> (p : Prop) -> (q : Question t p) -> LU (Ask q) -o QUD Max q;
+
+-- 2. assumption for straight answer: there is only one bus nr
+straightAnswer : (t:Time) -> (d:Dest) -> (s:Src) -> (n : Bus) !-> QUD Max (Question t (TT n t d s))  
+  -o TT n t d s -* [_ :: LG (Answer (Question t (TT n t d s)) t Prf); _ :: FACTS (TT n t d s)];
+--    ^ this should be general perhaps...
+
+systemSideSeq : (t:Time) -> (d:Dest) -> (s:Src) -> (n : Bus) ?-> QUD Max (Question t (TT n t d s))   
+  -* TT n t d s -* SS;
+runSideSeq : (t:Time) -> (d:Dest) -> (s:Src) -> (n : Bus) -> SS -o QUD Max (Question t (TT n t d s))
+	   -o [_ :: QUD Min (Question t (TT n t d s)); _ :: QUD Max (Question n (WantBus n))];
+userReply : (n : Bus) -> (n1 : Bus) -> (prf:NLU1) -o (QUD Max (Question n (WantBus n)))
+  -o LU (Answer (Question n (WantBus n)) n1 prf) -o FACTS (WantBus n1);
+
+foo : (t:Time) -> (d:Dest) -> (s:Src) -> (n : Bus) -> FACTS (WantBus n) 
+  -* QUD Min (Question t (TT n t d s)) -* QUD Max (Question t (TT n t d s));
+  
+
+
+-- DGB to start
+-- - empty QUD
+-- - no FACTS 
+
+nlu0 :: NLU0;
+nlu1 :: NLU1;
+
+-- Timetable: (n:NR, t:MinToNext, d:Destination, s:Station)
+item1 :: TT B52 T0 Skogome Gotaplatsen;
+item2 :: TT B18 T1 Johanneberg Gotaplatsen;
+item3 :: TT B55 T3 SciencePark Gotaplatsen;
+
+-- Timetable 2: (n:NR, t:MinToNext, d:Destination, s:Station)
+-- item2 :: TT B55 T1 Johanneberg Gotaplatsen;
+-- item3 :: TT B55 T13 SciencePark Gotaplatsen;
