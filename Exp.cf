@@ -9,6 +9,7 @@ DeclRule.   Decl ::= AIdent ":" Exp ;
 DeclCtx.    Decl ::= AIdent "::" Exp ;
 separator   Decl ";" ;
 
+Equality. Exp1 ::= Exp2 "==" Exp2 ;
 Fun.      Exp1 ::= Exp2 "->" Exp1 ;
 LFun.     Exp1 ::= Exp2 "-o" Exp1 ;
 LFunR.    Exp1 ::= Exp2 "-*" Exp1 ;

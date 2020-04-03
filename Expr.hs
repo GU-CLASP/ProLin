@@ -54,6 +54,9 @@ apps t = foldl app t
 (@@) :: Exp v -> Exp v -> Exp v
 t @@ u = App [t,u]
 
+pattern EQUAL :: forall v. Exp v -> Exp v -> Exp v
+pattern EQUAL x y = App [Con (Symbol "EQUALITY"),x,y]
+
 (-->) :: Exp v -> Exp v -> Exp v
 a --> b = Pi ("_",Zero AnyUnicity) a (There <$> b)
 
@@ -147,6 +150,9 @@ freeVars = toList
 
 occursIn :: Eq v => v -> Exp v -> Bool
 occursIn v e = getAny (foldMap (Any . (== v)) e )
+
+nextNoOccur :: Exp (Next v) -> Next (Exp v)
+nextNoOccur = sequenceA
 
 isClosed :: Exp v -> Maybe (Exp Zero)
 isClosed = traverse $ \_ -> Nothing
