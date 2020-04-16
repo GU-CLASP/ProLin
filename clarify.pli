@@ -1,14 +1,25 @@
 
 
-startQuestion : Start -o (x:XX) -> (a:AA) -> Candidate x (R x a);
-canAnswer : (x:XX) !-> (p : Prop) -> Candidate x p -o p -* Answer x;
-unclear   : (x:XX) ?-> (p : Prop) -> Candidate x p -*  p -* CR;
+startQuestion : Start -o (x:XX) -> (a:AA) -> [_ :: Arg1 x; _ :: Arg2 a; _ :: QUD (R x a)];
 
-clarification : (x:XX) -> (a:AA) -> Clarify a -o Candidate x (R x a) -* Clarified;
+-- Answering is modular (no reference to Arg 2)
+canAnswer : (x:XX) !-> (p : Prop) -> Arg1 x -o QUD p -o p -* Answer x;
+unclear   : (x:XX) ?-> (p : Prop) -> Arg1 x -* QUD p -* p -* CR;
+
+
+clarification : (a:AA) -> Clarify2 a -o Arg2 a -* Clarified;
+-- Here clarification works by unification (and is modular; no reference to Arg 1)
+
+-- correction : (a b : AA) -> Correct2 b -o Arg2 a -o [_ :: Arg2 b ; _ :: Corrected];
+-- does not work: unification does not update the QUD.
+
+correction : (x:XX) -> (a b : AA) -> Correct2 b -o Arg2 a -o QUD (R x a) -o [_ :: Arg2 b; _ :: QUD (R x b) ; _ :: Corrected];
+-- So correction is not modular
 
 isStart :: Start;
 
-cl :: Clarify B;
+-- cl :: Clarify2 B;
+corr :: Correct2 B; 
 
 fact1 :: R X A;
 fact2 :: R Y B;

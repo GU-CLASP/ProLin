@@ -1,0 +1,22 @@
+
+
+startQuestion : Start -o (x:XX) -> (a:AA) -> [_ :: Arg1 x; _ :: Arg2 a; _ :: QUD R];
+
+-- Answering is not modular:
+canAnswer : (x:XX) !-> (a : AA) -> (r : XX -> AA -> Prop) -> Arg1 x -o Arg2 a -o QUD r -o r x a -* Answer x;
+unclear   : (x:XX) ?-> (a : AA) -> (r : XX -> AA -> Prop) -> Arg1 x -o Arg2 a -* QUD r -* r x a -* CR;
+
+
+
+-- Correction is modular:
+correction : (x:XX) -> (a b : AA) -> Correct2 b -o Arg2 a -o [_ :: Arg2 b ; _ :: Corrected];
+
+isStart :: Start;
+
+-- cl :: Clarify2 B;
+
+corr :: Correct2 B;
+
+fact1 :: R X A;
+fact2 :: R Y B;
+
