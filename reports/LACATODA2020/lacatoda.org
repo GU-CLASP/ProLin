@@ -1,0 +1,56 @@
+#+OPTIONS: toc:nil ':t ":t
+#+LATEX_CLASS: article
+
+#+LATEX_HEADER: \pdfpagewidth=8.5in
+#+LATEX_HEADER: \pdfpageheight=11in
+#+LATEX_HEADER: \usepackage{ijcai20}
+#+LATEX_HEADER: \usepackage{times}
+#+LATEX_HEADER: \usepackage{soul}
+#+LATEX_HEADER: \usepackage{url}
+# FIXME: #+LATEX_HEADER: \usepackage[hidelinks]{hyperref}
+# FIXME: #+LATEX_HEADER: \usepackage{natbib}
+#+LATEX_HEADER: \usepackage[utf8]{inputenc}
+#+LATEX_HEADER: \usepackage[small]{caption}
+#+LATEX_HEADER: \usepackage{graphicx}
+#+LATEX_HEADER: \usepackage{amsmath}
+#+LATEX_HEADER: \usepackage{amsthm}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{algorithm}
+#+LATEX_HEADER: \usepackage{algorithmic}
+#+LATEX_HEADER: \urlstyle{same}
+
+# guidelines: https://www.ijcai.org/authors_kit
+
+#+TITLE: Questions and clarifications with linear logic
+#+AUTHOR:
+
+\begin{abstract}
+  The {\it IJCAI--PRICAI--20 Proceedings} will be printed from electronic
+  manuscripts submitted by the authors. The electronic manuscript will
+  also be included in the online version of the proceedings. This paper
+  provides the style instructions.
+\end{abstract}
+
+* Introductions
+- summarise dialogue system with Linear logic cite:dixon2009plans
+- references on clarification, why do we need to have clarifiable things, meta-var for places that can be clarified
+* Linear logic
+- explain the system
+- explain the extension with unique 
+- type checking?
+* Types of things
+- questions
+- propositions ...
+* Metavariables
+- question answering with meta-variables
+- meta-variable as something left for interpretation 
+- connecting CRs with grounding meta-variables
+- we are not implementing Kos here, just use something from it
+* Discussion
+- discussing the corrections
+- discuss the clarification requests in a more specific way: we can always redefine the referent
+- in dialogue systems meta-variables are always subject to clarification and correction (substitution) 
+
+* References :ignore:
+bibliographystyle:named
+bibliography:lacatoda.bib
