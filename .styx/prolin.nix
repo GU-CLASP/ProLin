@@ -6,7 +6,7 @@
 mkDerivation {
   pname = "prolin";
   version = "0.1.0";
-  src = /home/jyp/repo/gu/ProLin;
+  src = ./..;
   isLibrary = false;
   isExecutable = true;
   setupHaskellDepends = [ base Cabal directory process ];
