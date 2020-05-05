@@ -1,0 +1,11 @@
+taketurn : (x : User) -> DGB x (Spkr x);
+
+releaseturn : (a b : User) -> ReleaseTurn A -o DGB a (Spkr b) -o DGB a TurnUnderspec;
+
+cqe : (q : Question) -> (a b : User) -> DGB a (LU (Ask b q)) -o [_ :: DGB a (QUD q); _ :: ReleaseTurn b];
+
+
+item1 :: DGB A (LU (Ask A Q));
+item2 :: DGB B (LU (Ask A Q));
+item4 :: DGB A (Spkr A);
+item5 :: DGB B (Spkr A);
