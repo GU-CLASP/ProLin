@@ -172,6 +172,42 @@ contributions when user provides more information than they were
 asked, e.g. `Bus 18 to Skogome'.
  
 ** Linear logic
+In the linear logic implementation we treat the information state as a
+set [?] of /resources/ that can be queried and/or used. This is the
+basic set of operators that constitute our implementation and that
+makes it different from cite:dixon2009plans. [fn::TBD examples for each]
+- Query (~X -* Y~) :: the resource ~X~ is queried and if the result is
+  positive the resource ~Y~ is produced.
+- Query for uniqueness (~X !-> Y~) :: the resource ~X~ is queried for
+  uniqueness and if the result is positive the resource ~Y~ is produced.
+- Linear implication (~X -o Y~) :: the resource ~X~ is queried and if the
+  result is possible, ~X~ is consumed and the resource ~Y~ is
+  produced.
+- Conjunction of the results (~[_:: X; _:: Y]~) :: this is a way to produce
+  both ~X~ and ~Y~ as the result of applying the given rule.
+
+As an example, we can show how the rule for /QUD-incrementation/ from
+citet:ginzburg2015understanding can be formulated in this terms. Here
+we consider the dialogue between interlocutors /A/ and /B/, when /A/ asks
+/B/[fn::Here we omit addressees as the conversation is only two-party.]
+a question /Q/. The question /Q/ just have been posed and therefore has
+appeared on the DGBs of both /A/ and /B/ as the latest ~Ask~ move
+(~LatestMove~).
+#+BEGIN_SRC sh :exports code
+-- context
+_ :: DGB A (LatestMove (Ask A Q));
+_ :: DGB B (LatestMove (Ask A Q));
+#+END_SRC
+
+Now we can define our update rule that act on the contextual resources:
+#+BEGIN_SRC
+_ : (q : Question) -> (x y : User) ->
+    DGB x (LatestMove (Ask y q)) -o DGB x (QUD q);
+#+END_SRC
+Here, for any interlocutor, her ~LatestMove~ asking a question is
+consumed and her ~QUD~ is updated with the question from the ~Ask~ move.
+
+
 - explain the system
 - explain the extension with unique 
 - type checking?
