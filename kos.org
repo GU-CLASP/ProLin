@@ -36,6 +36,10 @@
   1. Question = [A :: Type; P :: A -> Prop]
   2. Example: whereDoYouLive = [A = City, P = λx. live_in(x,you)] (, means "where do you live?")
 
+  ? What to do with polar questions? - Are you coming tomorrow? - If the weather permits (...) -> yes / 70% chance (’yes’)
+  
+  
+
 ** Answers
 - Kos :: ?
 - ProLinKos :: follows AixDial
