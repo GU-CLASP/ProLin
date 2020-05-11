@@ -1,11 +1,61 @@
-taketurn : (x : User) -> DGB x (Spkr x);
-
-releaseturn : (x y : User) -> ReleaseTurn A -o DGB x (Spkr y) -o DGB x TurnUnderspec;
-
-cqe : (q : Question) -> (x y : User) -> DGB x (LatestMove (Ask y q)) -o [_ :: DGB x (QUD q); _ :: ReleaseTurn y];
 
 
-item1 :: DGB A (LatestMove (Ask A Q));
-item2 :: DGB B (LatestMove (Ask A Q));
-item4 :: DGB A (Spkr A);
-item5 :: DGB B (Spkr A);
+taketurn : (x y : User) -> TakeTurn y -o DGB x TurnUnderspec 
+	 -o DGB x (Spkr y);
+
+releaseturn : (x y : DP) -> ReleaseTurn y -o DGB x (Spkr y) 
+	    -o DGB x TurnUnderspec;
+
+-----------------------------------------------------------------------
+-- cooperative query exchange
+-- (28)
+cqe : (q : Question) -> (x y : DP) -> DGB x (LatestMove (Ask y q)) 
+    -o [_ :: DGB x (QUD q) ; _ :: ReleaseTurn y];
+
+-- "B: Where do you live?"
+startContextCQE : (x:Location) -> StartCQE -o 
+      [_ :: DGB A (LatestMove (Ask B (Q x (LiveIn A x))));
+       _ :: DGB B (LatestMove (Ask B (Q x (LiveIn A x))));
+       _ :: DGB A (Spkr B);
+       _ :: DGB B (Spkr B); ];
+
+-- "A: I live in Paris"
+answer : (x:DP) -> (loc:Location) -> DGB x (QUD (Q loc (LiveIn A loc)))
+       -o [_ :: TakeTurn A ;
+           _ :: DGB x (LatestMove (Assert A (LiveIn A Paris)))];
+-----------------------------------------------------------------------
+
+-----------------------------------------------------------------------
+-- cooperative assertion exchange with topic incrementation
+-- (37) ()
+startContextCAE : StartCAE -o
+  [_ :: DGB B (Spkr A);
+   _ :: DGB A (Spkr A);
+   _ :: DGB A (LatestMove (Assert A (LiveIn A Paris)));
+   _ :: DGB B (LatestMove (Assert A (LiveIn A Paris)));];
+
+cae :  (p : Prop) -> (x y : DP) 
+    -> DGB x (LatestMove (Assert y p)) 
+    -o [_ :: DGB x (QUD (Q Bool PQuestionMark)); 
+                              --(\a -> if a then p else p)
+        _ :: ReleaseTurn y
+];
+
+
+
+-- "B: mhm"
+
+-- B and A in Ask should depend on DGB.Spkr and DGB.Addr
+
+-- [A -> Prop]
+-- \a. live_in(a), where a : A
+
+-- [Type -> Prop]
+
+-- _ :: DGB A (LatestMove (Ask B Q));
+-- _ :: DGB B (LatestMove (Ask B Q));
+-- _ :: DGB A (Spkr B);
+-- _ :: DGB B (Spkr B); 
+
+
+_ :: StartCAE;
