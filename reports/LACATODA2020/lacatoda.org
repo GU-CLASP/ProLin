@@ -1,0 +1,231 @@
+#+OPTIONS: toc:nil ':t ":t
+#+LATEX_CLASS: article
+
+#+LATEX_HEADER: \pdfpagewidth=8.5in
+#+LATEX_HEADER: \pdfpageheight=11in
+#+LATEX_HEADER: \usepackage{ijcai20}
+#+LATEX_HEADER: \usepackage{times}
+#+LATEX_HEADER: \usepackage{soul}
+#+LATEX_HEADER: \usepackage{url}
+# FIXME: #+LATEX_HEADER: \usepackage[hidelinks]{hyperref}
+# FIXME: #+LATEX_HEADER: \usepackage{natbib}
+#+LATEX_HEADER: \usepackage[utf8]{inputenc}
+#+LATEX_HEADER: \usepackage[small]{caption}
+#+LATEX_HEADER: \usepackage{graphicx}
+#+LATEX_HEADER: \usepackage{amsmath}
+#+LATEX_HEADER: \usepackage{amsthm}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{algorithm}
+#+LATEX_HEADER: \usepackage{algorithmic}
+#+LATEX_HEADER: \urlstyle{same}
+
+# guidelines: https://www.ijcai.org/authors_kit
+
+#+LATEX_HEADER: \usepackage{mathtools}
+#+LATEX_HEADER: \newcommand{\ttr}[1]{\left[\begin{array}{lcl}#1\end{array}\right]}
+#+LATEX_HEADER: \newcommand{\tf}[2]{\mathrm{#1} & : & \mathit{#2}\\}
+#+LATEX_HEADER: \newcommand{\rf}[2]{\mathrm{#1} & = & \mathit{#2}\\}
+#+LATEX_HEADER: \newcommand{\mf}[3]{\mathrm{#1=#2} & : & \mathit{#3}\\}
+#+LATEX_HEADER: \newcommand{\type}[1]{$\mathit{#1}$}
+
+
+#+TITLE: Questions and clarifications with linear logic
+#+AUTHOR:
+
+\begin{abstract}
+In this paper we propose an account for dialogue coherence using Linear Logic. We focus our study on the range of things that can be potentially clarified in dialogue, and argue that they can be represented as meta-variables. 
+\end{abstract}
+
+* Introduction
+A key aspect of dialogue systems design is the coherence of system’s
+responses.  In this respect, key component of a dialogue system is the
+dialogue manager, which selects appropriate system actions depending
+on the current state and the external context.
+
+Two families of approaches to dialogue management can be considered:
+hand-crafted dialogue strategies
+citep:allen1995trains,larsson2002issue,jokinen2009constructive and
+statistical modelling of dialogue
+citep:rieser2011reinforcement,young2010hidden. Hand-crafted strategies
+range from finite-state machines and slot-filling to more complex
+dialogue planning and logical inference rules. Statistical models help
+to contend with the uncertainty that arises from noisy signals that
+arise from speech recognition and other sensors. 
+
+End-to-end systems (they don't have dialogue manager as an explicit
+component) [fn::TBD refs, incl recent Facebook paper] are mostly
+focused on chit-chat dialogues, where coherence plays a crucial role
+too. [fn::TBD what are their struggles?]
+
+Although there has been a lot of development in dialogue systems in
+recent years, only a few approaches to dialogue management reflect
+advancements in /dialogue theory/
+citep:allen1995trains,ginzburg1996interrogatives,poesio1997conversational,larsson2002issue,
+and there has not been much progress in this respect since the early
+2000s. Our aim is to closely integrate dialogue systems with work in
+theoretical semantics/pragmatics of dialogue.
+
+
+- summarise dialogue system with Linear logic cite:dixon2009plans
+- references on clarification, why do we need to have clarifiable things, meta-var for places that can be clarified
+  - also mention that it is a way to recover from / prevent ASR/NLU errors
+
+
+* Methods
+
+** KoS
+KoS (not an acronym) citep:ginzburg2012interactive provides among the
+most detailed theoretical treatments of domain general conversational
+relevance citep:ginzburg2012interactive, especially for query
+responses---see citet:purver-rlc06 on Clarification Requests,
+citet:lupkowski2017query for a general account---and this ties into
+the KoS treatment of non sentential utterances, again a domain crucial
+for naturalistic dialogue systems and where KoS has among the most
+detailed analyses citep:fgl07,ginzburg2012interactive.[fn::TBD DS/TTR,
+incrementality?]
+
+In KoS (and other dynamic approaches to meaning), language is compared
+to a game, containing players (interlocutors), goals and rules. KoS
+represent language interaction by representing the dynamically
+changing context. The meaning of an utterance is how it changes the
+context. Compared to most approaches
+[[citep:roberts2012information][e.g.::]], which represent a single context
+for both dialogue participants), KoS keeps a separate representation
+for each participant, using the /Dialogue Game Board/
+(DGB). DGBs represent the information states of the participants, and
+comprise a private part and the dialogue gameboard that represents
+information arising from publicized interactions. It tracks, at the
+very least, shared assumptions/visual space, moves (= utterances, form
+and content), and questions under discussion.
+
+KoS is based on the formalism of Type Theory with Records (TTR). There
+has been a wide range of work in this formalism which includes the
+modelling of intentionality and mental attitudes citep:cooper-rlc,
+generalised quantifiers citep:cooper-gq13, co-predication and dot
+types in lexical innovation, frame semantics for temporal reasoning,
+reasoning in hypothetical contexts citep:cooper-lacl11, spatial
+reasoning citep:dobnik2017interfacing, enthymematic reasoning
+citep:ellen-aisb, clarification requests
+citep:purver-rlc06,ginzburg2012interactive, negation
+citep:cooper2012negative, non-sentential utterance resolution
+citep:fgl07,ginzburg2012interactive and iconic gesture
+citep:lucking16.
+
+** Information state update approach
+In this work we are employing information-state update (ISU) approach,
+following
+citet:traum1999model,larsson2002issue,ginzburg2015understanding. In
+this view we present the information available to each participant of
+the dialogue (either a human or an artificial agent) in a rich
+information state. Being rich entails that the information state
+contains hierarchy of facts, including the ones that are thought to be
+shared and the ones that have not been yet publicised. Let’s consider
+the following example of the information state of a dialogue system,
+expressed in the TTR notation (Type Theory with Records, for further
+info see [fn::TBD fixed ref]):
+\begin{equation}
+\ttr{
+\rf{private}{\ttr{\rf{tt_1}{TT(Bus52,0,Skogome,Götaplatsen)}
+                  \rf{tt_2}{TT(Bus18,1,Johanneberg,Götaplatsen)}}}
+\rf{public}{\ttr{\rf{latestUtterance}{Ask(U,Question(\lambda t.TT(b,t,d,Götaplatsen)))}}}}
+\end{equation}
+What is expressed here is that dialogue system was just asked by a
+user ($U$) a question like ‘When is there a bus from Götaplatsen’ (the
+underspecified[fn::TBD more about underspecification] variables $b$, $t$ and $d$ correspond to bus number,
+time and destination respectively). This information is
+/public/[fn::Later on, following citet:ginzburg2015understanding we will
+denote the public part of the information state as Dialogue Gameboard
+(DGB).] and available to a user as well. What is private is the
+knowledge of the timetable ($TT$) available to the system and not yet
+made public, hence it is stored in the /private/ part of the information
+state.
+
+Let’s now consider the /update/, another essential component of ISU. In
+this case, we will rely on the set of rules, that will govern the
+updates. citet:ginzburg2015understanding defines one of the most basic
+rules -- the rule of QUD-incrementation -- the procedure of updating
+the current set of questions under discussions (QUD) if the latest
+utterance is comprised of asking the question. This operation is
+salient to a user and therefore it constitutes the update of the
+public part of the information state.
+
+#+BEGIN_SRC python :exports code
+if public.latestUtterance == Ask(U, Question(x)):
+    push Question(x) into public.QUD
+#+END_SRC
+The updated state will look as follows:
+\begin{equation}
+\ttr{
+\rf{private}{\ttr{\rf{tt_1}{TT(Bus52,0,Skogome,Götaplatsen)}
+                  \rf{tt_2}{TT(Bus18,1,Johanneberg,Götaplatsen)}}}
+\rf{public}{\ttr{\rf{latestUtterance}{Ask(U,Question(\lambda t.TT(b,t,d,Götaplatsen)))}
+              \rf{QUD}{set(Question(\lambda t.TT(b,t,d,Götaplatsen))}}}}
+\end{equation}
+
+The main benefit of using rich representation of information state
+with underspecified components is to be able to address wide range of
+clarifications from both parties. This is especially beneficial in
+case of automatic speech recognition or natural language understanding
+errors. But even put the errors aside, we can also consider topically
+relevant follow-up questions by the system, e.g. `What bus?', or
+contributions when user provides more information than they were
+asked, e.g. `Bus 18 to Skogome'.
+ 
+** Linear logic
+In the linear logic implementation we treat the information state as a
+set [?] of /resources/ that can be queried and/or used. This is the
+basic set of operators that constitute our implementation and that
+makes it different from cite:dixon2009plans. [fn::TBD examples for each]
+- Query (~X -* Y~) :: the resource ~X~ is queried and if the result is
+  positive the resource ~Y~ is produced.
+- Query for uniqueness (~X !-> Y~) :: the resource ~X~ is queried for
+  uniqueness and if the result is positive the resource ~Y~ is produced.
+- Linear implication (~X -o Y~) :: the resource ~X~ is queried and if the
+  result is possible, ~X~ is consumed and the resource ~Y~ is
+  produced.
+- Conjunction of the results (~[_:: X; _:: Y]~) :: this is a way to produce
+  both ~X~ and ~Y~ as the result of applying the given rule.
+
+As an example, we can show how the rule for /QUD-incrementation/ from
+citet:ginzburg2015understanding can be formulated in this terms. Here
+we consider the dialogue between interlocutors /A/ and /B/, when /A/ asks
+/B/[fn::Here we omit addressees as the conversation is only two-party.]
+a question /Q/. The question /Q/ just have been posed and therefore has
+appeared on the DGBs of both /A/ and /B/ as the latest ~Ask~ move
+(~LatestMove~).
+#+BEGIN_SRC sh :exports code
+-- context
+_ :: DGB A (LatestMove (Ask A Q));
+_ :: DGB B (LatestMove (Ask A Q));
+#+END_SRC
+
+Now we can define our update rule that act on the contextual resources:
+#+BEGIN_SRC
+_ : (q : Question) -> (x y : User) ->
+    DGB x (LatestMove (Ask y q)) -o DGB x (QUD q);
+#+END_SRC
+Here, for any interlocutor, her ~LatestMove~ asking a question is
+consumed and her ~QUD~ is updated with the question from the ~Ask~ move.
+
+
+- explain the system
+- explain the extension with unique 
+- type checking?
+* Types of things
+- questions
+- propositions ...
+* Metavariables
+- question answering with meta-variables
+- meta-variable as something left for interpretation 
+- connecting CRs with grounding meta-variables
+- we are not implementing Kos here, just use something from it
+* Discussion
+- discussing the corrections
+- discuss the clarification requests in a more specific way: we can always redefine the referent
+- in dialogue systems meta-variables are always subject to clarification and correction (substitution)
+- dependencies between questions (who killed bill -> who was around?)
+  
+
+* References :ignore:
+bibliographystyle:named
+bibliography:lacatoda.bib
