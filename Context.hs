@@ -1,3 +1,4 @@
+{-# LANGUAGE TupleSections #-}
 {-# LANGUAGE PartialTypeSignatures #-}
 {-# LANGUAGE EmptyCase #-}
 {-# LANGUAGE RankNTypes #-}
@@ -189,11 +190,11 @@ consistentUnicity uvs@((u,v):_) = case u of
   where (_us,nub -> vs) = unzip uvs
 
 
-applyAnyRule :: [(String,AnyRule)] -> [R] -> [R]
+applyAnyRule :: [(String,AnyRule)] -> [R] -> [(String,R)]
 applyAnyRule rs ctxs = do
   (ruleName,r) <- rs
   ctx <- ctxs
-  applyRule ruleName r ctx
+  (ruleName,) <$> (applyRule ruleName r ctx)
 
 
 prettyR :: Bool -> R -> D

@@ -52,5 +52,7 @@ run n  r rs = do
     [] -> do
       putStrLn "No more rules to apply"
       return r
-    (r':_) -> run (n-1) r' rs
+    ((ruleName,r'):_) -> do
+      putStrLn ("Applied: " ++ ruleName)
+      run (n-1) r' rs
 
