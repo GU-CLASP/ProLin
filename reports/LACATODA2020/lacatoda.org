@@ -15,8 +15,6 @@
 #+LATEX_HEADER: \usepackage{amsmath}
 #+LATEX_HEADER: \usepackage{amsthm}
 #+LATEX_HEADER: \usepackage{booktabs}
-#+LATEX_HEADER: \usepackage{algorithm}
-#+LATEX_HEADER: \usepackage{algorithmic}
 #+LATEX_HEADER: \urlstyle{same}
 
 # guidelines: https://www.ijcai.org/authors_kit
