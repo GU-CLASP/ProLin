@@ -71,9 +71,10 @@ theoretical semantics/pragmatics of dialogue.
   - also mention that it is a way to recover from / prevent ASR/NLU errors
 
 
-* Methods
+* Background
 
-** KoS
+** Dialogue management                                                 :Vlad:
+*** KoS
 KoS (not an acronym) citep:ginzburg2012interactive provides among the
 most detailed theoretical treatments of domain general conversational
 relevance citep:ginzburg2012interactive, especially for query
@@ -111,7 +112,7 @@ citep:cooper2012negative, non-sentential utterance resolution
 citep:fgl07,ginzburg2012interactive and iconic gesture
 citep:lucking16.
 
-** Information state update approach
+*** Information state update approach
 In this work we are employing information-state update (ISU) approach,
 following
 citet:traum1999model,larsson2002issue,ginzburg2015understanding. In
@@ -171,7 +172,8 @@ relevant follow-up questions by the system, e.g. `What bus?', or
 contributions when user provides more information than they were
 asked, e.g. `Bus 18 to Skogome'.
  
-** Linear logic
+** Clarification requests                                                :Vlad:
+** TODO Linear logic and Proof search                                    :JP:
 In the linear logic implementation we treat the information state as a
 set [?] of /resources/ that can be queried and/or used. This is the
 basic set of operators that constitute our implementation and that
@@ -211,20 +213,27 @@ consumed and her ~QUD~ is updated with the question from the ~Ask~ move.
 - explain the system
 - explain the extension with unique 
 - type checking?
-* Types of things
-- questions
-- propositions ...
-* Metavariables
+
+*** Metavariables and unification
+
+* TODO Theory and running example                                        :JP:
+** Questions and answers
+- propositions
+- stuff from previous paper
+
+** Metavariables in dialogue
 - question answering with meta-variables
-- meta-variable as something left for interpretation 
+- meta-variable as something left for interpretation
 - connecting CRs with grounding meta-variables
 - we are not implementing Kos here, just use something from it
-* Discussion
+- everything which is clarified is mediated by a metavariable
+
+
+* Evaluation/Discussion/Future work
 - discussing the corrections
 - discuss the clarification requests in a more specific way: we can always redefine the referent
 - in dialogue systems meta-variables are always subject to clarification and correction (substitution)
 - dependencies between questions (who killed bill -> who was around?)
-  
 
 * References :ignore:
 bibliographystyle:named
