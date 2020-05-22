@@ -170,14 +170,26 @@ contributions when user provides more information than they were
 asked, e.g. `Bus 18 to Skogome'.
  
 ** Clarification requests                                                :Vlad:
-** TODO Proof search as a programming language                           :JP:
+** Proof search as a programming language
+
+The prevailing tradition in formal semantics (TODO:citations) is to
+represent (declarative) statements as propositions, formalized in an
+underlying logic (such as propositional logic, first-order logic,
+etc.).
+
+In particular, in linguistic theories based on intuitionistic logic
+(such as TTR), true statements corresponds to propositions which admit
+a proof.
+
 There is a long history (TODO:citations) of using proof search as a
 declarative programming paradigm.  In the most abstract sense, the
 programmer specifies /axioms/ and /rules of inference/ which model
 their application domain. Typically such a system of axioms and rules
 represent a database of facts. For example, the axiom Leave 55
 Götaplatsen 11.50 can model the fact that bus 55 leaves from
-Götaplatsen at 11:30. The rule Leave x Gotaplatsen y -> Arrive x CentralStationen (y+0.75) can represent travelling times on a certain line.
+Götaplatsen at 11:30. The rule Leave x Gotaplatsen y -> Arrive x
+CentralStationen (y+0.75) can represent travelling times on a certain
+line.
 
 Then, the user may define a query (or goal) as
 a logical formula. The system can then search for a proof of goal as a
@@ -213,7 +225,11 @@ message to the outside world (in the form of speech, movement,
 etc.). Conversely, events happenning in the outside world can result
 in updates of the state (through a model of the perceptory subsystem).
 
-TODO: example?
+In an actual dialogue, the scenario is therefore suspended after every
+interaction, and the state represent the actual mental state of the
+agent which is modeleled.
+
+TODO: examples!
 
 It is important to note that we will not forego the unrestricted
 (i.e. non-linear) implication (->). Rather, both implication will
@@ -221,14 +237,23 @@ co-exist in our implementation, thus we can represent simultaneously
 transient facts, or states, (introduced by the linear arrow) and
 immuable facts (introduced by the unrestricted arrow).
 
-
-
-
 *** Metavariables and unification
+
+In prolog-like languages, metavariables play the role of unknowns,
+whose value can become fixed for a goal to be reached.
+
+In the context of linear-logic proof search, this means that, at any
+point in the scenario, state can refer to metavariables.
+
+(Example) 
+
+In this situation, metavariables represent a certain amount of
+flexibility in the scenario: /so far/ the scenario works for any value
+which could be assigned to the metavariable. In this paper we explore
+the potential of using metavariables in this context.
 
 * TODO Theory and running example                                        :JP:
 ** Questions and answers
-- propositions
 - stuff from previous paper
 
 ** Metavariables in dialogue
