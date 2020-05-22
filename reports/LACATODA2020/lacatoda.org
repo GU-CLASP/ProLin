@@ -68,7 +68,6 @@ theoretical semantics/pragmatics of dialogue.
 - references on clarification, why do we need to have clarifiable things, meta-var for places that can be clarified
   - also mention that it is a way to recover from / prevent ASR/NLU errors
 
-
 * Background
 
 ** Dialogue management                                                 :Vlad:
@@ -171,7 +170,39 @@ contributions when user provides more information than they were
 asked, e.g. `Bus 18 to Skogome'.
  
 ** Clarification requests                                                :Vlad:
-** TODO Linear logic and Proof search                                    :JP:
+** TODO Proof search as a programming language                           :JP:
+There is a long history (TODO:citations) of using proof search as a
+declarative programming paradigm.  In the most abstract sense, the
+programmer specifies /axioms/ and /rules of inference/ which model
+their application domain. Typically such a system of axioms and rules
+represent a database of facts. For example, the axiom Leave 55
+Götaplatsen 1155 can model the fact that bus 55 leaves from
+Götaplatsen at 11:55.  Then, the user may define a query (or goal) as
+a logical formula. The system can then search for a proof of goal as a
+way to query the database of facts. The most useful case are goals
+which contain /metavariables/. For example, the goal "Leave x
+Götaplatsen y" corresponds to a request to list all the buses leaving
+from Götaplatsen (as x) together with their departure time (as y).
+
+
+*** Linear logic 
+
+
+*** Metavariables and unification
+
+* TODO Theory and running example                                        :JP:
+** Questions and answers
+- propositions
+- stuff from previous paper
+
+** Metavariables in dialogue
+- question answering with meta-variables
+- meta-variable as something left for interpretation
+- connecting CRs with grounding meta-variables
+- we are not implementing Kos here, just use something from it
+- everything which is clarified is mediated by a metavariable
+
+** Extras
 In the linear logic implementation we treat the information state as a
 set [?] of /resources/ that can be queried and/or used. This is the
 basic set of operators that constitute our implementation and that
@@ -211,21 +242,6 @@ consumed and her ~QUD~ is updated with the question from the ~Ask~ move.
 - explain the system
 - explain the extension with unique 
 - type checking?
-
-*** Metavariables and unification
-
-* TODO Theory and running example                                        :JP:
-** Questions and answers
-- propositions
-- stuff from previous paper
-
-** Metavariables in dialogue
-- question answering with meta-variables
-- meta-variable as something left for interpretation
-- connecting CRs with grounding meta-variables
-- we are not implementing Kos here, just use something from it
-- everything which is clarified is mediated by a metavariable
-
 
 * Evaluation/Discussion/Future work
 - discussing the corrections
