@@ -1,25 +1,28 @@
 ### dlg-43dc490a-3a95-4b5d-89ed-abe3eebf50bb uber-lyft-1 ###
 U: Hey Sally # Greet. 
-S: Hey Rain. What's up? # Greet. Ask(Q [x:Prop] (Want x)).
-U: I need you to order a car for me. I'm in Jersey and I need to get over to Brooklyn # Answer(P). Assert. 
-S: Ok, give me a minute. # Request?
-U: Alright. # Accept? 
-S: Ok, exactly where are you in Newark? # Ask.
+S: Hey Rain. What's up? # CounterGreet. Ask(Q [x:Prop] (Want x)).
+U: I need you to order a car for me. I'm in Jersey and I need to get over to Brooklyn # Assert(P). Assert. 
+S: Ok, give me a minute. # Ack. Request(pause)? (Turn-control (Bunt))
+U: Alright. # Accept. (or give a pause)
+S: Ok, exactly where are you in Newark? # Turn-control. Ask.
 U: The airport. # Answer(Short).
 S: And where are you going in Brooklyn Heights? # Ask.
 U: To the Promenade. # Answer(Short).
 S: Why didn't you just catch a flight to LaGuardia.. this fare is going to be super expensive. # Ask. Assert. 
-U: Is this relevant? I've got family here, so flew up to see them first. Anyway, let's get back on task. What's the cost? # Ask. Answer(P). Request. Ask.
-S: Ok, we've got a shared ride on lyft that's about 45 and on a pool on Uber that is about 68 # Accept. Answer(P).
-U: I'm bringing the fam with me, so that won't work. We're going to need more space # Disagree. Request. 
-S: Ok...do you want fancy or normal # Ask.
-U: Normal haha. I'm not made of money  # Answer. Assert.
-S: Hah! right ok. So an Uber X will be over 70 and a Lyft XL will be about 5 to 10 dollars cheaper # reaction-to-joke. Accept. Answer(P). 
+U: Is this relevant? I've got family here, so flew up to see them first. Anyway, let's get back on task. What's the cost? # Ask(CR-meta-discoursive). Answer(P). Proposal(resolves meta-CR). Ask(with contextual parameter).
+S: Ok, we've got a shared ride on lyft that's about 45 and on a pool on Uber that is about 68 # Accept(proposal)/filler. Assert(P).
+U: I'm bringing the fam with me, so that won't work. We're going to need more space # Disagree. Assert. 
+S: Ok...do you want fancy or normal # Ask(?class).
+U: Normal haha. I'm not made of money  # Answer(haha - smoothing). Assert. -- sensitive questions/topics, like age, money, etc  -- tension relief? 
+S: Hah! right ok. So an Uber X will be over 70 and a Lyft XL will be about 5 to 10 dollars cheaper # Ack(enj.inc). Accept(resolves not-made-of-money QUD). Answer(P) ("so" for QUD downdate). 
 U: Ok, let's go with the Lyft # Accept. Request. 
-S: Cool. Plugging in the details now... and it is on the way! # Accept. ....
+S: Cool. Plugging in the details now... and it is on the way! # Accept. Request(time). Assert.
 U: Thanks Sally!  # Thank.
-S: No problem. Enjoy your family time, Rain. # CounterThank. wish?. 
-U: I will thanks. Bye  # counter-wish. Part.
+S: No problem. Enjoy your family time, Rain. # CounterThank. PrePart. 
+U: I will thanks. Bye  # CounterPrePart. Part.
 S: Bye. # CounterPart.
+
+CarTrip from to price class
+
 
 U String -> nlu [Moves] -> DM (apply rules, upd DGB) -> nlg [Moves] -> S String
