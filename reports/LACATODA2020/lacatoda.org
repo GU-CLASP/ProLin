@@ -34,6 +34,7 @@
 In this paper we propose an account for dialogue coherence using Linear Logic. We focus our study on the range of things that can be potentially clarified in dialogue, and argue that they can be represented as meta-variables. 
 \end{abstract}
 
+
 * Introduction
 A key aspect of dialogue systems design is the coherence of system’s
 responses.  In this respect, key component of a dialogue system is the
@@ -72,6 +73,9 @@ theoretical semantics/pragmatics of dialogue.
 
 ** Dialogue management                                                 :Vlad:
 *** KoS
+TODO: we are not implementing Kos here, just use something from it
+
+
 KoS (not an acronym) citep:ginzburg2012interactive provides among the
 most detailed theoretical treatments of domain general conversational
 relevance citep:ginzburg2012interactive, especially for query
@@ -253,15 +257,91 @@ which could be assigned to the metavariable. In this paper we explore
 the potential of using metavariables in this context.
 
 * TODO Theory and running example                                        :JP:
-** Questions and answers
-- stuff from previous paper
 
-** Metavariables in dialogue
-- question answering with meta-variables
-- meta-variable as something left for interpretation
-- connecting CRs with grounding meta-variables
-- we are not implementing Kos here, just use something from it
-- everything which is clarified is mediated by a metavariable
+** Question-answering with metavariables
+
+A first use for metavariables is to represent the requested answer.
+
+We choose here to represent a question by a predicate over a type A.
+
+A : Type
+P : A  -> Prop
+
+Examples:
+
+where do you live?
+do you live in paris?
+
+In the state of the agent, if the value of the requested answer is
+represented as a metavariable x, then the question can be represented as:
+
+Q x (P x)
+
+That is, the pending question is a pair of a metavariable x and a proposition
+where x occurs.
+
+We stress that P x is /not/ part of the state of the agent yet, rather
+the fact that the above question is /under discussion/ is a fact:
+
+QUD (Q x (P x))
+
+Resolving a question can be done by communicating an answer. An answer
+to a question (A : Type; P : A -> Type) is a pair of an element x:A
+and a /proof/ that P x holds.
+
+Examples.
+
+Therefore, one way to resolve a question is by the following rule:
+
+∀ x p'. Stated p' -> QUD (Q x p') -o p'
+
+That is, if it was stated P', and P' was under discussion, then P'
+holds.  Indeed, this requires that the statement and the posed
+question /unify/. Examples:
+
+"I live in paris" answers both questions "where do you live" and "do
+you live in paris", but, not, for example "what time is it?".
+
+(Formalize examples)
+
+However, in layman terms,one would consider the question answered only
+if the answer is "unique". For example, "I live somewhere" is not a
+valid answer to "where do you live". That is, if "somewhere" is
+represented by a metavariable, then the answer is not fitting.
+
+To be able to represent this, we extend linear logic with an operator !-> :
+
+TODO
+
+With this, we are ready to state understand the keystone of our theory:
+
+
+meta-variable stand in for any piece of information which is left for
+interpretation.
+
+
+** Clarification requests
+
+"I eat"
+
+eat(I,something)
+
+Then "What do you eat?" is a felicitous question
+
+"I eat an apple"
+
+eat(I,apple)
+
+
+Then "What do you eat?" is not a felicitous question.
+
+
+Anything which can be subject to clarification should be represented
+(or mediated) by a metavariable.
+
+Example: buses again.
+
+
 
 ** Extras
 In the linear logic implementation we treat the information /state as a
