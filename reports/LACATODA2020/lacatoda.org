@@ -201,11 +201,26 @@ Thus, the hypotheses available for proof search correspond to the
 /state/ of the system. In our application they will correspond to the
 state of the dialog (roughly speaking the dialog game board).
 
+This way, the firing of a linear rule corresponds to an /action/ of an
+agent, and a complete proof corresponds to a /scenario/, i.e. a
+sequence of actions, possibly involving action from several agents.
+However, the state of the system (typically in the literature and in
+this paper as well), represent the (mental) state of a /single/
+agent. A scenario is concieved as the plan of a single agent as to how
+a dialogue develops. Scenarii can be realised as an actual sequence of
+exchange of messages.  That is, an action can result in sending a
+message to the outside world (in the form of speech, movement,
+etc.). Conversely, events happenning in the outside world can result
+in updates of the state (through a model of the perceptory subsystem).
+
+TODO: example?
+
 It is important to note that we will not forego the unrestricted
 (i.e. non-linear) implication (->). Rather, both implication will
 co-exist in our implementation, thus we can represent simultaneously
 transient facts, or states, (introduced by the linear arrow) and
 immuable facts (introduced by the unrestricted arrow).
+
 
 
 
