@@ -176,8 +176,10 @@ declarative programming paradigm.  In the most abstract sense, the
 programmer specifies /axioms/ and /rules of inference/ which model
 their application domain. Typically such a system of axioms and rules
 represent a database of facts. For example, the axiom Leave 55
-Götaplatsen 1155 can model the fact that bus 55 leaves from
-Götaplatsen at 11:55.  Then, the user may define a query (or goal) as
+Götaplatsen 11.50 can model the fact that bus 55 leaves from
+Götaplatsen at 11:30. The rule Leave x Gotaplatsen y -> Arrive x CentralStationen (y+0.75) can represent travelling times on a certain line.
+
+Then, the user may define a query (or goal) as
 a logical formula. The system can then search for a proof of goal as a
 way to query the database of facts. The most useful case are goals
 which contain /metavariables/. For example, the goal "Leave x
@@ -185,7 +187,26 @@ Götaplatsen y" corresponds to a request to list all the buses leaving
 from Götaplatsen (as x) together with their departure time (as y).
 
 
-*** Linear logic 
+*** Linear logic
+Typically, and in particular in the archetypal logic programming
+language prolog, axioms and rules are expressed within the general
+framework of first order logic. However, several authors (cite:) have
+proposed to use instead linear logic. For our purpose, the crucial
+feature of linear logic is that facts may be used /only once/. For example, could have a rule
+Is x Gotaplatsen y -o Is x CentralStationen (y+0.75)
+Consequently, after firing the above rule, the premiss (Is x Gotaplatsen y) becomes unavailable for other rules.
+Thereby the linear arrow (-o) can be used to conveniently model that a bus cannot be at two places.
+
+Thus, the hypotheses available for proof search correspond to the
+/state/ of the system. In our application they will correspond to the
+state of the dialog (roughly speaking the dialog game board).
+
+It is important to note that we will not forego the unrestricted
+(i.e. non-linear) implication (->). Rather, both implication will
+co-exist in our implementation, thus we can represent simultaneously
+transient facts, or states, (introduced by the linear arrow) and
+immuable facts (introduced by the unrestricted arrow).
+
 
 
 *** Metavariables and unification
@@ -203,7 +224,7 @@ from Götaplatsen (as x) together with their departure time (as y).
 - everything which is clarified is mediated by a metavariable
 
 ** Extras
-In the linear logic implementation we treat the information state as a
+In the linear logic implementation we treat the information /state as a
 set [?] of /resources/ that can be queried and/or used. This is the
 basic set of operators that constitute our implementation and that
 makes it different from cite:dixon2009plans. [fn::TBD examples for each]
