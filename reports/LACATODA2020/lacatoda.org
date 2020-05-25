@@ -313,35 +313,110 @@ To be able to represent this, we extend linear logic with an operator !-> :
 
 TODO
 
-With this, we are ready to state understand the keystone of our theory:
-
+With this, we are ready to state our key idea:
 
 meta-variable stand in for any piece of information which is left for
-interpretation.
-
+interpretation
 
 ** Clarification requests
 
-"I eat"
+In this section we consider the repercussions of our key idea in the
+context of clarification requests.
 
-eat(I,something)
+Assume a two-place predicate /Eat/ with agent as first argument and
+object as second argument. The phrase "John eats an apple" could then
+be represented as /Eat(John,Apple)/. According to our theory, one can
+then represent the phrase "John eats" as /Eat(John,x)/, with /x/ being
+a metavariable.
 
-Then "What do you eat?" is a felicitous question
+Assume now a system with the state:
 
-"I eat an apple"
+/Eat(John,Apple)/
 
-eat(I,apple)
+Then the question "what does John eat", represented as /(Q x
+(Eat(John,x)))/, can be answered.  From the point of view of modelling
+with linear logic, we could attempt to model the answering by the
+rule:
 
+(a : Type) -> (x : a) -> (p : Prop) -> QUD (Q x p) -> P ⊸ (P ⊗ Answer x (Q x P))
 
-Then "What do you eat?" is not a felicitous question.
+The above states that, if $x$ makes the proposion $p$ true (more
+precisely, provable) then it is valid to answer $x$ if $p$ is under
+discussion. However, there is an issue with the above rule: if $x$ is
+/not unique/, then one would not consider $x$ a suitable answer. Indeed,
+assume instead that the system is in the state:
 
+/Eat(John,x)/
 
-Anything which can be subject to clarification should be represented
-(or mediated) by a metavariable.
+Then the question cannot be answered, because /x/ stands for some
+unknown thing. The proper answer is then "I do not know".
 
-Example: buses again.
+Hence, we introduce another type-former /(x : A) !-> B/. As for $(x :
+A) -> B$, it introduces the metavariable $x$. However, the rule fires
+only when $x$ is made /ground/ and /unique/ by matching the rule. That
+is, it won't match in the previous example, because the answer is not
+ground (it contains unknowns). Additionally, it won't match if the
+state of the system is composed of the two hypotheses
+/Eat(John,Apple)/ and /Eat(John,Orange)/: the answer is not unique. 
 
+Thus, the rule for answering can be written:
 
+(a : Type) -> (x : a) !-> (p : Prop) -> QUD (Q x p) -> P ⊸ (P ⊗ Answer x (Q x P))
+
+For the above example: A proper answer could be "An apple and an orange" or "An apple or an
+orange". However we consider here a third possibility: instead of
+answering, the agent can issue a clarification request (TODO: is this
+reasonable? When ... etc.)
+
+To illustrate, consider the question "What is being eaten?"
+represented as /Q x (Eat(y,x))/.  with the state /Eat(John,Apple)/ and
+/Eat(Mary,Apple)/. Then the agent can unambguously answer "An apple":
+even if we do not know who we're talking about, it does not matter:
+only an apple is being eaten. However, If the state is
+/Eat(John,Apple)/ and /Eat(Mary,Orange)/, then a probable answer would
+be a /clarification request/, namely "eaten by who?".
+
+To detect situations where a clarification request can be issued, we can use the following rule:
+
+(a : Type) -> (x : a) ?-> (p : Prop) -> QUD (Q x p) -> P ⊸ (P ⊗ CR)
+
+The conditions are similar to that of the answering rule. The
+principal difference is the use of the ?-> operator, which conditions
+on a metavariable which remains not (fully) ground, or which can be
+unified to several ground terms --- the opposite of the !-> operator.
+
+We can then turn our attention to the formulation of this clarification request.
+It is itself a question, and has a tricky representation:
+
+Q z (z = y)
+
+That is, the question is asking about some aspect which was left
+implicit in the original question (what is being eaten). In our terms,
+it must refer to the (implicit) metavariable which the original
+question included (y). After getting an answer, (say "Mary"), z will
+be bound to a ground term, and, in turn, the fact z=y will ensure that
+y becomes ground. This means the original question will, by
+unification, become Q x (Eat(Mary,x)), and it can be unambiguously
+answered using the /canAnswer/ rule. We note that the logical form of
+the question (z such that (z=y)) is typically realised in a
+complicated way. In our example, it could be "eaten by who"; echoing
+part of the original question and assuming cooperative communication
+so that the questioner properly relates the clarification request to
+the implicits of the original questions. (In sec. TODO we show other examples.)
+
+In practice, the form of clarification questions will greatly vary depending on the context.
+
+The above suposes a clear-cut distinction: if an answer is unique, it
+is given; otherwise a clarification request is issued. However,
+answers could simply be exhaustive ("An appler or an orange").  If the
+original questioners are unhappy with the ambiguity, they are free to
+issue more precise questions. In practice, one can easily imagine an
+ambiguity threshold after which clarification requests are
+preferred. In the simplest form, this ambiguity threshold could be
+expressed by the length of the answer. In our example, if one has to
+list, say, 20 different types of food, it is easy to imagine that the
+answer won't be fully given. In fact, this question can be the topic
+of an experimental study.
 
 ** Extras
 In the linear logic implementation we treat the information /state as a
