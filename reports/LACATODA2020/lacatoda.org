@@ -36,6 +36,15 @@ In this paper we propose an account for dialogue coherence using Linear Logic. W
 
 
 * Introduction
+
+** TODO ?
+- summarise dialogue system with Linear logic cite:dixon2009plans
+- references on clarification, why do we need to have clarifiable things, meta-var for places that can be clarified
+  - also mention that it is a way to recover from / prevent ASR/NLU errors
+
+* Background
+
+** Dialogue management                                                 :Vlad:
 A key aspect of dialogue systems design is the coherence of system’s
 responses.  In this respect, key component of a dialogue system is the
 dialogue manager, which selects appropriate system actions depending
@@ -49,30 +58,79 @@ citep:rieser2011reinforcement,young2010hidden. Hand-crafted strategies
 range from finite-state machines and slot-filling to more complex
 dialogue planning and logical inference rules. Statistical models help
 to contend with the uncertainty that arises from noisy signals that
-arise from speech recognition and other sensors. 
+arise from speech recognition and other sensors.
 
-End-to-end systems (they don't have dialogue manager as an explicit
-component) [fn::TBD refs, incl recent Facebook paper] are mostly
-focused on chit-chat dialogues, where coherence plays a crucial role
-too. [fn::TBD what are their struggles?]
+End-to-end systems that do not specify dialogue manager as an
+explicit component are gained lots of attention recently [[citep:roller2020recipes][e. g.,::]]. Although most of them are focused on chit-chat dialogues, coherence plays a crucial role there
+too. Typically issues there are concerned with system's memory which causes repetition, contradiction and forgetfulness of such systems. Having a policy for dialogue coherence would be beneficial for such systems. 
 
 Although there has been a lot of development in dialogue systems in
 recent years, only a few approaches to dialogue management reflect
-advancements in /dialogue theory/
-citep:allen1995trains,ginzburg1996interrogatives,poesio1997conversational,larsson2002issue,
-and there has not been much progress in this respect since the early
-2000s. Our aim is to closely integrate dialogue systems with work in
-theoretical semantics/pragmatics of dialogue.
+advancements in /dialogue theory/. Our aim is to closely integrate
+dialogue systems with work in theoretical semantics/pragmatics of
+dialogue.
 
+*** Information state update approach
+In this work we are employing information-state update (ISU) approach,
+following
+citet:traum1999model,larsson2002issue,ginzburg2012interactive. In this
+view we present the information available to each participant of the
+dialogue (either a human or an artificial agent) in a rich information
+state. Being rich entails that the information state contains
+hierarchy of facts, including the ones that are thought to be shared
+and the ones that have not been yet publicised. Let’s consider the
+following example of the information state of a dialogue system,
+expressed in the TTR notation (Type Theory with Records, for further
+info see [fn::TBD fixed ref]):
+\begin{equation}
+\ttr{
+\rf{private}{\ttr{\rf{tt_1}{TT(Bus52,0,Skogome,Götaplatsen)}
+                  \rf{tt_2}{TT(Bus18,1,Johanneberg,Götaplatsen)}}}
+\rf{public}{\ttr{\rf{latestUtterance}{Ask(U,Question(\lambda t.TT(b,t,d,Götaplatsen)))}}}}
+\end{equation}
+What is expressed here is that dialogue system was just asked by a
+user ($U$) a question like ‘When is there a bus from Götaplatsen’ (the
+underspecified[fn::TBD more about underspecification] variables $b$,
+$t$ and $d$ correspond to bus number, time and destination
+respectively). This information is /public/[fn::Later on, following
+citet:ginzburg2015understanding we will denote the public part of the
+information state as Dialogue Gameboard (DGB).] and available to a
+user as well. What is private is the knowledge of the timetable ($TT$)
+available to the system and not yet made public, hence it is stored in
+the /private/ part of the information state.
 
-- summarise dialogue system with Linear logic cite:dixon2009plans
-- references on clarification, why do we need to have clarifiable things, meta-var for places that can be clarified
-  - also mention that it is a way to recover from / prevent ASR/NLU errors
+Let’s now consider the /update/, another essential component of ISU. In
+this case, we will rely on the set of rules, that will govern the
+updates. citet:ginzburg2012interactive defines one of the most basic
+rules -- the rule of QUD-incrementation -- the procedure of updating
+the current set of questions under discussions (QUD) if the latest
+utterance is comprised of asking the question. This operation is
+salient to a user and therefore it constitutes the update of the
+public part of the information state.
 
-* Background
+#+BEGIN_SRC python :exports code
+if public.latestUtterance == Ask(U, Question(x)):
+    push Question(x) into public.QUD
+#+END_SRC
+The updated state will look as follows:
+\begin{equation}
+\ttr{
+\rf{private}{\ttr{\rf{tt_1}{TT(Bus52,0,Skogome,Götaplatsen)}
+                  \rf{tt_2}{TT(Bus18,1,Johanneberg,Götaplatsen)}}}
+\rf{public}{\ttr{\rf{latestUtterance}{Ask(U,Question(\lambda t.TT(b,t,d,Götaplatsen)))}
+              \rf{QUD}{set(Question(\lambda t.TT(b,t,d,Götaplatsen))}}}}
+\end{equation}
 
-** Dialogue management                                                 :Vlad:
-*** KoS
+The main benefit of using rich representation of information state
+with underspecified components is to be able to address wide range of
+clarifications from both parties. This is especially beneficial in
+case of automatic speech recognition or natural language understanding
+errors. But even put the errors aside, we can also consider topically
+relevant follow-up questions by the system, e.g. `What bus?', or
+contributions when user provides more information than they were
+asked, e.g. `Bus 18 to Skogome'.
+ 
+*** COMMENT KoS
 TODO: we are not implementing Kos here, just use something from it
 
 
@@ -113,67 +171,9 @@ citep:cooper2012negative, non-sentential utterance resolution
 citep:fgl07,ginzburg2012interactive and iconic gesture
 citep:lucking16.
 
-*** Information state update approach
-In this work we are employing information-state update (ISU) approach,
-following
-citet:traum1999model,larsson2002issue,ginzburg2015understanding. In
-this view we present the information available to each participant of
-the dialogue (either a human or an artificial agent) in a rich
-information state. Being rich entails that the information state
-contains hierarchy of facts, including the ones that are thought to be
-shared and the ones that have not been yet publicised. Let’s consider
-the following example of the information state of a dialogue system,
-expressed in the TTR notation (Type Theory with Records, for further
-info see [fn::TBD fixed ref]):
-\begin{equation}
-\ttr{
-\rf{private}{\ttr{\rf{tt_1}{TT(Bus52,0,Skogome,Götaplatsen)}
-                  \rf{tt_2}{TT(Bus18,1,Johanneberg,Götaplatsen)}}}
-\rf{public}{\ttr{\rf{latestUtterance}{Ask(U,Question(\lambda t.TT(b,t,d,Götaplatsen)))}}}}
-\end{equation}
-What is expressed here is that dialogue system was just asked by a
-user ($U$) a question like ‘When is there a bus from Götaplatsen’ (the
-underspecified[fn::TBD more about underspecification] variables $b$, $t$ and $d$ correspond to bus number,
-time and destination respectively). This information is
-/public/[fn::Later on, following citet:ginzburg2015understanding we will
-denote the public part of the information state as Dialogue Gameboard
-(DGB).] and available to a user as well. What is private is the
-knowledge of the timetable ($TT$) available to the system and not yet
-made public, hence it is stored in the /private/ part of the information
-state.
-
-Let’s now consider the /update/, another essential component of ISU. In
-this case, we will rely on the set of rules, that will govern the
-updates. citet:ginzburg2015understanding defines one of the most basic
-rules -- the rule of QUD-incrementation -- the procedure of updating
-the current set of questions under discussions (QUD) if the latest
-utterance is comprised of asking the question. This operation is
-salient to a user and therefore it constitutes the update of the
-public part of the information state.
-
-#+BEGIN_SRC python :exports code
-if public.latestUtterance == Ask(U, Question(x)):
-    push Question(x) into public.QUD
-#+END_SRC
-The updated state will look as follows:
-\begin{equation}
-\ttr{
-\rf{private}{\ttr{\rf{tt_1}{TT(Bus52,0,Skogome,Götaplatsen)}
-                  \rf{tt_2}{TT(Bus18,1,Johanneberg,Götaplatsen)}}}
-\rf{public}{\ttr{\rf{latestUtterance}{Ask(U,Question(\lambda t.TT(b,t,d,Götaplatsen)))}
-              \rf{QUD}{set(Question(\lambda t.TT(b,t,d,Götaplatsen))}}}}
-\end{equation}
-
-The main benefit of using rich representation of information state
-with underspecified components is to be able to address wide range of
-clarifications from both parties. This is especially beneficial in
-case of automatic speech recognition or natural language understanding
-errors. But even put the errors aside, we can also consider topically
-relevant follow-up questions by the system, e.g. `What bus?', or
-contributions when user provides more information than they were
-asked, e.g. `Bus 18 to Skogome'.
- 
 ** Clarification requests                                                :Vlad:
+
+
 ** Proof search as a programming language
 
 The prevailing tradition in formal semantics (TODO:citations) is to
