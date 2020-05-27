@@ -26,6 +26,7 @@
 #+LATEX_HEADER: \newcommand{\mf}[3]{\mathrm{#1=#2} & : & \mathit{#3}\\}
 #+LATEX_HEADER: \newcommand{\type}[1]{$\mathit{#1}$}
 
+# lhs2tex
 
 #+TITLE: Questions and clarifications with linear logic
 #+AUTHOR:
@@ -37,10 +38,6 @@ In this paper we propose an account for dialogue coherence using Linear Logic. W
 
 * Introduction
 
-** TODO ?
-- summarise dialogue system with Linear logic cite:dixon2009plans
-- references on clarification, why do we need to have clarifiable things, meta-var for places that can be clarified
-  - also mention that it is a way to recover from / prevent ASR/NLU errors
 
 * Background
 
@@ -54,21 +51,26 @@ Two families of approaches to dialogue management can be considered:
 hand-crafted dialogue strategies
 citep:allen1995trains,larsson2002issue,jokinen2009constructive and
 statistical modelling of dialogue
-citep:rieser2011reinforcement,young2010hidden. Hand-crafted strategies
-range from finite-state machines and slot-filling to more complex
-dialogue planning and logical inference rules. Statistical models help
-to contend with the uncertainty that arises from noisy signals that
-arise from speech recognition and other sensors.
+citep:rieser2011reinforcement,young2010hidden. Frameworks for
+hand-crafted strategies range from finite-state machines and
+form-filling to more complex dialogue planning and logical inference
+systems. Statistical models help to contend with the uncertainty that
+arises in human interaction; from noisy signals from speech
+recognition and other sensors to pragmatic ambiguities.
 
-End-to-end systems that do not specify dialogue manager as an
-explicit component are gained lots of attention recently [[citep:roller2020recipes][e. g.,::]]. Although most of them are focused on chit-chat dialogues, coherence plays a crucial role there
-too. Typically issues there are concerned with system's memory which causes repetition, contradiction and forgetfulness of such systems. Having a policy for dialogue coherence would be beneficial for such systems. 
+End-to-end systems that do not specify a dialogue manager as an
+explicit component have gained lots of attention recently
+[[citep:roller2020recipes][e. g.,::]]. Although most of them are
+focused on chit-chat dialogues, coherence plays a crucial role there
+too. Typically issues of such systems are related to memory
+limitations which cause repetition, contradiction and
+forgetfulness. Having a policy for dialogue coherence would be
+beneficial for such systems.
 
 Although there has been a lot of development in dialogue systems in
-recent years, only a few approaches to dialogue management reflect
-advancements in /dialogue theory/. Our aim is to closely integrate
-dialogue systems with work in theoretical semantics/pragmatics of
-dialogue.
+recent years, only a few approaches reflect advancements in /dialogue
+theory/. Our aim is to closely integrate dialogue systems with work in
+theoretical semantics and pragmatics of dialogue.
 
 *** Information state update approach
 In this work we are employing information-state update (ISU) approach,
@@ -78,10 +80,8 @@ view we present the information available to each participant of the
 dialogue (either a human or an artificial agent) in a rich information
 state. Being rich entails that the information state contains
 hierarchy of facts, including the ones that are thought to be shared
-and the ones that have not been yet publicised. Let’s consider the
-following example of the information state of a dialogue system,
-expressed in the TTR notation (Type Theory with Records, for further
-info see [fn::TBD fixed ref]):
+and the ones that have not been yet publicised.[fn::TBD consider if we need this] As an illustration citet:ginzburg2012interactive expresses the information state of a dialogue system,
+in TTR notation.
 \begin{equation}
 \ttr{
 \rf{private}{\ttr{\rf{tt_1}{TT(Bus52,0,Skogome,Götaplatsen)}
@@ -100,13 +100,13 @@ available to the system and not yet made public, hence it is stored in
 the /private/ part of the information state.
 
 Let’s now consider the /update/, another essential component of ISU. In
-this case, we will rely on the set of rules, that will govern the
+this case, we will rely on a set of rules, that will govern the
 updates. citet:ginzburg2012interactive defines one of the most basic
 rules -- the rule of QUD-incrementation -- the procedure of updating
 the current set of questions under discussions (QUD) if the latest
-utterance is comprised of asking the question. This operation is
-salient to a user and therefore it constitutes the update of the
-public part of the information state.
+utterance is a question. This operation is salient to a user and
+therefore it constitutes the update of the public part of the
+information state.
 
 #+BEGIN_SRC python :exports code
 if public.latestUtterance == Ask(U, Question(x)):
@@ -172,7 +172,13 @@ citep:fgl07,ginzburg2012interactive and iconic gesture
 citep:lucking16.
 
 ** Clarification requests                                                :Vlad:
-
+- what are CRs
+- why do they exist?
+- how frequent are they?
+- what gets clarified
+- why it is crucial for SDS: 
+  - why fine-grained
+  - user responses with open vocabulary ASR 
 
 ** Proof search as a programming language
 
@@ -191,14 +197,14 @@ programmer specifies /axioms/ and /rules of inference/ which model
 their application domain. Typically such a system of axioms and rules
 represent a database of facts. For example, the axiom Leave 55
 Götaplatsen 11.50 can model the fact that bus 55 leaves from
-Götaplatsen at 11:30. The rule Leave x Gotaplatsen y -> Arrive x
+Götaplatsen at 11:50. The rule Leave x Gotaplatsen y -> Arrive x
 CentralStationen (y+0.75) can represent travelling times on a certain
 line.
 
 Then, the user may define a query (or goal) as
-a logical formula. The system can then search for a proof of goal as a
-way to query the database of facts. The most useful case are goals
-which contain /metavariables/. For example, the goal "Leave x
+a logical formula. The system can then search for a proof of a goal as a
+way to query the database of facts. In the most useful cases, goals
+contain /metavariables/. For example, the goal "Leave x
 Götaplatsen y" corresponds to a request to list all the buses leaving
 from Götaplatsen (as x) together with their departure time (as y).
 
@@ -206,40 +212,44 @@ from Götaplatsen (as x) together with their departure time (as y).
 *** Linear logic
 Typically, and in particular in the archetypal logic programming
 language prolog, axioms and rules are expressed within the general
-framework of first order logic. However, several authors (cite:) have
-proposed to use instead linear logic. For our purpose, the crucial
-feature of linear logic is that facts may be used /only once/. For example, could have a rule
-Is x Gotaplatsen y -o Is x CentralStationen (y+0.75)
-Consequently, after firing the above rule, the premiss (Is x Gotaplatsen y) becomes unavailable for other rules.
-Thereby the linear arrow (-o) can be used to conveniently model that a bus cannot be at two places.
+framework of first order logic. However, several authors
+citep:dixon2009plans [fn::TBD add more, e.g. Chris Martens] have proposed to use 
+linear logic citep:girard1995linear instead. For our purpose, the crucial feature of linear logic is
+that facts may be used /only once/. For example, one could have a rule Is x
+Gotaplatsen y -o Is x CentralStationen (y+0.75). Consequently, after
+firing the above rule, the premiss (Is x Gotaplatsen y) becomes
+unavailable for other rules.  Thereby the linear arrow (-o) can be
+used to conveniently model that a bus cannot be at two places.
 
 Thus, the hypotheses available for proof search correspond to the
 /state/ of the system. In our application they will correspond to the
-state of the dialog (roughly speaking the dialog game board).
+information state of the dialog participant. 
 
 This way, the firing of a linear rule corresponds to an /action/ of an
-agent, and a complete proof corresponds to a /scenario/, i.e. a
-sequence of actions, possibly involving action from several agents.
-However, the state of the system (typically in the literature and in
-this paper as well), represent the (mental) state of a /single/
-agent. A scenario is concieved as the plan of a single agent as to how
-a dialogue develops. Scenarii can be realised as an actual sequence of
-exchange of messages.  That is, an action can result in sending a
-message to the outside world (in the form of speech, movement,
-etc.). Conversely, events happenning in the outside world can result
-in updates of the state (through a model of the perceptory subsystem).
+agent, and a complete proof corresponds to a /scenario/, i.e. a sequence
+of actions, possibly involving action from several agents.  However,
+the information state (typically in the literature and in this paper
+as well), represent the information state of a /single/ agent. A
+scenario is concieved as a sequence of actions and updates of
+information state of a single agent, even though such actions can be
+attributed to any other dialogue participant. Scenarii can be realised
+as a sequence of actual actions and updates. That is, an action can
+result in sending a message to the outside world (in the form of
+speech, movement, etc.). Conversely, events happening in the outside
+world can result in updates of the information state (through a model of the
+perceptory subsystem).
 
-In an actual dialogue, the scenario is therefore suspended after every
-interaction, and the state represent the actual mental state of the
-agent which is modeleled.
+In an actual dialogue, the scenario is therefore suspended between every
+interaction, and the state represents the current mental state of the
+agent which is modelled.[fn::possibly remove this sentence]
 
 TODO: examples!
 
 It is important to note that we will not forego the unrestricted
-(i.e. non-linear) implication (->). Rather, both implication will
+(i.e. non-linear) implication (->). Rather, both implications will
 co-exist in our implementation, thus we can represent simultaneously
 transient facts, or states, (introduced by the linear arrow) and
-immuable facts (introduced by the unrestricted arrow).
+immutable facts (introduced by the unrestricted arrow).
 
 *** Metavariables and unification
 
@@ -268,9 +278,10 @@ A : Type
 P : A  -> Prop
 
 Examples:
-
-where do you live?
-do you live in paris?
+| utterance                | A        | P                                                         |
+|--------------------------+----------+-----------------------------------------------------------|
+| where does John live?    | Location | λx.Live John x                                            |
+| does John live in paris? | Bool     | λx.if x then (Live John Paris) else Not (Live John Paris) |
 
 In the state of the agent, if the value of the requested answer is
 represented as a metavariable x, then the question can be represented as:
@@ -280,36 +291,53 @@ Q x (P x)
 That is, the pending question is a pair of a metavariable x and a proposition
 where x occurs.
 
-We stress that P x is /not/ part of the state of the agent yet, rather
-the fact that the above question is /under discussion/ is a fact:
+We stress that P x is /not/ part of the information state of the agent
+yet, rather the fact that the above question is /under discussion/.
 
 QUD (Q x (P x))
 
 Resolving a question can be done by communicating an answer. An answer
-to a question (A : Type; P : A -> Type) is a pair of an element x:A
-and a /proof/ that P x holds.
+to a question (A : Type; P : A -> Prop) can be of either of the two following forms: 
+- ShortAnswer :: is a pair of an element x:A and its type A.
+  ShortAnswer x A
+- Assertion :: is a proposition p. 
+  Assert P
 
-Examples.
+Examples:
+| utterance                | A        | P                                                         |                             |
+|--------------------------+----------+-----------------------------------------------------------+-----------------------------|
+| where does John live?    | Location | λx.Live John x                                            | ShortAnswer London Location |
+| does John live in paris? | Bool     | λx.if x then (Live John Paris) else Not (Live John Paris) | ShortAnswer True Bool       |
+| what time is it?         | Time     | λx.IsTime x                                               | Assert (IsTime 5:00)        |
 
-Therefore, one way to resolve a question is by the following rule:
 
-∀ x p'. Stated p' -> QUD (Q x p') -o p'
+Therefore, one way to process a short answer is by the following rule:
 
-That is, if it was stated P', and P' was under discussion, then P'
-holds.  Indeed, this requires that the statement and the posed
-question /unify/. Examples:
+∀ x a p. ShortAnswer x a -o QUD (Q x a p) -o p
 
-"I live in paris" answers both questions "where do you live" and "do
-you live in paris", but, not, for example "what time is it?".
+We demand in particular that types in the answer and in the question
+(a occurs in both) match, additionally because x occurs in p, the information
+state will mention the concrete x which was provided in the answer.
 
-(Formalize examples)
+To process assertion we can use the following rule:
 
-However, in layman terms,one would consider the question answered only
-if the answer is "unique". For example, "I live somewhere" is not a
-valid answer to "where do you live". That is, if "somewhere" is
-represented by a metavariable, then the answer is not fitting.
+∀ x a p. Assert p -o QUD (Q x a p) -o p
 
-To be able to represent this, we extend linear logic with an operator !-> :
+That is, if it was asserted p, and q is under discussion, and p can be
+unified with q, then the assertion resolves the
+question. Additionally, the metavariable x is grounded to a concrete
+value by virtue of unification. Examples:
+
+"John lives in Paris" answers both questions "Where does John live"
+and "does John live in Paris" (there is unification), but, not, for
+example "What time is it?" (there is no unification).
+
+However, one would consider the question resolved only
+if the answer is "unique". For example, "John lives somewhere" is not a
+resolving answer to "where does John live". That is, if "somewhere" is
+represented by a metavariable, then the answer is not resolving.
+
+To be able to represent this uniqueness, we extend linear logic with an operator !-> :
 
 TODO
 
@@ -339,6 +367,7 @@ with linear logic, we could attempt to model the answering by the
 rule:
 
 (a : Type) -> (x : a) -> (p : Prop) -> QUD (Q x p) -> P ⊸ (P ⊗ Answer x (Q x P))
+ [fn::VM: need to say what is P]
 
 The above states that, if $x$ makes the proposion $p$ true (more
 precisely, provable) then it is valid to answer $x$ if $p$ is under
@@ -366,7 +395,7 @@ Thus, the rule for answering can be written:
 For the above example: A proper answer could be "An apple and an orange" or "An apple or an
 orange". However we consider here a third possibility: instead of
 answering, the agent can issue a clarification request (TODO: is this
-reasonable? When ... etc.)
+reasonable? When ... etc.) [fn:VM: maybe more intuitive example, e.g. with ’like’? like(john,bananas) like(john,dogs)]
 
 To illustrate, consider the question "What is being eaten?"
 represented as /Q x (Eat(y,x))/.  with the state /Eat(John,Apple)/ and
@@ -399,7 +428,7 @@ y becomes ground. This means the original question will, by
 unification, become Q x (Eat(Mary,x)), and it can be unambiguously
 answered using the /canAnswer/ rule. We note that the logical form of
 the question (z such that (z=y)) is typically realised in a
-complicated way. In our example, it could be "eaten by who"; echoing
+complicated way. In our example, it could be "eaten by who"[fn::whom?]; echoing
 part of the original question and assuming cooperative communication
 so that the questioner properly relates the clarification request to
 the implicits of the original questions. (In sec. TODO we show other examples.)
@@ -408,7 +437,7 @@ In practice, the form of clarification questions will greatly vary depending on 
 
 The above suposes a clear-cut distinction: if an answer is unique, it
 is given; otherwise a clarification request is issued. However,
-answers could simply be exhaustive ("An appler or an orange").  If the
+answers could simply be exhaustive ("An apple or an orange").  If the
 original questioners are unhappy with the ambiguity, they are free to
 issue more precise questions. In practice, one can easily imagine an
 ambiguity threshold after which clarification requests are
