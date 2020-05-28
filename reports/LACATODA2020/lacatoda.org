@@ -1,6 +1,6 @@
 #+OPTIONS: toc:nil ':t ":t
 #+LATEX_CLASS: article
-
+#+LATEX_HEADER: %include polycode.fmt 
 #+LATEX_HEADER: \pdfpagewidth=8.5in
 #+LATEX_HEADER: \pdfpageheight=11in
 #+LATEX_HEADER: \usepackage{ijcai20}
@@ -8,7 +8,7 @@
 #+LATEX_HEADER: \usepackage{soul}
 #+LATEX_HEADER: \usepackage{url}
 # FIXME: #+LATEX_HEADER: \usepackage[hidelinks]{hyperref}
-# FIXME: #+LATEX_HEADER: \usepackage{natbib}
+#+LATEX_HEADER: \usepackage{natbib}
 #+LATEX_HEADER: \usepackage[utf8]{inputenc}
 #+LATEX_HEADER: \usepackage[small]{caption}
 #+LATEX_HEADER: \usepackage{graphicx}
@@ -26,8 +26,6 @@
 #+LATEX_HEADER: \newcommand{\mf}[3]{\mathrm{#1=#2} & : & \mathit{#3}\\}
 #+LATEX_HEADER: \newcommand{\type}[1]{$\mathit{#1}$}
 
-# lhs2tex
-
 #+TITLE: Questions and clarifications with linear logic
 #+AUTHOR:
 
@@ -37,7 +35,14 @@ In this paper we propose an account for dialogue coherence using Linear Logic. W
 
 
 * Introduction
+Test lhs2TeX:
 
+Inline |code can be also cool|
+
+#+BEGIN_code
+main  ::  IO ()
+main  =   putStrLn "Hello, world!"
+#+END_code
 
 * Background
 
@@ -213,13 +218,14 @@ from Götaplatsen (as x) together with their departure time (as y).
 Typically, and in particular in the archetypal logic programming
 language prolog, axioms and rules are expressed within the general
 framework of first order logic. However, several authors
-citep:dixon2009plans [fn::TBD add more, e.g. Chris Martens] have proposed to use 
-linear logic citep:girard1995linear instead. For our purpose, the crucial feature of linear logic is
-that facts may be used /only once/. For example, one could have a rule Is x
-Gotaplatsen y -o Is x CentralStationen (y+0.75). Consequently, after
-firing the above rule, the premiss (Is x Gotaplatsen y) becomes
-unavailable for other rules.  Thereby the linear arrow (-o) can be
-used to conveniently model that a bus cannot be at two places.
+citep:dixon2009plans,martens2015programming have proposed to use
+linear logic citep:girard1995linear instead. For our purpose, the
+crucial feature of linear logic is that facts may be used /only
+once/. For example, one could have a rule Is x Gotaplatsen y -o Is x
+CentralStationen (y+0.75). Consequently, after firing the above rule,
+the premiss (Is x Gotaplatsen y) becomes unavailable for other rules.
+Thereby the linear arrow (-o) can be used to conveniently model that a
+bus cannot be at two places.
 
 Thus, the hypotheses available for proof search correspond to the
 /state/ of the system. In our application they will correspond to the
