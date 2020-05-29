@@ -27,6 +27,8 @@
 #+LATEX_HEADER: \newcommand{\type}[1]{$\mathit{#1}$}
 
 #+TITLE: Questions and clarifications with linear logic
+# Alternate title: On the role of metavariables in symbolic dialogue modelling
+
 #+AUTHOR:
 
 \begin{abstract}
@@ -43,12 +45,18 @@ Inline |code can be also cool|
 main  ::  IO ()
 main  =   putStrLn "Hello, world!"
 #+END_code
+To be able to represent this uniqueness, we extend linear logic with
+an operator |!->|, which introduces a meta variable, 
+
+KEY IDEA: meta-variable stand in for any piece of information which is left for
+interpretation
+
 
 * Background
 
 ** Dialogue management                                                 :Vlad:
 A key aspect of dialogue systems design is the coherence of system’s
-responses.  In this respect, key component of a dialogue system is the
+responses.  In this respect, a key component of a dialogue system is the
 dialogue manager, which selects appropriate system actions depending
 on the current state and the external context.
 
@@ -78,7 +86,7 @@ theory/. Our aim is to closely integrate dialogue systems with work in
 theoretical semantics and pragmatics of dialogue.
 
 *** Information state update approach
-In this work we are employing information-state update (ISU) approach,
+In this work we are employing an information-state update (ISU) approach,
 following
 citet:traum1999model,larsson2002issue,ginzburg2012interactive. In this
 view we present the information available to each participant of the
@@ -189,70 +197,72 @@ citep:lucking16.
 
 The prevailing tradition in formal semantics (TODO:citations) is to
 represent (declarative) statements as propositions, formalized in an
-underlying logic (such as propositional logic, first-order logic,
-etc.).
+underlying logic (often first-order logic).
 
 In particular, in linguistic theories based on intuitionistic logic
 (such as TTR), true statements corresponds to propositions which admit
 a proof.
 
-There is a long history (TODO:citations) of using proof search as a
+There is a long history (TODO:cite prolog seminal paper?) of using proof search as a
 declarative programming paradigm.  In the most abstract sense, the
 programmer specifies /axioms/ and /rules of inference/ which model
 their application domain. Typically such a system of axioms and rules
-represent a database of facts. For example, the axiom Leave 55
-Götaplatsen 11.50 can model the fact that bus 55 leaves from
-Götaplatsen at 11:50. The rule Leave x Gotaplatsen y -> Arrive x
-CentralStationen (y+0.75) can represent travelling times on a certain
+represents a database of facts. For example, the axiom |Leave 55
+Götaplatsen 11.50| can model the fact that bus 55 leaves from
+Götaplatsen at 11:50. The rule |Leave x Gotaplatsen y -> Arrive x
+CentralStationen (y+0.75)| can represent travelling times on a certain
 line.
 
 Then, the user may define a query (or goal) as
 a logical formula. The system can then search for a proof of a goal as a
 way to query the database of facts. In the most useful cases, goals
-contain /metavariables/. For example, the goal "Leave x
-Götaplatsen y" corresponds to a request to list all the buses leaving
-from Götaplatsen (as x) together with their departure time (as y).
+contain /metavariables/. For example, the goal |Leave x
+Götaplatsen y| corresponds to a request to list all the buses leaving
+from Götaplatsen (as |x|) together with their departure time (as |y|).
 
 
 *** Linear logic
 Typically, and in particular in the archetypal logic programming
-language prolog, axioms and rules are expressed within the general
+language prolog (TODO citation), axioms and rules are expressed within the general
 framework of first order logic. However, several authors
 citep:dixon2009plans,martens2015programming have proposed to use
 linear logic citep:girard1995linear instead. For our purpose, the
 crucial feature of linear logic is that facts may be used /only
-once/. For example, one could have a rule Is x Gotaplatsen y -o Is x
-CentralStationen (y+0.75). Consequently, after firing the above rule,
-the premiss (Is x Gotaplatsen y) becomes unavailable for other rules.
-Thereby the linear arrow (-o) can be used to conveniently model that a
-bus cannot be at two places.
+once/. For example, one could have a rule |IsAt x Gotaplatsen y ⊸ IsAt x
+CentralStationen (y+0.75)|. Consequently, after firing the above rule,
+the premiss |(Is x Gotaplatsen y)| becomes unavailable for any other rule.
+Thereby the linear arrow |⊸| can be used to conveniently model that a
+bus cannot be at two places simultaneously.
 
 Thus, the hypotheses available for proof search correspond to the
 /state/ of the system. In our application they will correspond to the
-information state of the dialog participant. 
+/information state/ of the dialog participant.
 
 This way, the firing of a linear rule corresponds to an /action/ of an
 agent, and a complete proof corresponds to a /scenario/, i.e. a sequence
 of actions, possibly involving action from several agents.  However,
 the information state (typically in the literature and in this paper
-as well), represent the information state of a /single/ agent. A
-scenario is concieved as a sequence of actions and updates of
-information state of a single agent, even though such actions can be
-attributed to any other dialogue participant. Scenarii can be realised
+as well), corresponds to the state of a /single/ agent. Thus, a
+scenario is concieved as a sequence of actions and updates of the
+information state of a single agent $a$, even though such actions can be
+attributed to any other dialogue participant $b$. (That is, they are $a$'s representation of actions of $b$.) 
+Scenarii can be realised
 as a sequence of actual actions and updates. That is, an action can
 result in sending a message to the outside world (in the form of
 speech, movement, etc.). Conversely, events happening in the outside
 world can result in updates of the information state (through a model of the
 perceptory subsystem).
 
-In an actual dialogue, the scenario is therefore suspended between every
-interaction, and the state represents the current mental state of the
-agent which is modelled.[fn::possibly remove this sentence]
+In an actual dialogue, the scenario is therefore suspended between
+every interaction, and the state represents the current mental state
+of the agent which is modelled.[fn::possibly remove this sentence]
 
-TODO: examples!
+#+BEGIN_code
+TODO: import example from later
+#+END_code
 
 It is important to note that we will not forego the unrestricted
-(i.e. non-linear) implication (->). Rather, both implications will
+(i.e. non-linear) implication (|->|). Rather, both implications will
 co-exist in our implementation, thus we can represent simultaneously
 transient facts, or states, (introduced by the linear arrow) and
 immutable facts (introduced by the unrestricted arrow).
@@ -265,7 +275,9 @@ whose value can become fixed for a goal to be reached.
 In the context of linear-logic proof search, this means that, at any
 point in the scenario, state can refer to metavariables.
 
-(Example) 
+#+BEGIN_code
+TODO: import example from later
+#+END_code
 
 In this situation, metavariables represent a certain amount of
 flexibility in the scenario: /so far/ the scenario works for any value
@@ -276,39 +288,40 @@ the potential of using metavariables in this context.
 
 ** Question-answering with metavariables
 
-A first use for metavariables is to represent the requested answer.
+A first use for metavariables is to represent the requested answer of a question.
 
-We choose here to represent a question by a predicate over a type A.
+In this paper, we represent a question by a predicate P over a type A. That is, using a typed intuitionistic logic:
+#+BEGIN_code
+A  : Type
+P  : A  -> Prop
+#+END_code
 
-A : Type
-P : A  -> Prop
-
-Examples:
 | utterance                | A        | P                                                         |
 |--------------------------+----------+-----------------------------------------------------------|
 | where does John live?    | Location | λx.Live John x                                            |
 | does John live in paris? | Bool     | λx.if x then (Live John Paris) else Not (Live John Paris) |
 
-In the state of the agent, if the value of the requested answer is
-represented as a metavariable x, then the question can be represented as:
+Within the state of the agent, if the value of the requested answer is
+represented as a metavariable x, then the question can be represented as: |Q A x (P x)|.
 
-Q x (P x)
+That is, the pending question is a triple of a type, a
+metavariable |x|, and a proposition where |x| occurs.
 
-That is, the pending question is a pair of a metavariable x and a proposition
-where x occurs.
+We stress that |P x| is /not/ part of the information state of the
+agent yet, rather the fact that the above question is /under
+discussion/ is a fact. For example, after asking "when does John
+live", we'd have:
 
-We stress that P x is /not/ part of the information state of the agent
-yet, rather the fact that the above question is /under discussion/.
-
-QUD (Q x (P x))
+#+BEGIN_code
+haveQud : QUD (Q Location x (Live John x))
+#+END_code
 
 Resolving a question can be done by communicating an answer. An answer
-to a question (A : Type; P : A -> Prop) can be of either of the two following forms: 
-- ShortAnswer :: is a pair of an element x:A and its type A.
-  ShortAnswer x A
-- Assertion :: is a proposition p. 
-  Assert P
+to a question |(A : Type; P : A -> Prop)| can be of either of the two following forms: 
+- ShortAnswer :: is a pair of an element X:A and its type A, represented as |ShortAnswer X A|
+- Assertion :: is a proposition P, represented as |Assert P|
 
+TODO: move this to a float and merge with previous table.
 Examples:
 | utterance                | A        | P                                                         |                             |
 |--------------------------+----------+-----------------------------------------------------------+-----------------------------|
@@ -317,45 +330,40 @@ Examples:
 | what time is it?         | Time     | λx.IsTime x                                               | Assert (IsTime 5:00)        |
 
 
-Therefore, one way to process a short answer is by the following rule:
+Therefore, one way to process a short answer is by the |processShort| rule:
 
-∀ x a p. ShortAnswer x a -o QUD (Q x a p) -o p
+#+BEGIN_code
+processShort : ∀ x a p. ShortAnswer x a ⊸ QUD (Q x a p) ⊸ p
+#+END_code
 
 We demand in particular that types in the answer and in the question
-(a occurs in both) match, additionally because x occurs in p, the information
-state will mention the concrete x which was provided in the answer.
+match (|a| occurs in both places). Additionally, because |x| occurs in |p|, the information
+state will mention the concrete |x| which was provided in the answer.
 
-To process assertion we can use the following rule:
+TODO: example
 
-∀ x a p. Assert p -o QUD (Q x a p) -o p
+To process assertions, we can use the following rule:
 
-That is, if it was asserted p, and q is under discussion, and p can be
+#+BEGIN_code
+processAssert : ∀ x a p. Assert p ⊸ QUD (Q x a p) ⊸ p
+#+END_code
+
+That is, (1) if it was asserted |p|, (2) the proposition |q| is part of a question under discussion, and (3) p can be
 unified with q, then the assertion resolves the
-question. Additionally, the metavariable x is grounded to a concrete
-value by virtue of unification. Examples:
+question. Additionally, the metavariable |x| is grounded to a concrete
+value by virtue of unification of |p| and |q|. Examples:
 
 "John lives in Paris" answers both questions "Where does John live"
-and "does John live in Paris" (there is unification), but, not, for
+and "Does John live in Paris" (there is unification), but, not, for
 example "What time is it?" (there is no unification).
 
-However, one would consider the question resolved only
-if the answer is "unique". For example, "John lives somewhere" is not a
-resolving answer to "where does John live". That is, if "somewhere" is
-represented by a metavariable, then the answer is not resolving.
+** Notion of unique and concrete answers
 
-To be able to represent this uniqueness, we extend linear logic with an operator !-> :
-
-TODO
-
-With this, we are ready to state our key idea:
-
-meta-variable stand in for any piece of information which is left for
-interpretation
-
-** Clarification requests
-
-In this section we consider the repercussions of our key idea in the
-context of clarification requests.
+However, one would consider the question resolved only if the answer
+is "unique". For example, the assertion "John lives somewhere" does
+not resolve the question "where does John live". That is, if
+"somewhere" is represented by a metavariable, then the answer is not
+resolving.
 
 Assume a two-place predicate /Eat/ with agent as first argument and
 object as second argument. The phrase "John eats an apple" could then
@@ -365,14 +373,18 @@ a metavariable.
 
 Assume now a system with the state:
 
-/Eat(John,Apple)/
++#BEGIN_code
+Eat(John,Apple)
++#END_code
 
-Then the question "what does John eat", represented as /(Q x
-(Eat(John,x)))/, can be answered.  From the point of view of modelling
+Then the question "What does John eat", represented as |(Q Food x
+(Eat(John,x)))|, can be answered.  From the point of view of modelling
 with linear logic, we could attempt to model the answering by the
 rule:
 
+#+BEGIN_code
 (a : Type) -> (x : a) -> (p : Prop) -> QUD (Q x p) -> P ⊸ (P ⊗ Answer x (Q x P))
+#+END_code
  [fn::VM: need to say what is P]
 
 The above states that, if $x$ makes the proposion $p$ true (more
@@ -398,7 +410,13 @@ Thus, the rule for answering can be written:
 
 (a : Type) -> (x : a) !-> (p : Prop) -> QUD (Q x p) -> P ⊸ (P ⊗ Answer x (Q x P))
 
-For the above example: A proper answer could be "An apple and an orange" or "An apple or an
+** Clarification requests
+
+In this section we discuss an alternative kind of answering, which is
+to issue clarification requests.  To see how they can occur, consider
+again the question "what does john eat", in the same information state
+as above.
+A proper answer could be "An apple and an orange" or "An apple or an
 orange". However we consider here a third possibility: instead of
 answering, the agent can issue a clarification request (TODO: is this
 reasonable? When ... etc.) [fn:VM: maybe more intuitive example, e.g. with ’like’? like(john,bananas) like(john,dogs)]
@@ -462,7 +480,7 @@ makes it different from cite:dixon2009plans. [fn::TBD examples for each]
   positive the resource ~Y~ is produced.
 - Query for uniqueness (~X !-> Y~) :: the resource ~X~ is queried for
   uniqueness and if the result is positive the resource ~Y~ is produced.
-- Linear implication (~X -o Y~) :: the resource ~X~ is queried and if the
+- Linear implication (~X ⊸ Y~) :: the resource ~X~ is queried and if the
   result is possible, ~X~ is consumed and the resource ~Y~ is
   produced.
 - Conjunction of the results (~[_:: X; _:: Y]~) :: this is a way to produce
@@ -484,15 +502,10 @@ _ :: DGB B (LatestMove (Ask A Q));
 Now we can define our update rule that act on the contextual resources:
 #+BEGIN_SRC
 _ : (q : Question) -> (x y : User) ->
-    DGB x (LatestMove (Ask y q)) -o DGB x (QUD q);
+    DGB x (LatestMove (Ask y q)) ⊸ DGB x (QUD q);
 #+END_SRC
 Here, for any interlocutor, her ~LatestMove~ asking a question is
 consumed and her ~QUD~ is updated with the question from the ~Ask~ move.
-
-
-- explain the system
-- explain the extension with unique 
-- type checking?
 
 * Evaluation/Discussion/Future work
 - discussing the corrections
