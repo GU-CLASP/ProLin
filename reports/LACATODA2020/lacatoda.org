@@ -471,7 +471,10 @@ list, say, 20 different types of food, it is easy to imagine that the
 answer won't be fully given. In fact, this question can be the topic
 of an experimental study.
 
-** Extras
+** TODO Extras
+Merge vocabulary/citations into the previous sections.
+
+
 In the linear logic implementation we treat the information /state as a
 set [?] of /resources/ that can be queried and/or used. This is the
 basic set of operators that constitute our implementation and that
