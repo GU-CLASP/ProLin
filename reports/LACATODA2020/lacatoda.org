@@ -25,6 +25,8 @@
 #+LATEX_HEADER: \newcommand{\rf}[2]{\mathrm{#1} & = & \mathit{#2}\\}
 #+LATEX_HEADER: \newcommand{\mf}[3]{\mathrm{#1=#2} & : & \mathit{#3}\\}
 #+LATEX_HEADER: \newcommand{\type}[1]{$\mathit{#1}$}
+#+LATEX_HEADER: \newcommand{\jg}[1]{\noindent \textcolor{blue}{\textbf{\emph{[jg:  #1]}}}}
+
 
 #+TITLE: Questions and clarifications with linear logic
 # Alternate title: On the role of metavariables in symbolic dialogue modelling
@@ -82,7 +84,7 @@ beneficial for such systems.
 
 Although there has been a lot of development in dialogue systems in
 recent years, only a few approaches reflect advancements in /dialogue
-theory/. Our aim is to closely integrate dialogue systems with work in
+theory/. \jg{But why should we care!} Our aim is to closely integrate dialogue systems with work in
 theoretical semantics and pragmatics of dialogue.
 
 *** Information state update approach
@@ -387,7 +389,7 @@ rule:
 #+END_code
  [fn::VM: need to say what is P]
 
-The above states that, if $x$ makes the proposion $p$ true (more
+The above states that, if $x$ makes the proposition $p$ true (more
 precisely, provable) then it is valid to answer $x$ if $p$ is under
 discussion. However, there is an issue with the above rule: if $x$ is
 /not unique/, then one would not consider $x$ a suitable answer. Indeed,
