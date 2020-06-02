@@ -286,7 +286,7 @@ flexibility in the scenario: /so far/ the scenario works for any value
 which could be assigned to the metavariable. In this paper we explore
 the potential of using metavariables in this context.
 
-* TODO Theory and running example                                        :JP:
+* Theory and running example
 
 ** Question-answering with metavariables
 
@@ -325,12 +325,12 @@ to a question |(A : Type; P : A -> Prop)| can be of either of the two following 
 
 TODO: move this to a float and merge with previous table.
 Examples:
-| utterance                | A        | P                                                         |                             |
-|--------------------------+----------+-----------------------------------------------------------+-----------------------------|
-| where does John live?    | Location | λx.Live John x                                            | ShortAnswer London Location |
-| does John live in paris? | Bool     | λx.if x then (Live John Paris) else Not (Live John Paris) | ShortAnswer True Bool       |
-| what time is it?         | Time     | λx.IsTime x                                               | Assert (IsTime 5:00)        |
-
+| utterance                | A            | P                                                         | a                           |
+|--------------------------+--------------+-----------------------------------------------------------+-----------------------------|
+| where does John live?    | Location     | λx.Live John x                                            | ShortAnswer London Location |
+| does John live in paris? | Bool         | λx.if x then (Live John Paris) else Not (Live John Paris) | ShortAnswer True Bool       |
+| what time is it?         | Time         | λx.IsTime x                                               | Assert (IsTime 5:00)        |
+| does John live in paris? | Prop -> Prop | λm. m (Live John Paris)                                   | ShortAnswer _ Not           |
 
 Therefore, one way to process a short answer is by the |processShort| rule:
 
@@ -472,6 +472,33 @@ expressed by the length of the answer. In our example, if one has to
 list, say, 20 different types of food, it is easy to imagine that the
 answer won't be fully given. In fact, this question can be the topic
 of an experimental study.
+
+*** TODO more CRs                                        :JP:
+
+
+What does John eat?
+
+-> Do you mean this morning?
+
+There is an (implicit) extra argument to eat, corresponding to, say, a time interval:
+
+eat(who,what,when)
+
+However most of the time one may choose to leave this parameter
+implicit. This is what is done for example when asking the above
+question:
+
+Q x Food Eat(John,x,y)
+
+assuming a metavariable y of type TimeInterval.
+
+If the question can be answered without regard for the time, then the
+metavariable will remain free for the duration of the dialogue. If on
+the other hand, answering the question demands clarification, this can
+be done neatly.
+
+
+In our model, to support clarification requests, a system must integrate many arguments and use metavariables.
 
 ** TODO Extras
 Merge vocabulary/citations into the previous sections.
