@@ -298,13 +298,33 @@ A  : Type
 P  : A  -> Prop
 #+END_code
 
-| utterance                | A        | P                                                         |
-|--------------------------+----------+-----------------------------------------------------------|
-| where does John live?    | Location | λx.Live John x                                            |
-| does John live in paris? | Bool     | λx.if x then (Live John Paris) else Not (Live John Paris) |
+The intent of the question is to find out about a value $x$ of type
+$A$ which makes $P x$ true. We show several examples in table TODO.
+It is worth stressing that the type $A$ can be large (for example
+asking for any location) or as small as a boolean (if one requires a
+simple yes/no answer).  We note in passing that, typically, yes/no
+questions can be answered not just by a boolean but by qualifing the
+predicate in question (Table ref:tbl:qa-ex, last two rows).  In this
+instance |A = Prop -> Prop|. (Also, a simple "no" answer can be
+ambiguous when the question is negative.)
+
+
+\begin{table*}
+\label{tbl:qa-ex}
+\begin{tabular}{lllll}
+utterance & A & P & a\\
+\hline
+where does John live?    & |Location    | & |\x.Live John x                                           | & in london & |ShortAnswer London Location| \\
+does John live in paris? & |Bool        | & |\x.if x then (Live John Paris) else Not (Live John Paris)| & yes & |ShortAnswer True Bool| \\
+what time is it?         & |Time        | & |\x.IsTime x                                              | & It is 5am & |Assert (IsTime 5.00)| \\
+does John live in paris? & |Prop -> Prop| & |\m. m (Live John Paris)                                  | & yes & |ShortAnswer (\x. x)  (Prop -> Prop)| \\
+does John live in paris? & |Prop -> Prop| & |\m. m (Live John Paris)                                  | & From January & |ShortAnswer (\x. FromJanuary(x)) (Prop -> Prop)| \\
+\end{tabular}
+\end{table*}
+
 
 Within the state of the agent, if the value of the requested answer is
-represented as a metavariable x, then the question can be represented as: |Q A x (P x)|.
+represented as a metavariable |x|, then the question can be represented as: |Q A x (P x)|.
 
 That is, the pending question is a triple of a type, a
 metavariable |x|, and a proposition where |x| occurs.
@@ -323,14 +343,7 @@ to a question |(A : Type; P : A -> Prop)| can be of either of the two following 
 - ShortAnswer :: is a pair of an element X:A and its type A, represented as |ShortAnswer X A|
 - Assertion :: is a proposition P, represented as |Assert P|
 
-TODO: move this to a float and merge with previous table.
-Examples:
-| utterance                | A            | P                                                         | a                           |
-|--------------------------+--------------+-----------------------------------------------------------+-----------------------------|
-| where does John live?    | Location     | λx.Live John x                                            | ShortAnswer London Location |
-| does John live in paris? | Bool         | λx.if x then (Live John Paris) else Not (Live John Paris) | ShortAnswer True Bool       |
-| what time is it?         | Time         | λx.IsTime x                                               | Assert (IsTime 5:00)        |
-| does John live in paris? | Prop -> Prop | λm. m (Live John Paris)                                   | ShortAnswer _ Not           |
+
 
 Therefore, one way to process a short answer is by the |processShort| rule:
 
@@ -395,12 +408,14 @@ discussion. However, there is an issue with the above rule: if $x$ is
 /not unique/, then one would not consider $x$ a suitable answer. Indeed,
 assume instead that the system is in the state:
 
-/Eat(John,x)/
+#+BEGIN_code
+Eat(John,x)
+#+END_code
 
 Then the question cannot be answered, because /x/ stands for some
 unknown thing. The proper answer is then "I do not know".
 
-Hence, we introduce another type-former /(x : A) !-> B/. As for $(x :
+Hence, we introduce another type-former |(x : A) !-> B|. As for $(x :
 A) -> B$, it introduces the metavariable $x$. However, the rule fires
 only when $x$ is made /ground/ and /unique/ by matching the rule. That
 is, it won't match in the previous example, because the answer is not
@@ -410,7 +425,9 @@ state of the system is composed of the two hypotheses
 
 Thus, the rule for answering can be written:
 
+#+BEGIN_code
 (a : Type) -> (x : a) !-> (p : Prop) -> QUD (Q x p) -> P ⊸ (P ⊗ Answer x (Q x P))
+#+END_code
 
 ** Clarification requests
 
@@ -433,7 +450,9 @@ be a /clarification request/, namely "eaten by who?".
 
 To detect situations where a clarification request can be issued, we can use the following rule:
 
+#+BEGIN_code
 (a : Type) -> (x : a) ?-> (p : Prop) -> QUD (Q x p) -> P ⊸ (P ⊗ CR)
+#+END_code
 
 The conditions are similar to that of the answering rule. The
 principal difference is the use of the ?-> operator, which conditions
@@ -443,7 +462,9 @@ unified to several ground terms --- the opposite of the !-> operator.
 We can then turn our attention to the formulation of this clarification request.
 It is itself a question, and has a tricky representation:
 
+#+BEGIN_code
 Q z (z = y)
+#+END_code
 
 That is, the question is asking about some aspect which was left
 implicit in the original question (what is being eaten). In our terms,
