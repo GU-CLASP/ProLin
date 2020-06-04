@@ -218,7 +218,7 @@ line.
 Then, the user may define a query (or goal) as
 a logical formula. The system can then search for a proof of a goal as a
 way to query the database of facts. In the most useful cases, goals
-contain /metavariables/. For example, the goal |Leave x
+contain /metavariables/[fn:here, we use the convention that metavariables are lowercase letters.]. For example, the goal |Leave x
 Götaplatsen y| corresponds to a request to list all the buses leaving
 from Götaplatsen (as |x|) together with their departure time (as |y|).
 
@@ -420,8 +420,9 @@ unknown thing. The proper answer is then "I do not know".
 
 Hence, we introduce another type-former |(x : A) !-> B|. As for |(x :
 A) -> B|, it introduces the metavariable $x$. However, the rule fires
-only when |x| is made /ground/ and /unique/ by matching the rule. That
-is, it won't match in the previous example, because the answer is not
+only when |x| is made /ground/ (it is bound to a term which does not
+contain any metavariable) and /unique/ by matching the rule. That is,
+it won't match in the previous example, because the answer is not
 ground (it contains unknowns). Additionally, it won't match if the
 state of the system is composed of the two
 hypotheses |Eat(John,Apple)| and |Eat(John,Orange)|: the answer is not
@@ -430,8 +431,28 @@ unique.
 Thus, the rule for answering can be written:
 
 #+BEGIN_code
-(a : Type) -> (x : a) !-> (p : Prop) -> QUD (Q x p) -> P ⊸ (P ⊗ Answer x (Q x P))
+produceAnswer : (a : Type) -> (x : a) !-> (p : Prop) -> QUD (Q a x p) -> p ⊸ (p ⊗ ShortAnswer x a)
 #+END_code
+
+For example, if we have the following state:
+#+BEGIN_code
+QUD (Q Food x (Eat(John,x)))
+Eat(John,Apple)
+#+END_code
+
+The system can unify |QUD (Q Food x (Eat(John,x)))| and |QUD (Q a x
+p)|, yielding |a = Food|, |p=Eat(John,x)|. Then, we search for a
+proof |p|, and to do this, it can unify |Eat(John,x)|
+with |Eat(John,Apple)|, giving finally the answer |x=Apple| and
+therefore the state becomes:
+#+BEGIN_code
+Eat(John,Apple)
+ShortAnswer Apple Food
+#+END_code
+
+Note that the fact |Eat(John,Apple)| is found both as hypothesis and a
+conclusion of |produceAnswer|, and therefore it is remains in the
+information state.
 
 ** Clarification requests
 
@@ -445,16 +466,20 @@ answering, the agent can issue a clarification request (TODO: is this
 reasonable? When ... etc.) [fn:VM: maybe more intuitive example, e.g. with ’like’? like(john,bananas) like(john,dogs)]
 
 To illustrate, consider the question "What is being eaten?"
-represented as |Q x (Eat(y,x))|.  with the state |Eat(John,Apple)|
-and |Eat(Mary,Apple)|. Then the agent can unambguously answer "An
-apple": even if we do not know who we're talking about, it does not
-matter: only an apple is being eaten. However, If the state is
+represented as |Q x (Eat(y,x))|,  with the state
+#+BEGIN_code
+Eat(John,Apple)
+Eat(Mary,Apple)
+#+END_code
+Then the agent can unambguously answer "An apple": even if we do not
+know who we're talking about, it does not matter: only an apple is
+being eaten. However, If the state is
 #+BEGIN_code
 Eat(John,Apple)
 Eat(Mary,Orange)
 #+END_code
-then a probable answer would be a /clarification request/, namely
-"eaten by who?".
+Then, a probable answer would be a /clarification request/, namely
+"eaten by whom?".
 
 To detect situations where a clarification request can be issued, we can use the following rule:
 #+BEGIN_code
@@ -470,24 +495,44 @@ We can then turn our attention to the formulation of this clarification request.
 It is itself a question, and has a tricky representation:
 
 #+BEGIN_code
-Q z (z = y)
+Q Person z (z = y)
 #+END_code
 
 That is, the question is asking about some aspect which was left
 implicit in the original question (what is being eaten). In our terms,
-it must refer to the (implicit) metavariable which the original
-question included (y). After getting an answer, (say "Mary"), z will
-be bound to a ground term, and, in turn, the fact z=y will ensure that
-y becomes ground. This means the original question will, by
-unification, become Q x (Eat(Mary,x)), and it can be unambiguously
-answered using the /canAnswer/ rule. We note that the logical form of
-the question (z such that (z=y)) is typically realised in a
-complicated way. In our example, it could be "eaten by who"[fn::whom?]; echoing
-part of the original question and assuming cooperative communication
-so that the questioner properly relates the clarification request to
-the implicits of the original questions. (In sec. TODO we show other examples.)
+it must refer to the metavariable (|y|) which the original
+question included.  After getting an answer, (say |Mary|), |z|
+will be bound to a ground term, and, in turn, the fact |z=y| will
+ensure that |y| becomes ground. 
 
-In practice, the form of clarification questions will greatly vary depending on the context.
+#+BEGIN_code
+Eat(John,Apple)
+Eat(Mary,Orange)
+ori :: QUD (Q Food x (Eat(y,x)))
+cr ::  QUD (Q Person z (z=y))
+a  ::  ShortAnswer Mary Person
+#+END_code
+after applying |processShort|:
+#+BEGIN_code
+Eat(John,Apple)
+Eat(Mary,Orange)
+ori :: QUD (Q Food x (Eat(y,x)))
+r ::  Mary=y
+#+END_code
+
+
+This means the original question will,
+by unification, become |Q Food x (Eat(Mary,x))|, and it can be
+unambiguously answered using the /canAnswer/ rule. We note that the
+logical form of the question (|z| such that |z=y|) is typically
+realised in a complicated way. In our example, it could be "eaten by
+whom"; echoing part of the original question and assuming cooperative
+communication so that the questioner properly relates the
+clarification request to the implicits of the original questions. (In
+sec. ref:sec:bus)
+
+In practice, the form of clarification questions will greatly vary
+depending on the context.
 
 The above suposes a clear-cut distinction: if an answer is unique, it
 is given; otherwise a clarification request is issued. However,
@@ -497,36 +542,41 @@ issue more precise questions. In practice, one can easily imagine an
 ambiguity threshold after which clarification requests are
 preferred. In the simplest form, this ambiguity threshold could be
 expressed by the length of the answer. In our example, if one has to
-list, say, 20 different types of food, it is easy to imagine that the
+list, say, 20 different kinds of food, it is easy to imagine that the
 answer won't be fully given. In fact, this question can be the topic
 of an experimental study.
 
 *** TODO more CRs                                        :JP:
 
+Consider the exchange:
 
-What does John eat?
+#+BEGIN_quote
+Where does John live?
+Do you mean while he is in confinement?
+#+END_quote
 
--> Do you mean this morning?
-
-There is an (implicit) extra argument to eat, corresponding to, say, a time interval:
-
-eat(who,what,when)
+In the above, there is an (implicit) extra argument to the |Live|
+predicate, corresponding to, say, a time
+interval: |Live(who,location,confinement)|.
 
 However most of the time one may choose to leave this parameter
 implicit. This is what is done for example when asking the above
 question:
 
-Q x Food Eat(John,x,y)
+#+BEGIN_code
+Q Location x Live(John,x,y)
+#+END_code
 
-assuming a metavariable y of type TimeInterval.
+assuming a metavariable y of type |Bool|.
 
-If the question can be answered without regard for the time, then the
-metavariable will remain free for the duration of the dialogue. If on
-the other hand, answering the question demands clarification, this can
-be done neatly.
+If the question can be answered without regard for whether there is
+confinement or not, then the metavariable will remain free for the
+duration of the dialogue. If on the other hand, answering the question
+demands clarification, this can be done using the mechanisms described
+above.
 
-
-In our model, to support clarification requests, a system must integrate many arguments and use metavariables.
+In sum, in our model, to support clarification requests, a system must
+integrate many arguments and use metavariables.
 
 ** TODO Extras
 Merge vocabulary/citations into the previous sections.
@@ -568,6 +618,7 @@ Here, for any interlocutor, her ~LatestMove~ asking a question is
 consumed and her ~QUD~ is updated with the question from the ~Ask~ move.
 
 * Application: Bus example
+label:sec:bus
 - Formalisation of all the aspects of the the example in the theory.
 - Say it's a complete and implemented system
 * Evaluation/Discussion/Future work
@@ -575,6 +626,8 @@ consumed and her ~QUD~ is updated with the question from the ~Ask~ move.
 - discuss the clarification requests in a more specific way: we can always redefine the referent
 - in dialogue systems meta-variables are always subject to clarification and correction (substitution)
 - dependencies between questions (who killed bill -> who was around?)
+
+- clarification could be narrowing from general types to subtypes.
 
 * References :ignore:
 bibliographystyle:named
