@@ -340,8 +340,8 @@ haveQud : QUD (Q Location x (Live John x))
 
 Resolving a question can be done by communicating an answer. An answer
 to a question |(A : Type; P : A -> Prop)| can be of either of the two following forms: 
-- ShortAnswer :: is a pair of an element X:A and its type A, represented as |ShortAnswer X A|
-- Assertion :: is a proposition P, represented as |Assert P|
+- ShortAnswer :: is a pair of an element |X:A| and its type |A|, represented as |ShortAnswer X A|
+- Assertion :: is a proposition |P|, represented as |Assert P|
 
 
 
@@ -372,6 +372,8 @@ value by virtue of unification of |p| and |q|. Examples:
 and "Does John live in Paris" (there is unification), but, not, for
 example "What time is it?" (there is no unification).
 
+TODO: in both cases (processAssert and processShort) correspond to updates of the information state.
+
 ** Notion of unique and concrete answers
 
 However, one would consider the question resolved only if the answer
@@ -380,10 +382,10 @@ not resolve the question "where does John live". That is, if
 "somewhere" is represented by a metavariable, then the answer is not
 resolving.
 
-Assume a two-place predicate /Eat/ with agent as first argument and
+Assume a two-place predicate |Eat| with agent as first argument and
 object as second argument. The phrase "John eats an apple" could then
-be represented as /Eat(John,Apple)/. According to our theory, one can
-then represent the phrase "John eats" as /Eat(John,x)/, with /x/ being
+be represented as |Eat(John,Apple)|. According to our theory, one can
+then represent the phrase "John eats" as |Eat(John,x)|, with |x| being
 a metavariable.
 
 Assume now a system with the state:
@@ -398,30 +400,32 @@ with linear logic, we could attempt to model the answering by the
 rule:
 
 #+BEGIN_code
-(a : Type) -> (x : a) -> (p : Prop) -> QUD (Q x p) -> P ⊸ (P ⊗ Answer x (Q x P))
+(a : Type) -> (x : a) -> (p : Prop) -> QUD (Q a x p) -> p ⊸ (p ⊗ Answer x (Q x p))
 #+END_code
- [fn::VM: need to say what is P]
 
-The above states that, if $x$ makes the proposition $p$ true (more
-precisely, provable) then it is valid to answer $x$ if $p$ is under
-discussion. However, there is an issue with the above rule: if $x$ is
-/not unique/, then one would not consider $x$ a suitable answer. Indeed,
-assume instead that the system is in the state:
+
+The above states that, if |x| makes the proposition |p| true (more
+precisely, provable --- we require that |p| is a fact in the last
+argument) then it is valid to answer |x| if |Q a x p| is under
+discussion. However, there is an issue with the above rule: if |x| is
+/not unique/, then one would not consider $x$ a suitable
+answer. Indeed, assume instead that the system is in the state:
 
 #+BEGIN_code
 Eat(John,x)
 #+END_code
 
-Then the question cannot be answered, because /x/ stands for some
+Then the question cannot be answered, because |x| stands for some
 unknown thing. The proper answer is then "I do not know".
 
-Hence, we introduce another type-former |(x : A) !-> B|. As for $(x :
-A) -> B$, it introduces the metavariable $x$. However, the rule fires
-only when $x$ is made /ground/ and /unique/ by matching the rule. That
+Hence, we introduce another type-former |(x : A) !-> B|. As for |(x :
+A) -> B|, it introduces the metavariable $x$. However, the rule fires
+only when |x| is made /ground/ and /unique/ by matching the rule. That
 is, it won't match in the previous example, because the answer is not
 ground (it contains unknowns). Additionally, it won't match if the
-state of the system is composed of the two hypotheses
-/Eat(John,Apple)/ and /Eat(John,Orange)/: the answer is not unique. 
+state of the system is composed of the two
+hypotheses |Eat(John,Apple)| and |Eat(John,Orange)|: the answer is not
+unique.
 
 Thus, the rule for answering can be written:
 
@@ -441,15 +445,18 @@ answering, the agent can issue a clarification request (TODO: is this
 reasonable? When ... etc.) [fn:VM: maybe more intuitive example, e.g. with ’like’? like(john,bananas) like(john,dogs)]
 
 To illustrate, consider the question "What is being eaten?"
-represented as /Q x (Eat(y,x))/.  with the state /Eat(John,Apple)/ and
-/Eat(Mary,Apple)/. Then the agent can unambguously answer "An apple":
-even if we do not know who we're talking about, it does not matter:
-only an apple is being eaten. However, If the state is
-/Eat(John,Apple)/ and /Eat(Mary,Orange)/, then a probable answer would
-be a /clarification request/, namely "eaten by who?".
+represented as |Q x (Eat(y,x))|.  with the state |Eat(John,Apple)|
+and |Eat(Mary,Apple)|. Then the agent can unambguously answer "An
+apple": even if we do not know who we're talking about, it does not
+matter: only an apple is being eaten. However, If the state is
+#+BEGIN_code
+Eat(John,Apple)
+Eat(Mary,Orange)
+#+END_code
+then a probable answer would be a /clarification request/, namely
+"eaten by who?".
 
 To detect situations where a clarification request can be issued, we can use the following rule:
-
 #+BEGIN_code
 (a : Type) -> (x : a) ?-> (p : Prop) -> QUD (Q x p) -> P ⊸ (P ⊗ CR)
 #+END_code
@@ -560,6 +567,9 @@ _ : (q : Question) -> (x y : User) ->
 Here, for any interlocutor, her ~LatestMove~ asking a question is
 consumed and her ~QUD~ is updated with the question from the ~Ask~ move.
 
+* Application: Bus example
+- Formalisation of all the aspects of the the example in the theory.
+- Say it's a complete and implemented system
 * Evaluation/Discussion/Future work
 - discussing the corrections
 - discuss the clarification requests in a more specific way: we can always redefine the referent
