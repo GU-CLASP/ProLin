@@ -1,6 +1,9 @@
 #+OPTIONS: toc:nil ':t ":t
 #+LATEX_CLASS: article
-#+LATEX_HEADER: %include polycode.fmt 
+#+LATEX_HEADER: %include polycode.fmt
+#+LATEX_HEADER: %format !-> = "\rightarrow_{!}"
+#+LATEX_HEADER: %format ?-> = "\rightarrow_{?}"
+#+LATEX_HEADER: %format . = "."
 #+LATEX_HEADER: \pdfpagewidth=8.5in
 #+LATEX_HEADER: \pdfpageheight=11in
 #+LATEX_HEADER: \usepackage{ijcai20}
@@ -8,6 +11,8 @@
 #+LATEX_HEADER: \usepackage{soul}
 #+LATEX_HEADER: \usepackage{url}
 # FIXME: #+LATEX_HEADER: \usepackage[hidelinks]{hyperref}
+#+LATEX_HEADER: \usepackage{newunicodechar}
+#+LATEX_HEADER: \input{newunicodedefs}
 #+LATEX_HEADER: \usepackage{natbib}
 #+LATEX_HEADER: \usepackage[utf8]{inputenc}
 #+LATEX_HEADER: \usepackage[small]{caption}
@@ -15,6 +20,7 @@
 #+LATEX_HEADER: \usepackage{amsmath}
 #+LATEX_HEADER: \usepackage{amsthm}
 #+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{xcolor}
 #+LATEX_HEADER: \urlstyle{same}
 
 # guidelines: https://www.ijcai.org/authors_kit
@@ -37,22 +43,10 @@
 In this paper we propose an account for dialogue coherence using Linear Logic. We focus our study on the range of things that can be potentially clarified in dialogue, and argue that they can be represented as meta-variables. 
 \end{abstract}
 
-
 * Introduction
-Test lhs2TeX:
-
-Inline |code can be also cool|
-
-#+BEGIN_code
-main  ::  IO ()
-main  =   putStrLn "Hello, world!"
-#+END_code
-To be able to represent this uniqueness, we extend linear logic with
-an operator |!->|, which introduces a meta variable, 
 
 KEY IDEA: meta-variable stand in for any piece of information which is left for
 interpretation
-
 
 * Background
 
@@ -348,7 +342,8 @@ to a question |(A : Type; P : A -> Prop)| can be of either of the two following 
 Therefore, one way to process a short answer is by the |processShort| rule:
 
 #+BEGIN_code
-processShort : ∀ x a p. ShortAnswer x a ⊸ QUD (Q x a p) ⊸ p
+processShort : ∀ x a p. ShortAnswer x a
+             ⊸ QUD (Q x a p) ⊸ p
 #+END_code
 
 We demand in particular that types in the answer and in the question
@@ -578,7 +573,7 @@ above.
 In sum, in our model, to support clarification requests, a system must
 integrate many arguments and use metavariables.
 
-** TODO Extras
+** TODO COMMENT Extras
 Merge vocabulary/citations into the previous sections.
 
 
