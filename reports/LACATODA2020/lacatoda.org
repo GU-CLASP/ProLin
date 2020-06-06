@@ -316,15 +316,14 @@ answer can be ambiguous when the question is negative.)
 \begin{tabular}{lllll}
 utterance & A & P & a\\
 \hline
-Where does John live?    & |Location    | & |\x.Live John x                                           | & in London & |ShortAnswer London Location| \\
+Where does John live?    & |Location    | & |\x.Live John x                          | & in London & |ShortAnswer London Location| \\
 Does John live in paris? & |Bool        | & \makecell{|\x.if x then (Live John Paris)| \\ |else Not (Live John Paris)|} & yes & |ShortAnswer True Bool| \\
-What time is it?         & |Time        | & |\x.IsTime x                                              | & It is 5am. & |Assert (IsTime 5.00)| \\
-Does John live in paris? & |Prop -> Prop| & |\m. m (Live John Paris)                                  | & yes & |ShortAnswer (\x. x)  (Prop -> Prop)| \\
-Does John live in paris? & |Prop -> Prop| & |\m. m (Live John Paris)                                  | & from January & \makecell{|ShortAnswer (\x. FromJanuary(x))|\\|(Prop -> Prop)|} \\
+What time is it?         & |Time        | & |\x.IsTime x                             | & It is 5am. & |Assert (IsTime 5.00)| \\
+Does John live in paris? & |Prop -> Prop| & |\m. m (Live John Paris)                 | & yes & |ShortAnswer (\x. x)  (Prop -> Prop)| \\
+Does John live in paris? & |Prop -> Prop| & |\m. m (Live John Paris)                 | & from January & \makecell{|ShortAnswer (\x. FromJanuary(x))|\\|(Prop -> Prop)|} \\
 \end{tabular}
 \caption{Examples of questions and the possible corresponding answers.\label{tbl:qa-ex}}
 \end{table*}
-
 
 Within the state of the agent, if the value of the requested answer is
 represented as a metavariable |x|, then the question can be represented as: |Q A x (P x)|.
@@ -378,6 +377,28 @@ and "Does John live in Paris" (there is unification), but, not, for
 example "What time is it?" (there is no unification).
 
 TODO: in both cases (processAssert and processShort) correspond to updates of the information state.
+
+*** A bit more on polar questions
+Treatment of "no":
+#+BEGIN_code
+"does john live in paris?"
+⟦q⟧  = [A = Prop -> Prop;
+       P = \m. m (Live John Paris)]
+"doesn't john live in paris?
+⟦q'⟧ = [A = Prop -> Prop;
+       P = \m. m (Not (Live John Paris))]
+"no"/"oui"
+⟦a⟧  = ShortAnswer (\x.if (Not y) then (Not y) else (Not y)) (Prop -> Prop)
+"si"
+⟦a'⟧ = ShortAnswer (\x.if (Not y) then y) (Prop -> Prop)
+#+END_code
+
+More on ellipsis?
+- "he doesn't" 
+- "he does"
+
+
+
 
 ** Notion of unique and concrete answers
 
