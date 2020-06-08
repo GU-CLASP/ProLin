@@ -1,0 +1,37 @@
+
+-- HasTurn :: DP -> Prop
+
+greeting : (x y : DP) ->
+           HasTurn x -o
+           WishToOpenDialogueWith y -o
+           [_ :: UtterRemember Greet
+           ];
+
+counterGreeting : (x y : DP) ->
+                  HasTurn x -o
+                  LatestMove (Greet y x)  -o
+                  [_ :: UtterRemember CounterGreet
+                  ];
+
+askExample :(x y : DP) ->
+                  HasTurn x -o
+                  -- some else
+                  [_ :: UtterRemember (Ask q)
+                   _ :: Asked q
+                  ];
+
+greetIsSwitchingMove :: SwitchingMove Greet
+greetIsSwitchingMove :: SwitchingMove CounterGreet
+
+utterAndRemember : (x y : DP) -> UtterRemember m -o SwitchingMove m -* HasTurn x -o Adressee y  -* [ _ :: Utter (m x y) ; _ :: LatestMove (m x y) ; _ :: HasTurn y ]
+hearAndRemember  : (x y : DP) -> Hear          m -o SwitchingMove m -* HasTurn x -o Adressee y  -* [                      _ :: LatestMove (m x y) ; _ :: HasTurn y ]
+
+utterAndRemember2 : (x y : DP) -> UtterRemember m -o NotSwitchingMove m -* Adressee y  -* [ _ :: Utter (m x y) ; _ :: LatestMove (m x y) ]
+hearAndRemember2  : (x y : DP) -> Hear          m -o NotSwitchingMove m -* Adressee y  -* [                      _ :: LatestMove (m x y) ]
+
+processShort : ∀ x a p. LatestMove (ShortAnswer x a) ⊸ Asked (Q x a p) ⊸ p
+
+getQUD : LatestMove (Ask q x y) -* QUD q
+
+prroduceAnswer : (a : Type) -> (x : a) !-> (p : Prop) -> QUD (Q a x p) -o p -* [_ :: UtterRemember (ShortAnswer x a)]
+

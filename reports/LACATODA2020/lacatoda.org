@@ -194,9 +194,9 @@ citep:lucking16.
 - why do they exist?
 - how frequent are they?
 - what gets clarified
-- why it is crucial for SDS: 
+- why it is crucial for SDS:
   - why fine-grained
-  - user responses with open vocabulary ASR 
+  - user responses with open vocabulary ASR
 
 ** Proof search as a programming language
 
@@ -382,15 +382,15 @@ TODO: in both cases (processAssert and processShort) correspond to updates of th
 Treatment of "no":
 #+BEGIN_code
 "does john live in paris?"
-⟦q⟧  = [A = Prop -> Prop;
-       P = \m. m (Live John Paris)]
-"doesn't john live in paris?
-⟦q'⟧ = [A = Prop -> Prop;
-       P = \m. m (Not (Live John Paris))]
+⟦q⟧  = [A = QuestionPolarity -> Prop -> Prop;
+        P = \m. m Positive (Live John Paris)]
+"doesn't John live in Paris?
+⟦q'⟧ = [A = QuestionPolarity -> Prop -> Prop;
+        P = \m. m Negative (Not (Live John Paris))]
 "no"/"oui"
-⟦a⟧  = ShortAnswer (\x.if (Not y) then (Not y) else (Not y)) (Prop -> Prop)
+⟦a⟧  = ShortAnswer (\pol prop -> if Positive then Not prop else prop) (Prop -> Prop)
 "si"
-⟦a'⟧ = ShortAnswer (\x.if (Not y) then y) (Prop -> Prop)
+⟦a'⟧ = ShortAnswer (\pol prop -> if Positive then ERROR else Not prop) (Prop -> Prop)
 #+END_code
 
 More on ellipsis?
@@ -575,7 +575,8 @@ list, say, 20 different kinds of food, it is easy to imagine that the
 answer won't be fully given. In fact, this question can be the topic
 of an experimental study.
 
-*** TODO more CRs                                        :JP:
+*** More on CRs
+TODO: flow sentence.
 
 Consider the exchange:
 
@@ -595,7 +596,6 @@ question:
 #+BEGIN_code
 Q Location x Live(John,x,y)
 #+END_code
-
 assuming a metavariable y of type |Bool|.
 
 If the question can be answered without regard for whether there is
@@ -650,6 +650,9 @@ consumed and her ~QUD~ is updated with the question from the ~Ask~ move.
 label:sec:bus
 - Formalisation of all the aspects of the the example in the theory.
 - Say it's a complete and implemented system
+
+
+
 * Evaluation/Discussion/Future work
 - discussing the corrections
 - discuss the clarification requests in a more specific way: we can always redefine the referent
