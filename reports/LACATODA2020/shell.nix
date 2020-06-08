@@ -1,17 +1,16 @@
 with import (fetchTarball https://github.com/NixOS/nixpkgs-channels/archive/nixos-20.03.tar.gz) {};
 
-let  myEmacsConfig = writeText "default.el" ''
-     (setq wofuytarnust "aorsitenwfyut")
-     (require 'org-ref) 
-'';
+let  
+     myEmacs = emacsWithPackages (epkgs: with epkgs; [org-ref]);
+     myEmacsConfig = writeText "default.el" ''
+       (add-to-list 'load-path "${emacsPackages.org-ref}")
+       (require 'org-ref)
+     '';
 in stdenv.mkDerivation {
+  shellHook = ''
+    export MYEMACSLOAD=${myEmacsConfig}
+  '';
   name = "docsEnv";
-  myEmacs = emacsWithPackages (epkgs: with epkgs; [
-  (runCommand "default.el" {} ''
-  mkdir -p $out/share/emacs/site-lisp
-  cp ${myEmacsConfig} $out/share/emacs/site-lisp/defaut.el
-  '')
-  org-ref]);
   buildInputs = [ haskellPackages.lhs2tex
                   # python3Packages.pygments
                   myEmacs
@@ -51,6 +50,7 @@ in stdenv.mkDerivation {
                        prftree
                        relsize
                        scheme-small wrapfig marvosym wasysym
+                       soul
                        stmaryrd
                        lazylist polytable # lhs2tex
                        todonotes

@@ -2,12 +2,12 @@ default:
 	nix-shell --pure --run "make lacatoda.pdf"
 
 %.pdf: %.tex
-	latekmk $<
+	latexmk $<
 
 %.tex: %.lhs
-	lhs2tex -o $@ $<
+	lhs2TeX -o $@ $<
 
 %.lhs: %.org
-	emacs  --batch --eval="(message \"%s\" wofuytarnust)" $< -f org-latex-export-to-latex --kill
+	emacs  --batch --eval="(load \"${MYEMACSLOAD}\")" $< -f org-latex-export-to-latex --kill
 	mv -f $*.tex $@
 
