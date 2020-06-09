@@ -2,7 +2,7 @@ default:
 	nix-shell --pure --run "make lacatoda.pdf"
 
 %.pdf: %.tex
-	latexmk $<
+	latexmk -pdf $<
 
 %.tex: %.lhs
 	lhs2TeX -o $@ $<

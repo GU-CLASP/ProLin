@@ -40,6 +40,7 @@ in stdenv.mkDerivation {
                        logreq
                        mathpartir
                        minted
+                       makecell
                        mweights
                        ncclatex
                        ncctools
