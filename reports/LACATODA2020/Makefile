@@ -1,5 +1,5 @@
 default:
-	nix-shell --pure --run "make lacatoda.pdf"
+	nix-shell --pure --run "make tal.pdf"
 
 %.pdf: %.tex
 	latexmk -pdf $<

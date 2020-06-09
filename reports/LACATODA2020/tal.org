@@ -1,31 +1,24 @@
-#+OPTIONS: toc:nil ':t ":t
-#+LATEX_CLASS: article
+#+OPTIONS: toc:nil ':t ":t 
+#+LATEX_CLASS: article-hermes_french
+#+LATEX_HEADER: \usepackage[labelfont=bf,textfont=it,labelsep=period,justification=raggedright,singlelinecheck=false]{caption}
+
 #+LATEX_HEADER: %include polycode.fmt
 #+LATEX_HEADER: %format !-> = "\rightarrow_{!}"
 #+LATEX_HEADER: %format ?-> = "\rightarrow_{?}"
 #+LATEX_HEADER: %format . = "."
 #+LATEX_HEADER: %let operator = "."
-#+LATEX_HEADER: \pdfpagewidth=8.5in
-#+LATEX_HEADER: \pdfpageheight=11in
-#+LATEX_HEADER: \usepackage{ijcai20}
-#+LATEX_HEADER: \usepackage{times}
 #+LATEX_HEADER: \usepackage{soul}
 #+LATEX_HEADER: \usepackage{url}
-# FIXME: #+LATEX_HEADER: \usepackage[hidelinks]{hyperref}
 #+LATEX_HEADER: \usepackage{newunicodechar}
 #+LATEX_HEADER: \input{newunicodedefs}
-#+LATEX_HEADER: \usepackage{natbib}
+# #+LATEX_HEADER: \usepackage{natbib}
 #+LATEX_HEADER: \usepackage[utf8]{inputenc}
-#+LATEX_HEADER: \usepackage[small]{caption}
-#+LATEX_HEADER: \usepackage{graphicx}
 #+LATEX_HEADER: \usepackage{amsmath}
 #+LATEX_HEADER: \usepackage{amsthm}
 #+LATEX_HEADER: \usepackage{booktabs}
 #+LATEX_HEADER: \usepackage{xcolor}
 #+LATEX_HEADER: \urlstyle{same}
 #+LATEX_HEADER: \usepackage{makecell}
-
-# guidelines: https://www.ijcai.org/authors_kit
 
 #+LATEX_HEADER: \usepackage{mathtools}
 #+LATEX_HEADER: \newcommand{\ttr}[1]{\left[\begin{array}{lcl}#1\end{array}\right]}
@@ -35,15 +28,17 @@
 #+LATEX_HEADER: \newcommand{\type}[1]{$\mathit{#1}$}
 #+LATEX_HEADER: \newcommand{\jg}[1]{\noindent \textcolor{blue}{\textbf{\emph{[jg:  #1]}}}}
 
-
 #+TITLE: Questions and clarifications with linear logic
-# Alternate title: On the role of metavariables in symbolic dialogue modelling
+#+AUTHOR: 
+#+latex_header: \input{tal-preamble.tex}
+#+LATEX_HEADER: \title[Questions and clarifications]{Questions and clarifications with linear logic}
 
-#+AUTHOR:
 
-\begin{abstract}
-In this paper we propose an account for dialogue coherence using Linear Logic. We focus our study on the range of things that can be potentially clarified in dialogue, and argue that they can be represented as meta-variables. 
-\end{abstract}
+# # Alternate title: On the role of metavariables in symbolic dialogue modelling
+
+# \abstract{In this paper we propose an account for dialogue coherence using Linear Logic. We focus our study on the range of things that can be potentially clarified in dialogue, and argue that they can be represented as meta-variables.}
+
+
 
 * Introduction
 
@@ -60,9 +55,9 @@ on the current state and the external context.
 
 Two families of approaches to dialogue management can be considered:
 hand-crafted dialogue strategies
-citep:allen1995trains,larsson2002issue,jokinen2009constructive and
+cite:allen1995trains,larsson2002issue,jokinen2009constructive and
 statistical modelling of dialogue
-citep:rieser2011reinforcement,young2010hidden. Frameworks for
+cite:rieser2011reinforcement,young2010hidden. Frameworks for
 hand-crafted strategies range from finite-state machines and
 form-filling to more complex dialogue planning and logical inference
 systems. Statistical models help to contend with the uncertainty that
@@ -71,7 +66,7 @@ recognition and other sensors to pragmatic ambiguities.
 
 End-to-end systems that do not specify a dialogue manager as an
 explicit component have gained lots of attention recently
-[[citep:roller2020recipes][e. g.,::]]. Although most of them are
+[[cite:roller2020recipes][e. g.,::]]. Although most of them are
 focused on chit-chat dialogues, coherence plays a crucial role there
 too. Typically issues of such systems are related to memory
 limitations which cause repetition, contradiction and
@@ -86,12 +81,12 @@ theoretical semantics and pragmatics of dialogue.
 *** Information state update approach
 In this work we are employing an information-state update (ISU) approach,
 following
-citet:traum1999model,larsson2002issue,ginzburg2012interactive. In this
+cite:traum1999model,larsson2002issue,ginzburg2012interactive. In this
 view we present the information available to each participant of the
 dialogue (either a human or an artificial agent) in a rich information
 state. Being rich entails that the information state contains
 hierarchy of facts, including the ones that are thought to be shared
-and the ones that have not been yet publicised.[fn::TBD consider if we need this] As an illustration citet:ginzburg2012interactive expresses the information state of a dialogue system,
+and the ones that have not been yet publicised.[fn::TBD consider if we need this] As an illustration cite:ginzburg2012interactive expresses the information state of a dialogue system,
 in TTR notation.
 \begin{equation}
 \def\arraystretch{1.5}
@@ -108,7 +103,7 @@ field public.LU -- latest utterance) by a user ($U$) a question like
 ‘When is there a bus from Gotaplatsen’ (the underspecified[fn::TBD
 more about underspecification] variables $b$, $t$ and $d$ correspond
 to bus number, time and destination respectively). This information is
-/public/[fn::Later on, following citet:ginzburg2015understanding we will
+/public/[fn::Later on, following cite:ginzburg2012interactive we will
 denote the public part of the information state as Dialogue Gameboard
 (DGB).] and available to a user as well. What is private is the
 knowledge of the timetable ($TT$) available to the system and not yet
@@ -117,7 +112,7 @@ state.
 
 Let’s now consider the /update/, another essential component of ISU. In
 this case, we will rely on a set of rules, that will govern the
-updates. citet:ginzburg2012interactive defines one of the most basic
+updates. cite:ginzburg2012interactive defines one of the most basic
 rules -- the rule of QUD-incrementation -- the procedure of updating
 the current set of questions under discussions (QUD) if the latest
 utterance (LU) is a question. This operation is salient to a user and
@@ -152,14 +147,14 @@ asked, e.g. `Bus 18 to Skogome'.
 TODO: we are not implementing Kos here, just use something from it
 
 
-KoS (not an acronym) citep:ginzburg2012interactive provides among the
+KoS (not an acronym) cite:ginzburg2012interactive provides among the
 most detailed theoretical treatments of domain general conversational
-relevance citep:ginzburg2012interactive, especially for query
-responses---see citet:purver-rlc06 on Clarification Requests,
-citet:lupkowski2017query for a general account---and this ties into
+relevance cite:ginzburg2012interactive, especially for query
+responses---see cite:purver-rlc06 on Clarification Requests,
+cite:lupkowski2017query for a general account---and this ties into
 the KoS treatment of non sentential utterances, again a domain crucial
 for naturalistic dialogue systems and where KoS has among the most
-detailed analyses citep:fgl07,ginzburg2012interactive.[fn::TBD DS/TTR,
+detailed analyses cite:fgl07,ginzburg2012interactive.[fn::TBD DS/TTR,
 incrementality?]
 
 In KoS (and other dynamic approaches to meaning), language is compared
@@ -167,7 +162,7 @@ to a game, containing players (interlocutors), goals and rules. KoS
 represent language interaction by representing the dynamically
 changing context. The meaning of an utterance is how it changes the
 context. Compared to most approaches
-[[citep:roberts2012information][e.g.::]], which represent a single context
+[[cite:roberts2012information][e.g.::]], which represent a single context
 for both dialogue participants), KoS keeps a separate representation
 for each participant, using the /Dialogue Game Board/
 (DGB). DGBs represent the information states of the participants, and
@@ -178,16 +173,16 @@ and content), and questions under discussion.
 
 KoS is based on the formalism of Type Theory with Records (TTR). There
 has been a wide range of work in this formalism which includes the
-modelling of intentionality and mental attitudes citep:cooper-rlc,
-generalised quantifiers citep:cooper-gq13, co-predication and dot
+modelling of intentionality and mental attitudes cite:cooper-rlc,
+generalised quantifiers cite:cooper-gq13, co-predication and dot
 types in lexical innovation, frame semantics for temporal reasoning,
-reasoning in hypothetical contexts citep:cooper-lacl11, spatial
-reasoning citep:dobnik2017interfacing, enthymematic reasoning
-citep:ellen-aisb, clarification requests
-citep:purver-rlc06,ginzburg2012interactive, negation
-citep:cooper2012negative, non-sentential utterance resolution
-citep:fgl07,ginzburg2012interactive and iconic gesture
-citep:lucking16.
+reasoning in hypothetical contexts cite:cooper-lacl11, spatial
+reasoning cite:dobnik2017interfacing, enthymematic reasoning
+cite:ellen-aisb, clarification requests
+cite:purver-rlc06,ginzburg2012interactive, negation
+cite:cooper2012negative, non-sentential utterance resolution
+cite:fgl07,ginzburg2012interactive and iconic gesture
+cite:lucking16.
 
 ** Clarification requests                                                :Vlad:
 - what are CRs
@@ -230,8 +225,8 @@ from Götaplatsen (as |x|) together with their departure time (as |y|).
 Typically, and in particular in the archetypal logic programming
 language prolog (TODO citation), axioms and rules are expressed within the general
 framework of first order logic. However, several authors
-citep:dixon2009plans,martens2015programming have proposed to use
-linear logic citep:girard1995linear instead. For our purpose, the
+cite:dixon2009plans,martens2015programming have proposed to use
+linear logic cite:girard1995linear instead. For our purpose, the
 crucial feature of linear logic is that facts may be used /only
 once/. For example, one could have a rule |IsAt x Gotaplatsen y ⊸ IsAt x
 CentralStationen (y+0.75)|. Consequently, after firing the above rule,
@@ -626,7 +621,7 @@ makes it different from cite:dixon2009plans. [fn::TBD examples for each]
   both ~X~ and ~Y~ as the result of applying the given rule.
 
 As an example, we can show how the rule for /QUD-incrementation/ from
-citet:ginzburg2015understanding can be formulated in this terms. Here
+cite:ginzburg2012interactive can be formulated in this terms. Here
 we consider the dialogue between interlocutors /A/ and /B/, when /A/ asks
 /B/[fn::Here we omit addressees as the conversation is only two-party.]
 a question /Q/. The question /Q/ just have been posed and therefore has
@@ -661,6 +656,10 @@ label:sec:bus
 
 - clarification could be narrowing from general types to subtypes.
 
-* References :ignore:
-bibliographystyle:named
-bibliography:lacatoda.bib
+
+
+
+\bibliography{tal}
+
+* COMMENT references
+bibliography:tal.bib

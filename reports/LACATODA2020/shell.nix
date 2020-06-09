@@ -5,6 +5,14 @@ let
      myEmacsConfig = writeText "default.el" ''
        (add-to-list 'load-path "${emacsPackages.org-ref}")
        (require 'org-ref)
+       (add-to-list 'org-latex-classes
+       '("article-hermes_french" "\\documentclass[english,utf8]{article-hermes_french}
+       " ("\\section{%s}"
+       . "\\section*{%s}") ("\\subsection{%s}"
+       . "\\subsection*{%s}")("\\subsubsection{%s}"
+       . "\\subsubsection*{%s}") ("\\paragraph{%s}"
+       . "\\paragraph*{%s}") ("\\subparagraph{%s}"
+       . "\\subparagraph*{%s}")))
      '';
 in stdenv.mkDerivation {
   shellHook = ''
@@ -29,6 +37,7 @@ in stdenv.mkDerivation {
                        fontaxes
                        framed
                        fvextra
+                       harvard
                        ifplatform
                        ifsym
                        inconsolata
