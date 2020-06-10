@@ -4,10 +4,10 @@ import Options.Applicative
 
 options :: ParserInfo (Int, String)
 options =
-  info ((,) <$>
+  info (((,) <$>
          option auto (showDefault <> value 10 <> short 'f' <> long "fuel" <> help "amount of fuel" <> metavar "INT") <*>
          (argument str (metavar "INPUT"))
-        ) (fullDesc <> progDesc "pli checker and interpreter")
+        ) <**> helper) (fullDesc <> progDesc "pli checker and interpreter")
 
 main :: IO ()
 main = do
