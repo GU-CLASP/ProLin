@@ -1,7 +1,7 @@
 { mkDerivation, alex, array, base, BNFC, Cabal, containers
 , directory, filepath, happy, haskeline, mtl, network
-, network-simple, parsek, pretty-compact, process, stdenv
-, transformers
+, network-simple, optparse-applicative, parsek, pretty-compact
+, process, stdenv, transformers
 }:
 mkDerivation {
   pname = "prolin";
@@ -12,7 +12,8 @@ mkDerivation {
   setupHaskellDepends = [ base Cabal directory process ];
   executableHaskellDepends = [
     array base BNFC containers directory filepath haskeline mtl network
-    network-simple parsek pretty-compact transformers
+    network-simple optparse-applicative parsek pretty-compact
+    transformers
   ];
   executableToolDepends = [ alex happy ];
   homepage = "https://github.com/GU-CLASP/prolin";
