@@ -17,7 +17,8 @@ noMoves :: Moves Nil;
 greeting : (x y : DP) ->
            HasTurn x -o
            WishToOpenDialogueWith y -o
-           [_ :: Agenda Greet
+           Agenda Nil -o
+           [_ :: Agenda (Greet x y)
            ];
 
 counterGreeting : (x y : DP) -> (ms : List Move) ->
@@ -45,7 +46,7 @@ utterAndRemember :
   (x y : DP) ->
   Agenda (m x y) -o
   -- SwitchingMove m -*
-  HasTurn x -o [ _ :: Utter (m x y) ; _ :: PushMove (m x y) ; _ :: HasTurn y ];
+  HasTurn x -o [_ :: Utter (m x y); _ :: PushMove (m x y) ; _ :: HasTurn y];
 
 hearAndRemember  :
   (m : DP -> DP -> Move) ->
@@ -66,8 +67,15 @@ processShort : (a : Type) -> (x : a) ->  (p : Prop) -> LatestMove (ShortAnswer x
 
 getQUD : (ms : List Move) -> (q : Question) -> (x y : DP) -> Moves (Cons (Ask q x y) ms) -* QUD Nil -o QUD q;
 
-produceAnswer : (a : Type) -> (x : a) !-> (p : Prop) -> QUD (Q a x p) -o p -*
-   [_ :: Agenda (ShortAnswer x a);
+produceAnswer :
+   (a : Type) ->
+   (x : a) !->
+   (p : Prop) ->
+   QUD (Q a x p) -o
+   p -*
+   Agenda Nil -o
+   [_ :: Agenda (ShortAnswer x a SYSTEM USER); -- FIXME!!!
     _ :: Answered (Q a x p)];
+
 
 johnParis :: Live John Paris;
