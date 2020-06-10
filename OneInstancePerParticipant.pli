@@ -1,6 +1,13 @@
 
 
+-- hardcoding user moves.
+noQud :: QUD Nil;
 start :: Heard (Greet USER SYSTEM);
+q1    : (x : Location) ->
+        Utter (CounterGreet SYSTEM USER) -o Heard (Ask (Q Location x (Live John x)) USER SYSTEM);
+
+
+
 ready :: HasTurn USER;
 noMoves :: Moves Nil;
 
@@ -28,8 +35,8 @@ askExample :(x y : DP) ->
                    _ :: Asked q
                   ];
 
-greetIsSwitchingMove :: SwitchingMove Greet;
-greetIsSwitchingMove :: SwitchingMove CounterGreet;
+-- greetIsSwitching :: SwitchingMove Greet;
+-- cgreetIsSwitching :: SwitchingMove CounterGreet;
 
 pushMove : (m : Move) -> (ms : List Move) -> PushMove m -o Moves ms -o Moves (Cons m ms);
 
@@ -37,13 +44,14 @@ utterAndRemember :
   (m : DP -> DP -> Move) ->
   (x y : DP) ->
   Agenda (m x y) -o
-  SwitchingMove m -* HasTurn x -o [ _ :: Utter (m x y) ; _ :: PushMove (m x y) ; _ :: HasTurn y ];
+  -- SwitchingMove m -*
+  HasTurn x -o [ _ :: Utter (m x y) ; _ :: PushMove (m x y) ; _ :: HasTurn y ];
 
 hearAndRemember  :
   (m : DP -> DP -> Move) ->
   (x y : DP) ->
   Heard (m x y) -o
-  SwitchingMove m -*
+  -- SwitchingMove m -*
   HasTurn x       -o
   [_ :: PushMove (m x y) ;
    _ :: HasTurn y ;
@@ -56,9 +64,10 @@ hearAndRemember2  :   (m : DP -> DP -> Move) ->
 
 processShort : (a : Type) -> (x : a) ->  (p : Prop) -> LatestMove (ShortAnswer x a) -o Asked (Q x a p) -o p;
 
-getQUD : (q : Question) -> (x y : DP) -> LatestMove (Ask q x y) -* QUD q;
+getQUD : (ms : List Move) -> (q : Question) -> (x y : DP) -> Moves (Cons (Ask q x y) ms) -* QUD Nil -o QUD q;
 
 produceAnswer : (a : Type) -> (x : a) !-> (p : Prop) -> QUD (Q a x p) -o p -*
    [_ :: Agenda (ShortAnswer x a);
     _ :: Answered (Q a x p)];
 
+johnParis :: Live John Paris;
