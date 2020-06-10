@@ -1,37 +1,64 @@
 
+
+start :: Heard (Greet USER SYSTEM);
+ready :: HasTurn USER;
+noMoves :: Moves Nil;
+
 -- HasTurn :: DP -> Prop
+-- HasTurn x means that x is expected to speak next.
 
 greeting : (x y : DP) ->
            HasTurn x -o
            WishToOpenDialogueWith y -o
-           [_ :: UtterRemember Greet
+           [_ :: Agenda Greet
            ];
 
-counterGreeting : (x y : DP) ->
-                  HasTurn x -o
-                  LatestMove (Greet y x)  -o
-                  [_ :: UtterRemember CounterGreet
-                  ];
+counterGreeting : (x y : DP) -> (ms : List Move) ->
+                  HasTurn x -*
+                  Moves (Cons (Greet y x) ms)  -*
+                  Agenda Nil -o
+                  -- Agenda m !-o
+                  [_ :: Agenda (CounterGreet x y)];
 
 askExample :(x y : DP) ->
+            (q : Question) ->
                   HasTurn x -o
-                  -- some else
-                  [_ :: UtterRemember (Ask q)
+                  AnyGivenCondition -o
+                  [_ :: Agenda (Ask q);
                    _ :: Asked q
                   ];
 
-greetIsSwitchingMove :: SwitchingMove Greet
-greetIsSwitchingMove :: SwitchingMove CounterGreet
+greetIsSwitchingMove :: SwitchingMove Greet;
+greetIsSwitchingMove :: SwitchingMove CounterGreet;
 
-utterAndRemember : (x y : DP) -> UtterRemember m -o SwitchingMove m -* HasTurn x -o Adressee y  -* [ _ :: Utter (m x y) ; _ :: LatestMove (m x y) ; _ :: HasTurn y ]
-hearAndRemember  : (x y : DP) -> Hear          m -o SwitchingMove m -* HasTurn x -o Adressee y  -* [                      _ :: LatestMove (m x y) ; _ :: HasTurn y ]
+pushMove : (m : Move) -> (ms : List Move) -> PushMove m -o Moves ms -o Moves (Cons m ms);
 
-utterAndRemember2 : (x y : DP) -> UtterRemember m -o NotSwitchingMove m -* Adressee y  -* [ _ :: Utter (m x y) ; _ :: LatestMove (m x y) ]
-hearAndRemember2  : (x y : DP) -> Hear          m -o NotSwitchingMove m -* Adressee y  -* [                      _ :: LatestMove (m x y) ]
+utterAndRemember :
+  (m : DP -> DP -> Move) ->
+  (x y : DP) ->
+  Agenda (m x y) -o
+  SwitchingMove m -* HasTurn x -o [ _ :: Utter (m x y) ; _ :: PushMove (m x y) ; _ :: HasTurn y ];
 
-processShort : ∀ x a p. LatestMove (ShortAnswer x a) ⊸ Asked (Q x a p) ⊸ p
+hearAndRemember  :
+  (m : DP -> DP -> Move) ->
+  (x y : DP) ->
+  Heard (m x y) -o
+  SwitchingMove m -*
+  HasTurn x       -o
+  [_ :: PushMove (m x y) ;
+   _ :: HasTurn y ;
+   _ :: Agenda Nil];
 
-getQUD : LatestMove (Ask q x y) -* QUD q
+utterAndRemember2 :   (m : DP -> DP -> Move) ->
+(x y : DP) -> Agenda m -o NotSwitchingMove m -* Adressee y  -* [ _ :: Utter (m x y) ; _ :: LatestMove (m x y) ];
+hearAndRemember2  :   (m : DP -> DP -> Move) ->
+(x y : DP) -> Heard m -o NotSwitchingMove m -* Adressee y  -* [                      _ :: LatestMove (m y x) ];
 
-prroduceAnswer : (a : Type) -> (x : a) !-> (p : Prop) -> QUD (Q a x p) -o p -* [_ :: UtterRemember (ShortAnswer x a)]
+processShort : (a : Type) -> (x : a) ->  (p : Prop) -> LatestMove (ShortAnswer x a) -o Asked (Q x a p) -o p;
+
+getQUD : (q : Question) -> (x y : DP) -> LatestMove (Ask q x y) -* QUD q;
+
+produceAnswer : (a : Type) -> (x : a) !-> (p : Prop) -> QUD (Q a x p) -o p -*
+   [_ :: Agenda (ShortAnswer x a);
+    _ :: Answered (Q a x p)];
 
