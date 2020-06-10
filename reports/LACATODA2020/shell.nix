@@ -5,6 +5,8 @@ let
      myEmacsConfig = writeText "default.el" ''
        (add-to-list 'load-path "${emacsPackages.org-ref}")
        (require 'org-ref)
+       (setq org-latex-subtitle-separate t)
+       (setq org-latex-subtitle-format "%s")  ; insane hack for short title
        (add-to-list 'org-latex-classes
        '("article-hermes_french" "\\documentclass[english,utf8]{article-hermes_french}
        " ("\\section{%s}"

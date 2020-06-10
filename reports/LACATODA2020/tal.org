@@ -28,10 +28,10 @@
 #+LATEX_HEADER: \newcommand{\type}[1]{$\mathit{#1}$}
 #+LATEX_HEADER: \newcommand{\jg}[1]{\noindent \textcolor{blue}{\textbf{\emph{[jg:  #1]}}}}
 
-#+TITLE: Questions and clarifications with linear logic
-#+AUTHOR: 
+#+TITLE: Questions and clarifications
+#+SUBTITLE: \title[Questions and clarifications]{Questions and clarifications with linear logic}
+#+AUTHOR: ME
 #+latex_header: \input{tal-preamble.tex}
-#+LATEX_HEADER: \title[Questions and clarifications]{Questions and clarifications with linear logic}
 
 
 # # Alternate title: On the role of metavariables in symbolic dialogue modelling
@@ -663,3 +663,10 @@ label:sec:bus
 
 * COMMENT references
 bibliography:tal.bib
+
+
+
+# Local Variables:
+# org-latex-subtitle-separate: t
+# org-latex-classes: (("article-hermes_french" "\\documentclass[english,utf8]{article-hermes_french} " ("\\section{%s}" . "\\section*{%s}") ("\\subsection{%s}" . "\\subsection*{%s}")("\\subsubsection{%s}" . "\\subsubsection*{%s}") ("\\paragraph{%s}" . "\\paragraph*{%s}") ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+# End:
