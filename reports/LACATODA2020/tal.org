@@ -238,6 +238,14 @@ Thus, the hypotheses available for proof search correspond to the
 /state/ of the system. In our application they will correspond to the
 /information state/ of the dialog participant.
 
+We note that in linear logic, facts (hypotheses) to not come in a
+hierarchy (TODO as above). Either we have a fact, or we don't. However
+in second order variants of intuitionistic logic, like the one we use,
+one can conveniently wrap propositions in constructors, to indicate
+that they come with a qualification. For example, we can write |Unsure
+P| to indicate that the proposition |P| may hold (for example if
+clarification is required).
+
 This way, the firing of a linear rule corresponds to an /action/ of an
 agent, and a complete proof corresponds to a /scenario/, i.e. a sequence
 of actions, possibly involving action from several agents.  However,
@@ -257,9 +265,7 @@ In an actual dialogue, the scenario is therefore suspended between
 every interaction, and the state represents the current mental state
 of the agent which is modelled.[fn::possibly remove this sentence]
 
-#+BEGIN_code
-TODO: import example from later
-#+END_code
+TODO: forward reference to example.
 
 It is important to note that we will not forego the unrestricted
 (i.e. non-linear) implication (|->|). Rather, both implications will
@@ -275,9 +281,7 @@ whose value can become fixed for a goal to be reached.
 In the context of linear-logic proof search, this means that, at any
 point in the scenario, state can refer to metavariables.
 
-#+BEGIN_code
-TODO: import example from later
-#+END_code
+TODO: forward reference to example.
 
 In this situation, metavariables represent a certain amount of
 flexibility in the scenario: /so far/ the scenario works for any value
@@ -345,7 +349,7 @@ to a question |(A : Type; P : A -> Prop)| can be of either of the two following 
 Therefore, one way to process a short answer is by the |processShort| rule:
 
 #+BEGIN_code
-processShort : ∀ x a p. ShortAnswer x a
+processShort : ∀ x a p. ShortAnswer a x
              ⊸ QUD (Q x a p) ⊸ p
 #+END_code
 
@@ -353,7 +357,12 @@ We demand in particular that types in the answer and in the question
 match (|a| occurs in both places). Additionally, because |x| occurs in |p|, the information
 state will mention the concrete |x| which was provided in the answer.
 
-TODO: example
+For example, if the QUD was |(Q Location x (Live John x))| and the
+system processes the answer |ShortAnswer Location Paris|, then |x|
+unifies with |Paris|, and the new state will include:
+#+begin_code
+Live John Paris
+#+end_code
 
 To process assertions, we can use the following rule:
 
@@ -371,7 +380,9 @@ value by virtue of unification of |p| and |q|. Examples:
 and "Does John live in Paris" (there is unification), but, not, for
 example "What time is it?" (there is no unification).
 
-TODO: in both cases (processAssert and processShort) correspond to updates of the information state.
+Note that, in both cases (|processAssert| and |processShort|), the
+information state is updated with the proposition posed in the
+question.
 
 *** A bit more on polar questions
 Treatment of "no":
@@ -602,23 +613,16 @@ above.
 In sum, in our model, to support clarification requests, a system must
 integrate many arguments and use metavariables.
 
+** Implementation notes
+
+In our implementation, the information state is represented by a set
+we treat the information /state as a set [?] of /resources/ that can
+be queried and/or used.
+
+On top of this, we have set of immuable rules (they remain available
+even after being used).
+
 ** TODO COMMENT Extras
-Merge vocabulary/citations into the previous sections.
-
-
-In the linear logic implementation we treat the information /state as a
-set [?] of /resources/ that can be queried and/or used. This is the
-basic set of operators that constitute our implementation and that
-makes it different from cite:dixon2009plans. [fn::TBD examples for each]
-- Query (~X -* Y~) :: the resource ~X~ is queried and if the result is
-  positive the resource ~Y~ is produced.
-- Query for uniqueness (~X !-> Y~) :: the resource ~X~ is queried for
-  uniqueness and if the result is positive the resource ~Y~ is produced.
-- Linear implication (~X ⊸ Y~) :: the resource ~X~ is queried and if the
-  result is possible, ~X~ is consumed and the resource ~Y~ is
-  produced.
-- Conjunction of the results (~[_:: X; _:: Y]~) :: this is a way to produce
-  both ~X~ and ~Y~ as the result of applying the given rule.
 
 As an example, we can show how the rule for /QUD-incrementation/ from
 cite:ginzburg2012interactive can be formulated in this terms. Here
@@ -641,12 +645,17 @@ _ : (q : Question) -> (x y : User) ->
 Here, for any interlocutor, her ~LatestMove~ asking a question is
 consumed and her ~QUD~ is updated with the question from the ~Ask~ move.
 
+* TODO Implementation: show actual set of rules
+
 * Application: Bus example
 label:sec:bus
 - Formalisation of all the aspects of the the example in the theory.
 - Say it's a complete and implemented system
 
+* Related work
 
+Use the same basic idea as citet:dixon2009plans. But we have the additional unicity
+operators (~X !-> Y~) and (~X ?-> Y~). Also we explicitly deal with QA and CR.
 
 * Evaluation/Discussion/Future work
 - discussing the corrections
