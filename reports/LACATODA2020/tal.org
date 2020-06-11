@@ -630,8 +630,8 @@ Not (Live John Paris Illinois)
 then both "True" and "False" are valid answers, and a clarification
 requests should be issued: |Q Country z (z=y)|. We see again that the
 realisation of the clarification request depends highly on the
-formulation of the question. In this case "Do you mean Paris, France?"
-would be suitable.
+formulation of the question and the context. In this case "Do you mean
+Paris, France?"  would be suitable.
 
 ** Implementation notes
 
