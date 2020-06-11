@@ -288,7 +288,7 @@ flexibility in the scenario: /so far/ the scenario works for any value
 which could be assigned to the metavariable. In this paper we explore
 the potential of using metavariables in this context.
 
-* Theory and running example
+* Questions and clarifications
 
 ** Question-answering with metavariables
 
@@ -676,6 +676,72 @@ label:sec:bus
 
 Use the same basic idea as citet:dixon2009plans. But we have the additional unicity
 operators (~X !-> Y~) and (~X ?-> Y~). Also we explicitly deal with QA and CR.
+
+* Kos-inspired dialogue management with linear logic
+- Connect with AixDial paper. 
+- image with basic SDS architecture
+
+** Domain-independent rules
+*** Interface with language understanding and generation
+Here we assume that information that is external to dialogue manager
+is expressed in terms of semantic interpretations of a move, and
+contains information about the speaker and the addressee in a
+structured way. Here we provide 5 basic types of moves as an illustration:
+#+BEGIN_code
+Greet          spkr addr
+CounterGreet   spkr addr
+Ask          q spkr addr
+ShortAnswer  v spkr addr
+Assert       p spkr addr
+#+END_code
+
+This moves can be received either by the NLU component, in which case
+they enter the context with |Heard| predicate, or generated in order
+to be used by the NLG component in which case they are put in |Agenda|.
+
+*** Initial state
+In a general case we start with empty |QUD| and |Agenda|. Empty |QUD|
+can be adjusted if in a certain domain some open questions are assumed
+from the start. |Agenda| might not be empty in the case if one would
+want system to initiate the conversation. There are also no moves as
+nothing has been said by neither party.
+
+#+BEGIN_code
+_ :: QUD Nil;
+_ :: Agenda Nil;
+_ :: Moves Nil;
+#+END_code
+
+*** Hearing
+
+*** Uttering
+
+*** Basic adjacency: greeting
+We can show how basic move adjacency can be defined in the example of
+countergreeting preconditioned by a greeting from the other party:
+
+#+BEGIN_code
+counterGreeting : (x y : DP) -> (ms : List Move) ->
+                  HasTurn x -*
+                  Moves (Cons (Greet y x) ms)  -*
+                  Agenda Nil -o
+                  [_ :: Agenda (CounterGreet x y)];
+#+END_code
+
+
+*** Question resolution
+*** Note on turn taking
+- how can be turned into something more advanced
+** Example
+With/without  system-cr:
+- greeting exchange
+- when there is a bus from A?
+- (towards where? 
+- B)
+- it is at T
+
+With user-cr:
+- ??? 
 
 * Evaluation/Discussion/Future work
 - discussing the corrections
