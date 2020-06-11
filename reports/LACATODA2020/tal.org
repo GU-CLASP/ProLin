@@ -613,6 +613,26 @@ above.
 In sum, in our model, to support clarification requests, a system must
 integrate many arguments and use metavariables.
 
+*** Even more on CRs
+
+Consider now the closed question "Does John live in Paris?".
+But where the system has a 3-place predicate for live, where the country is specified; and we have:
+
+We can assume that the question can be encoded for simplicity
+as |\x. if x then (Live John Paris y) else Not (Live John Paris y)|.
+That is, the country is implicit and represented by a metavariable.
+
+If the system has the following facts:
+#+begin_code
+Live John Paris France
+Not (Live John Paris Illinois)
+#+end_code
+then both "True" and "False" are valid answers, and a clarification
+requests should be issued: |Q Country z (z=y)|. We see again that the
+realisation of the clarification request depends highly on the
+formulation of the question. In this case "Do you mean Paris, France?"
+would be suitable.
+
 ** Implementation notes
 
 In our implementation, the information state is represented by a set
