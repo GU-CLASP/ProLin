@@ -674,7 +674,7 @@ label:sec:bus
 
 * Related work
 
-Use the same basic idea as citet:dixon2009plans. But we have the additional unicity
+Use the same basic idea as cite:dixon2009plans. But we have the additional unicity
 operators (~X !-> Y~) and (~X ?-> Y~). Also we explicitly deal with QA and CR.
 
 * Kos-inspired dialogue management with linear logic
@@ -695,9 +695,18 @@ ShortAnswer  v spkr addr
 Assert       p spkr addr
 #+END_code
 
-This moves can be received either by the NLU component, in which case
+These moves can be received either by the NLU component, in which case
 they enter the context with |Heard| predicate, or generated in order
 to be used by the NLG component in which case they are put in |Agenda|.
+
+As it is easily noticed, each move is accompanied by the information
+about who has uttered it, and towards whom was it addressed. All the
+moves are stacked in the |Moves| part of the participant’s dialogue
+gameboard[fn::VM:should we get DGB back?] using the following rule.
+#+BEGIN_code
+pushMove : (m : Move) -> (ms : List Move) ->
+           PushMove m -o Moves ms -o Moves (Cons m ms);
+#+END_code
 
 *** Initial state
 In a general case we start with empty |QUD| and |Agenda|. Empty |QUD|
@@ -713,8 +722,36 @@ _ :: Moves Nil;
 #+END_code
 
 *** Hearing
+The capacity of "hearing" or, in other words, receiving semantic
+representations of utterances from the NLU component is implemented
+with the following rule:
+#+BEGIN_code
+hearAndRemember  :
+  (m : DP -> DP -> Move) -> (x y : DP) ->
+  Heard (m x y) -o
+  HasTurn x     -o
+  [_ :: PushMove (m x y) ;
+   _ :: HasTurn y ;
+   _ :: Agenda Nil];
+#+END_code
+where |(m x y)| is a semantic representation of the utterance. Here it
+is assumed that participant |x| has a turn and, as a result, turn was
+taken by her partner |y|. [fn::VM:why do we have a nil agenda here?]
+
 
 *** Uttering
+The capacity of "uttering" represents an ability to generate
+information for the NLG component. NLP component is represented
+by |Agenda| that contains a move that is just about to be uttered.
+
+#+BEGIN_code
+utterAndRemember :
+  (m : DP -> DP -> Move) ->
+  (x y : DP) ->
+  Agenda (m x y) -o
+  HasTurn x -o [_ :: Utter (m x y); _ :: PushMove (m x y) ; _ :: HasTurn y];
+#+END_code
+
 
 *** Basic adjacency: greeting
 We can show how basic move adjacency can be defined in the example of
