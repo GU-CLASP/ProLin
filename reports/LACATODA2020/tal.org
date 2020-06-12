@@ -802,3 +802,26 @@ bibliography:tal.bib
 # org-latex-subtitle-separate: t
 # org-latex-classes: (("article-hermes_french" "\\documentclass[english,utf8]{article-hermes_french} " ("\\section{%s}" . "\\section*{%s}") ("\\subsection{%s}" . "\\subsection*{%s}")("\\subsubsection{%s}" . "\\subsubsection*{%s}") ("\\paragraph{%s}" . "\\paragraph*{%s}") ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 # End:
+
+* COMMENT notes 
+
+** VM & JG <2020-06-12 Fri>
+Why should we care? 
+- one of the ideas is to deal with structured NLU representations
+- repair is a minor issue
+- reach coherence, and some responses have low frequency, therefore it
+  is hard to learn them from data
+
+How is it better than other systems?
+- Traum: ICT systems, sensai, psychotheraphy consulting
+- TDM
+- end2end, as they referee sigdial/acl
+- Young et al.
+- Sadek, Phil Colin
+
+More punch: either benefit for semantic theories, or to dialogue system building.
+
++ Shalom’s point from Friday: formal systems as reality/sanity check,
+  can be used to highlight linguistic phenomena and relations between
+  them. A source of insight for improving deep learning systems. 
+
