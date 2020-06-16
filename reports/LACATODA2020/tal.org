@@ -39,7 +39,6 @@
 # \abstract{In this paper we propose an account for dialogue coherence using Linear Logic. We focus our study on the range of things that can be potentially clarified in dialogue, and argue that they can be represented as meta-variables.}
 
 
-
 * Introduction
 
 KEY IDEA: meta-variable stand in for any piece of information which is left for
@@ -197,7 +196,7 @@ cite:lucking16.
 
 The prevailing tradition in formal semantics (TODO:citations) is to
 represent (declarative) statements as propositions, formalized in an
-underlying logic (often first-order logic).
+underlying logic (often first⊸rder logic).
 
 In particular, in linguistic theories based on intuitionistic logic
 (such as TTR), true statements corresponds to propositions which admit
@@ -711,17 +710,19 @@ operators (~X !-> Y~) and (~X ?-> Y~). Also we explicitly deal with QA and CR.
 - Additionally, the use of metavariables is new.
 
 ** Domain-independent rules
+todo: explain |-*|
+
 *** Interface with language understanding and generation
 Here we assume that information that is external to dialogue manager
 is expressed in terms of semantic interpretations of a move, and
 contains information about the speaker and the addressee in a
 structured way. Here we provide 5 basic types of moves as an illustration:
 #+BEGIN_code
-Greet          spkr addr
-CounterGreet   spkr addr
-Ask          q spkr addr
-ShortAnswer  v spkr addr
-Assert       p spkr addr
+Greet            spkr  addr
+CounterGreet     spkr  addr
+Ask           q  spkr  addr
+ShortAnswer   v  spkr  addr
+Assert        p  spkr  addr
 #+END_code
 
 These moves can be received either by the NLU component, in which case
@@ -734,7 +735,7 @@ moves are stacked in the |Moves| part of the participant’s dialogue
 gameboard[fn::VM:should we get DGB back?] using the following rule.
 #+BEGIN_code
 pushMove : (m : Move) -> (ms : List Move) ->
-           PushMove m -o Moves ms -o Moves (Cons m ms);
+           PushMove m ⊸ Moves ms ⊸ Moves (Cons m ms);
 #+END_code
 
 *** Initial state
@@ -757,8 +758,8 @@ with the following rule:
 #+BEGIN_code
 hearAndRemember  :
   (m : DP -> DP -> Move) -> (x y : DP) ->
-  Heard (m x y) -o
-  HasTurn x     -o
+  Heard (m x y) ⊸
+  HasTurn x     ⊸
   [_ :: PushMove (m x y) ;
    _ :: HasTurn y ;
    _ :: Agenda Nil];
@@ -777,8 +778,8 @@ by |Agenda| that contains a move that is just about to be uttered.
 utterAndRemember :
   (m : DP -> DP -> Move) ->
   (x y : DP) ->
-  Agenda (m x y) -o
-  HasTurn x -o [_ :: Utter (m x y); _ :: PushMove (m x y) ; _ :: HasTurn y];
+  Agenda (m x y) ⊸
+  HasTurn x ⊸ [_ :: Utter (m x y); _ :: PushMove (m x y) ; _ :: HasTurn y];
 #+END_code
 
 
@@ -790,7 +791,7 @@ countergreeting preconditioned by a greeting from the other party:
 counterGreeting : (x y : DP) -> (ms : List Move) ->
                   HasTurn x -*
                   Moves (Cons (Greet y x) ms)  -*
-                  Agenda Nil -o
+                  Agenda Nil ⊸
                   [_ :: Agenda (CounterGreet x y)];
 #+END_code
 
