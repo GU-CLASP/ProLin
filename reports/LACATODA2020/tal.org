@@ -434,7 +434,13 @@ rule:
 (a : Type) -> (x : a) -> (p : Prop)
 -> QUD (Q a x p) -> p ⊸ (p ⊗ Answer x (Q x p))
 #+END_code
-
+Note: taking a linear argument and producing it again is a common
+pattern, which can be spelled out |A ⊸ (A ⊗ P)|. It is so common that
+from here on we use the syntactic sugar |A -* P| for it, so the above rule will be written:
+#+BEGIN_code
+(a : Type) -> (x : a) -> (p : Prop)
+-> QUD (Q a x p) -> p -* Answer x (Q x p)
+#+END_code
 
 The above states that, if |x| makes the proposition |p| true (more
 precisely, provable --- we require that |p| is a fact in the last
@@ -710,7 +716,6 @@ operators (~X !-> Y~) and (~X ?-> Y~). Also we explicitly deal with QA and CR.
 - Additionally, the use of metavariables is new.
 
 ** Domain-independent rules
-todo: explain |-*|
 
 *** Interface with language understanding and generation
 Here we assume that information that is external to dialogue manager
