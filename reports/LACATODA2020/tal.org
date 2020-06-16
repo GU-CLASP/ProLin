@@ -636,6 +636,25 @@ realisation of the clarification request depends highly on the
 formulation of the question and the context. In this case "Do you mean
 Paris, France?"  would be suitable.
 
+**** Alternative representation with binary predicates only (DB normalisation)
+
+Question: |\x. if x then (Live John y ∧ Name y Paris) else Not (Live John y) ∧ Name y Paris|
+
+Facts:
+Live John X
+Name Paris X
+Not (Live John Y)
+Name Paris Y
+Country France X
+Not (Country France Y)
+Country Denmark Y
+
+
+Clarification question: |Q Country z (z=y)|
+
+or even better: |Q Bool (\x. if x then Country France y else Not (Country France y))|
+
+
 ** Implementation notes
 
 In our implementation, the information state is represented by a set
