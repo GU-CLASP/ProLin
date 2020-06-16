@@ -812,9 +812,31 @@ counterGreeting : (x y : DP) -> (ms : List Move) ->
                   Agenda Nil ⊸
                   [_ :: Agenda (CounterGreet x y)];
 #+END_code
-
+*** QUD identification
+#+BEGIN_code
+setQUD :
+   (ms : List Move) ->
+   (q : Question) ->
+   (x y : DP) ->
+   Moves (Cons (Ask q x y) ms) -* QUD Nil -o QUD q;
+#+END_code
 
 *** Question resolution
+Variant of |produceAnswer| rule that works as part of dialogue management
+
+#+BEGIN_code
+produceAnswer :
+   (a : Type) ->
+   (x : a) !->
+   (p : Prop) ->
+   QUD (Q a x p) -o
+   p -*
+   Agenda Nil -o
+   [_ :: Agenda (ShortAnswer x a SYSTEM USER); 
+    _ :: Answered (Q a x p)];
+#+END_code
+
+
 *** Note on turn taking
 - how can be turned into something more advanced
 ** Example
