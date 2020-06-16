@@ -523,8 +523,9 @@ Then, a probable answer would be a /clarification request/, namely
 To detect situations where a clarification request can be issued, we can use the following rule:
 #+BEGIN_code
 (a : Type) -> (x : a) ?-> (p : Prop)
-   -> QUD (Q x p) -> p ⊸ (p ⊗ CR)
+   -> QUD (Q x p) -> p -* CR
 #+END_code
+(We leave the exact form of the CR abstract for now and come back to it below)
 
 The conditions are similar to that of the answering rule. The
 principal difference is the use of the |?->| operator, which conditions
@@ -548,9 +549,9 @@ ensure that |y| becomes ground.
 #+BEGIN_code
 Eat(John,Apple)
 Eat(Mary,Orange)
-ori :: QUD (Q Food x (Eat(y,x)))
-cr ::  QUD (Q Person z (z=y))
-a  ::  ShortAnswer Mary Person
+ori  ::  QUD (Q Food x (Eat(y,x)))
+cr   ::  QUD (Q Person z (z=y))
+a    ::  ShortAnswer Mary Person
 #+END_code
 after applying |processShort|:
 #+BEGIN_code
@@ -718,10 +719,11 @@ operators (~X !-> Y~) and (~X ?-> Y~). Also we explicitly deal with QA and CR.
 ** Domain-independent rules
 
 *** Interface with language understanding and generation
-Here we assume that information that is external to dialogue manager
-is expressed in terms of semantic interpretations of a move, and
-contains information about the speaker and the addressee in a
-structured way. Here we provide 5 basic types of moves as an illustration:
+Here we assume that the information that comes from a source which is
+external to the dialogue manager is expressed in terms of semantic
+interpretations of moves, and contains information about the speaker
+and the addressee in a structured way. Here we provide 5 basic types
+of moves as an illustration:
 #+BEGIN_code
 Greet            spkr  addr
 CounterGreet     spkr  addr
@@ -730,9 +732,17 @@ ShortAnswer   v  spkr  addr
 Assert        p  spkr  addr
 #+END_code
 
-These moves can be received either by the NLU component, in which case
-they enter the context with |Heard| predicate, or generated in order
-to be used by the NLG component in which case they are put in |Agenda|.
+These moves can either be received as input or produced as outputs. If
+they are inputs, they come from the NLU component, and they enter the
+context with |Heard| predicate. For example, if one hears a greeting,
+the proposition |Heard (Greet S A)| is added to the context, without
+any rule being fired --- this is what we mean by an external source.
+
+
+If they are outputs, to be further used by the NLG component, some
+rule will place them in |Agenda|. For example, to issue a
+countergreeting, a rule will place the proposition |Agenda
+(CounterGreet A S)| in the information state.
 
 As it is easily noticed, each move is accompanied by the information
 about who has uttered it, and towards whom was it addressed. All the
@@ -744,11 +754,11 @@ pushMove : (m : Move) -> (ms : List Move) ->
 #+END_code
 
 *** Initial state
-In a general case we start with empty |QUD| and |Agenda|. Empty |QUD|
-can be adjusted if in a certain domain some open questions are assumed
-from the start. |Agenda| might not be empty in the case if one would
-want system to initiate the conversation. There are also no moves as
-nothing has been said by neither party.
+In general, we start with empty |QUD| and |Agenda|. An empty |QUD| can
+be adjusted if in a certain domain some open questions are assumed
+from the start. The |Agenda| might not be empty if one would want the
+system to initiate the conversation. There are also no moves: nothing
+has been said by neither party.
 
 #+BEGIN_code
 _ :: QUD Nil;
@@ -757,9 +767,9 @@ _ :: Moves Nil;
 #+END_code
 
 *** Hearing
-The capacity of "hearing" or, in other words, receiving semantic
-representations of utterances from the NLU component is implemented
-with the following rule:
+The capacity of "hearing" or, in other words, starting the processing
+of semantic representations of utterances from the NLU component, is
+implemented with the following rule:
 #+BEGIN_code
 hearAndRemember  :
   (m : DP -> DP -> Move) -> (x y : DP) ->
@@ -771,8 +781,11 @@ hearAndRemember  :
 #+END_code
 where |(m x y)| is a semantic representation of the utterance. Here it
 is assumed that participant |x| has a turn and, as a result, turn was
-taken by her partner |y|. [fn::VM:why do we have a nil agenda here?]
-
+taken by her partner |y|. We do here several things: 1. place the move
+in a move list for further references (|PushMove|) 2. record the
+turn-switching (which in a complete system may not apply to all cases
+--- then additional hypotheses would be added.) 3. Prepare to react by
+recording that agenda is empty.
 
 *** Uttering
 The capacity of "uttering" represents an ability to generate
@@ -787,7 +800,7 @@ utterAndRemember :
   HasTurn x ⊸ [_ :: Utter (m x y); _ :: PushMove (m x y) ; _ :: HasTurn y];
 #+END_code
 
-
+Here also, we take care of turn-taking in the same rule.
 *** Basic adjacency: greeting
 We can show how basic move adjacency can be defined in the example of
 countergreeting preconditioned by a greeting from the other party:
