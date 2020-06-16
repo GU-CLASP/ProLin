@@ -2,7 +2,7 @@
 
  }:
 let nixpkgs_source =
-fetchTarball "https://github.com/NixOS/nixpkgs-channels/archive/nixos-19.09.tar.gz";
+fetchTarball "https://github.com/NixOS/nixpkgs-channels/archive/nixos-20.03.tar.gz";
   nixpkgs' = (import nixpkgs_source){};
 in with nixpkgs'.pkgs;
 let hp = haskellPackages.override{
@@ -29,8 +29,7 @@ pkgs.stdenv.mkDerivation {
   name = "my-haskell-env-0";
   buildInputs = [ ghc ];
   shellHook = ''
-export LOCALE_ARCHIVE=/usr/lib/locale/locale-archive
-export LC_ALL=en_US.UTF-8
-eval $(egrep ^export ${ghc}/bin/ghc)
+ export LANG=C.UTF-8
+ eval $(egrep ^export ${ghc}/bin/ghc)
 '';
 }

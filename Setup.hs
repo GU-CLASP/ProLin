@@ -16,7 +16,9 @@ main = do
   defaultMain
   where
     bnfc = do
+      putStrLn "About to run BNFC..."
       ret <- system "bnfc --haskell -d Exp.cf"
+      putStrLn "Done!"
       case ret of
         ExitSuccess   -> defaultMain
         ExitFailure n -> error $ "bnfc command not found or error" ++ show n

@@ -238,6 +238,14 @@ Thus, the hypotheses available for proof search correspond to the
 /state/ of the system. In our application they will correspond to the
 /information state/ of the dialog participant.
 
+We note that in linear logic, facts (hypotheses) to not come in a
+hierarchy (TODO as above). Either we have a fact, or we don't. However
+in second order variants of intuitionistic logic, like the one we use,
+one can conveniently wrap propositions in constructors, to indicate
+that they come with a qualification. For example, we can write |Unsure
+P| to indicate that the proposition |P| may hold (for example if
+clarification is required).
+
 This way, the firing of a linear rule corresponds to an /action/ of an
 agent, and a complete proof corresponds to a /scenario/, i.e. a sequence
 of actions, possibly involving action from several agents.  However,
@@ -257,9 +265,7 @@ In an actual dialogue, the scenario is therefore suspended between
 every interaction, and the state represents the current mental state
 of the agent which is modelled.[fn::possibly remove this sentence]
 
-#+BEGIN_code
-TODO: import example from later
-#+END_code
+TODO: forward reference to example.
 
 It is important to note that we will not forego the unrestricted
 (i.e. non-linear) implication (|->|). Rather, both implications will
@@ -275,16 +281,14 @@ whose value can become fixed for a goal to be reached.
 In the context of linear-logic proof search, this means that, at any
 point in the scenario, state can refer to metavariables.
 
-#+BEGIN_code
-TODO: import example from later
-#+END_code
+TODO: forward reference to example.
 
 In this situation, metavariables represent a certain amount of
 flexibility in the scenario: /so far/ the scenario works for any value
 which could be assigned to the metavariable. In this paper we explore
 the potential of using metavariables in this context.
 
-* Theory and running example
+* Questions and clarifications
 
 ** Question-answering with metavariables
 
@@ -345,7 +349,7 @@ to a question |(A : Type; P : A -> Prop)| can be of either of the two following 
 Therefore, one way to process a short answer is by the |processShort| rule:
 
 #+BEGIN_code
-processShort : ∀ x a p. ShortAnswer x a
+processShort : ∀ x a p. ShortAnswer a x
              ⊸ QUD (Q x a p) ⊸ p
 #+END_code
 
@@ -353,7 +357,12 @@ We demand in particular that types in the answer and in the question
 match (|a| occurs in both places). Additionally, because |x| occurs in |p|, the information
 state will mention the concrete |x| which was provided in the answer.
 
-TODO: example
+For example, if the QUD was |(Q Location x (Live John x))| and the
+system processes the answer |ShortAnswer Location Paris|, then |x|
+unifies with |Paris|, and the new state will include:
+#+begin_code
+Live John Paris
+#+end_code
 
 To process assertions, we can use the following rule:
 
@@ -371,7 +380,9 @@ value by virtue of unification of |p| and |q|. Examples:
 and "Does John live in Paris" (there is unification), but, not, for
 example "What time is it?" (there is no unification).
 
-TODO: in both cases (processAssert and processShort) correspond to updates of the information state.
+Note that, in both cases (|processAssert| and |processShort|), the
+information state is updated with the proposition posed in the
+question.
 
 *** A bit more on polar questions
 Treatment of "no":
@@ -602,23 +613,36 @@ above.
 In sum, in our model, to support clarification requests, a system must
 integrate many arguments and use metavariables.
 
+*** Even more on CRs
+
+Consider now the closed question "Does John live in Paris?".
+But where the system has a 3-place predicate for live, where the country is specified; and we have:
+
+We can assume that the question can be encoded for simplicity
+as |\x. if x then (Live John Paris y) else Not (Live John Paris y)|.
+That is, the country is implicit and represented by a metavariable.
+
+If the system has the following facts:
+#+begin_code
+Live John Paris France
+Not (Live John Paris Illinois)
+#+end_code
+then both "True" and "False" are valid answers, and a clarification
+requests should be issued: |Q Country z (z=y)|. We see again that the
+realisation of the clarification request depends highly on the
+formulation of the question and the context. In this case "Do you mean
+Paris, France?"  would be suitable.
+
+** Implementation notes
+
+In our implementation, the information state is represented by a set
+we treat the information /state as a set [?] of /resources/ that can
+be queried and/or used.
+
+On top of this, we have set of immuable rules (they remain available
+even after being used).
+
 ** TODO COMMENT Extras
-Merge vocabulary/citations into the previous sections.
-
-
-In the linear logic implementation we treat the information /state as a
-set [?] of /resources/ that can be queried and/or used. This is the
-basic set of operators that constitute our implementation and that
-makes it different from cite:dixon2009plans. [fn::TBD examples for each]
-- Query (~X -* Y~) :: the resource ~X~ is queried and if the result is
-  positive the resource ~Y~ is produced.
-- Query for uniqueness (~X !-> Y~) :: the resource ~X~ is queried for
-  uniqueness and if the result is positive the resource ~Y~ is produced.
-- Linear implication (~X ⊸ Y~) :: the resource ~X~ is queried and if the
-  result is possible, ~X~ is consumed and the resource ~Y~ is
-  produced.
-- Conjunction of the results (~[_:: X; _:: Y]~) :: this is a way to produce
-  both ~X~ and ~Y~ as the result of applying the given rule.
 
 As an example, we can show how the rule for /QUD-incrementation/ from
 cite:ginzburg2012interactive can be formulated in this terms. Here
@@ -641,12 +665,120 @@ _ : (q : Question) -> (x y : User) ->
 Here, for any interlocutor, her ~LatestMove~ asking a question is
 consumed and her ~QUD~ is updated with the question from the ~Ask~ move.
 
+* TODO Implementation: show actual set of rules
+
 * Application: Bus example
 label:sec:bus
 - Formalisation of all the aspects of the the example in the theory.
 - Say it's a complete and implemented system
 
+* Related work
 
+Use the same basic idea as cite:dixon2009plans. But we have the additional unicity
+operators (~X !-> Y~) and (~X ?-> Y~). Also we explicitly deal with QA and CR.
+
+* Kos-inspired dialogue management with linear logic
+- Connect with AixDial paper. 
+- image with basic SDS architecture
+
+** Domain-independent rules
+*** Interface with language understanding and generation
+Here we assume that information that is external to dialogue manager
+is expressed in terms of semantic interpretations of a move, and
+contains information about the speaker and the addressee in a
+structured way. Here we provide 5 basic types of moves as an illustration:
+#+BEGIN_code
+Greet          spkr addr
+CounterGreet   spkr addr
+Ask          q spkr addr
+ShortAnswer  v spkr addr
+Assert       p spkr addr
+#+END_code
+
+These moves can be received either by the NLU component, in which case
+they enter the context with |Heard| predicate, or generated in order
+to be used by the NLG component in which case they are put in |Agenda|.
+
+As it is easily noticed, each move is accompanied by the information
+about who has uttered it, and towards whom was it addressed. All the
+moves are stacked in the |Moves| part of the participant’s dialogue
+gameboard[fn::VM:should we get DGB back?] using the following rule.
+#+BEGIN_code
+pushMove : (m : Move) -> (ms : List Move) ->
+           PushMove m -o Moves ms -o Moves (Cons m ms);
+#+END_code
+
+*** Initial state
+In a general case we start with empty |QUD| and |Agenda|. Empty |QUD|
+can be adjusted if in a certain domain some open questions are assumed
+from the start. |Agenda| might not be empty in the case if one would
+want system to initiate the conversation. There are also no moves as
+nothing has been said by neither party.
+
+#+BEGIN_code
+_ :: QUD Nil;
+_ :: Agenda Nil;
+_ :: Moves Nil;
+#+END_code
+
+*** Hearing
+The capacity of "hearing" or, in other words, receiving semantic
+representations of utterances from the NLU component is implemented
+with the following rule:
+#+BEGIN_code
+hearAndRemember  :
+  (m : DP -> DP -> Move) -> (x y : DP) ->
+  Heard (m x y) -o
+  HasTurn x     -o
+  [_ :: PushMove (m x y) ;
+   _ :: HasTurn y ;
+   _ :: Agenda Nil];
+#+END_code
+where |(m x y)| is a semantic representation of the utterance. Here it
+is assumed that participant |x| has a turn and, as a result, turn was
+taken by her partner |y|. [fn::VM:why do we have a nil agenda here?]
+
+
+*** Uttering
+The capacity of "uttering" represents an ability to generate
+information for the NLG component. NLP component is represented
+by |Agenda| that contains a move that is just about to be uttered.
+
+#+BEGIN_code
+utterAndRemember :
+  (m : DP -> DP -> Move) ->
+  (x y : DP) ->
+  Agenda (m x y) -o
+  HasTurn x -o [_ :: Utter (m x y); _ :: PushMove (m x y) ; _ :: HasTurn y];
+#+END_code
+
+
+*** Basic adjacency: greeting
+We can show how basic move adjacency can be defined in the example of
+countergreeting preconditioned by a greeting from the other party:
+
+#+BEGIN_code
+counterGreeting : (x y : DP) -> (ms : List Move) ->
+                  HasTurn x -*
+                  Moves (Cons (Greet y x) ms)  -*
+                  Agenda Nil -o
+                  [_ :: Agenda (CounterGreet x y)];
+#+END_code
+
+
+*** Question resolution
+*** Note on turn taking
+- how can be turned into something more advanced
+** Example
+With/without  system-cr:
+- greeting exchange
+- when there is a bus from A?
+- (towards where? 
+- B)
+- it is at T
+
+With user-cr:
+- ??? 
 
 * Evaluation/Discussion/Future work
 - discussing the corrections
@@ -670,3 +802,26 @@ bibliography:tal.bib
 # org-latex-subtitle-separate: t
 # org-latex-classes: (("article-hermes_french" "\\documentclass[english,utf8]{article-hermes_french} " ("\\section{%s}" . "\\section*{%s}") ("\\subsection{%s}" . "\\subsection*{%s}")("\\subsubsection{%s}" . "\\subsubsection*{%s}") ("\\paragraph{%s}" . "\\paragraph*{%s}") ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 # End:
+
+* COMMENT notes 
+
+** VM & JG <2020-06-12 Fri>
+Why should we care? 
+- one of the ideas is to deal with structured NLU representations
+- repair is a minor issue
+- reach coherence, and some responses have low frequency, therefore it
+  is hard to learn them from data
+
+How is it better than other systems?
+- Traum: ICT systems, sensai, psychotheraphy consulting
+- TDM
+- end2end, as they referee sigdial/acl
+- Young et al.
+- Sadek, Phil Colin
+
+More punch: either benefit for semantic theories, or to dialogue system building.
+
++ Shalom’s point from Friday: formal systems as reality/sanity check,
+  can be used to highlight linguistic phenomena and relations between
+  them. A source of insight for improving deep learning systems. 
+
