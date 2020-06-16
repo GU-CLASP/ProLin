@@ -700,8 +700,15 @@ Use the same basic idea as cite:dixon2009plans. But we have the additional unici
 operators (~X !-> Y~) and (~X ?-> Y~). Also we explicitly deal with QA and CR.
 
 * Kos-inspired dialogue management with linear logic
-- Connect with AixDial paper. 
+- Connect with AixDial paper.
 - image with basic SDS architecture
+
+- importantly each (LL) rule manipulates a part of the information
+  state (captured by its premisses) and leaves everything else in the
+  state alone. (This is what TTR tries to do with its "assymetric
+  merge" operation).
+
+- Additionally, the use of metavariables is new.
 
 ** Domain-independent rules
 *** Interface with language understanding and generation
