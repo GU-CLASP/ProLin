@@ -65,30 +65,32 @@ arises in human interaction; from noisy signals from speech
 recognition and other sensors to pragmatic ambiguities.
 
 End-to-end systems that do not specify a dialogue manager as an
-explicit component have gained lots of attention recently
-[[cite:roller2020recipes][e. g.,::]]. Although most of them are
-focused on chit-chat dialogues, coherence plays a crucial role there
-too. Typically issues of such systems are related to memory
-limitations which cause repetition, contradiction and
-forgetfulness. Having a policy for dialogue coherence would be
+explicit component have gained lots of attention recently (e.g.,
+cite:roller2020recipes). Although most of them are focused on
+chit-chat dialogues, coherence plays a crucial role there
+too. Typically the main issues associated with such systems are
+related to memory limitations which cause repetition, contradiction
+and forgetfulness. Having a policy for dialogue coherence would be
 beneficial for such systems.
 
 Although there has been a lot of development in dialogue systems in
 recent years, only a few approaches reflect advancements in /dialogue
-theory/. \jg{But why should we care!} Our aim is to closely integrate dialogue systems with work in
-theoretical semantics and pragmatics of dialogue.
+theory/. Our aim is to closely integrate dialogue systems with work in
+theoretical semantics and pragmatics of dialogue. This field has provided accounts for linguistic phenomena intrinsic to dialogue such as non-sentential utterances cite:schlangen-diss,flg08,ginzburg2012interactive, clarification requests cite:purcer-rlc06,ginzburg2012interactive and self-repair citep:gfs-sp,houghpurver-disfl, where the resolution is intuitively tied to the coherence of what is being said.
 
 *** Information state update approach
-In this work we are employing an information-state update (ISU) approach,
-following
+In this work we are employing an information-state update (ISU)
+approach, following
 cite:traum1999model,larsson2002issue,ginzburg2012interactive. In this
 view we present the information available to each participant of the
 dialogue (either a human or an artificial agent) in a rich information
 state. Being rich entails that the information state contains
 hierarchy of facts, including the ones that are thought to be shared
-and the ones that have not been yet publicised.[fn::TBD consider if we need this] As an illustration cite:ginzburg2012interactive expresses the information state of a dialogue system,
-in TTR notation.
-\begin{equation}
+and the ones that have not been yet publicised.[fn::TBD consider if we
+need this] As an illustration ref:eq:isu-before-update is a rough
+exemplification the information state of a dialogue system, in TTR
+notation.
+\begin{equation}\label{eq:isu-before-update}
 \def\arraystretch{1.5}
 \setlength{\arraycolsep}{1pt}
 \ttr{
@@ -99,24 +101,24 @@ in TTR notation.
 \end{equation}
 
 What is expressed here is that dialogue system was just asked (in the
-field public.LU -- latest utterance) by a user ($U$) a question like
-‘When is there a bus from Gotaplatsen’ (the underspecified[fn::TBD
+field |public.LU| -- latest utterance) by a user ($U$) a question like
+"When is there a bus from Gotaplatsen" (the underspecified[fn::TBD
 more about underspecification] variables $b$, $t$ and $d$ correspond
 to bus number, time and destination respectively). This information is
 /public/[fn::Later on, following cite:ginzburg2012interactive we will
-denote the public part of the information state as Dialogue Gameboard
-(DGB).] and available to a user as well. What is private is the
-knowledge of the timetable ($TT$) available to the system and not yet
-made public, hence it is stored in the /private/ part of the information
-state.
+denote the public part of the information state as the Dialogue
+Gameboard (DGB).] and available to a user as well. What is private is
+the knowledge of the timetable ($TT$) available to the system and not
+yet made public, hence it is stored in the /private/ part of the
+information state.
 
 Let’s now consider the /update/, another essential component of ISU. In
 this case, we will rely on a set of rules, that will govern the
 updates. cite:ginzburg2012interactive defines one of the most basic
 rules -- the rule of QUD-incrementation -- the procedure of updating
-the current set of questions under discussions (QUD) if the latest
-utterance (LU) is a question. This operation is salient to a user and
-therefore it constitutes the update of the public part of the
+the current set of questions under discussions (|QUD|) if the latest
+utterance (|LU|) is a question. This operation is salient to a user
+and therefore it constitutes the update of the public part of the
 information state.
 
 #+BEGIN_code
@@ -128,25 +130,22 @@ The updated state will look as follows:
 \def\arraystretch{1.5}
 \setlength{\arraycolsep}{1pt}
 \ttr{
-\rf{private}{\ttr{\rf{tt_1}{TT(Bus52,0,Sko,Göt)}
-                  \rf{tt_2}{TT(Bus18,1,Joh,Göt)}}}
+\rf{private}{\ttr{\rf{tt_1}{TT(Bus52,0,Sko,Got)}
+                  \rf{tt_2}{TT(Bus18,1,Joh,Got)}}}
 \rf{public}{\ttr{\rf{LU}{Ask(U,Question(\lambda t.TT(b,t,d,Got)))}
               \rf{QUD}{set(Question(\lambda t.TT(b,t,d,Got))}}}}
 \end{equation}
 
 The main benefit of using rich representation of information state
-with underspecified components is to be able to address wide range of
-clarifications from both parties. This is especially beneficial in
+with underspecified components is to be able to address a wide range
+of clarifications from both parties. This is especially beneficial in
 case of automatic speech recognition or natural language understanding
-errors. But even put the errors aside, we can also consider topically
-relevant follow-up questions by the system, e.g. `What bus?', or
-contributions when user provides more information than they were
-asked, e.g. `Bus 18 to Skogome'.
+errors. But even putting such errors aside, we can also consider
+topically relevant follow-up questions by the system, e.g. "What
+bus?", or contributions when the user provides more information than
+they were asked, e.g. "Bus 18 to Skogome".
  
-*** COMMENT KoS
-TODO: we are not implementing Kos here, just use something from it
-
-
+*** KoS
 KoS (not an acronym) cite:ginzburg2012interactive provides among the
 most detailed theoretical treatments of domain general conversational
 relevance cite:ginzburg2012interactive, especially for query
@@ -250,16 +249,16 @@ This way, the firing of a linear rule corresponds to an /action/ of an
 agent, and a complete proof corresponds to a /scenario/, i.e. a sequence
 of actions, possibly involving action from several agents.  However,
 the information state (typically in the literature and in this paper
-as well), corresponds to the state of a /single/ agent. Thus, a
-scenario is concieved as a sequence of actions and updates of the
-information state of a single agent $a$, even though such actions can be
-attributed to any other dialogue participant $b$. (That is, they are $a$'s representation of actions of $b$.) 
-Scenarii can be realised
-as a sequence of actual actions and updates. That is, an action can
+as well), corresponds to the state of a /single/ agent. Thus, a scenario
+is conceived as a sequence of actions and updates of the information
+state of a single agent $a$, even though such actions can be
+attributed to any other dialogue participant $b$. (That is, they are
+$a$'s representation of actions of $b$.)  Scenaria can be realised as
+a sequence of actual actions and updates. That is, an action can
 result in sending a message to the outside world (in the form of
 speech, movement, etc.). Conversely, events happening in the outside
-world can result in updates of the information state (through a model of the
-perceptory subsystem).
+world can result in updates of the information state (through a model
+of the perceptory subsystem).
 
 In an actual dialogue, the scenario is therefore suspended between
 every interaction, and the state represents the current mental state
@@ -305,10 +304,10 @@ $A$ which makes $P x$ true. We show several examples in table
 ref:tbl:qa-ex.  It is worth stressing that the type $A$ can be large
 (for example asking for any location) or as small as a boolean (if one
 requires a simple yes/no answer).  We note in passing that, typically,
-yes/no questions can be answered not just by a boolean but by
+polar questions can be answered not just by a boolean but by
 qualifing the predicate in question (Table ref:tbl:qa-ex, last two
-rows).  In this instance |A = Prop -> Prop|. (Also, a simple "no"
-answer can be ambiguous when the question is negative.)
+rows).  In this instance |A = Prop -> Prop|. Also, a simple "no"
+answer can be ambiguous when the question is negative cite:cooper2012negative.
 
 
 \begin{sidewaystable} %[htbp]
@@ -333,7 +332,7 @@ metavariable |x|, and a proposition where |x| occurs.
 We stress that |P x| is /not/ part of the information state of the
 agent yet, rather the fact that the above question is /under
 discussion/ is a fact. For example, after asking "when does John
-live", we'd have:
+live", we have:
 
 #+BEGIN_code
 haveQud : QUD (Q Location x (Live John x))
