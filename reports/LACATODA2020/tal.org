@@ -117,7 +117,7 @@ information state.
 
 Let’s now consider the /update/, another essential component of ISU. In
 this case, we will rely on a set of rules, that will govern the
-updates. cite:ginzburg2012interactive defines one of the most basic
+updates. citet:ginzburg2012interactive defines one of the most basic
 rules -- the rule of QUD-incrementation -- the procedure of updating
 the current set of questions under discussions (|QUD|) if the latest
 utterance (|LU|) is a question. This operation is salient to a user
@@ -149,10 +149,10 @@ bus?", or contributions when the user provides more information than
 they were asked, e.g. "Bus 18 to Skogome".
  
 *** KoS
-KoS (not an acronym) cite:ginzburg2012interactive provides among the
+KoS (not an acronym) cite:ginzburg2012interactive provides one of the
 most detailed theoretical treatments of domain general conversational
-relevance cite:ginzburg2012interactive, especially for query
-responses---see cite:purver-rlc06 on Clarification Requests,
+relevance, especially for query
+responses---see citet:purver-rlc06 on Clarification Requests,
 cite:lupkowski2017query for a general account---and this ties into
 the KoS treatment of non sentential utterances, again a domain crucial
 for naturalistic dialogue systems and where KoS has among the most
