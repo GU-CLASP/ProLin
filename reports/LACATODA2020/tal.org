@@ -79,7 +79,7 @@ beneficial for such systems.
 Although there has been a lot of development in dialogue systems in
 recent years, only a few approaches reflect advancements in /dialogue
 theory/. Our aim is to closely integrate dialogue systems with work in
-theoretical semantics and pragmatics of dialogue. This field has provided accounts for linguistic phenomena intrinsic to dialogue such as non-sentential utterances cite:schlangen-diss,flg08,ginzburg2012interactive, clarification requests cite:purcer-rlc06,ginzburg2012interactive and self-repair citep:gfs-sp,houghpurver-disfl, where the resolution is intuitively tied to the coherence of what is being said.
+theoretical semantics and pragmatics of dialogue. This field has provided accounts for linguistic phenomena intrinsic to dialogue such as non-sentential utterances cite:schlangen-diss,flg08,ginzburg2012interactive, clarification requests cite:purcer-rlc06,ginzburg2012interactive and self-repair cite:gfs-sp,houghpurver-disfl, where the resolution is intuitively tied to the coherence of what is being said.
 
 *** Information state update approach
 In this work we are employing an information-state update (ISU) approach,
@@ -90,7 +90,7 @@ dialogue (either a human or an artificial agent) in a rich information
 state. Being rich entails that the information state contains
 hierarchy of facts, including the ones that are thought to be shared
 and the ones that have not been yet publicised.[fn::TBD consider if we
-need this] As an illustration ref:eq:isu-before-update is a rough
+need this] As an illustration [ref:eq:isu-before-update] is a rough
 exemplification the information state of a dialogue system, in TTR
 notation.
 \begin{equation}\label{eq:isu-before-update}
@@ -164,9 +164,9 @@ to a game, containing players (interlocutors), goals and rules. KoS
 represent language interaction by representing the dynamically
 changing context. The meaning of an utterance is how it changes the
 context. Compared to most approaches
-[[cite:roberts2012information][e.g.::]], which represent a single context
-for both dialogue participants), KoS keeps a separate representation
-for each participant, using the /Dialogue Game Board/
+[[cite:roberts2012information][e.g.::]], which represent a single
+context for both dialogue participants), KoS keeps a separate
+representation for each participant, using the /Dialogue Game Board/
 (DGB). DGBs represent the information states of the participants, and
 comprise a private part and the dialogue gameboard that represents
 information arising from publicized interactions. It tracks, at the
@@ -176,15 +176,14 @@ and content), and questions under discussion.
 KoS is based on the formalism of Type Theory with Records (TTR). There
 has been a wide range of work in this formalism which includes the
 modelling of intentionality and mental attitudes cite:cooper-rlc,
-generalised quantifiers cite:cooper-gq13, co-predication and dot
-types in lexical innovation, frame semantics for temporal reasoning,
+generalised quantifiers cite:cooper-gq13, co-predication and dot types
+in lexical innovation, frame semantics for temporal reasoning,
 reasoning in hypothetical contexts cite:cooper-lacl11, spatial
 reasoning cite:dobnik2017interfacing, enthymematic reasoning
 cite:ellen-aisb, clarification requests
 cite:purver-rlc06,ginzburg2012interactive, negation
 cite:cooper2012negative, non-sentential utterance resolution
-cite:fgl07,ginzburg2012interactive and iconic gesture
-cite:lucking16.
+cite:fgl07,ginzburg2012interactive and iconic gesture cite:lucking16.
 
 ** Clarification requests                                                :Vlad:
 - what are CRs
@@ -373,7 +372,7 @@ processAssert  : ∀ x a p. Assert p
                ⊸ QUD (Q x a p) ⊸ p
 #+END_code
 
-That is, (1) if it was asserted |p|, (2) the proposition |q| is part of a question under discussion, and (3) p can be
+That is, (1) if |p| was asserted , (2) the proposition |q| is part of a question under discussion, and (3) p can be
 unified with q, then the assertion resolves the
 question. Additionally, the metavariable |x| is grounded to a concrete
 value by virtue of unification of |p| and |q|. Examples:
@@ -387,7 +386,7 @@ information state is updated with the proposition posed in the
 question.
 
 *** A bit more on polar questions
-Treatment of "no":
+Treatment of "no" [fn::TBD move this to the table and explain!]:
 #+BEGIN_code
 "does john live in paris?"
 ⟦q⟧  = [A = QuestionPolarity -> Prop -> Prop;
@@ -408,7 +407,7 @@ More on ellipsis?
 
 ** Notion of unique and concrete answers
 
-However, one would consider the question resolved only if the answer
+However, one should consider the question resolved only if the answer
 is "unique". For example, the assertion "John lives somewhere" does
 not resolve the question "where does John live". That is, if
 "somewhere" is represented by a metavariable, then the answer is not
@@ -459,10 +458,10 @@ unknown thing. The proper answer is then "I do not know".
 
 Hence, we introduce another type-former |(x : A) !-> B|. As for |(x :
 A) -> B|, it introduces the metavariable $x$. However, the rule fires
-only when |x| is made /ground/ (it is bound to a term which does not
+only when |x| is made /grounded/ (it is bound to a term which does not
 contain any metavariable) and /unique/ by matching the rule. That is,
 it won't match in the previous example, because the answer is not
-ground (it contains unknowns). Additionally, it won't match if the
+grounded (it contains unknowns). Additionally, it won't match if the
 state of the system is composed of the two
 hypotheses |Eat(John,Apple)| and |Eat(John,Orange)|: the answer is not
 unique.
@@ -471,7 +470,7 @@ Thus, the rule for answering can be written:
 
 #+BEGIN_code
 produceAnswer : (a : Type) -> (x : a) !-> (p : Prop)
--> QUD (Q a x p) -> p ⊸ (p ⊗ ShortAnswer x a)
+-> QUD (Q a x p) -> p -* ShortAnswer x a
 #+END_code
 
 For example, if we have the following state:
@@ -519,7 +518,7 @@ Eat(John,Apple)
 Eat(Mary,Orange)
 #+END_code
 Then, a probable answer would be a /clarification request/, namely
-"eaten by whom?".
+"By whom?".
 
 To detect situations where a clarification request can be issued, we can use the following rule:
 #+BEGIN_code
@@ -530,7 +529,7 @@ To detect situations where a clarification request can be issued, we can use the
 
 The conditions are similar to that of the answering rule. The
 principal difference is the use of the |?->| operator, which conditions
-on a metavariable which remains not (fully) ground, or which can be
+on a metavariable which remains not (fully) grounded, or which can be
 unified to several ground terms --- the opposite of the |!->| operator.
 
 We can then turn our attention to the formulation of this clarification request.
@@ -563,15 +562,14 @@ r ::  Mary=y
 #+END_code
 
 
-This means the original question will,
-by unification, become |Q Food x (Eat(Mary,x))|, and it can be
-unambiguously answered using the /canAnswer/ rule. We note that the
-logical form of the question (|z| such that |z=y|) is typically
-realised in a complicated way. In our example, it could be "eaten by
-whom"; echoing part of the original question and assuming cooperative
-communication so that the questioner properly relates the
-clarification request to the implicits of the original questions. (In
-sec. ref:sec:bus)
+This means the original question will, by unification, become |Q Food
+x (Eat(Mary,x))|, and it can be unambiguously answered using the
+/canAnswer/ rule. We note that the logical form of the question (|z|
+such that |z=y|) is typically realised in a complicated way. In our
+example, it could be "By whom"; echoing part of the original question
+and assuming cooperative communication so that the questioner properly
+relates the clarification request to the implicits of the original
+questions. (In sec. ref:sec:bus)
 
 In practice, the form of clarification questions will greatly vary
 depending on the context.
@@ -594,8 +592,8 @@ TODO: flow sentence.
 Consider the exchange:
 
 #+BEGIN_quote
-Where does John live?
-Do you mean while he is in confinement?
+A: Where does John live? \\
+B: Do you mean while he is in confinement?
 #+END_quote
 
 In the above, there is an (implicit) extra argument to the |Live|
@@ -643,7 +641,7 @@ realisation of the clarification request depends highly on the
 formulation of the question and the context. In this case "Do you mean
 Paris, France?"  would be suitable.
 
-**** Alternative representation with binary predicates only
+*** Alternative representation with binary predicates only
 
 The above presentation (using a ternary predicate) is perhaps not
 ideal. (Because the country is functionally dependent on the location,
