@@ -388,8 +388,8 @@ Live John Paris
 To process assertions, we can use the following rule:
 
 #+BEGIN_code
-processAssert  : ∀ x a p. Assert p
-               ⊸ QUD (Q x a p) ⊸ p
+processAssert  :  ∀ x a p. Assert p ⊸
+                  QUD (Q x a p) ⊸ p
 #+END_code
 
 That is, (1) if |p| was asserted , (2) the proposition |q| is part of a question under discussion, and (3) p can be
