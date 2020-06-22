@@ -317,10 +317,13 @@ answer can be ambiguous when the question is negative cite:cooper2012negative.
 utterance & A & P & a\\
 \hline
 Where does John live?    & |Location    | & |\x.Live John x                          | & in London & |ShortAnswer London Location| \\
-Does John live in paris? & |Bool        | & \makecell{|\x.if x then (Live John Paris)| \\ |else Not (Live John Paris)|} & yes & |ShortAnswer True Bool| \\
-What time is it?         & |Time        | & |\x.IsTime x                             | & It is 5am. & |Assert (IsTime 5.00)| \\
-Does John live in paris? & |Prop -> Prop| & |\m. m (Live John Paris)                 | & yes & |ShortAnswer (\x. x)  (Prop -> Prop)| \\
-Does John live in paris? & |Prop -> Prop| & |\m. m (Live John Paris)                 | & from January & \makecell{|ShortAnswer (\x. FromJanuary(x))|\\|(Prop -> Prop)|} \\
+Does John live in Paris? & |Bool        | & \makecell[l]{|\x.if x then (Live John Paris)| \\ |else Not (Live John Paris)|} & yes & |ShortAnswer True Bool| \\
+What time is it?         & |Time        | & |\x.IsTime x                             | & It is 5am. & |Assert (IsTime 5.00)| \\\hline
+Does John live in Paris? & |Prop -> Prop| & |\m. m (Live John Paris)                 | & yes & |ShortAnswer (\x. x)  (Prop -> Prop)| \\
+Does John live in Paris? & |Prop -> Prop| & |\m. m (Live John Paris)                 | & from January & \makecell[l]{|ShortAnswer (\x. FromJanuary(x))|\\|(Prop -> Prop)|} \\\hline
+Does John live in Paris? & \makecell[l]{|QuestionPolarity ->|\\|Prop -> Prop|} & |\m. m Positive (Live John Paris)| & yes & |ShortAnswer (\x. x)  (Prop -> Prop)| \\
+Doesn't John live in Paris? & \makecell[l]{|QuestionPolarity ->|\\|Prop -> Prop|} & |\m. m Negative (Live John Paris)| & no / oui\footnote{is it so?} & \makecell[l]{|ShortAnswer (\ pol prop -> if Positive then|\\|Not prop else prop) (Prop -> Prop)|} \\
+Doesn't John live in Paris? & \makecell[l]{|QuestionPolarity ->|\\|Prop -> Prop|} & |\m. m Negative (Live John Paris)| & si & \makecell[l]{|ShortAnswer (\ pol prop -> if Positive then ERROR|\\|else Not prop) (Prop -> Prop)|} \\
 \end{tabular}
 \caption{Examples of questions and the possible corresponding answers.\label{tbl:qa-ex}}
 \end{sidewaystable}
@@ -386,19 +389,7 @@ information state is updated with the proposition posed in the
 question.
 
 *** A bit more on polar questions
-Treatment of "no" [fn::TBD move this to the table and explain!]:
-#+BEGIN_code
-"does john live in paris?"
-⟦q⟧  = [A = QuestionPolarity -> Prop -> Prop;
-        P = \m. m Positive (Live John Paris)]
-"doesn't John live in Paris?
-⟦q'⟧ = [A = QuestionPolarity -> Prop -> Prop;
-        P = \m. m Negative (Not (Live John Paris))]
-"no"/"oui"
-⟦a⟧  = ShortAnswer (\pol prop -> if Positive then Not prop else prop) (Prop -> Prop)
-"si"
-⟦a'⟧ = ShortAnswer (\pol prop -> if Positive then ERROR else Not prop) (Prop -> Prop)
-#+END_code
+- Treatment of "no" (explain)
 
 More on ellipsis?
 - "he doesn't"
