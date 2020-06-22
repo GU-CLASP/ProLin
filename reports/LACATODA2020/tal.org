@@ -367,8 +367,8 @@ Live John Paris
 To process assertions, we can use the following rule:
 
 #+BEGIN_code
-processAssert : ∀ x a p. Assert p
-              ⊸ QUD (Q x a p) ⊸ p
+processAssert  : ∀ x a p. Assert p
+               ⊸ QUD (Q x a p) ⊸ p
 #+END_code
 
 That is, (1) if it was asserted |p|, (2) the proposition |q| is part of a question under discussion, and (3) p can be
@@ -400,10 +400,8 @@ Treatment of "no":
 #+END_code
 
 More on ellipsis?
-- "he doesn't" 
+- "he doesn't"
 - "he does"
-
-
 
 
 ** Notion of unique and concrete answers
@@ -643,23 +641,34 @@ realisation of the clarification request depends highly on the
 formulation of the question and the context. In this case "Do you mean
 Paris, France?"  would be suitable.
 
-**** Alternative representation with binary predicates only (DB normalisation)
+**** Alternative representation with binary predicates only
 
-Question: |\x. if x then (Live John y ∧ Name y Paris) else Not (Live John y) ∧ Name y Paris|
+The above presentation (using a ternary predicate) is perhaps not
+ideal. (Because the country is functionally dependent on the location,
+these two concepts should be linked directly together rather than
+involve the |Live| predicate.) Using an intermediary entity type for
+locations and binary predicates, one can represent the question "Does
+John live in Paris?" as follows: |\x. if x then (Live John y -> Name y
+Paris) else Not (Live John y -> Name y Paris) |
 
-Facts:
-Live John X
+Literally, "Does John live in a place called Paris?".
+
+The ambiguity of the |Paris| name can be represented by several
+locations named |Paris|, |X| and |Y| in our illustration:
+#+begin_code
 Name Paris X
-Not (Live John Y)
 Name Paris Y
+Live John X
+Not (Live John Y)
 Country France X
 Not (Country France Y)
-Country Denmark Y
+#+end_code
 
-
-Clarification question: |Q Country z (z=y)|
-
-or even better: |Q Bool (\x. if x then Country France y else Not (Country France y))|
+Because John lives in |X| but not in |Y| the question is
+ambiguous. One way to lift the ambiguity is raise the clarification
+request as above. Here it can be phrased as a boolean question
+again: |Q Bool (\x. if x then Country France y else Not (Country
+France y))|
 
 
 ** Implementation notes
