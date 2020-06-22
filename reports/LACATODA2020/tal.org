@@ -6,6 +6,7 @@
 #+LATEX_HEADER: %format !-> = "\rightarrow_{!}"
 #+LATEX_HEADER: %format ?-> = "\rightarrow_{?}"
 #+LATEX_HEADER: %format . = "."
+#+LATEX_HEADER: %format \_ = "\_"
 #+LATEX_HEADER: %let operator = "."
 #+LATEX_HEADER: \usepackage{soul}
 #+LATEX_HEADER: \usepackage{url}
@@ -797,11 +798,11 @@ implemented with the following rule:
 #+BEGIN_code
 hearAndRemember  :
   (m : DP -> DP -> Move) -> (x y : DP) ->
-  Heard (m x y) ⊸
-  HasTurn x     ⊸
-  [_ :: PushMove (m x y) ;
-   _ :: HasTurn y ;
-   _ :: Agenda Nil];
+  Heard (m x y)  ⊸
+  HasTurn x      ⊸
+  [  _ :: PushMove (m x y)  ;
+     _ :: HasTurn y         ;
+     _ :: Agenda Nil        ]
 #+END_code
 where |(m x y)| is a semantic representation of the utterance. Here it
 is assumed that participant |x| has a turn and, as a result, turn was
