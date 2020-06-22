@@ -67,7 +67,7 @@ interpretation
 
 * Background
 
-** Dialogue management                                                 :Vlad:
+** Dialogue management
 A key aspect of dialogue systems design is the coherence of system’s
 responses.  In this respect, a key component of a dialogue system is the
 dialogue manager, which selects appropriate system actions depending
@@ -96,12 +96,18 @@ beneficial for such systems.
 Although there has been a lot of development in dialogue systems in
 recent years, only a few approaches reflect advancements in /dialogue
 theory/. Our aim is to closely integrate dialogue systems with work in
-theoretical semantics and pragmatics of dialogue. This field has provided accounts for linguistic phenomena intrinsic to dialogue such as non-sentential utterances cite:schlangen-diss,flg08,ginzburg2012interactive, clarification requests cite:purcer-rlc06,ginzburg2012interactive and self-repair cite:gfs-sp,houghpurver-disfl, where the resolution is intuitively tied to the coherence of what is being said.
+theoretical semantics and pragmatics of dialogue. This field has
+provided accounts for linguistic phenomena intrinsic to dialogue such
+as non-sentential utterances
+cite:schlangen-diss,flg08,ginzburg2012interactive, clarification
+requests cite:purver-rlc06,ginzburg2012interactive and self-repair
+cite:gfs-sp,houghpurver-disfl, where the resolution is intuitively
+tied to the coherence of what is being said.
 
 *** Information state update approach
-In this work we are employing an information-state update (ISU) approach,
-following several authors, including
-citet:traum1999model, citet:larsson2002issue, and citet:ginzburg2012interactive. In this
+In this work we are employing an information-state update (ISU)
+approach, following several authors, including citet:traum1999model,
+citet:larsson2002issue, and citet:ginzburg2012interactive. In this
 view we present the information available to each participant of the
 dialogue (either a human or an artificial agent) in a rich information
 state. Being rich entails that the information state contains
@@ -168,22 +174,20 @@ they were asked, e.g. "Bus 18 to Skogome".
 *** KoS
 KoS (not an acronym) cite:ginzburg2012interactive provides one of the
 most detailed theoretical treatments of domain general conversational
-relevance, especially for query
-responses---see citet:purver-rlc06 on Clarification Requests,
-cite:lupkowski2017query for a general account---and this ties into
-the KoS treatment of non sentential utterances, again a domain crucial
-for naturalistic dialogue systems and where KoS has among the most
-detailed analyses cite:fgl07,ginzburg2012interactive.[fn::TBD DS/TTR,
-incrementality?]
+relevance, especially for query responses---see citet:purver-rlc06 on
+Clarification Requests, cite:lupkowski2017query for a general
+account---and this ties into the KoS treatment of non sentential
+utterances, again a domain crucial for naturalistic dialogue systems
+and where KoS has among the most detailed analyses
+cite:fgl07,ginzburg2012interactive.[fn::TBD DS/TTR, incrementality?]
 
 In KoS (and other dynamic approaches to meaning), language is compared
 to a game, containing players (interlocutors), goals and rules. KoS
 represent language interaction by representing the dynamically
 changing context. The meaning of an utterance is how it changes the
-context. Compared to most approaches
-[[cite:roberts2012information][e.g.::]], which represent a single context
-for both dialogue participants), KoS keeps a separate representation
-for each participant, using the /Dialogue Game Board/
+context. Compared to most approaches [fn::TBD refs], which represent a
+single context for both dialogue participants), KoS keeps a separate
+representation for each participant, using the /Dialogue Game Board/
 (DGB). DGBs represent the information states of the participants, and
 comprise a private part and the dialogue gameboard that represents
 information arising from publicized interactions. It tracks, at the
@@ -202,7 +206,7 @@ cite:purver-rlc06,ginzburg2012interactive, negation
 cite:cooper2012negative, non-sentential utterance resolution
 cite:fgl07,ginzburg2012interactive and iconic gesture cite:lucking16.
 
-** Clarification requests                                                :Vlad:
+** Clarification requests
 - what are CRs
 - why do they exist?
 - how frequent are they?
