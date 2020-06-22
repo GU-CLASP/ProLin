@@ -32,21 +32,38 @@
 #+LATEX_HEADER: \newcommand{\type}[1]{$\mathit{#1}$}
 #+LATEX_HEADER: \newcommand{\jg}[1]{\noindent \textcolor{blue}{\textbf{\emph{[jg:  #1]}}}}
 
-#+TITLE: Questions and clarifications
-#+SUBTITLE: \title[Questions and clarifications]{Questions and clarifications with linear logic}
-#+AUTHOR: ME
+#+TITLE: Dummy, see below.
+
+#+SUBTITLE: \title[linear logic, metavariables and Q/A]{Dialogue management with linear logic: the role of metavariables in questions and clarifications}
+#+AUTHOR: Anonymous
 #+latex_header: \input{tal-preamble.tex}
-
-
-# # Alternate title: On the role of metavariables in symbolic dialogue modelling
-
-# \abstract{In this paper we propose an account for dialogue coherence using Linear Logic. We focus our study on the range of things that can be potentially clarified in dialogue, and argue that they can be represented as meta-variables.}
 
 
 * Introduction
 
+# Establish the field. What is the line of work? (references, etc.)
+# Vlad
+
+# Identify a gap.
+
+- Semantic gap: the ideas are expressed in a formalism which is not the
+  best match.
+
+  (For example the TTR merge is a hack! 1. ad-hoc addition to
+  type-theory. 2. destructive updates, deletes, etc.)
+
+- Implementation gap.
+
+- Who cares about this anyway and what do they see as important?
+
+# How we plan to fill this gap?
+
 KEY IDEA: meta-variable stand in for any piece of information which is left for
 interpretation
+
+# What do we get?
+
+
 
 * Background
 
