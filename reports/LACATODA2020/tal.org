@@ -12,6 +12,9 @@
 #+LATEX_HEADER: \usepackage{newunicodechar}
 #+LATEX_HEADER: \input{newunicodedefs}
 # #+LATEX_HEADER: \usepackage{natbib}
+# Natbib-like commands for harvard.sty:
+#+LATEX_HEADER: \newcommand\citep[1]{\cite{#1}}
+#+LATEX_HEADER: \newcommand\citet[1]{\citeasnoun{#1}}
 #+LATEX_HEADER: \usepackage[utf8]{inputenc}
 #+LATEX_HEADER: \usepackage{amsmath}
 #+LATEX_HEADER: \usepackage{amsthm}
@@ -80,13 +83,13 @@ theoretical semantics and pragmatics of dialogue.
 
 *** Information state update approach
 In this work we are employing an information-state update (ISU) approach,
-following
-cite:traum1999model,larsson2002issue,ginzburg2012interactive. In this
+following several authors, including
+citet:traum1999model, citet:larsson2002issue, and citet:ginzburg2012interactive. In this
 view we present the information available to each participant of the
 dialogue (either a human or an artificial agent) in a rich information
 state. Being rich entails that the information state contains
 hierarchy of facts, including the ones that are thought to be shared
-and the ones that have not been yet publicised.[fn::TBD consider if we need this] As an illustration cite:ginzburg2012interactive expresses the information state of a dialogue system,
+and the ones that have not been yet publicised.[fn::TBD consider if we need this] As an illustration citet:ginzburg2012interactive expresses the information state of a dialogue system,
 in TTR notation.
 \begin{equation}
 \def\arraystretch{1.5}
