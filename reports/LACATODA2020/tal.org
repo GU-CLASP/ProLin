@@ -220,7 +220,7 @@ cite:fgl07,ginzburg2012interactive and iconic gesture cite:lucking16.
 
 The prevailing tradition in formal semantics (TODO:citations) is to
 represent (declarative) statements as propositions, formalized in an
-underlying logic (often first⊸rder logic).
+underlying logic (often first-order logic).
 
 In particular, in linguistic theories based on intuitionistic logic
 (such as TTR), true statements corresponds to propositions which admit
@@ -772,10 +772,12 @@ countergreeting, a rule will place the proposition |Agenda
 As it is easily noticed, each move is accompanied by the information
 about who has uttered it, and towards whom was it addressed. All the
 moves are stacked in the |Moves| part of the participant’s dialogue
-gameboard[fn::VM:should we get DGB back?] using the following rule.
+gameboard[fn::VM:should we get DGB back?] using the following rule
+which relies on |PushMove m| directive, where |m| is supposed to move
+on top of the stack.
 #+BEGIN_code
-pushMove : (m : Move) -> (ms : List Move) ->
-           PushMove m ⊸ Moves ms ⊸ Moves (Cons m ms);
+pushMove :  (m : Move) -> (ms : List Move) ->
+            PushMove m ⊸ Moves ms ⊸ Moves (Cons m ms);
 #+END_code
 
 *** Initial state
@@ -802,15 +804,15 @@ hearAndRemember  :
   HasTurn x      ⊸
   [  _ :: PushMove (m x y)  ;
      _ :: HasTurn y         ;
-     _ :: Agenda Nil        ]
+     _ :: Agenda Nil        ];
 #+END_code
 where |(m x y)| is a semantic representation of the utterance. Here it
 is assumed that participant |x| has a turn and, as a result, turn was
-taken by her partner |y|. We do here several things: 1. place the move
-in a move list for further references (|PushMove|) 2. record the
+taken by her partner |y|. We do here several things: i) place the move
+in a move list for further references (|PushMove|), ii) record the
 turn-switching (which in a complete system may not apply to all cases
---- then additional hypotheses would be added.) 3. Prepare to react by
-recording that agenda is empty.
+--- then additional hypotheses would be added.), and iii) prepare to
+react by recording that agenda is empty.
 
 *** Uttering
 The capacity of "uttering" represents an ability to generate
@@ -822,7 +824,10 @@ utterAndRemember :
   (m : DP -> DP -> Move) ->
   (x y : DP) ->
   Agenda (m x y) ⊸
-  HasTurn x ⊸ [_ :: Utter (m x y); _ :: PushMove (m x y) ; _ :: HasTurn y];
+  HasTurn x ⊸
+  [  _ :: Utter (m x y) ;
+     _ :: PushMove (m x y) ;
+     _ :: HasTurn y ] ;
 #+END_code
 
 Here also, we take care of turn-taking in the same rule.
@@ -831,19 +836,22 @@ We can show how basic move adjacency can be defined in the example of
 countergreeting preconditioned by a greeting from the other party:
 
 #+BEGIN_code
-counterGreeting : (x y : DP) -> (ms : List Move) ->
-                  HasTurn x -*
-                  Moves (Cons (Greet y x) ms)  -*
-                  Agenda Nil ⊸
-                  [_ :: Agenda (CounterGreet x y)];
+counterGreeting :
+    (x y : DP) -> (ms : List Move) ->
+    HasTurn x -*
+    Moves (Cons (Greet y x) ms)  -*
+    Agenda Nil ⊸
+       [_ :: Agenda (CounterGreet x y)];
 #+END_code
 *** QUD identification
+Another important rule accounts for setting the current question under discussion (|QUD|) to the latest move.
+
 #+BEGIN_code
 setQUD :
    (ms : List Move) ->
    (q : Question) ->
    (x y : DP) ->
-   Moves (Cons (Ask q x y) ms) -* QUD Nil -o QUD q;
+   Moves (Cons (Ask q x y) ms) -* QUD Nil ⊸ QUD q;
 #+END_code
 
 *** Question resolution
@@ -865,6 +873,20 @@ produceAnswer :
 *** Note on turn taking
 - how can be turned into something more advanced
 ** Example
+Now we turn into how the simple of system of rules above can handle the following exchange:
+#+begin_quote
+U: Hello!
+S: Hello, User.
+U: When there is a bus from Gotaplatsen?
+S: It is in 15 minutes.
+#+end_quote
+
+Let’s now assume the following system’s context:
+#+BEGIN_code
+i1  ::  TT B55 T1   Gotaplatsen Johanneberg ;
+i2  ::  TT B55 T13  Gotaplatsen SciencePark ;
+#+END_code
+
 With/without  system-cr:
 - greeting exchange
 - when there is a bus from A?
