@@ -53,7 +53,7 @@
   (For example the TTR merge is a hack! 1. ad-hoc addition to
   type-theory. 2. destructive updates, deletes, etc.)
 
-- Implementation gap.
+- Implementation gap. Updated version of GoDIS? 
 
 - Who cares about this anyway and what do they see as important?
 
@@ -63,6 +63,7 @@ KEY IDEA: meta-variable stand in for any piece of information which is left for
 interpretation
 
 # What do we get?
+
 
 
 
@@ -905,6 +906,8 @@ With user-cr:
 
 - clarification could be narrowing from general types to subtypes.
 
+- how types/proofs can be implemented
+
 
 
 
@@ -940,5 +943,17 @@ More punch: either benefit for semantic theories, or to dialogue system building
 
 + Shalom’s point from Friday: formal systems as reality/sanity check,
   can be used to highlight linguistic phenomena and relations between
-  them. A source of insight for improving deep learning systems. 
+  them. A source of insight for improving deep learning systems.
 
+** <2020-06-22 Mon>
+discussion:
+- need story/footnote/discussion about binding vs. metavariables in
+  order to suppost embedded questions (limitations)
+- how do we scale-up?
+
+introduction:
+- some story about granularity, that we can scale up for fully
+  implemented dialogue theory
+
+evaluation:
+- notion of benchmarks, like GoDIS ticklist (fernandes&ginzubrg 2010)
