@@ -19,6 +19,7 @@
 #+LATEX_HEADER: \usepackage{xcolor}
 #+LATEX_HEADER: \urlstyle{same}
 #+LATEX_HEADER: \usepackage{makecell}
+#+LATEX_HEADER: \usepackage{rotating}
 
 #+LATEX_HEADER: \usepackage{mathtools}
 #+LATEX_HEADER: \newcommand{\ttr}[1]{\left[\begin{array}{lcl}#1\end{array}\right]}
@@ -310,7 +311,7 @@ rows).  In this instance |A = Prop -> Prop|. (Also, a simple "no"
 answer can be ambiguous when the question is negative.)
 
 
-\begin{table*}[htbp]
+\begin{sidewaystable} %[htbp]
 \begin{tabular}{lllll}
 utterance & A & P & a\\
 \hline
@@ -321,7 +322,7 @@ Does John live in paris? & |Prop -> Prop| & |\m. m (Live John Paris)            
 Does John live in paris? & |Prop -> Prop| & |\m. m (Live John Paris)                 | & from January & \makecell{|ShortAnswer (\x. FromJanuary(x))|\\|(Prop -> Prop)|} \\
 \end{tabular}
 \caption{Examples of questions and the possible corresponding answers.\label{tbl:qa-ex}}
-\end{table*}
+\end{sidewaystable}
 
 Within the state of the agent, if the value of the requested answer is
 represented as a metavariable |x|, then the question can be represented as: |Q A x (P x)|.
