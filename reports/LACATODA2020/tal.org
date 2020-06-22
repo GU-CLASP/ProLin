@@ -672,10 +672,12 @@ France y))|
 
 
 ** Implementation notes
+TODO: move earlier
 
 In our implementation, the information state is represented by a set
-we treat the information /state as a set [?] of /resources/ that can
-be queried and/or used.
+we treat the information state as a multiset [?] of /linear
+hypotheses/ that can be queried. Because they are linear, these
+hypotheses can also be removed from the state.
 
 On top of this, we have set of immuable rules (they remain available
 even after being used).
