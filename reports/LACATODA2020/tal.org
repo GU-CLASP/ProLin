@@ -13,8 +13,8 @@
 #+LATEX_HEADER: \input{newunicodedefs}
 # #+LATEX_HEADER: \usepackage{natbib}
 # Natbib-like commands for harvard.sty:
-#+LATEX_HEADER: \newcommand\citep[1]{\cite{#1}}
-#+LATEX_HEADER: \newcommand\citet[1]{\citeasnoun{#1}}
+#+LATEX_HEADER: \newcommand\citep[2][]{\cite[#1]{#2}}
+#+LATEX_HEADER: \newcommand\citet[2][]{\citeasnoun[#1]{#2}}
 #+LATEX_HEADER: \usepackage[utf8]{inputenc}
 #+LATEX_HEADER: \usepackage{amsmath}
 #+LATEX_HEADER: \usepackage{amsthm}
@@ -164,9 +164,9 @@ to a game, containing players (interlocutors), goals and rules. KoS
 represent language interaction by representing the dynamically
 changing context. The meaning of an utterance is how it changes the
 context. Compared to most approaches
-[[cite:roberts2012information][e.g.::]], which represent a single
-context for both dialogue participants), KoS keeps a separate
-representation for each participant, using the /Dialogue Game Board/
+[[cite:roberts2012information][e.g.::]], which represent a single context
+for both dialogue participants), KoS keeps a separate representation
+for each participant, using the /Dialogue Game Board/
 (DGB). DGBs represent the information states of the participants, and
 comprise a private part and the dialogue gameboard that represents
 information arising from publicized interactions. It tracks, at the
