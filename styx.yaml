@@ -9,9 +9,12 @@ local-packages:
 
 nix-deps:
   - BNFC
-  - parsek
+  - pretty-compact
 
 source-deps:
-  pretty-compact:
-    location: https://github.com/jyp/prettiest.git
-    revision: 3ef1954f045b026c9842cac51549203370088120
+  parsek:
+    location: https://github.com/jyp/Parsek.git
+    revision: cb92f2cfc5dde7b4ebc6c9e0de66455ee269281d
+  # pretty-compact:
+  #   location: https://github.com/jyp/prettiest.git
+  #   revision: 0fb7f1b2209d6763b9467c5aae2f952f8a929aed

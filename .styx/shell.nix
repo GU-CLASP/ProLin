@@ -7,7 +7,7 @@ fetchTarball "https://github.com/NixOS/nixpkgs-channels/archive/nixos-20.03.tar.
 in with nixpkgs'.pkgs;
 let hp = haskellPackages.override{
     overrides = self: super: {
-      pretty-compact = self.callPackage ./pretty-compact.nix {};
+      parsek = self.callPackage ./parsek.nix {};
       prolin = self.callPackage ./prolin.nix {};
       };};
      getHaskellDeps = ps: path:
@@ -22,7 +22,7 @@ let hp = haskellPackages.override{
 ghc = hp.ghcWithPackages (ps: with ps; stdenv.lib.lists.subtractLists
 [prolin]
 ([ cabal-install 
-pretty-compact BNFC parsek
+parsek BNFC pretty-compact
   ]  ++ getHaskellDeps ps ./prolin.nix));
 in
 pkgs.stdenv.mkDerivation {
