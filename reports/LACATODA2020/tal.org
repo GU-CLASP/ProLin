@@ -57,6 +57,8 @@
 
 - Who cares about this anyway and what do they see as important?
 
+--> represent uncertainty and ways to clarify it
+
 # How we plan to fill this gap?
 
 KEY IDEA: meta-variable stand in for any piece of information which is left for
