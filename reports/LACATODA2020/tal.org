@@ -61,7 +61,7 @@ use formal tools which are most appropriate for the task: one should
 be able to express the rules of cooperative dialog in a concise way,
 free, to any possible extent, of irrelevant technical details.
 
-In the view of citet:cite:dixon2009plans, this is best done by
+In the view of citet:dixon2009plans, this is best done by
 representing the information-state of the agents as updatable sets of
 propositions. Subsets of propositions in the information state can be
 treated independently, and, therefore, a suitable and flexible way to
