@@ -914,23 +914,96 @@ produceAnswer :
 ** Example
 Now we turn into how the simple of system of rules above can handle the following exchange:
 #+begin_quote
-U: Hello!
-S: Hello, User.
-U: When there is a bus from Gotaplatsen?
-S: It is in 15 minutes.
+U: Hello!\\
+S: Hello, USER.\\
+U: When there is a bus from Gotaplatsen?\\
+S: In 15 minutes.
 #+end_quote
 
-Let’s now assume the following system’s context:
+Let’s now assume the following system’s context, which contains
+up-to-date public transport information (we just give a few
+examples). They are added to the initial domain-independent context
+outlined above. We also assume that user has the turn at the start. 
 #+BEGIN_code
-i1  ::  TT B55 T1   Gotaplatsen Johanneberg ;
-i2  ::  TT B55 T13  Gotaplatsen SciencePark ;
+i1  :: TT B55 T15  Gotaplatsen     Johanneberg ;
+i2  :: TT B55 T30  CentralStation  SciencePark ;
+i3  :: TT B18 T1   Gotaplatsen  Johanneberg;
+_   :: QUD Nil;
+_   :: Agenda Nil;
+_   :: Moves Nil;
+_   :: HasTurn USER;
 #+END_code
+
+The when the systems "hears" the greeting it can be integrated into
+the state using |hearAndRemember| rule, therefore system updates its
+state accordingly:
+#+BEGIN_code
+i1  :: TT B55 T15  Gotaplatsen     Johanneberg ;
+i2  :: TT B55 T30  CentralStation  SciencePark ;
+i3  :: TT B18 T1   Gotaplatsen  Johanneberg;
+_   :: QUD Nil;
+_   :: Agenda Nil;
+_   :: Moves (Cons (Greet USER SYSTEM));
+_   :: HasTurn SYSTEM;
+#+END_code
+
+In this context the system can issue a countergreeting by firing
+the |counterGreeting| rule:
+
+#+BEGIN_code
+i1  :: TT B55 T15  Gotaplatsen     Johanneberg ;
+i2  :: TT B55 T30  CentralStation  SciencePark ;
+i3  :: TT B18 T1   Gotaplatsen  Johanneberg;
+_   :: QUD Nil;
+_   :: Agenda  (CounterGreet SYSTEM USER);
+_   :: Moves   (Cons (Greet USER SYSTEM) Nil);
+_   :: HasTurn SYSTEM;
+#+END_code
+
+Everything which is on the agenda can be uttered
+using |utterAndRemember| rule (via issuing |PushMove m| instruction),
+given that the system has the turn. System also hands the turn over to
+the user. Therefore, the state becomes:
+
+#+BEGIN_code
+i1  :: TT B55 T15  Gotaplatsen     Johanneberg ;
+i2  :: TT B55 T30  CentralStation  SciencePark ;
+i3  :: TT B18 T1   Gotaplatsen  Johanneberg;
+_   :: QUD Nil;
+_   :: Agenda  Nil;
+_   :: Moves   (Cons  (CounterGreet SYSTEM USER)
+                      (Cons (Greet USER SYSTEM) Nil);
+_   :: HasTurn USER;
+#+END_code
+
+Now the systems hears the question (|Ask| move: |(Ask (Question t (TT
+n t Gotaplatsen d)))|. It is domain specific, and basically requests
+the timetable information for the given departure station. Again, we
+use |hearAndRemember| rule to itegrate it into state, but also,
+because the move is |Ask|, systems sets its QUD to the question that
+the move contains with the |setQUD| rule. 
+
+#+BEGIN_code
+i1  :: TT B55 T15  Gotaplatsen     Johanneberg ;
+i2  :: TT B55 T30  CentralStation  SciencePark ;
+i3  :: TT B18 T1   Gotaplatsen  Johanneberg;
+_   :: QUD (Question t (TT n t Gotaplatsen d);
+_   :: Agenda  Nil;
+_   :: Moves  (Cons  (Ask (Question t (TT n t Gotaplatsen d))
+                     (Cons  (CounterGreet SYSTEM USER)
+                            (Cons (Greet USER SYSTEM) Nil);
+_   :: HasTurn SYSTEM;
+#+END_code
+
+
+
+
 
 With/without  system-cr:
 - greeting exchange
 - when there is a bus from A?
-- (towards where? 
-- B)
+- (Which bus?
+- Bus 55)
 - it is at T
 
 With user-cr:
