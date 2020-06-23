@@ -376,9 +376,41 @@ ref:tbl:qa-ex.  It is worth stressing that the type $A$ can be large
 (for example asking for any location) or as small as a boolean (if one
 requires a simple yes/no answer).  We note in passing that, typically,
 polar questions can be answered not just by a boolean but by
-qualifing the predicate in question (Table ref:tbl:qa-ex, last two
-rows).  In this instance |A = Prop -> Prop|. Also, a simple "no"
-answer can be ambiguous when the question is negative cite:cooper2012negative.
+qualifing the predicate in question, for example "maybe", "on tuesdays", etc. (Table ref:tbl:qa-ex, last two
+rows).  In this instance |A = Prop -> Prop|. 
+
+
+
+# NEGATIVE QUESTIONS
+One complication are polar questions phrased in the negative (cite:cooper2012negative):
+
+Doesn't John like Bananas?
+
+In this instance, a simple a simple "no" answer can be ambiguous, and
+a possible model would be a multi-valued kind of answer (yes he does
+-> DefiniteYes / no he doesn't DefiniteNo / No -> AmbiguousNo / He
+does in the weekend -> General OnWeekend ):
+
+#+begin_code
+Q Multi (\x -> case x of
+    AmbiguousNo -> Trivial
+    DefiniteNo -> not P
+    DefiniteYes -> P
+    General m -> m P
+  )
+#+end_code
+
+To represent ambiguity in the case of |AmbiguousNo|, we make the
+answer provide no information, in the form of a trivial proposition.
+Additionally, in the framework of a full dialogue management system,
+the |AmbiguousNo| case should be treated as unresolving (the question
+effectively remains unanswered). However, in such a framework, it is
+always possible to recieve a biasing answer ("I don't know") or no
+answer whatsoever --- but we leave this out of scope of our analysis.
+
+Yet even more complications are possible, by introduction of cases
+such as rhethorical and attitudinal questions ("Can you believe who I
+met yesterday?"), which are also out of scope.
 
 
 \begin{sidewaystable} %[htbp]
