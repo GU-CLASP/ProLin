@@ -390,8 +390,9 @@ haveQud : QUD (Q Location x (Live John x))
 
 Resolving a question can be done by communicating an answer. An answer
 to a question |(A : Type; P : A -> Prop)| can be of either of the two following forms: 
-- ShortAnswer :: is a pair of an element |X:A| and its type |A|, represented as |ShortAnswer X A|
-- Assertion :: is a proposition |P|, represented as |Assert P|
+1) *ShortAnswer* is a pair of an element |X:A| and its type |A|,
+   represented as |ShortAnswer X A|
+2) *Assertion* is a proposition |P|, represented as |Assert P|
 
 
 
@@ -403,12 +404,12 @@ processShort : ∀ x a p. ShortAnswer a x
 #+END_code
 
 We demand in particular that types in the answer and in the question
-match (|a| occurs in both places). Additionally, because |x| occurs in |p|, the information
-state will mention the concrete |x| which was provided in the answer.
-
-For example, if the QUD was |(Q Location x (Live John x))| and the
-system processes the answer |ShortAnswer Location Paris|, then |x|
-unifies with |Paris|, and the new state will include:
+match (|a| occurs in both places). Additionally, because |x| occurs
+in |p|, the information state will mention the concrete |x| which was
+provided in the answer.  For example, if the QUD was |(Q Location x
+(Live John x))| and the system processes the answer |ShortAnswer
+Location Paris|, then |x| unifies with |Paris|, and the new state will
+include:
 #+begin_code
 Live John Paris
 #+end_code
@@ -420,18 +421,18 @@ processAssert  :  ∀ x a p. Assert p ⊸
                   QUD (Q x a p) ⊸ p
 #+END_code
 
-That is, (1) if |p| was asserted , (2) the proposition |q| is part of a question under discussion, and (3) p can be
-unified with q, then the assertion resolves the
-question. Additionally, the metavariable |x| is grounded to a concrete
-value by virtue of unification of |p| and |q|. Examples:
-
-"John lives in Paris" answers both questions "Where does John live"
-and "Does John live in Paris" (there is unification), but, not, for
-example "What time is it?" (there is no unification).
+That is, (1) if |p| was asserted , (2) the proposition |q| is part of
+a question under discussion, and (3) p can be unified with q, then the
+assertion resolves the question. Additionally, the metavariable |x| is
+grounded to a concrete value by virtue of unification of |p|
+and |q|. For example, "John lives in Paris" answers both questions
+"Where does John live" and "Does John live in Paris" (there is
+unification), but, not, for example "What time is it?" (there is no
+unification).
 
 Note that, in both cases (|processAssert| and |processShort|), the
 information state is updated with the proposition posed in the
-question.
+question. [fn:: should we have "Answered p" here?]
 
 *** A bit more on polar questions
 - Treatment of "no" (explain)
