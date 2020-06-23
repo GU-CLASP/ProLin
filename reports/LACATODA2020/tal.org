@@ -419,19 +419,22 @@ Doesn't John like Bananas?
 In this instance, a simple a simple "no" answer can be ambiguous, and
 a possible model would be a multi-valued kind of answer (yes he does
 -> DefiniteYes / no he doesn't DefiniteNo / No -> AmbiguousNo / He
-does in the weekend -> General OnWeekend ):
+does in the weekend -> Qualifier OnWeekend ):
 
 #+begin_code
-Q Multi (\x -> case x of
+Q Multi ( \x. case x of
     AmbiguousNo -> Trivial
     DefiniteNo -> not P
     DefiniteYes -> P
-    General m -> m P
+    Qualifier m -> m P
   )
 #+end_code
 
 To represent ambiguity in the case of |AmbiguousNo|, we make the
 answer provide no information, in the form of a trivial proposition.
+
+TODO: context-dependent.
+
 Additionally, in the framework of a full dialogue management system,
 the |AmbiguousNo| case should be treated as unresolving (the question
 effectively remains unanswered). However, in such a framework, it is
@@ -456,7 +459,7 @@ Does John live in Paris? & \makecell[l]{|QuestionPolarity ->|\\|Prop -> Prop|} &
 Doesn't John live in Paris? & \makecell[l]{|QuestionPolarity ->|\\|Prop -> Prop|} & |\m. m Negative (Live John Paris)| & no / oui &
 \begin{minipage}{3cm}
 \begin{code}
-ShortAnswer (\ pol prop . 
+ShortAnswer (\ pol prop .
   if   Positive then Not prop
   else prop) (Prop -> Prop)
 \end{code}
