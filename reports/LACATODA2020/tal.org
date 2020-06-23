@@ -321,6 +321,44 @@ flexibility in the scenario: /so far/ the scenario works for any value
 which could be assigned to the metavariable. In this paper we explore
 the potential of using metavariables in this context.
 
+* Implementation
+In our implementation, the information state is represented by a set
+we treat the information state as a multiset [?] of /linear
+hypotheses/ that can be queried. Because they are linear, these
+hypotheses can also be removed from the state.
+
+On top of this, we have set of immuable rules (they remain available
+even after being used).
+
+- importantly each (LL) rule manipulates a part of the information
+  state (captured by its premisses) and leaves everything else in the
+  state alone. (This is what TTR tries to do with its "assymetric
+  merge" operation).
+
+** TODO COMMENT Extras
+
+As an example, we can show how the rule for /QUD-incrementation/ from
+cite:ginzburg2012interactive can be formulated in this terms. Here
+we consider the dialogue between interlocutors /A/ and /B/, when /A/ asks
+/B/[fn::Here we omit addressees as the conversation is only two-party.]
+a question /Q/. The question /Q/ just have been posed and therefore has
+appeared on the DGBs of both /A/ and /B/ as the latest ~Ask~ move
+(~LatestMove~).
+#+BEGIN_SRC sh :exports code
+-- context
+_ :: DGB A (LatestMove (Ask A Q));
+_ :: DGB B (LatestMove (Ask A Q));
+#+END_SRC
+
+Now we can define our update rule that act on the contextual resources:
+#+BEGIN_SRC
+_ : (q : Question) -> (x y : User) ->
+    DGB x (LatestMove (Ask y q)) ⊸ DGB x (QUD q);
+#+END_SRC
+Here, for any interlocutor, her ~LatestMove~ asking a question is
+consumed and her ~QUD~ is updated with the question from the ~Ask~ move.
+
+
 * Questions and clarifications
 ** Question-answering with metavariables
 
@@ -707,48 +745,8 @@ again: |Q Bool (\x. if x then Country France y else Not (Country
 France y))|
 
 
-** Implementation notes
-TODO: move earlier
-
-In our implementation, the information state is represented by a set
-we treat the information state as a multiset [?] of /linear
-hypotheses/ that can be queried. Because they are linear, these
-hypotheses can also be removed from the state.
-
-On top of this, we have set of immuable rules (they remain available
-even after being used).
-
-** TODO COMMENT Extras
-
-As an example, we can show how the rule for /QUD-incrementation/ from
-cite:ginzburg2012interactive can be formulated in this terms. Here
-we consider the dialogue between interlocutors /A/ and /B/, when /A/ asks
-/B/[fn::Here we omit addressees as the conversation is only two-party.]
-a question /Q/. The question /Q/ just have been posed and therefore has
-appeared on the DGBs of both /A/ and /B/ as the latest ~Ask~ move
-(~LatestMove~).
-#+BEGIN_SRC sh :exports code
--- context
-_ :: DGB A (LatestMove (Ask A Q));
-_ :: DGB B (LatestMove (Ask A Q));
-#+END_SRC
-
-Now we can define our update rule that act on the contextual resources:
-#+BEGIN_SRC
-_ : (q : Question) -> (x y : User) ->
-    DGB x (LatestMove (Ask y q)) ⊸ DGB x (QUD q);
-#+END_SRC
-Here, for any interlocutor, her ~LatestMove~ asking a question is
-consumed and her ~QUD~ is updated with the question from the ~Ask~ move.
-
-
 * Kos-inspired dialogue management with linear logic
 - image with basic SDS architecture
-
-- importantly each (LL) rule manipulates a part of the information
-  state (captured by its premisses) and leaves everything else in the
-  state alone. (This is what TTR tries to do with its "assymetric
-  merge" operation).
 
 - Additionally, the use of metavariables is new.
 
