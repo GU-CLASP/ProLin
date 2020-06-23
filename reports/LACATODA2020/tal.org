@@ -44,6 +44,8 @@
 
 # Establish the field. What is the line of work? (references, etc.)
 # Vlad
+say something about the use of logic-based systems for DM
+- Who cares about this anyway and what do they see as important?
 
 # Identify a gap.
 
@@ -51,24 +53,24 @@
   best match.
 
   (For example the TTR merge is a hack! 1. ad-hoc addition to
-  type-theory. 2. destructive updates, deletes, etc.)
+  type-theory. 2. destructive updates, deletes, etc.)  We propose the
+  formalism that allows natural updated to the individual components
+  of the information state. [forward ref]
+  --> represent uncertainty and ways to clarify it
 
-- Implementation gap. Updated version of GoDIS? 
-
-- Who cares about this anyway and what do they see as important?
-
---> represent uncertainty and ways to clarify it
+- Implementation gap.
+  - Updated and more natural version of GoDIS, that also uses Prolog,
+    and therefore might have problems with deleting the information.
+  - Some theoretical work needs to be tested in a system.
 
 # How we plan to fill this gap?
 
 KEY IDEA: meta-variable stand in for any piece of information which is left for
 interpretation
 
-# What do we get?
-
-
-
-
+TODO: outline
+1. Questions and clarifications
+2. (1) integrated in a more general framework
 * Background
 
 ** Dialogue management
@@ -210,6 +212,7 @@ cite:purver-rlc06,ginzburg2012interactive, negation
 cite:cooper2012negative, non-sentential utterance resolution
 cite:fgl07,ginzburg2012interactive and iconic gesture cite:lucking16.
 
+*** TODO Questions and answers
 ** Clarification requests
 - what are CRs
 - why do they exist?
@@ -239,12 +242,13 @@ leaves from Götaplatsen at 11:50. The rule |(Leave x Gotaplatsen y ->
 Arrive x CentralStationen (y+0.75))| can represent travelling times on
 a certain line.
 
-Then, the user may define a query (or goal) as
-a logical formula. The system can then search for a proof of a goal as a
-way to query the database of facts. In the most useful cases, goals
-contain /metavariables/[fn::here, we use the convention that metavariables are lowercase letters.]. For example, the goal |(Leave x
-Götaplatsen y)| corresponds to a request to list all the buses leaving
-from Götaplatsen (as |x|) together with their departure time (as |y|).
+Then, the user may define a query (or goal) as a logical formula. The
+system can then search for a proof of a goal as a way to query the
+database of facts. In the most useful cases, goals contain
+/metavariables/[fn::here, we use the convention that metavariables are
+lowercase letters.]. For example, the goal |(Leave x Götaplatsen y)|
+corresponds to a request to list all the buses leaving from
+Götaplatsen (as |x|) together with their departure time (as |y|).
 
 
 *** Linear logic
@@ -280,7 +284,7 @@ as well), corresponds to the state of a /single/ agent. Thus, a scenario
 is conceived as a sequence of actions and updates of the information
 state of a single agent $a$, even though such actions can be
 attributed to any other dialogue participant $b$. (That is, they are
-$a$'s representation of actions of $b$.)  Scenaria can be realised as
+$a$'s representation of actions of $b$.)  Scenarios can be realised as
 a sequence of actual actions and updates. That is, an action can
 result in sending a message to the outside world (in the form of
 speech, movement, etc.). Conversely, events happening in the outside
@@ -299,6 +303,9 @@ co-exist in our implementation, thus we can represent simultaneously
 transient facts, or states, (introduced by the linear arrow) and
 immutable facts (introduced by the unrestricted arrow).
 
+TODO: Difference from cite:dixon2009plans: we have the additional unicity
+operators (~X !-> Y~) and (~X ?-> Y~). Also we explicitly deal with QA and CR.
+
 *** Metavariables and unification
 
 In prolog-like languages, metavariables play the role of unknowns,
@@ -315,7 +322,6 @@ which could be assigned to the metavariable. In this paper we explore
 the potential of using metavariables in this context.
 
 * Questions and clarifications
-
 ** Question-answering with metavariables
 
 A first use for metavariables is to represent the requested answer of a question.
@@ -509,7 +515,7 @@ Note that the fact |Eat(John,Apple)| is found both as hypothesis and a
 conclusion of |produceAnswer|, and therefore it is remains in the
 information state.
 
-** Clarification requests
+** Clarification requests and follow-up questions
 
 In this section we discuss an alternative kind of answering, which is
 to issue clarification requests.  To see how they can occur, consider
@@ -602,7 +608,7 @@ list, say, 20 different kinds of food, it is easy to imagine that the
 answer won't be fully given. In fact, this question can be the topic
 of an experimental study.
 
-*** More on CRs
+*** more on CR
 TODO: flow sentence.
 
 Consider the exchange:
@@ -721,20 +727,8 @@ _ : (q : Question) -> (x y : User) ->
 Here, for any interlocutor, her ~LatestMove~ asking a question is
 consumed and her ~QUD~ is updated with the question from the ~Ask~ move.
 
-* TODO Implementation: show actual set of rules
-
-* Application: Bus example
-label:sec:bus
-- Formalisation of all the aspects of the the example in the theory.
-- Say it's a complete and implemented system
-
-* Related work
-
-Use the same basic idea as cite:dixon2009plans. But we have the additional unicity
-operators (~X !-> Y~) and (~X ?-> Y~). Also we explicitly deal with QA and CR.
 
 * Kos-inspired dialogue management with linear logic
-- Connect with AixDial paper.
 - image with basic SDS architecture
 
 - importantly each (LL) rule manipulates a part of the information
@@ -899,6 +893,14 @@ With/without  system-cr:
 
 With user-cr:
 - ??? 
+* Related work
+question answering /CR with metavariable:
+- AixDial
+- godis?
+- purver on CRs, ginzburg 2012
+
+linear logic for dialogue management:
+- cite:dixon2009plans
 
 * Evaluation/Discussion/Future work
 - discussing the corrections
