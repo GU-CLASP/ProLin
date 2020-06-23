@@ -353,8 +353,22 @@ What time is it?         & |Time        | & |\x.IsTime x                        
 Does John live in Paris? & |Prop -> Prop| & |\m. m (Live John Paris)                 | & yes & |ShortAnswer (\x. x)  (Prop -> Prop)| \\
 Does John live in Paris? & |Prop -> Prop| & |\m. m (Live John Paris)                 | & from January & \makecell[l]{|ShortAnswer (\x. FromJanuary(x))|\\|(Prop -> Prop)|} \\\hline
 Does John live in Paris? & \makecell[l]{|QuestionPolarity ->|\\|Prop -> Prop|} & |\m. m Positive (Live John Paris)| & yes & |ShortAnswer (\x. x)  (Prop -> Prop)| \\
-Doesn't John live in Paris? & \makecell[l]{|QuestionPolarity ->|\\|Prop -> Prop|} & |\m. m Negative (Live John Paris)| & no / oui\footnote{is it so?} & \makecell[l]{|ShortAnswer (\ pol prop -> if Positive then|\\|Not prop else prop) (Prop -> Prop)|} \\
-Doesn't John live in Paris? & \makecell[l]{|QuestionPolarity ->|\\|Prop -> Prop|} & |\m. m Negative (Live John Paris)| & si & \makecell[l]{|ShortAnswer (\ pol prop -> if Positive then ERROR|\\|else Not prop) (Prop -> Prop)|} \\
+Doesn't John live in Paris? & \makecell[l]{|QuestionPolarity ->|\\|Prop -> Prop|} & |\m. m Negative (Live John Paris)| & no / oui &
+\begin{minipage}{3cm}
+\begin{code}
+ShortAnswer (\ pol prop . 
+  if   Positive then Not prop
+  else prop) (Prop -> Prop)
+\end{code}
+\end{minipage}\\
+Doesn't John live in Paris? & \makecell[l]{|QuestionPolarity ->|\\|Prop -> Prop|} & |\m. m Negative (Live John Paris)| & si &
+\begin{minipage}{3cm}
+\begin{code}
+ShortAnswer (\ pol prop . 
+  if   Positive then ERROR 
+  else Not prop) (Prop -> Prop)
+        \end{code}
+\end{minipage}\\
 \end{tabular}
 \caption{Examples of questions and the possible corresponding answers.\label{tbl:qa-ex}}
 \end{sidewaystable}
@@ -425,7 +439,6 @@ question.
 More on ellipsis?
 - "he doesn't"
 - "he does"
-
 
 ** Notion of unique and concrete answers
 
@@ -608,7 +621,7 @@ list, say, 20 different kinds of food, it is easy to imagine that the
 answer won't be fully given. In fact, this question can be the topic
 of an experimental study.
 
-*** more on CR
+*** Context-dependent arguments
 TODO: flow sentence.
 
 Consider the exchange:
@@ -640,9 +653,8 @@ above.
 In sum, in our model, to support clarification requests, a system must
 integrate many arguments and use metavariables.
 
-*** Even more on CRs
-
-Consider now the closed question "Does John live in Paris?". The
+*** Clarification via adding extra arguments
+Consider now the polar question "Does John live in Paris?". The
 questionee may decide that there is some ambiguity about /which/ Paris
 one is talking about --- after all there are several places called
 like this. To be able to model this, the |Live| relation needs to be
@@ -663,7 +675,7 @@ realisation of the clarification request depends highly on the
 formulation of the question and the context. In this case "Do you mean
 Paris, France?"  would be suitable.
 
-*** Alternative representation with binary predicates only
+*** Clarification via adding named contextual parameters
 
 The above presentation (using a ternary predicate) is perhaps not
 ideal. (Because the country is functionally dependent on the location,
@@ -688,7 +700,8 @@ Not (Country France Y)
 
 Because John lives in |X| but not in |Y| the question is
 ambiguous. One way to lift the ambiguity is raise the clarification
-request as above. Here it can be phrased as a boolean question
+request as above. Here it can be phrased as a polar question[fn::Here
+we use the simpler version of interpereting polar questions.]
 again: |Q Bool (\x. if x then Country France y else Not (Country
 France y))|
 
@@ -739,7 +752,6 @@ consumed and her ~QUD~ is updated with the question from the ~Ask~ move.
 - Additionally, the use of metavariables is new.
 
 ** Domain-independent rules
-
 *** Interface with language understanding and generation
 Here we assume that the information that comes from a source which is
 external to the dialogue manager is expressed in terms of semantic
@@ -865,7 +877,6 @@ produceAnswer :
    [_ :: Agenda (ShortAnswer x a SYSTEM USER); 
     _ :: Answered (Q a x p)];
 #+END_code
-
 
 *** Note on turn taking
 - how can be turned into something more advanced
