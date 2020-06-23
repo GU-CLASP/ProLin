@@ -43,34 +43,64 @@
 * Introduction
 
 # Establish the field. What is the line of work? (references, etc.)
-# Vlad
+# Who cares about this anyway and what do they see as important?
+
+TODO: Vlad
+
+Dialogue management is an important and rich field (a dozen citations).
+
+Nowadays people tend to use deep learning systems, but they fall short in the following ways.
+TODO
+
 say something about the use of logic-based systems for DM
-- Who cares about this anyway and what do they see as important?
 
 # Identify a gap.
 
-- Semantic gap: the ideas are expressed in a formalism which is not the
-  best match.
+Even though this field is promising, we belive that it is crucial to
+use formal tools which are most appropriate for the task: one should
+be able to express the rules of cooperative dialog in a concise way,
+free, to any possible extent, of irrelevant technical details.
 
-  (For example the TTR merge is a hack! 1. ad-hoc addition to
-  type-theory. 2. destructive updates, deletes, etc.)  We propose the
-  formalism that allows natural updated to the individual components
-  of the information state. [forward ref]
-  --> represent uncertainty and ways to clarify it
+In the view of citet:cite:dixon2009plans, this is best done by
+representing the information-state of the agents as updatable sets of
+propositions. Subsets of propositions in the information state can be
+treated independently, and, therefore, a suitable and flexible way to
+represent updates is as propositions in linear logic. We adopt this
+view here, and further argue for it in sec:TODO.
 
-- Implementation gap.
-  - Updated and more natural version of GoDIS, that also uses Prolog,
-    and therefore might have problems with deleting the information.
-  - Some theoretical work needs to be tested in a system.
+We further extend this framework to deal with unclarity and
+ambiguity. Indeed, asking a question is typically not done in one
+utterance which leaves nothing to interpretation. Rather, an initial
+short and possbily ambiguous question is posed. If the answerer deems
+the question unclear, a dialogue with ensue before the question is
+finally resolved. In technical terms we propose to deal with
+question-answering and clarification requests in the context of dialog
+management.
 
 # How we plan to fill this gap?
 
-KEY IDEA: meta-variable stand in for any piece of information which is left for
-interpretation
+To deal with such ambiguity and unclarity, we propose here the use of
+/metavariables/, thereby leveraging much research on unification and
+proof search in various logical frameworks.  That is, meta-variables
+will stand in for any piece of information which is left to further
+interpretation.
 
-TODO: outline
-1. Questions and clarifications
-2. (1) integrated in a more general framework
+By using well-known techniques which correspond well with the
+intuition of information-state management, we are able to provide a
+fully working prototype of the components of our framework:
+
+1. a proof-search engine based on linear logic, modified to support
+   inputs from external systems (representing inputs and outputs of
+   the agent)
+
+2. a set of rules which function as a core framework for dialogue
+   management (in the style of KoS)
+
+3. several examples which use the above to construct potential
+   applications of the system.
+
+TODO: add forward references above and outline of the rest below.
+
 * Background
 
 ** Dialogue management
@@ -1014,7 +1044,20 @@ question answering /CR with metavariable:
 - godis?
 - purver on CRs, ginzburg 2012
 
-linear logic for dialogue management:
+** KoS
+
+  # (For example the TTR merge is a hack! 1. ad-hoc addition to
+  # type-theory. 2. destructive updates, deletes, etc.)  We propose the
+  # formalism that allows natural updated to the individual components
+  # of the information state. [forward ref]
+  # --> represent uncertainty and ways to clarify it
+
+** GoDIS
+  - Updated and more natural version of GoDIS, that also uses Prolog,
+    and therefore might have problems with deleting the information.
+
+
+** Linear logic for dialogue management:
 - cite:dixon2009plans
 
 * Evaluation/Discussion/Future work
