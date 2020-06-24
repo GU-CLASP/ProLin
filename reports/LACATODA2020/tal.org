@@ -211,8 +211,9 @@ bus?", or contributions when the user provides more information than
 they were asked, e.g. "Bus 18 to Skogome".
  
 *** KoS
-KoS (not an acronym) cite:ginzburg2012interactive provides one of the
-most detailed theoretical treatments of domain general conversational
+KoS (not an acronym but loosely corresponds to Conversation Oriented
+Semantics) cite:ginzburg2012interactive provides one of the most
+detailed theoretical treatments of domain general conversational
 relevance, especially for query responses---see citet:purver-rlc06 on
 Clarification Requests, cite:lupkowski2017query for a general
 account---and this ties into the KoS treatment of non sentential
@@ -245,8 +246,10 @@ cite:purver-rlc06,ginzburg2012interactive, negation
 cite:cooper2012negative, non-sentential utterance resolution
 cite:fgl07,ginzburg2012interactive and iconic gesture cite:lucking16.
 
-*** TODO Questions and answers
-** Clarification requests
+*** TODO Questions and clarifications
+TODO: Questions and answers
+
+CRs:
 - what are CRs
 - why do they exist?
 - how frequent are they?
