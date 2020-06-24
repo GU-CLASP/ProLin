@@ -54,8 +54,8 @@
 
 A key aspect of dialogue systems design is the coherence of system’s
 responses.  In this respect, a key component of a dialogue system is
-the dialogue manager, which determines which system actions 
-are appropriate depending on the current state and the external context.
+the dialogue manager, which selects appropriate system actions
+depending on the current state and the external context.
 
 Two families of approaches to dialogue management can be considered:
 hand-crafted dialogue strategies
@@ -79,7 +79,7 @@ beneficial for such systems.
 
 Although there has been a lot of development in dialogue systems in
 recent years, only a few approaches reflect advancements in /dialogue
-theory/. (TODO: citations?) Our aim is to closely integrate dialogue systems with research in
+theory/. Our aim is to closely integrate dialogue systems with work in
 theoretical semantics and pragmatics of dialogue. This field has
 provided accounts for linguistic phenomena intrinsic to dialogue such
 as non-sentential utterances
@@ -88,6 +88,7 @@ requests cite:purver-rlc06,ginzburg2012interactive and self-repair
 cite:gfs-sp,houghpurver-disfl, where the resolution is intuitively
 tied to the coherence of what is being said.
 
+say something about the use of logic-based systems for DM
 
 # Identify a gap.
 
@@ -96,7 +97,7 @@ use formal tools which are most appropriate for the task: one should
 be able to express the rules of cooperative dialog in a concise way,
 free, to any possible extent, of irrelevant technical details.
 
-In the view of citet:dixon2009plans, this is best done by
+In the view of citet:dixon2009plans , this is best done by
 representing the information-state of the agents as updatable sets of
 propositions. Subsets of propositions in the information state can be
 treated independently, and, therefore, a suitable and flexible way to
@@ -826,10 +827,10 @@ interpretations of moves, and contains information about the speaker
 and the addressee in a structured way. Here we provide 5 basic types
 of moves as an illustration:
 #+BEGIN_code
-Greet            spkr  addr
-CounterGreet     spkr  addr
-Ask           q  spkr  addr
-ShortAnswer   v  spkr  addr
+Greet         spkr  addr
+CounterGreet  spkr  addr
+Ask           question  spkr  addr
+ShortAnswer   vtype v spkr  addr
 Assert        p  spkr  addr
 #+END_code
 
@@ -848,13 +849,9 @@ countergreeting, a rule will place the proposition |Agenda
 As it is easily noticed, each move is accompanied by the information
 about who has uttered it, and towards whom was it addressed. All the
 moves are stacked in the |Moves| part of the participant’s dialogue
-gameboard[fn::VM:should we get DGB back?] using the following rule
-which relies on |PushMove m| directive, where |m| is supposed to move
-on top of the stack.
-#+BEGIN_code
-pushMove :  (m : Move) -> (ms : List Move) ->
-            PushMove m ⊸ Moves ms ⊸ Moves (Cons m ms);
-#+END_code
+gameboard.
+
+TODO: Pending
 
 *** Initial state
 In general, we start with empty |QUD| and |Agenda|. An empty |QUD| can
@@ -875,49 +872,48 @@ of semantic representations of utterances from the NLU component, is
 implemented with the following rule:
 #+BEGIN_code
 hearAndRemember  :
-  (m : DP -> DP -> Move) -> (x y : DP) ->
+  (m : DP -> DP -> Move) -> (x y : DP) -> (ms : List Move) ->
   Heard (m x y)  ⊸
+  Moves ms       ⊸
   HasTurn x      ⊸
-  [  _ :: PushMove (m x y)  ;
-     _ :: HasTurn y         ;
-     _ :: Agenda Nil        ];
+  [  _ :: Moves (Cons (m x y) ms);
+     _ :: Pending (m x y) ;
+     _ :: HasTurn y ];
 #+END_code
 where |(m x y)| is a semantic representation of the utterance. Here it
 is assumed that participant |x| has a turn and, as a result, turn was
-taken by her partner |y|. We do here several things: i) place the move
-in a move list for further references (|PushMove|), ii) record the
+taken by her partner |y|. |DP| type stands for /dialogue
+participant/. As a result we do several things: i) place the move in a move
+list for further references (|PushMove|), ii) record the
 turn-switching (which in a complete system may not apply to all cases
 --- then additional hypotheses would be added.), and iii) prepare to
-react by recording that agenda is empty.
+process the move (|Pending|).
 
 *** Uttering
 The capacity of "uttering" represents an ability to generate
 information for the NLG component. NLP component is represented
 by |Agenda| that contains a move that is just about to be uttered.
-
 #+BEGIN_code
 utterAndRemember :
-  (m : DP -> DP -> Move) ->
-  (x y : DP) ->
-  Agenda (m x y) ⊸
-  HasTurn x ⊸
-  [  _ :: Utter (m x y) ;
-     _ :: PushMove (m x y) ;
-     _ :: HasTurn y ] ;
+  (m : DP -> DP -> Move) -> (ms : List Move) -> (x y : DP) ->
+  Agenda (m x y)  ⊸
+  Moves ms        ⊸
+  HasTurn x       ⊸
+  [  _ :: Utter (m x y);
+     _ :: Moves (Cons (m x y) ms);
+     _ :: HasTurn y];
 #+END_code
 
-Here also, we take care of turn-taking in the same rule.
+Here also we take care of turn-taking in the same rule. As a result, the system consumes the |Agenda| passes the move to the NLG component. The move is also memorised in the |Moves| stack.
 *** Basic adjacency: greeting
 We can show how basic move adjacency can be defined in the example of
 countergreeting preconditioned by a greeting from the other party:
-
 #+BEGIN_code
 counterGreeting :
-    (x y : DP) -> (ms : List Move) ->
-    HasTurn x -*
-    Moves (Cons (Greet y x) ms)  -*
-    Agenda Nil ⊸
-       [_ :: Agenda (CounterGreet x y)];
+  (x y : DP) -> 
+  HasTurn x            -*
+  Pending (Greet y x)  -o
+  Agenda (CounterGreet x y);
 #+END_code
 *** QUD identification
 Another important rule accounts for setting the current question under discussion (|QUD|) to the latest move.
