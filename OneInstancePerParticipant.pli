@@ -8,7 +8,7 @@ q1    : (t : Time) -> (n : Bus) -> (d : Location) ->
 	Heard (Ask (Question USER Time t (TT n t Gotaplatsen d)) USER SYSTEM);
 
 q2 : (n0 : Bus) -> Utter (Ask (Question SYSTEM Bus n0 (WhichBus n0)) SYSTEM USER) -o
-     Heard ((ShortAnswer B55 Bus) USER SYSTEM);
+     Heard ((ShortAnswer Bus B55) USER SYSTEM);
 
 -- knowledge base 1 (no CR)
 kb1  :: TT B18 T15   Gotaplatsen     Johanneberg ;
@@ -85,7 +85,7 @@ hearAndRemember  :
 
 processShort : (a : Type) -> (x : a) ->  (p : Prop) -> 
   (qs : List Question) -> (dp dp1 : DP) ->
-  Pending (ShortAnswer x a dp1 dp) -o QUD (Cons (Question dp a x p) qs) -o
+  Pending (ShortAnswer a x dp1 dp) -o QUD (Cons (Question dp a x p) qs) -o
   [ _ :: p;
     _ :: QUD qs];
 
@@ -107,7 +107,7 @@ produceAnswer :
    (qs : List Question) ->	
    QUD (Cons (Question USER a x p) qs) -o
    p -*
-   [_ :: Agenda (ShortAnswer x a SYSTEM USER); -- FIXME!!!
+   [_ :: Agenda (ShortAnswer a x SYSTEM USER); -- FIXME!!!
     _ :: QUD qs;
     _ :: Answered (Question USER a x p)];
 
