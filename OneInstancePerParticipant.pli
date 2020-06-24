@@ -128,7 +128,7 @@ specificCR :
   CR -o
   QUD (Cons (Question USER Time t  (TT n  t  s           d))  qs) -o
   [_ :: QUD (Cons (Question SYSTEM Bus n (WhichBus n)) 
-            (Cons (Question USER Time t (TT n t s d) qs)));
+            (Cons (Question USER Time t (TT n t s d)) qs));
    _ :: Agenda (Ask (Question SYSTEM Bus n (WhichBus n)) SYSTEM USER) ];
    
 -- johnParis :: Live John Paris;
