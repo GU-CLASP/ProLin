@@ -83,7 +83,7 @@ theory/. Our aim is to closely integrate dialogue systems with work in
 theoretical semantics and pragmatics of dialogue. This field has
 provided accounts for linguistic phenomena intrinsic to dialogue such
 as non-sentential utterances
-cite:schlangen-diss,flg08,ginzburg2012interactive, clarification
+cite:schlangen-diss,fgl07,ginzburg2012interactive, clarification
 requests cite:purver-rlc06,ginzburg2012interactive and self-repair
 cite:gfs-sp,houghpurver-disfl, where the resolution is intuitively
 tied to the coherence of what is being said.
@@ -140,7 +140,6 @@ framework:
 TODO: add forward references above and outline of the rest below.
 
 * Background
-
 ** Dialogue management
 
 *** Information state update approach
