@@ -1,0 +1,16 @@
+isStart :: Start;
+
+init2 : (x:XX) -> (a:AA) -> Start -o QUD x (R x a);
+
+canAnswer : (x:XX) !-> (p : Prop) -> QUD x p -o p -* Answer x;
+
+-- canAnswer : (query : [x:XX; p : Prop; _ :: QUD x p; _ :: p]) !-> Answer query.x;
+
+clarify   : [x:XX; p : Prop; _ :: QUD x p; _ :: p] ?->
+            (a:AA) -> Clarify2 a -o (x:XX) -> QUD x (R x a) -o QUD x (R x a);
+
+cl :: Clarify2 B;
+
+fact1 :: R X A;
+fact2 :: R Y B;
+
