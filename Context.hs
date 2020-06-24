@@ -112,7 +112,7 @@ ruleApplies wN consumed args e (Pi (vNm,Zero NonUnique) (Rec tele) body) metaTyp
   case ruleApplies wN True args (Con (Symbol "dummyN")) (pis tele (Con (Symbol ("dummyN_" ++ vNm)))) metaTypes ctx of
     [] -> []
     [_] -> []
-    _ -> ruleApplies wN consumed args (e `app` nonuniqueArg) (body >>= s) metaTypes ctx
+    _ -> ruleApplies wN True args (e `app` nonuniqueArg) (body >>= s) metaTypes ctx
     -- We cannot apply the substitution: if we were, we'd be
     -- chosing one of the non-unique things! So we simply discard the matched arguments and continue. (It does not occur in the rest of the type anyway according to the syntax)
   where nonuniqueArg = Con (Symbol "NONUNIQUE")

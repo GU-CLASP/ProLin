@@ -89,7 +89,7 @@ pushQUD :
    (x y : DP) -> 
    Pending (Ask q x y) -o QUD qs -o 
    [_ :: QUD (Cons q qs)
-   ; _ :: PendingQuestion
+   -- ; _ :: PendingQuestion
    ];
 
 -- pushQUD2 : (q : Question) -> (qs : List Question) -> PushQUD q -o
@@ -114,7 +114,7 @@ produceCR :
    ;_ :: QUD (Cons (Question USER a x p) qs)
    ;_ :: p
    ] ?->
-   PendingQuestion -o
+   -- PendingQuestion -o
    CR;
 
 specificCR :
