@@ -88,8 +88,9 @@ pushQUD :
    (q : Question) -> (qs : List Question) ->
    (x y : DP) -> 
    Pending (Ask q x y) -o QUD qs -o 
-   [_ :: QUD (Cons q qs);
-    _ :: PendingQuestion ];
+   [_ :: QUD (Cons q qs)
+   ; _ :: PendingQuestion
+   ];
 
 -- pushQUD2 : (q : Question) -> (qs : List Question) -> PushQUD q -o
 --    QUD qs -o QUD (Cons q qs);
@@ -106,20 +107,22 @@ produceAnswer :
     _ :: Answered (Question USER a x p)];
 
 produceCR :
-   (a : Type) ->
-   (x : a) ?->
-   (p : Prop) ->
-   (qs : List Question) ->	
-   p -* 
-   QUD (Cons (Question USER a x p) qs ) -o
-   CR ;
+   [a : Type
+   ;x : a
+   ;p : Prop
+   ;qs : List Question
+   ;_ :: QUD (Cons (Question USER a x p) qs)
+   ;_ :: p
+   ] ?->
+   PendingQuestion -o
+   CR;
 
--- specificCR :
---   (t : Time) -> (n : Bus) -> (s d : Location) ->
---   (qs : List Question) ->
---   CR -o
---   QUD (Cons (Question USER Time t (TT n t s d) qs)) -o
---   QUD (Cons (Question SYSTEM Bus n (WhichBus n)) 
---             (Cons (Question USER Time t (TT n t s d) qs))); 
+specificCR :
+  (t : Time) -> (n : Bus) -> (s d : Location) ->
+  (qs : List Question) ->
+  CR -o
+  QUD (Cons (Question USER Time t  (TT n  t  s           d))  qs) -o
+  QUD (Cons (Question SYSTEM Bus n (WhichBus n)) 
+            (Cons (Question USER Time t (TT n t s d) qs))); 
 
 johnParis :: Live John Paris;
