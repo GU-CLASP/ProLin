@@ -3,19 +3,19 @@
 -- hardcoding user moves.
 noQud :: QUD Nil;
 start :: Heard (Greet USER SYSTEM);
-q1    : (t : Time) -> (n : Route) -> (d : Location) ->
+q1    : (t : Time) -> (n : Bus) -> (d : Location) ->
         Utter (CounterGreet SYSTEM USER) -o 
-	Heard (Ask (Question Time t (TT n t Gotaplatsen d)) USER SYSTEM);
+	Heard (Ask (Question USER Time t (TT n t Gotaplatsen d)) USER SYSTEM);
 
 -- knowledge base 1 (no CR)
 kb1  :: TT B18 T15   Gotaplatsen     Johanneberg ;
-kb2  :: TT B55 T15   Gotaplatsen     SciencePark ; --(optional)
+-- kb2  :: TT B55 T15   Gotaplatsen     SciencePark ; --(optional)
 --- (...some problem?)
 
 
 -- kb 2 (destination- or bus-CR)
 -- kb1  :: TT B18 T15   Gotaplatsen     Johanneberg ;
--- kb2  :: TT B55 T20   Gotaplatsen     SciencePark ;
+kb3  :: TT B55 T20   Gotaplatsen     SciencePark ;
 
 -- kb3  :: TT B55 T30  CentralStation  SciencePark ;
 
@@ -81,13 +81,15 @@ hearAndRemember  :
 -- (x y : DP) -> Heard m -o NotSwitchingMove m -* Adressee y  -* [                      _ :: LatestMove (m y x) ];
 
 processShort : (a : Type) -> (x : a) ->  (p : Prop) ->
-  (qs : List Question) ->
-  Pending (ShortAnswer x a) -o QUD (Cons (Q x a p) qs) -o p;
+  (qs : List Question) -> (dp : DP) ->
+  Pending (ShortAnswer x a) -o QUD (Cons (Question dp x a p) qs) -o p;
 
 pushQUD :
    (q : Question) -> (qs : List Question) ->
    (x y : DP) -> 
-   Pending (Ask q x y) -o QUD qs -o QUD (Cons q qs);
+   Pending (Ask q x y) -o QUD qs -o 
+   [_ :: QUD (Cons q qs);
+    _ :: PendingQuestion ];
 
 -- pushQUD2 : (q : Question) -> (qs : List Question) -> PushQUD q -o
 --    QUD qs -o QUD (Cons q qs);
@@ -97,17 +99,27 @@ produceAnswer :
    (x : a) !->
    (p : Prop) ->
    (qs : List Question) ->	
-   QUD (Cons (Question a x p) qs) -o
+   QUD (Cons (Question USER a x p) qs) -o
    p -*
    [_ :: Agenda (ShortAnswer x a SYSTEM USER); -- FIXME!!!
     _ :: QUD qs;
-    _ :: Answered (Question a x p)];
+    _ :: Answered (Question USER a x p)];
 
--- produceCR :
---    (a : Type) ->
---    (x : a) ?->
---    (p : Prop) ->
---    QUD (Question a x p) -o
---    p -* CR; 
+produceCR :
+   (a : Type) ->
+   (x : a) ?->
+   (p : Prop) ->
+   (qs : List Question) ->	
+   p -* 
+   QUD (Cons (Question USER a x p) qs ) -o
+   CR ;
 
--- johnParis :: Live John Paris;
+-- specificCR :
+--   (t : Time) -> (n : Bus) -> (s d : Location) ->
+--   (qs : List Question) ->
+--   CR -o
+--   QUD (Cons (Question USER Time t (TT n t s d) qs)) -o
+--   QUD (Cons (Question SYSTEM Bus n (WhichBus n)) 
+--             (Cons (Question USER Time t (TT n t s d) qs))); 
+
+johnParis :: Live John Paris;
