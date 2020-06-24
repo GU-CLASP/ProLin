@@ -3,9 +3,21 @@
 -- hardcoding user moves.
 noQud :: QUD Nil;
 start :: Heard (Greet USER SYSTEM);
-q1    : (x : Location) ->
-        Utter (CounterGreet SYSTEM USER) -o Heard (Ask (Q Location x (Live John x)) USER SYSTEM);
+q1    : (t : Time) -> (n : Route) -> (d : Location) ->
+        Utter (CounterGreet SYSTEM USER) -o 
+	Heard (Ask (Question Time t (TT n t Gotaplatsen d)) USER SYSTEM);
 
+-- knowledge base 1 (no CR)
+kb1  :: TT B18 T15   Gotaplatsen     Johanneberg ;
+kb2  :: TT B55 T15   Gotaplatsen     SciencePark ; --(optional)
+--- (...some problem?)
+
+
+-- kb 2 (destination- or bus-CR)
+-- kb1  :: TT B18 T15   Gotaplatsen     Johanneberg ;
+-- kb2  :: TT B55 T20   Gotaplatsen     SciencePark ;
+
+-- kb3  :: TT B55 T30  CentralStation  SciencePark ;
 
 
 ready :: HasTurn USER;
@@ -21,61 +33,81 @@ greeting : (x y : DP) ->
            [_ :: Agenda (Greet x y)
            ];
 
-counterGreeting : (x y : DP) -> (ms : List Move) ->
+counterGreeting : (x y : DP) -> 
                   HasTurn x -*
-                  Moves (Cons (Greet y x) ms)  -*
-                  Agenda Nil -o
-                  -- Agenda m !-o
+                  Pending (Greet y x)  -o
                   [_ :: Agenda (CounterGreet x y)];
 
-askExample :(x y : DP) ->
-            (q : Question) ->
-                  HasTurn x -o
-                  AnyGivenCondition -o
-                  [_ :: Agenda (Ask q);
-                   _ :: Asked q
-                  ];
+-- askExample :(x y : DP) ->
+--             (q : Question) ->
+--                   HasTurn x -o
+--                   AnyGivenCondition -o
+--                   [_ :: Agenda (Ask q);
+--                    _ :: Asked q
+--                   ];
 
 -- greetIsSwitching :: SwitchingMove Greet;
 -- cgreetIsSwitching :: SwitchingMove CounterGreet;
 
-pushMove : (m : Move) -> (ms : List Move) -> PushMove m -o Moves ms -o Moves (Cons m ms);
+-- pushMove : (m : Move) -> (ms : List Move) -> PushMove m -o Moves ms -o Moves (Cons m ms);
 
 utterAndRemember :
   (m : DP -> DP -> Move) ->
+  (ms : List Move) ->
   (x y : DP) ->
   Agenda (m x y) -o
+  Moves ms -o
   -- SwitchingMove m -*
-  HasTurn x -o [_ :: Utter (m x y); _ :: PushMove (m x y) ; _ :: HasTurn y];
+  HasTurn x -o
+  [_ :: Utter (m x y);
+   _ :: Moves (Cons (m x y) ms);
+   _ :: HasTurn y];
 
 hearAndRemember  :
   (m : DP -> DP -> Move) ->
   (x y : DP) ->
+  (ms : List Move) ->
   Heard (m x y) -o
+  Moves ms -o
   -- SwitchingMove m -*
   HasTurn x       -o
-  [_ :: PushMove (m x y) ;
-   _ :: HasTurn y ;
-   _ :: Agenda Nil];
+  [_ :: Moves (Cons (m x y) ms);
+   _ :: Pending (m x y) ;
+   _ :: HasTurn y ];
 
-utterAndRemember2 :   (m : DP -> DP -> Move) ->
-(x y : DP) -> Agenda m -o NotSwitchingMove m -* Adressee y  -* [ _ :: Utter (m x y) ; _ :: LatestMove (m x y) ];
-hearAndRemember2  :   (m : DP -> DP -> Move) ->
-(x y : DP) -> Heard m -o NotSwitchingMove m -* Adressee y  -* [                      _ :: LatestMove (m y x) ];
+-- utterAndRemember2 :   (m : DP -> DP -> Move) ->
+-- (x y : DP) -> Agenda m -o NotSwitchingMove m -* Adressee y  -* [ _ :: Utter (m x y) ; _ :: LatestMove (m x y) ];
+-- hearAndRemember2  :   (m : DP -> DP -> Move) ->
+-- (x y : DP) -> Heard m -o NotSwitchingMove m -* Adressee y  -* [                      _ :: LatestMove (m y x) ];
 
-processShort : (a : Type) -> (x : a) ->  (p : Prop) -> LatestMove (ShortAnswer x a) -o Asked (Q x a p) -o p;
+processShort : (a : Type) -> (x : a) ->  (p : Prop) ->
+  (qs : List Question) ->
+  Pending (ShortAnswer x a) -o QUD (Cons (Q x a p) qs) -o p;
 
-getQUD : (ms : List Move) -> (q : Question) -> (x y : DP) -> Moves (Cons (Ask q x y) ms) -* QUD Nil -o QUD q;
+pushQUD :
+   (q : Question) -> (qs : List Question) ->
+   (x y : DP) -> 
+   Pending (Ask q x y) -o QUD qs -o QUD (Cons q qs);
+
+-- pushQUD2 : (q : Question) -> (qs : List Question) -> PushQUD q -o
+--    QUD qs -o QUD (Cons q qs);
 
 produceAnswer :
    (a : Type) ->
    (x : a) !->
    (p : Prop) ->
-   QUD (Q a x p) -o
+   (qs : List Question) ->	
+   QUD (Cons (Question a x p) qs) -o
    p -*
-   Agenda Nil -o
    [_ :: Agenda (ShortAnswer x a SYSTEM USER); -- FIXME!!!
-    _ :: Answered (Q a x p)];
+    _ :: QUD qs;
+    _ :: Answered (Question a x p)];
 
+-- produceCR :
+--    (a : Type) ->
+--    (x : a) ?->
+--    (p : Prop) ->
+--    QUD (Question a x p) -o
+--    p -* CR; 
 
-johnParis :: Live John Paris;
+-- johnParis :: Live John Paris;
