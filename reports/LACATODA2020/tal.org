@@ -45,69 +45,17 @@
 # Establish the field. What is the line of work? (references, etc.)
 # Who cares about this anyway and what do they see as important?
 
-TODO: Vlad
+# TODO: Vlad
 
-Dialogue management is an important and rich field (a dozen citations).
+# Dialogue management is an important and rich field (a dozen citations).
 
-Nowadays people tend to use deep learning systems, but they fall short in the following ways.
-TODO
+# Nowadays people tend to use deep learning systems, but they fall short in the following ways.
+# TODO
 
-say something about the use of logic-based systems for DM
-
-# Identify a gap.
-
-Even though this field is promising, we belive that it is crucial to
-use formal tools which are most appropriate for the task: one should
-be able to express the rules of cooperative dialog in a concise way,
-free, to any possible extent, of irrelevant technical details.
-
-In the view of citet:dixon2009plans, this is best done by
-representing the information-state of the agents as updatable sets of
-propositions. Subsets of propositions in the information state can be
-treated independently, and, therefore, a suitable and flexible way to
-represent updates is as propositions in linear logic. We adopt this
-view here, and further argue for it in sec:TODO.
-
-We further extend this framework to deal with unclarity and
-ambiguity. Indeed, asking a question is typically not done in one
-utterance which leaves nothing to interpretation. Rather, an initial
-short and possbily ambiguous question is posed. If the answerer deems
-the question unclear, a dialogue with ensue before the question is
-finally resolved. In technical terms we propose to deal with
-question-answering and clarification requests in the context of dialog
-management.
-
-# How we plan to fill this gap?
-
-To deal with such ambiguity and unclarity, we propose here the use of
-/metavariables/, thereby leveraging much research on unification and
-proof search in various logical frameworks.  That is, meta-variables
-will stand in for any piece of information which is left to further
-interpretation.
-
-By using well-known techniques which correspond well with the
-intuition of information-state management, we are able to provide a
-fully working prototype of the components of our framework:
-
-1. a proof-search engine based on linear logic, modified to support
-   inputs from external systems (representing inputs and outputs of
-   the agent)
-
-2. a set of rules which function as a core framework for dialogue
-   management (in the style of KoS)
-
-3. several examples which use the above to construct potential
-   applications of the system.
-
-TODO: add forward references above and outline of the rest below.
-
-* Background
-
-** Dialogue management
 A key aspect of dialogue systems design is the coherence of system’s
-responses.  In this respect, a key component of a dialogue system is the
-dialogue manager, which selects appropriate system actions depending
-on the current state and the external context.
+responses.  In this respect, a key component of a dialogue system is
+the dialogue manager, which selects appropriate system actions
+depending on the current state and the external context.
 
 Two families of approaches to dialogue management can be considered:
 hand-crafted dialogue strategies
@@ -139,6 +87,61 @@ cite:schlangen-diss,flg08,ginzburg2012interactive, clarification
 requests cite:purver-rlc06,ginzburg2012interactive and self-repair
 cite:gfs-sp,houghpurver-disfl, where the resolution is intuitively
 tied to the coherence of what is being said.
+
+
+say something about the use of logic-based systems for DM
+
+# Identify a gap.
+
+Even though this field is promising, we belive that it is crucial to
+use formal tools which are most appropriate for the task: one should
+be able to express the rules of cooperative dialog in a concise way,
+free, to any possible extent, of irrelevant technical details.
+
+In the view of citet:dixon2009plans , this is best done by
+representing the information-state of the agents as updatable sets of
+propositions. Subsets of propositions in the information state can be
+treated independently, and, therefore, a suitable and flexible way to
+represent updates is as propositions in linear logic. We adopt this
+view here, and further argue for it in sec:TODO.
+
+We further extend this framework to deal with unclarity and
+ambiguity. Indeed, asking a question is typically not done in one
+utterance which leaves nothing to interpretation. Rather, an initial
+short and possbily ambiguous question is posed. If the answerer deems
+the question unclear, a dialogue with ensue before the question is
+finally resolved. In technical terms we propose to deal with
+question-answering and clarification requests in the context of dialog
+management.
+
+# How we plan to fill this gap?
+
+To deal with such ambiguity and unclarity, we propose here the use of
+/metavariables/, thereby leveraging much research on unification and
+proof search in various logical frameworks.  That is, meta-variables
+will stand in for any piece of information which is left to further
+interpretation.
+
+By using well-known techniques which correspond well with the
+intuition of information-state based dialogue management, we are able
+to provide a fully working prototype of the components of our
+framework:
+
+1. a proof-search engine based on linear logic, modified to support
+   inputs from external systems (representing inputs and outputs of
+   the agent)
+
+2. a set of rules which function as a core framework for dialogue
+   management (in the style of KoS cite:ginzburg2012interactive)
+
+3. several examples which use the above to construct potential
+   applications of the system.
+
+TODO: add forward references above and outline of the rest below.
+
+* Background
+
+** Dialogue management
 
 *** Information state update approach
 In this work we are employing an information-state update (ISU)
