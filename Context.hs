@@ -107,6 +107,19 @@ ruleApplies wN consumed args e (Pi ("_",Zero _) (EQUAL ty1 ty2) body) metaTypes 
               [(nm,v,t >>= s'') | (nm,o -> There v,t) <- metaTypes]
               ([(w >>= s'',t >>= s'') | (w,t) <- ctx] )
 
+-- We match here a non-unique query (in tele).
+ruleApplies wN consumed args e (Pi (vNm,Zero NonUnique) (Rec tele) body) metaTypes ctx =
+  case ruleApplies wN True args (Con (Symbol "dummyN")) (pis tele (Con (Symbol ("dummyN_" ++ vNm)))) metaTypes ctx of
+    [] -> []
+    [_] -> []
+    _ -> ruleApplies wN consumed args (e `app` nonuniqueArg) (body >>= s) metaTypes ctx
+    -- We cannot apply the substitution: if we were, we'd be
+    -- chosing one of the non-unique things! So we simply discard the matched arguments and continue. (It does not occur in the rest of the type anyway according to the syntax)
+  where nonuniqueArg = Con (Symbol "NONUNIQUE")
+        s = \case Here -> nonuniqueArg
+                  There t -> V t
+
+
 ruleApplies wN consumed args e (Pi (vNm,Zero unicity) dom body) metaTypes ctx =
   -- something is needed zero times. So, we create a metavariable
   ruleApplies wN consumed
@@ -168,12 +181,7 @@ addSimpleResult nm r = pushInContext (Con (Symbol nm),r)
 applyRule :: String -> AnyRule -> R -> [R]
 applyRule ruleName r state@(R wN metas avail) =
   if unicityCheck ass
-  then if any (==NonUnique) (map fst $ concat ass)
-       -- Here we had a non-unique result. Then we cannot apply the substitution (because we'd be chosing one of the non-unique things). So we instead add the end state --- which itself should be unique
-       then case nub simpleResults of
-              [Just simpleResult] -> [addSimpleResult ruleName simpleResult state]
-              _ -> error "Simple result is not unique or not closed in non-unique rule application"
-       else results
+  then results
   else []
   where (ass,simpleResults,results) = unzip3 (ruleApplies wN False [] (Symb ruleName) (\case <$> r) metas avail)
 
@@ -184,9 +192,8 @@ unicityCheck ass@(as:_) = all ((== length as) . length) ass && all consistentUni
 consistentUnicity :: Eq a => [(Unicity, Maybe a)] -> Bool
 consistentUnicity [] = True
 consistentUnicity uvs@((u,v):_) = case u of
-              AnyUnicity -> True
               Unique -> length vs == 1 && isJust v
-              NonUnique -> Nothing `elem` vs || length vs > 1 
+              _ -> True
   where (_us,nub -> vs) = unzip uvs
 
 

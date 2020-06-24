@@ -74,7 +74,6 @@ parse :: forall a. CF.Exp -> (String -> Either String a) -> Exp (Either String a
 parse e0 f = case e0 of
      CF.U -> Con (Symbol "Type")
      (CF.Pi t b)  -> parsePi (Zero AnyUnicity) t b f
-     (CF.PiN t b) -> parsePi (Zero NonUnique) t b f
      (CF.PiU t b) -> parsePi (Zero Unique) t b f
      (CF.LinPi t b)  -> parsePi (One Keep) t b f
      (CF.LinPiR t b)  -> parsePi (One Release) t b f
@@ -87,6 +86,7 @@ parse e0 f = case e0 of
      (CF.Fun a b) -> parseFun f (Zero AnyUnicity) a b
      (CF.LFun a b) -> parseFun f (One Keep) a b
      (CF.LFunR a b) -> parseFun f (One Release) a b
+     (CF.NFun a b) -> parseFun f (Zero NonUnique) a b
      (CF.Rec fs) -> Rec (parseRec fs f)
 
 data Ctx where

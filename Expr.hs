@@ -34,6 +34,11 @@ data Tele v where
 
 data Constant = Symbol String | String String | Int Int deriving (Eq,Show)
 
+-- | Construct a pi type from a telescope.
+pis :: Tele v -> Exp v -> Exp v
+pis TNil b = b
+pis (TCons binder ty rest) b = Pi binder ty (pis rest (There <$> b))
+
 data Exp v where
   Rec :: Tele v -> Exp v
   Pi :: (String,Mult) -> Exp v -> Exp (Next v) -> Exp v
