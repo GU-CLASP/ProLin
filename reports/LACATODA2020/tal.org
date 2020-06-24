@@ -54,8 +54,8 @@
 
 A key aspect of dialogue systems design is the coherence of system’s
 responses.  In this respect, a key component of a dialogue system is
-the dialogue manager, which selects appropriate system actions
-depending on the current state and the external context.
+the dialogue manager, which determines which system actions 
+are appropriate depending on the current state and the external context.
 
 Two families of approaches to dialogue management can be considered:
 hand-crafted dialogue strategies
@@ -79,7 +79,7 @@ beneficial for such systems.
 
 Although there has been a lot of development in dialogue systems in
 recent years, only a few approaches reflect advancements in /dialogue
-theory/. Our aim is to closely integrate dialogue systems with work in
+theory/. (TODO: citations?) Our aim is to closely integrate dialogue systems with research in
 theoretical semantics and pragmatics of dialogue. This field has
 provided accounts for linguistic phenomena intrinsic to dialogue such
 as non-sentential utterances
@@ -89,8 +89,6 @@ cite:gfs-sp,houghpurver-disfl, where the resolution is intuitively
 tied to the coherence of what is being said.
 
 
-say something about the use of logic-based systems for DM
-
 # Identify a gap.
 
 Even though this field is promising, we belive that it is crucial to
@@ -98,7 +96,7 @@ use formal tools which are most appropriate for the task: one should
 be able to express the rules of cooperative dialog in a concise way,
 free, to any possible extent, of irrelevant technical details.
 
-In the view of citet:dixon2009plans , this is best done by
+In the view of citet:dixon2009plans, this is best done by
 representing the information-state of the agents as updatable sets of
 propositions. Subsets of propositions in the information state can be
 treated independently, and, therefore, a suitable and flexible way to
