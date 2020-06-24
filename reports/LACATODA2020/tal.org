@@ -83,10 +83,11 @@ theory/. Our aim is to closely integrate dialogue systems with work in
 theoretical semantics and pragmatics of dialogue. This field has
 provided accounts for linguistic phenomena intrinsic to dialogue such
 as non-sentential utterances
-cite:schlangen-diss,fgl07,ginzburg2012interactive, clarification
+cite:schlangen-diss,flg08,ginzburg2012interactive, clarification
 requests cite:purver-rlc06,ginzburg2012interactive and self-repair
 cite:gfs-sp,houghpurver-disfl, where the resolution is intuitively
 tied to the coherence of what is being said.
+
 
 say something about the use of logic-based systems for DM
 
@@ -94,7 +95,7 @@ say something about the use of logic-based systems for DM
 
 Even though this field is promising, we belive that it is crucial to
 use formal tools which are most appropriate for the task: one should
-be able to express the rules of cooperative dialog in a concise way,
+be able to express the rules of various genres of dialog in a concise way,
 free, to any possible extent, of irrelevant technical details.
 
 In the view of citet:dixon2009plans , this is best done by
@@ -108,7 +109,7 @@ We further extend this framework to deal with unclarity and
 ambiguity. Indeed, asking a question is typically not done in one
 utterance which leaves nothing to interpretation. Rather, an initial
 short and possbily ambiguous question is posed. If the answerer deems
-the question unclear, a dialogue with ensue before the question is
+the question unclear, a dialogue will ensue before the question is
 finally resolved. In technical terms we propose to deal with
 question-answering and clarification requests in the context of dialog
 management.
@@ -139,6 +140,7 @@ framework:
 TODO: add forward references above and outline of the rest below.
 
 * Background
+
 ** Dialogue management
 
 *** Information state update approach
@@ -147,7 +149,7 @@ approach, following several authors, including citet:traum1999model,
 citet:larsson2002issue, and citet:ginzburg2012interactive. In this
 view we present the information available to each participant of the
 dialogue (either a human or an artificial agent) in a rich information
-state. Being rich entails that the information state contains
+state. Being rich entails that the information state contains a
 hierarchy of facts, including the ones that are thought to be shared
 and the ones that have not been yet publicised.[fn::TBD consider if we
 need this] As an illustration [ref:eq:isu-before-update] is a rough
@@ -226,9 +228,9 @@ changing context. The meaning of an utterance is how it changes the
 context. Compared to most approaches [fn::TBD refs], which represent a
 single context for both dialogue participants), KoS keeps a separate
 representation for each participant, using the /Dialogue Game Board/
-(DGB). DGBs represent the information states of the participants, and
+(DGB). Thus, the information states of the participants
 comprise a private part and the dialogue gameboard that represents
-information arising from publicized interactions. It tracks, at the
+information arising from publicized interactions. The DGB tracks, at the
 very least, shared assumptions/visual space, moves (= utterances, form
 and content), and questions under discussion.
 
@@ -772,6 +774,9 @@ We can then assume that the question can be encoded for simplicity
 as |\x. if x then (Live John Paris y) else Not (Live John Paris y)|.
 That is, the country is implicit and represented by a metavariable.
 
+***Ultimately this requires rampant polymorphism (a separate arg for country, county
+***district, etc Better to treat this as multiple reference
+
 If the system has the following facts:
 #+begin_code
 Live John Paris France
@@ -827,10 +832,10 @@ interpretations of moves, and contains information about the speaker
 and the addressee in a structured way. Here we provide 5 basic types
 of moves as an illustration:
 #+BEGIN_code
-Greet         spkr  addr
-CounterGreet  spkr  addr
-Ask           question  spkr  addr
-ShortAnswer   vtype v spkr  addr
+Greet            spkr  addr
+CounterGreet     spkr  addr
+Ask           q  spkr  addr
+ShortAnswer   v  spkr  addr
 Assert        p  spkr  addr
 #+END_code
 
@@ -849,16 +854,20 @@ countergreeting, a rule will place the proposition |Agenda
 As it is easily noticed, each move is accompanied by the information
 about who has uttered it, and towards whom was it addressed. All the
 moves are stacked in the |Moves| part of the participant’s dialogue
-gameboard.
-
-TODO: Pending
+gameboard[fn::VM:should we get DGB back?] using the following rule
+which relies on |PushMove m| directive, where |m| is supposed to move
+on top of the stack.
+#+BEGIN_code
+pushMove :  (m : Move) -> (ms : List Move) ->
+            PushMove m ⊸ Moves ms ⊸ Moves (Cons m ms);
+#+END_code
 
 *** Initial state
 In general, we start with empty |QUD| and |Agenda|. An empty |QUD| can
 be adjusted if in a certain domain some open questions are assumed
 from the start. The |Agenda| might not be empty if one would want the
 system to initiate the conversation. There are also no moves: nothing
-has been said by neither party.
+has been said by either party.
 
 #+BEGIN_code
 _ :: QUD Nil;
@@ -872,48 +881,49 @@ of semantic representations of utterances from the NLU component, is
 implemented with the following rule:
 #+BEGIN_code
 hearAndRemember  :
-  (m : DP -> DP -> Move) -> (x y : DP) -> (ms : List Move) ->
+  (m : DP -> DP -> Move) -> (x y : DP) ->
   Heard (m x y)  ⊸
-  Moves ms       ⊸
   HasTurn x      ⊸
-  [  _ :: Moves (Cons (m x y) ms);
-     _ :: Pending (m x y) ;
-     _ :: HasTurn y ];
+  [  _ :: PushMove (m x y)  ;
+     _ :: HasTurn y         ;
+     _ :: Agenda Nil        ];
 #+END_code
 where |(m x y)| is a semantic representation of the utterance. Here it
 is assumed that participant |x| has a turn and, as a result, turn was
-taken by her partner |y|. |DP| type stands for /dialogue
-participant/. As a result we do several things: i) place the move in a move
-list for further references (|PushMove|), ii) record the
+taken by her partner |y|. We do here several things: i) place the move
+in a move list for further references (|PushMove|), ii) record the
 turn-switching (which in a complete system may not apply to all cases
 --- then additional hypotheses would be added.), and iii) prepare to
-process the move (|Pending|).
+react by recording that agenda is empty.
 
 *** Uttering
 The capacity of "uttering" represents an ability to generate
 information for the NLG component. NLP component is represented
 by |Agenda| that contains a move that is just about to be uttered.
+
 #+BEGIN_code
 utterAndRemember :
-  (m : DP -> DP -> Move) -> (ms : List Move) -> (x y : DP) ->
-  Agenda (m x y)  ⊸
-  Moves ms        ⊸
-  HasTurn x       ⊸
-  [  _ :: Utter (m x y);
-     _ :: Moves (Cons (m x y) ms);
-     _ :: HasTurn y];
+  (m : DP -> DP -> Move) ->
+  (x y : DP) ->
+  Agenda (m x y) ⊸
+  HasTurn x ⊸
+  [  _ :: Utter (m x y) ;
+     _ :: PushMove (m x y) ;
+     _ :: HasTurn y ] ;
 #+END_code
 
-Here also we take care of turn-taking in the same rule. As a result, the system consumes the |Agenda| passes the move to the NLG component. The move is also memorised in the |Moves| stack.
+Here also, we take care of turn-taking in the same rule.
 *** Basic adjacency: greeting
 We can show how basic move adjacency can be defined in the example of
 countergreeting preconditioned by a greeting from the other party:
+
 #+BEGIN_code
 counterGreeting :
-  (x y : DP) -> 
-  HasTurn x            -*
-  Pending (Greet y x)  -o
-  Agenda (CounterGreet x y);
+    (x y : DP) -> (ms : List Move) ->
+    HasTurn x -*
+    Moves (Cons (Greet y x) ms)  -*
+    Agenda Nil ⊸
+       [_ :: Agenda (CounterGreet x y)];
 #+END_code
 *** QUD identification
 Another important rule accounts for setting the current question under discussion (|QUD|) to the latest move.
@@ -1072,6 +1082,52 @@ question answering /CR with metavariable:
 
 - how types/proofs can be implemented
 
+Table~\ref{table:ds} originates from \cite{ginzburg-nlphandbook}, who proposed a series of benchmarks
+for comparing different approaches to developing dialogue systems (see section xxx of that paper).\footnote{  The  approaches compared
+were FSMs, Frames, Inference-based, and the Information state approach.}
+ For each approach the symbol \checkmark 
+\ indicates that the approach safisfies the benchmark in the corresponding row; 
+$\sim$ that the benchmark could be met with some caveats, as explained in 
+the text above; and --- that the benchmark is not met by a standard version 
+of the approach. Here we discuss 
+
+
+\begin{figure}\begin{center}
+\begin{tabular}{|l||c|c|c|}\hline
+{Benchmarks} & \, {FSMs} \, & \ {Frames} \ & {Inference} \\\hline\hline
+{\bf query and assertion}     & & & \\
+Q1 simple answers & \checkmark &  \checkmark &  \checkmark \\
+Q2a non-resolving answers  & $\sim$ &  \checkmark & \checkmark  \\
+Q2b follow up queries      & $\sim$ &  \checkmark & \checkmark  \\
+Q3 overinformative answers & $\sim$ &  \checkmark & \checkmark \\
+Q4 sub-questions      & --- & --- & $\sim$ \\
+Q5 topic changing     & --- & --- & --- \\
+A1 propositional content update  & --- & $\sim$ & \checkmark \\
+A2 disagreement                  & --- & --- & $\sim$ \\ 
+SC scalability         & --- & --- & ---     \\
+DA domain adaptability & --- & --- & $\sim$  \\ \hline
+{\bf metacommunication}      & & & \\
+Ack1 completed acknowledgements      & \checkmark &  \checkmark &  \checkmark \\
+Ack2 continuation acknowledgements   & --- & --- & --- \\
+Ack3 gestural acknowledgements       & $\sim$ & $\sim$ & $\sim$ \\
+CR1 repetition CRs      & \checkmark & \checkmark &  \checkmark \\
+CR2 confirmation CRs    & \checkmark & \checkmark &  \checkmark \\
+CR3 intended content CRs      & --- & --- & --- \\
+CR4 intention recognition CRs & --- & --- & $\sim$ \\
+SND distinct updates          & --- & --- & --- \\
+FG fine-grained representations & --- & --- & ---\\ \hline
+{\bf fragments}       & & & \\
+SF1 wide coverage of SFs    & --- & --- & --- \\
+SF2 basic answer resolution & \checkmark  & \checkmark &  \checkmark \\
+SF3 reprise fragment resolution & --- & --- & --- \\
+SF4 long distance short answers & --- & --- & --- \\
+SF5 genre sensitive initiating SFs     & --- & \checkmark &  \checkmark \\
+D1 recognize and repair disfluencies  & \checkmark & \checkmark & \checkmark \\
+D2 keep disfluencies in context       & --- & --- & --- \\\hline
+\end{tabular}
+\end{center}\caption{Comparison of dialogue management approaches}
+\label{table:ds}
+\end{figure} 
 
 
 
