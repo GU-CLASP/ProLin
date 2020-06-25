@@ -1088,9 +1088,6 @@ With user-cr:
 - ??? 
 * Related work
 
-** Question answering with types
-- AixDial
-
 ** purver on CRs
 ** Ginzburg 2012
 
@@ -1106,8 +1103,10 @@ given rule. Cooper's TTR has a special "assymetric merge" operator for
 this purpose, but it is a less-studied \textit{ad-hoc} addition to
 type-theory.
 
-Furthermore, as it stands, KoS is lacking implementations, which, as
-we see it, are largely due to the semantic gap between its aims
+Furthermore, as it stands, KoS is lacking implementations, with the
+exception of the work of citet:maraev_kosttr-based_2018, who adapt KoS
+to eschew the assymetric merge operation.  As we see it, this sparsity
+of implementations is largely due to the semantic gap between its aims
 (information-state dialogue management) and its formalism (TTR).
 
 ** GoDIS
@@ -1116,7 +1115,7 @@ we see it, are largely due to the semantic gap between its aims
 
 ** Linear logic for dialogue management
 
-To our knowledge cite:dixon2009plans were the first to advocate the
+To our knowledge citet:dixon2009plans were the first to advocate the
 use of linear logic for dialogue management and planning. Compared to
 the present work, they focus primarily on the planning part of
 dialogue, rather than question-answering. In particular, they do not
