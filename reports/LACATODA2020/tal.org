@@ -1090,14 +1090,15 @@ operators (~X !-> Y~) and (~X ?-> Y~). Also we explicitly deal with QA and CR.
 
 - how types/proofs can be implemented
 
-Table~\ref{table:ds} originates from \cite{ginzburg-nlphandbook}, who proposed a series of benchmarks
-for comparing different approaches to developing dialogue systems (see section xxx of that paper).\footnote{  The  approaches compared
-were FSMs, Frames, Inference-based, and the Information state approach.}
- For each approach the symbol \checkmark 
-\ indicates that the approach safisfies the benchmark in the corresponding row; 
-$\sim$ that the benchmark could be met with some caveats, as explained in 
-the text above; and --- that the benchmark is not met by a standard version 
-of the approach. Here we discuss 
+Table~\ref{table:ds} originates from cite:ginzburg-nlphandbook, who
+proposed a series of benchmarks for comparing different approaches to
+developing dialogue systems (see section xxx of that paper).\footnote{
+The approaches compared were FSMs, Frames, Inference-based, and the
+Information state approach.}  For each approach the symbol \checkmark
+\ indicates that the approach safisfies the benchmark in the
+corresponding row; $\sim$ that the benchmark could be met with some
+caveats, as explained in the text above; and --- that the benchmark is
+not met by a standard version of the approach. Here we discuss
 
 
 \begin{figure}\begin{center}
