@@ -1110,8 +1110,11 @@ of implementations is largely due to the semantic gap between its aims
 (information-state dialogue management) and its formalism (TTR).
 
 ** GoDIS
-  - Updated and more natural version of GoDIS, that also uses Prolog,
-    and therefore might have problems with deleting the information.
+
+citet:larsson2000godis proposed the use of Prolog (and hence, proof
+search), as a dialogue management framework. However, the lack of
+linear hypotheses means that destructive information-state updates are sometimes
+awkward to represent.
 
 ** Linear logic for dialogue management
 
