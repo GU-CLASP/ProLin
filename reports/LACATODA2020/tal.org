@@ -813,7 +813,11 @@ about who has uttered it, and towards whom was it addressed. All the
 moves are stacked in the |Moves| part of the participant’s dialogue
 gameboard.
 
-TODO: Pending
+Additionally, we record any move |m| which one has yet to actively
+react to, in the hypothesis |Pending m|. We cannot use the |Moves|
+part of the state for this purpose, because it is meant to be static
+(not to be consumed). |Pending| thus allows to make the difference
+between a moves which is fully processed or not.
 
 *** Initial state
 In general, we start with empty |QUD| and |Agenda|. An empty |QUD| can
