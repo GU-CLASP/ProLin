@@ -1087,10 +1087,12 @@ With/without  system-cr:
 With user-cr:
 - ??? 
 * Related work
-question answering /CR with metavariable:
+
+** Question answering with types
 - AixDial
-- godis?
-- purver on CRs, ginzburg 2012
+
+** purver on CRs
+** Ginzburg 2012
 
 ** KoS
 
@@ -1107,12 +1109,17 @@ question answering /CR with metavariable:
   - Updated and more natural version of GoDIS, that also uses Prolog,
     and therefore might have problems with deleting the information.
 
+** Linear logic for dialogue management
 
-** Linear logic for dialogue management:
-- cite:dixon2009plans
+To our knowledge cite:dixon2009plans were the first to advocate the
+use of linear logic for dialogue management and planning. Compared to
+the present work, they focus primarily on the planning part of
+dialogue, rather than question-answering. In particular, they do not
+discuss the role of metavariables and clarification requests.
 
-TODO: Difference from cite:dixon2009plans: we have the additional unicity
-operators (~X !-> Y~) and (~X ?-> Y~). Also we explicitly deal with QA and CR.
+We additionally propose the extension of linear logic with
+special-purpose operators | X !-> Y | and | X ?-> Y | to distinguish
+the presence or the absence of ambiguity.
 
 * Evaluation/Discussion/Future work
 - discussing the corrections
