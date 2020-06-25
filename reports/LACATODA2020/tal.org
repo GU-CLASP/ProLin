@@ -1096,14 +1096,15 @@ With user-cr:
 
 ** KoS
 
-  # (For example the TTR merge is a hack! 1. ad-hoc addition to
-  # type-theory. 2. destructive updates, deletes, etc.)  We propose the
-  # formalism that allows natural updated to the individual components
-  # of the information state. [forward ref]
-  # --> represent uncertainty and ways to clarify it
-
-(This is what TTR tries to do with its "assymetric merge"
-  operation).
+One of our main sources of inspiration is Ginzburg's KoS. However we
+recast it in the framework of proof search, and linear logic. We have
+argued that this has many advantages. First, it affords the use of
+metavariables to represent uncertaintly, which is absent from TTR.
+Second, expressing updates using linear logic rules means that only
+the relevant parts of the information state must be dealt with in any
+given rule. Cooper's TTR has a special "assymetric merge" operator for
+this purpose, but it is a less-studied \textit{ad-hoc} addition to
+type-theory.
 
 ** GoDIS
   - Updated and more natural version of GoDIS, that also uses Prolog,
