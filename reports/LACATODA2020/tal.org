@@ -360,16 +360,15 @@ Each such rule manipulates a part of the information state (captured
 by its premisses) and leaves everything else in the state
 alone.
 
-*** Metavariables and unification
 
+
+* Questions and clarifications
+** Question-answering with metavariables
 In prolog-like languages, metavariables play the role of unknowns,
 whose value can become fixed for a goal to be reached.
 
 In the context of linear-logic proof search, this means that, at any
 point in the scenario, the state can refer to metavariables.
-
-TODO: example snippet.
-
 In this situation, metavariables represent a certain amount of
 flexibility in the scenario: /so far/ the scenario works for any value
 which could be assigned to the metavariable. This means that at a
@@ -378,26 +377,28 @@ value. In this paper we explore the potential of using metavariables
 in the context of dialog management, and in particular the
 representation of question/answering exchanges.
 
+In this subsection we show how a metavariable can represent what is
+being asked, as the unknown in a proposition.
 
-* Questions and clarifications
-** Question-answering with metavariables
+A first use for metavariables is to represent the requested answer of
+a question.
 
-A first use for metavariables is to represent the requested answer of a question.
-
-In this paper, we represent a question by a predicate P over a type A. That is, using a typed intuitionistic logic:
+In this paper, we represent a question by a predicate |P| over a
+type |A|. That is, using a typed intuitionistic logic:
 #+BEGIN_code
 A  : Type
 P  : A  -> Prop
 #+END_code
 
-The intent of the question is to find out about a value $x$ of type
-$A$ which makes $P x$ true. We show several examples in table
-ref:tbl:qa-ex.  It is worth stressing that the type $A$ can be large
+The intent of the question is to find out about a value |x| of
+type |A| which makes |P x| true. We show several examples in table
+ref:tbl:qa-ex.  It is worth stressing that the type |A| can be large
 (for example asking for any location) or as small as a boolean (if one
 requires a simple yes/no answer).  We note in passing that, typically,
-polar questions can be answered not just by a boolean but by
-qualifing the predicate in question, for example "maybe", "on tuesdays", etc. (Table ref:tbl:qa-ex, last two
-rows).  In this instance |A = Prop -> Prop|. 
+polar questions can be answered not just by a boolean but by qualifing
+the predicate in question, for example "maybe", "on tuesdays",
+etc. (Table ref:tbl:qa-ex, last two rows).  In this instance |A = Prop
+-> Prop|.
 
 
 
