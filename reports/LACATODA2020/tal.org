@@ -46,11 +46,7 @@
 # Who cares about this anyway and what do they see as important?
 
 # TODO: Vlad
-
 # Dialogue management is an important and rich field (a dozen citations).
-
-# Nowadays people tend to use deep learning systems, but they fall short in the following ways.
-# TODO
 
 A key aspect of dialogue systems design is the coherence of system’s
 responses.  In this respect, a key component of a dialogue system is
@@ -105,7 +101,7 @@ representing the information-state of the agents as updatable sets of
 propositions. Subsets of propositions in the information state can be
 treated independently, and, therefore, a suitable and flexible way to
 represent updates is as propositions in linear logic. We adopt this
-view here, and further argue for it in sec:TODO.
+view here, and further argue for it in the body of the paper.
 
 We further extend this framework to deal with unclarity and
 ambiguity. Indeed, asking a question is typically not done in one
@@ -142,8 +138,6 @@ framework:
    applications of the system.
 
 TODO: add forward references above and outline of the rest below.
-
-TODO: fix citet
 
 * Background
 
@@ -274,7 +268,7 @@ In particular, in linguistic theories based on intuitionistic logic
 (such as TTR), true statements corresponds to propositions which admit
 a proof.
 
-There is a long history (TODO:cite prolog seminal paper?) of using
+There is a long history  of using
 proof search as a declarative programming paradigm.  In the most
 abstract sense, the programmer specifies /axioms/ and /rules of inference/
 which model their application domain. Typically such a system of
@@ -294,12 +288,12 @@ Götaplatsen (as |x|) together with their departure time (as |y|).
 
 Because statements are propositions, it is only natural to use
 proof-search as a means to represent possible moves in dialog seen as
-a game. (TODO: cite GoDIS)
+a game cite:larsson2000godis.
 
 
 ** Linear logic as a Dialog Management Framework
 Typically, and in particular in the archetypal logic programming
-language prolog (TODO citation), axioms and rules are expressed within the general
+language prolog cite:bratko2001prolog, axioms and rules are expressed within the general
 framework of first order logic. However, several authors
 cite:dixon2009plans,martens2015programming have proposed to use
 linear logic cite:girard1995linear instead. For our purpose, the
@@ -316,11 +310,11 @@ to the /state/ of the system. In our application they will correspond
 to the /information state/ of the dialog participant.
 
 We note that in linear logic, facts (or hypotheses) to not come in a
-hierarchy (TODO as above). Either we have a fact, or we don't. However
-in second order variants of intuitionistic logic, like the one we use,
-one can conveniently wrap propositions in constructors, to indicate
-that they come with a qualification. For example, we can write |Unsure
-P| to indicate that the proposition |P| may hold (for example if
+hierarchy. Either we have a fact, or we don't. However, in second
+order variants of intuitionistic logic, like the one we use, one can
+conveniently wrap propositions in constructors, to indicate that they
+come with a qualification. For example, we can write |Unsure P| to
+indicate that the proposition |P| may hold (for example if
 clarification is required).
 
 This way, the firing of a linear rule corresponds to an /action/ of an
