@@ -385,7 +385,7 @@ P  : A  -> Prop
 #+END_code
 
 The intent of the question is to find out about a value |x| of
-type |A| which makes |P x| true. We show several examples in table
+type |A| which makes |P x| true, or at least held true by the other participant. We show several examples in table
 ref:tbl:qa-ex.  It is worth stressing that the type |A| can be large
 (for example asking for any location) or as small as a boolean (if one
 requires a simple yes/no answer).  We note in passing that, typically,
