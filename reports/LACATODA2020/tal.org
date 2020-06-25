@@ -417,7 +417,12 @@ To represent ambiguity in the case of |AmbiguousNo|, we make the
 answer provide no information, in the form of a trivial proposition
 (which is always true regardless of context).
 
-TODO: context-dependent.
+One potentially surprising feature is that, in our account, the
+meaning of simple answers (such as "no") depend on the
+context. However, we do not see this as a problem: indeed, the meaning
+of short answers is /always/ context-dependent. (For example "Paris"
+has a does not mean the same thing in the context of "Where do you
+live?" as in the context "Where were you born?".)
 
 Additionally, in the framework of a full dialogue management system,
 the |AmbiguousNo| case should be treated as unresolving (the question
