@@ -33,7 +33,7 @@
 #+LATEX_HEADER: \newcommand{\type}[1]{$\mathit{#1}$}
 #+LATEX_HEADER: \newcommand{\jg}[1]{\noindent \textcolor{blue}{\textbf{\emph{[jg:  #1]}}}}
 
-#+TITLE: Dialogue management with linear logic: the role of metavariables in questions and clarifications
+#+TITLE: Linear logic, metavariables and Q/A
 
 #+SUBTITLE: \title[linear logic, metavariables and Q/A]{Dialogue management with linear logic: the role of metavariables in questions and clarifications}
 #+AUTHOR: Anonymous
