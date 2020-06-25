@@ -14,8 +14,8 @@
 #+LATEX_HEADER: \input{newunicodedefs}
 # #+LATEX_HEADER: \usepackage{natbib}
 # Natbib-like commands for harvard.sty:
-#+LATEX_HEADER: \newcommand\citep[2][]{\cite[#1]{#2}}
-#+LATEX_HEADER: \newcommand\citet[2][]{\citeasnoun[#1]{#2}}
+#+LATEX_HEADER: \newcommand\citet[2][]{\ifthenelse{\equal{#1}{}}{\citeasnoun{#2}}{\citeasnoun[#1]{#2}}}
+#+LATEX_HEADER: \newcommand\citep[2][]{\ifthenelse{\equal{#1}{}}{\cite{#2}}{\cite[#1]{#2}}}
 #+LATEX_HEADER: \usepackage[utf8]{inputenc}
 #+LATEX_HEADER: \usepackage{amsmath}
 #+LATEX_HEADER: \usepackage{amsthm}
