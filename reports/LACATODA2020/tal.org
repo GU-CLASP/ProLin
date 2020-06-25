@@ -3,7 +3,8 @@
 #+LATEX_HEADER: \usepackage[labelfont=bf,textfont=it,labelsep=period,justification=raggedright,singlelinecheck=false]{caption}
 
 #+LATEX_HEADER: %include polycode.fmt
-#+LATEX_HEADER: %format -* = "-{\kern -1.3ex}*"
+#+LATEX_HEADER: %format -* = "\rightarrowtriangle"
+# alternative:                 -{\kern -1.3ex}*
 #+LATEX_HEADER: %format !-> = "\rightarrow_{!}"
 #+LATEX_HEADER: %format ?-> = "\rightarrow_{?}"
 #+LATEX_HEADER: %format . = "."
