@@ -89,7 +89,9 @@ cite:gfs-sp,houghpurver-disfl, where the resolution is intuitively
 tied to the coherence of what is being said.
 
 
-say something about the use of logic-based systems for DM
+To this end, a formal and in particular a logical representation is
+instrumental.  This paper is concerned with the representation of
+participant states and transitions in a unified logical framework.
 
 # Identify a gap.
 
