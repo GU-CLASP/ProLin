@@ -55,9 +55,10 @@ statistical modelling of dialogue
 cite:rieser2011reinforcement,young2010hidden. Frameworks for
 hand-crafted strategies range from finite-state machines and
 form-filling to more complex dialogue planning and logical inference
-systems. Statistical models help to contend with the uncertainty that
-arises in human interaction; from noisy signals from speech
-recognition and other sensors to pragmatic ambiguities.
+systems, such as Information State Update (ISU) cite:larsson2002issue
+that we employ here. Statistical models help to contend with the
+uncertainty that arises in human interaction; from noisy signals from
+speech recognition and other sensors to pragmatic ambiguities.
 
 End-to-end systems that do not specify a dialogue manager as an
 explicit component have gained lots of attention recently (e.g.,
@@ -1202,6 +1203,8 @@ label:sec:discussion
 - dependencies between questions (who killed bill -> who was around?)
 
 - clarification could be narrowing from general types to subtypes.
+
+- scaling up to probabilistic DM
 
 - how types/proofs can be implemented
 
