@@ -834,10 +834,10 @@ interpretations of moves, and contains information about the speaker
 and the addressee in a structured way. Here we provide 5 basic types
 of moves as an illustration:
 #+BEGIN_code
-Greet            spkr  addr
-CounterGreet     spkr  addr
-Ask           q  spkr  addr
-ShortAnswer   v  spkr  addr
+Greet         spkr  addr
+CounterGreet  spkr  addr
+Ask           question  spkr  addr
+ShortAnswer   vtype v spkr  addr
 Assert        p  spkr  addr
 #+END_code
 
@@ -856,20 +856,16 @@ countergreeting, a rule will place the proposition |Agenda
 As it is easily noticed, each move is accompanied by the information
 about who has uttered it, and towards whom was it addressed. All the
 moves are stacked in the |Moves| part of the participant’s dialogue
-gameboard[fn::VM:should we get DGB back?] using the following rule
-which relies on |PushMove m| directive, where |m| is supposed to move
-on top of the stack.
-#+BEGIN_code
-pushMove :  (m : Move) -> (ms : List Move) ->
-            PushMove m ⊸ Moves ms ⊸ Moves (Cons m ms);
-#+END_code
+gameboard.
+
+TODO: Pending
 
 *** Initial state
 In general, we start with empty |QUD| and |Agenda|. An empty |QUD| can
 be adjusted if in a certain domain some open questions are assumed
 from the start. The |Agenda| might not be empty if one would want the
 system to initiate the conversation. There are also no moves: nothing
-has been said by either party.
+has been said by neither party.
 
 #+BEGIN_code
 _ :: QUD Nil;
@@ -883,49 +879,48 @@ of semantic representations of utterances from the NLU component, is
 implemented with the following rule:
 #+BEGIN_code
 hearAndRemember  :
-  (m : DP -> DP -> Move) -> (x y : DP) ->
+  (m : DP -> DP -> Move) -> (x y : DP) -> (ms : List Move) ->
   Heard (m x y)  ⊸
+  Moves ms       ⊸
   HasTurn x      ⊸
-  [  _ :: PushMove (m x y)  ;
-     _ :: HasTurn y         ;
-     _ :: Agenda Nil        ];
+  [  _ :: Moves (Cons (m x y) ms);
+     _ :: Pending (m x y) ;
+     _ :: HasTurn y ];
 #+END_code
 where |(m x y)| is a semantic representation of the utterance. Here it
 is assumed that participant |x| has a turn and, as a result, turn was
-taken by her partner |y|. We do here several things: i) place the move
-in a move list for further references (|PushMove|), ii) record the
+taken by her partner |y|. |DP| type stands for /dialogue
+participant/. As a result we do several things: i) place the move in a move
+list for further references (|PushMove|), ii) record the
 turn-switching (which in a complete system may not apply to all cases
 --- then additional hypotheses would be added.), and iii) prepare to
-react by recording that agenda is empty.
+process the move (|Pending|).
 
 *** Uttering
 The capacity of "uttering" represents an ability to generate
 information for the NLG component. NLP component is represented
 by |Agenda| that contains a move that is just about to be uttered.
-
 #+BEGIN_code
 utterAndRemember :
-  (m : DP -> DP -> Move) ->
-  (x y : DP) ->
-  Agenda (m x y) ⊸
-  HasTurn x ⊸
-  [  _ :: Utter (m x y) ;
-     _ :: PushMove (m x y) ;
-     _ :: HasTurn y ] ;
+  (m : DP -> DP -> Move) -> (ms : List Move) -> (x y : DP) ->
+  Agenda (m x y)  ⊸
+  Moves ms        ⊸
+  HasTurn x       ⊸
+  [  _ :: Utter (m x y);
+     _ :: Moves (Cons (m x y) ms);
+     _ :: HasTurn y];
 #+END_code
 
-Here also, we take care of turn-taking in the same rule.
+Here also we take care of turn-taking in the same rule. As a result, the system consumes the |Agenda| passes the move to the NLG component. The move is also memorised in the |Moves| stack.
 *** Basic adjacency: greeting
 We can show how basic move adjacency can be defined in the example of
 countergreeting preconditioned by a greeting from the other party:
-
 #+BEGIN_code
 counterGreeting :
-    (x y : DP) -> (ms : List Move) ->
-    HasTurn x -*
-    Moves (Cons (Greet y x) ms)  -*
-    Agenda Nil ⊸
-       [_ :: Agenda (CounterGreet x y)];
+  (x y : DP) -> 
+  HasTurn x            -*
+  Pending (Greet y x)  -o
+  Agenda (CounterGreet x y);
 #+END_code
 *** QUD identification
 Another important rule accounts for setting the current question under discussion (|QUD|) to the latest move.
