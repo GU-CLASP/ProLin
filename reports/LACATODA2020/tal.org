@@ -181,7 +181,7 @@ information state.
 
 Let’s now consider the /update/, another essential component of ISU. In
 this case, we will rely on a set of rules, that will govern the
-updates. Citet:ginzburg2012interactive defines one of the most basic
+updates. citet:ginzburg2012interactive defines one of the most basic
 rules -- the rule of QUD-incrementation -- the procedure of updating
 the current set of questions under discussions (|QUD|) if the latest
 utterance (|LU|) is a question. This operation is salient to a user
