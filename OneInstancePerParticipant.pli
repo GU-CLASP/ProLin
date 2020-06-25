@@ -7,8 +7,12 @@ q1    : (t : Time) -> (n : Bus) -> (d : Location) ->
         Utter (CounterGreet SYSTEM USER) -o 
 	Heard (Ask (Question USER Time t (TT n t Gotaplatsen d)) USER SYSTEM);
 
-q2 : (n0 : Bus) -> Utter (Ask (Question SYSTEM Bus n0 (WhichBus n0)) SYSTEM USER) -o
-     Heard ((ShortAnswer Bus B55) USER SYSTEM);
+-- q2a : (n0 : Bus) -> Utter (Ask (Question SYSTEM Bus n0 (WantBus n0)) SYSTEM USER) -o
+--      Heard ((ShortAnswer Bus B55) USER SYSTEM);
+
+q2b : (n0 : Bus) -> Utter (Ask (Question SYSTEM Bus n0 (WantBus n0)) SYSTEM USER) -o
+     Heard (Assert (WantBus B55) USER SYSTEM);
+
 
 -- knowledge base 1 (no CR)
 kb1  :: TT B18 T15   Gotaplatsen     Johanneberg ;
@@ -86,7 +90,13 @@ hearAndRemember  :
 processShort : (a : Type) -> (x : a) ->  (p : Prop) -> 
   (qs : List Question) -> (dp dp1 : DP) ->
   Pending (ShortAnswer a x dp1 dp) -o QUD (Cons (Question dp a x p) qs) -o
-  [ _ :: p;
+  [ _ :: UserFact p;
+    _ :: QUD qs];
+
+processAssert : (a : Type) -> (x : a) ->  (p : Prop) -> 
+  (qs : List Question) -> (dp dp1 : DP) ->
+  Pending (Assert p dp1 dp) -o QUD (Cons (Question dp a x p) qs) -o
+  [ _ :: UserFact p;
     _ :: QUD qs];
 
 pushQUD :
@@ -127,8 +137,8 @@ specificCR :
   (qs : List Question) ->
   CR -o
   QUD (Cons (Question USER Time t  (TT n  t  s           d))  qs) -o
-  [_ :: QUD (Cons (Question SYSTEM Bus n (WhichBus n)) 
+  [_ :: QUD (Cons (Question SYSTEM Bus n (WantBus n)) 
             (Cons (Question USER Time t (TT n t s d)) qs));
-   _ :: Agenda (Ask (Question SYSTEM Bus n (WhichBus n)) SYSTEM USER) ];
+   _ :: Agenda (Ask (Question SYSTEM Bus n (WantBus n)) SYSTEM USER) ];
    
 -- johnParis :: Live John Paris;
