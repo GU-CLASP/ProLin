@@ -134,8 +134,17 @@ framework:
 3. several examples which use the above to construct potential
    applications of the system.
 
-The rest of the paper is structured as follows.
-TODO: outline of the rest below.
+The rest of the paper is structured as follows. In section
+ref:sec:background we review important background for formalisation
+and implementation theories: dialogue management, linear logic and
+proof search. In section ref:sec:qa&cr we expose a treatment of
+question, answers and clarification using the aforementioned
+formalisms. This treatment ignores part of the dialogue management
+complexities, which we address in section ref:sec:dm. We discuss
+related work in ref:sec:related. Concluding remarks are provided in
+ref:sec:discussion.
+
+
 
 * Background
 label:sec:background
@@ -1170,6 +1179,7 @@ special-purpose operators | X !-> Y | and | X ?-> Y | to distinguish
 the presence or the absence of ambiguity.
 
 * Evaluation/Discussion/Future work
+label:sec:discussion
 - discussing the corrections (limitation)
 - discuss the clarification requests in a more specific way: we can
   always redefine the referent
