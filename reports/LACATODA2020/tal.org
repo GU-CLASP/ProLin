@@ -43,13 +43,6 @@
 
 
 * Introduction
-
-# Establish the field. What is the line of work? (references, etc.)
-# Who cares about this anyway and what do they see as important?
-
-# TODO: Vlad
-# Dialogue management is an important and rich field (a dozen citations).
-
 A key aspect of dialogue systems design is the coherence of system’s
 responses.  In this respect, a key component of a dialogue system is
 the dialogue manager, which selects appropriate system actions
@@ -144,8 +137,6 @@ framework:
 The rest of the paper is structured as follows.
 TODO: outline of the rest below.
 
-TODO: briefly mention ISU
-
 * Background
 label:sec:background
 ** Dialogue management
@@ -233,9 +224,10 @@ CRs:
 
 ** Proof search as a programming language
 
-The prevailing tradition in formal semantics, including in most pieces of work cited above, is to
-represent (declarative) statements as propositions, formalized in an
-underlying logic (often first-order logic).
+The prevailing tradition in formal semantics, including in most pieces
+of work cited above, is to represent (declarative) statements as
+propositions, formalized in an underlying logic (often first-order
+logic).
 
 In particular, in linguistic theories based on intuitionistic logic
 (such as TTR), true statements corresponds to propositions which admit
@@ -266,16 +258,16 @@ a game cite:larsson2000godis.
 
 ** Linear logic as a Dialog Management Framework
 Typically, and in particular in the archetypal logic programming
-language prolog cite:bratko2001prolog, axioms and rules are expressed within the general
-framework of first order logic. However, several authors
-cite:dixon2009plans,martens2015programming have proposed to use
-linear logic cite:girard1995linear instead. For our purpose, the
+language prolog cite:bratko2001prolog, axioms and rules are expressed
+within the general framework of first order logic. However, several
+authors cite:dixon2009plans,martens2015programming have proposed to
+use linear logic cite:girard1995linear instead. For our purpose, the
 crucial feature of linear logic is that hypotheses may be used /only
-once/. For example, one could have a rule |IsAt x Gotaplatsen y ⊸ IsAt x
-CentralStationen (y+0.75)|. Consequently, after firing the above rule,
-the premiss |(Is x Gotaplatsen y)| becomes unavailable for any other rule.
-Thereby the linear arrow |⊸| can be used to conveniently model that a
-bus cannot be at two places simultaneously.
+once/. For example, one could have a rule |IsAt x Gotaplatsen y ⊸ IsAt
+x CentralStationen (y+0.75)|. Consequently, after firing the above
+rule, the premiss |(Is x Gotaplatsen y)| becomes unavailable for any
+other rule.  Thereby the linear arrow |⊸| can be used to conveniently
+model that a bus cannot be at two places simultaneously.
 
 In general, the linear arrow correspond to /destructive state
 updates/. Thus, the hypotheses available for proof search correspond
@@ -307,13 +299,12 @@ of the perceptory subsystem).
 
 In an actual dialogue, the scenario is therefore suspended between
 every interaction, and the state represents the current mental state
-of the agent which is modelled.[fn::possibly remove this sentence]
+of the agent which is modelled.
 
 Therefore, in our implementation, we treat the information state as a
-multiset [?] of /linear hypotheses/ that can be queried. Because they
-are linear, these hypotheses can also be removed from the state.
-
-TODO: preview example.
+multiset of /linear hypotheses/ that can be queried. Because they are
+linear, these hypotheses can also be removed from the state, as we
+discuss in detail in section ref:sec:dm.
 
 It is important to note that we will not forego the unrestricted
 (i.e. non-linear) implication (|->|). Rather, both implications will
@@ -595,8 +586,7 @@ to issue clarification requests.  To see how they can occur, consider
 again the question "what does john eat", in the same information state
 as above.  A proper answer could be "Mars and Twix" or "Mars or
 Twix". However we consider here a third possibility: instead of
-answering, the agent can issue a clarification request (TODO: is this
-reasonable? When ... etc.)
+answering, the agent can issue a clarification request.
 
 To illustrate, consider the question "What is being eaten?"
 represented as |Q x (Eat(y,x))|,  with the state
@@ -620,7 +610,7 @@ To detect situations where a clarification request can be issued, we can use the
  x : a; 
  p : Prop;
  havePAsQud :: QUD (Q x p);
- proof :: p] ?-> -* CR
+ proof :: p] ?-> CR
 #+END_code
 (We leave the exact form of the CR abstract for now and come back to it below)
 
@@ -959,7 +949,9 @@ of the spectrum of possible options is wide. We will provide an example of
 domain-specific |CR| in the section ref:sec:example below.
 
 *** Note on turn taking
-- TODO: how can be turned into something more advanced
+For now we have a very simple model of turn-taking, which can be
+improved in many ways: certain moves may not induce turn-change, there
+can be more than two participants, etc.
 ** Example label:sec:example
 Now we turn into how the simple of system of rules above can handle the following exchange:
 #+begin_quote
