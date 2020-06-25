@@ -1113,7 +1113,7 @@ show the state after processing the short answer.
 QUD  [  Question USER Time t0 (TT B55 t0 Gotaplatsen d0) ]
 UserFact (WantBus B55)
 HasTurn SYSTEM
-Moves  [  ShortAnswer Bus B55) USER SYSTEM
+Moves  [  ShortAnswer Bus B55 USER SYSTEM
           Ask (Question SYSTEM Bus B55 (WantBus B55)) SYSTEM USER
           …  ]
 #+END_code
@@ -1191,57 +1191,59 @@ label:sec:discussion
 
 - how types/proofs can be implemented
 
+
+TODO briefly describe the evaluation benchmarks
+
 Table ref:table:ds originates from cite:ginzburg-nlphandbook, who
 proposed a series of benchmarks for comparing different approaches to
-developing dialogue systems (see section xxx of that paper).\footnote{
-The approaches compared were FSMs, Frames, Inference-based, and the
-Information state approach.}  For each approach the symbol \checkmark
-\ indicates that the approach safisfies the benchmark in the
-corresponding row; $\sim$ that the benchmark could be met with some
-caveats, as explained in the text above; and --- that the benchmark is
-not met by a standard version of the approach. Here we discuss
+developing dialogue systems (see section xxx of that paper). For each
+approach the symbol \checkmark \ indicates that the approach safisfies
+the benchmark in the corresponding row; $\sim$ that the benchmark
+could be met with some caveats, as explained in the text above; and
+--- that the benchmark is not met by a standard version of the
+approach. Here we discuss
 
 \begin{table}
-\begin{tabular}{lccc}
+\centering
+\begin{tabular}{lc}
 \hline
-{Benchmarks} & \, {FSMs} \, & \ {Frames} \ & {Inference} \\\hline\hline
-{\bf query and assertion}     & & & \\
-Q1 simple answers & \checkmark &  \checkmark &  \checkmark \\
-Q2a non-resolving answers  & $\sim$ &  \checkmark & \checkmark  \\
-Q2b follow up queries      & $\sim$ &  \checkmark & \checkmark  \\
-Q3 overinformative answers & $\sim$ &  \checkmark & \checkmark \\
-Q4 sub-questions      & --- & --- & $\sim$ \\
-Q5 topic changing     & --- & --- & --- \\
-A1 propositional content update  & --- & $\sim$ & \checkmark \\
-A2 disagreement                  & --- & --- & $\sim$ \\ 
-SC scalability         & --- & --- & ---     \\
-DA domain adaptability & --- & --- & $\sim$  \\ \hline
-{\bf metacommunication}      & & & \\
-Ack1 completed acknowledgements      & \checkmark &  \checkmark &  \checkmark \\
-Ack2 continuation acknowledgements   & --- & --- & --- \\
-Ack3 gestural acknowledgements       & $\sim$ & $\sim$ & $\sim$ \\
-CR1 repetition CRs      & \checkmark & \checkmark &  \checkmark \\
-CR2 confirmation CRs    & \checkmark & \checkmark &  \checkmark \\
-CR3 intended content CRs      & --- & --- & --- \\
-CR4 intention recognition CRs & --- & --- & $\sim$ \\
-SND distinct updates          & --- & --- & --- \\
-FG fine-grained representations & --- & --- & ---\\ \hline
-{\bf fragments}       & & & \\
-SF1 wide coverage of SFs    & --- & --- & --- \\
-SF2 basic answer resolution & \checkmark  & \checkmark &  \checkmark \\
-SF3 reprise fragment resolution & --- & --- & --- \\
-SF4 long distance short answers & --- & --- & --- \\
-SF5 genre sensitive initiating SFs     & --- & \checkmark &  \checkmark \\
-D1 recognize and repair disfluencies  & \checkmark & \checkmark & \checkmark \\
-D2 keep disfluencies in context       & --- & --- & --- \\\hline
-\end{tabular}\caption{Comparison of dialogue management approaches}
+{Benchmarks}                         & {Our system} \\\hline\hline
+{\bf query and assertion}            & \\
+Q1 simple answers                    & \\
+Q2a non-resolving answers            & \\
+Q2b follow up queries                & \\
+Q3 overinformative answers           & \\
+Q4 sub-questions                     & \\
+Q5 topic changing                    & \\
+A1 propositional content update      & \\
+A2 disagreement                      & \\ 
+SC scalability                       & \\
+DA domain adaptability               & \\ \hline
+{\bf metacommunication}              & \\
+Ack1 completed acknowledgements      & \\
+Ack2 continuation acknowledgements   & \\
+Ack3 gestural acknowledgements       & \\
+CR1 repetition CRs                   & \\
+CR2 confirmation CRs                 & \\
+CR3 intended content CRs             & \\
+CR4 intention recognition CRs        & \\
+SND distinct updates                 & \\
+FG fine-grained representations      & \\ \hline
+{\bf fragments}                      & \\
+SF1 wide coverage of SFs             & \\
+SF2 basic answer resolution          & \\
+SF3 reprise fragment resolution      & \\
+SF4 long distance short answers      & \\
+SF5 genre sensitive initiating SFs   & \\
+D1 recognize and repair disfluencies & \\
+D2 keep disfluencies in context      & \\\hline
+\end{tabular}\caption{System evaluation}
 \label{table:ds}
 \end{table}
 
 
 \bibliography{tal}
 
-label:sec:discussion
 * COMMENT references
 bibliography:tal.bib
 
