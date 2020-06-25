@@ -1000,58 +1000,49 @@ S: In 15 minutes.
 
 Let’s now assume the following system’s context, which contains
 up-to-date public transport information (we just give a few
-examples). They are added to the initial domain-independent context
+examples, |kbX| for "knowledge base").
+#+BEGIN_code
+TT B18 T15   Gotaplatsen     Johanneberg
+TT B55 T20   Gotaplatsen     SciencePark
+#+END_code
+They are added to the initial domain-independent context
 outlined above. We also assume that user has the turn at the start. 
 #+BEGIN_code
-i1  :: TT B55 T15  Gotaplatsen     Johanneberg ;
-i2  :: TT B55 T30  CentralStation  SciencePark ;
-i3  :: TT B18 T1   Gotaplatsen  Johanneberg;
-_   :: QUD Nil;
-_   :: Agenda Nil;
-_   :: Moves Nil;
-_   :: HasTurn USER;
+QUD Nil
+Agenda Nil
+Moves Nil
+HasTurn USER
 #+END_code
 
 The when the systems "hears" the greeting it can be integrated into
 the state using |hearAndRemember| rule, therefore system updates its
 state accordingly:
 #+BEGIN_code
-i1  :: TT B55 T15  Gotaplatsen     Johanneberg ;
-i2  :: TT B55 T30  CentralStation  SciencePark ;
-i3  :: TT B18 T1   Gotaplatsen  Johanneberg;
-_   :: QUD Nil;
-_   :: Agenda Nil;
-_   :: Moves (Cons (Greet USER SYSTEM));
-_   :: HasTurn SYSTEM;
+-- Applied: hearAndRemember
+QUD Nil
+Agenda Nil
+Moves (Cons (Greet USER SYSTEM))
+HasTurn SYSTEM
 #+END_code
 
 In this context the system can issue a countergreeting by firing
 the |counterGreeting| rule:
 
 #+BEGIN_code
-i1  :: TT B55 T15  Gotaplatsen     Johanneberg ;
-i2  :: TT B55 T30  CentralStation  SciencePark ;
-i3  :: TT B18 T1   Gotaplatsen  Johanneberg;
-_   :: QUD Nil;
-_   :: Agenda  (CounterGreet SYSTEM USER);
-_   :: Moves   (Cons (Greet USER SYSTEM) Nil);
-_   :: HasTurn SYSTEM;
+Agenda (CounterGreet SYSTEM USER)
+HasTurn SYSTEM
+Moves [  Greet USER SYSTEM  ]
 #+END_code
 
 Everything which is on the agenda can be uttered
-using |utterAndRemember| rule (via issuing |PushMove m| instruction),
-given that the system has the turn. System also hands the turn over to
-the user. Therefore, the state becomes:
+using |utterAndRemember| rule, given that the system has the
+turn. System also hands the turn over to the user. Therefore, the
+state becomes:
 
 #+BEGIN_code
-i1  :: TT B55 T15  Gotaplatsen     Johanneberg ;
-i2  :: TT B55 T30  CentralStation  SciencePark ;
-i3  :: TT B18 T1   Gotaplatsen  Johanneberg;
-_   :: QUD Nil;
-_   :: Agenda  Nil;
-_   :: Moves   (Cons  (CounterGreet SYSTEM USER)
-                      (Cons (Greet USER SYSTEM) Nil);
-_   :: HasTurn USER;
+HasTurn USER
+Moves [ CounterGreet SYSTEM USER   
+        Greet USER SYSTEM         ]
 #+END_code
 
 Now the systems hears the question (|Ask| move: |(Ask (Question t (TT
@@ -1059,33 +1050,105 @@ n t Gotaplatsen d)))|. It is domain specific, and basically requests
 the timetable information for the given departure station. Again, we
 use |hearAndRemember| rule to itegrate it into state, but also,
 because the move is |Ask|, systems sets its QUD to the question that
-the move contains with the |setQUD| rule. 
+the move contains with the |pushQUD| rule. 
 
 #+BEGIN_code
-i1  :: TT B55 T15  Gotaplatsen     Johanneberg ;
-i2  :: TT B55 T30  CentralStation  SciencePark ;
-i3  :: TT B18 T1   Gotaplatsen  Johanneberg;
-_   :: QUD (Question t (TT n t Gotaplatsen d);
-_   :: Agenda  Nil;
-_   :: Moves  (Cons  (Ask (Question t (TT n t Gotaplatsen d))
-                     (Cons  (CounterGreet SYSTEM USER)
-                            (Cons (Greet USER SYSTEM) Nil);
-_   :: HasTurn SYSTEM;
+QUD [  Question USER Time t0 (TT n0 t0 Gotaplatsen d0)  ]
+HasTurn SYSTEM
+Moves [  Ask (Question USER Time t0 (TT n0 t0 Gotaplatsen d0)) USER SYSTEM
+         CounterGreet SYSTEM USER
+         Greet USER SYSTEM  ]
+#+END_code
+
+Now, dependent on the state of the knowledge base, the system will
+have two options: i) produce the answer straight away, or ii)
+integrate a clarifying side sequence.
+*** Straight answer
+For this case we will consider a knowledge base that includes
+information just about the unique (w.r.t. the time) entry in the
+timetable:
+#+BEGIN_code
+TT B18 T15   Gotaplatsen     Johanneberg
+#+END_code
+
+Therefore the question can be resolved and the resolving short answer
+can be put on the |Agenda|.
+#+BEGIN_code
+Answered (Question USER Time T15 (TT B18 T15 Gotaplatsen Johanneberg))
+QUD Nil
+HasTurn SYSTEM
+Agenda (ShortAnswer Time T15 SYSTEM USER)
+Moves  [ ... ]  -- same as above
+#+END_code
+*** Clarifying side sequence
+We can extend our minimal timetable example with another entry,
+therefore making it non-unique, w.r.t. time. 
+#+BEGIN_code
+TT B18 T15   Gotaplatsen     Johanneberg
+TT B55 T20   Gotaplatsen     SciencePark
+#+END_code
+
+In order to make it unique we can either clarify the bus number or the
+destination. We decided to go with the bus number here, and the rule
+for clarification can be formulated as follows:
+#+BEGIN_code
+specificCR :
+  (t : Time) -> (n : Bus) -> (s d : Location) ->
+  (qs : List Question) ->
+  CR -o
+  QUD (Cons (Question USER Time t  (TT n t s d))  qs)   -o
+  [_ :: QUD (Cons (Question SYSTEM Bus n (WantBus n)) 
+                  (Cons (Question USER Time t (TT n t s d)) qs));
+   _ :: Agenda (Ask (Question SYSTEM Bus n (WantBus n)) SYSTEM USER) ];
+#+END_code
+
+As a result of applying it, the state becomes:
+#+BEGIN_code
+Agenda (Ask (Question SYSTEM Bus n0 (WantBus n0)) SYSTEM USER)
+QUD  [  Question SYSTEM Bus n0 (WantBus n0))
+        Question USER Time t0 (TT n0 t0 Gotaplatsen d0) ]
+HasTurn SYSTEM  
+Moves [ ... ]  -- same as above
+#+END_code
+
+Then, the system can utter the clarification request (|utterAndRemember| rule): 
+#+BEGIN_code
+QUD  [  Question SYSTEM Bus n0 (WantBus n0))
+        Question USER Time t0 (TT n0 t0 Gotaplatsen d0) ]
+HasTurn SYSTEM  
+Moves  [  Ask (Question SYSTEM Bus n0 (WantBus n0)) SYSTEM USER
+          Ask (Question USER Time t0 (TT n0 t0 Gotaplatsen d0)) USER SYSTEM
+          CounterGreet SYSTEM USER
+          Greet USER SYSTEM  ]
+#+END_code
+
+User can reply to this with a short answer |(ShortAnswer Bus B55)| or
+an assertion |(Assert (WantBus B55)|, which can be integrated
+using |processShort| or |processAssert| rule correspondingly. Here we
+show the state after processing the short answer.
+#+BEGIN_code
+QUD  [  Question USER Time t0 (TT B55 t0 Gotaplatsen d0) ]
+UserFact (WantBus B55)
+HasTurn SYSTEM
+Moves  [  (ShortAnswer Bus B55) USER SYSTEM
+          (Ask (Question SYSTEM Bus B55 (WantBus B55)) SYSTEM USER)
+          ...  ]
+#+END_code
+The reader can notice that the metavariable |n0| from the previous
+state is now unified with |B55| in the question under discussion,
+therefore it now corresponds to one unique entry in the knowledge
+base. Hence, the answer can be issued (|produceAnswer|) rule.
+
+#+BEGIN_code
+Answered (Question USER Time T20 (TT B55 T20 Gotaplatsen SciencePark))
+QUD Nil
+Agenda (ShortAnswer Time T20 SYSTEM USER)
+UserFact (WantBus B55)
+HasTurn SYSTEM
+Moves [ ... ]  -- same as above
 #+END_code
 
 
-
-
-
-With/without  system-cr:
-- greeting exchange
-- when there is a bus from A?
-- (Which bus?
-- Bus 55)
-- it is at T
-
-With user-cr:
-- ??? 
 * Related work
 
 ** purver on CRs
