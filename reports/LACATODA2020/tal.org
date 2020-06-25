@@ -973,9 +973,9 @@ produceCR :
       _  :: p   ] ?-> CR;
 #+END_code
 
-The clarifying side sequence itself (|CR|) is supposed to be specified
-by a dialogue developer, because it is domain-specifica and the choice
-of the possible options is wide. We will provide an example of
+The clarifying side sequence itself (|CR|) is meant to be specified
+by a dialogue developer, because it is domain-specific and the choice
+of the spectrum of possible options is wide. We will provide an example of
 domain-specific |CR| in the section ref:sec:example below.
 
 *** Note on turn taking
