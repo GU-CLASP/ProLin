@@ -122,7 +122,9 @@ To deal with such ambiguity and unclarity, we propose here the use of
 /metavariables/, thereby leveraging much research on unification and
 proof search in various logical frameworks.  That is, meta-variables
 will stand in for any piece of information which is left to further
-interpretation.
+interpretation. In particular, in this paper we explore the potential
+of using metavariables in the representation of question/answering
+exchanges.
 
 By using well-known techniques which correspond well with the
 intuition of information-state based dialogue management, we are able
@@ -367,16 +369,6 @@ alone.
 In prolog-like languages, metavariables play the role of unknowns,
 whose value can become fixed for a goal to be reached.
 
-In the context of linear-logic proof search, this means that, at any
-point in the scenario, the state can refer to metavariables.
-In this situation, metavariables represent a certain amount of
-flexibility in the scenario: /so far/ the scenario works for any value
-which could be assigned to the metavariable. This means that at a
-further point the metavariable can be instanciated to some other
-value. In this paper we explore the potential of using metavariables
-in the context of dialog management, and in particular the
-representation of question/answering exchanges.
-
 In this subsection we show how a metavariable can represent what is
 being asked, as the unknown in a proposition.
 
@@ -587,7 +579,7 @@ Then the question cannot be answered, because |x| stands for some
 unknown thing. The proper answer is then "I do not know".
 
 Hence, we introduce another type-former |(x : A) !-> B|. As for |(x :
-A) -> B|, it introduces the metavariable $x$. However, the rule fires
+A) -> B|, it introduces the metavariable |x|. However, the rule fires
 only when |x| is made /grounded/ (it is bound to a term which does not
 contain any metavariable) and /unique/ by matching the rule. That is,
 it won't match in the previous example, because the answer is not
@@ -633,6 +625,7 @@ A proper answer could be "An apple and an orange" or "An apple or an
 orange". However we consider here a third possibility: instead of
 answering, the agent can issue a clarification request (TODO: is this
 reasonable? When ... etc.) [fn:VM: maybe more intuitive example, e.g. with ’like’? like(john,bananas) like(john,dogs)]
+
 
 To illustrate, consider the question "What is being eaten?"
 represented as |Q x (Eat(y,x))|,  with the state
@@ -805,6 +798,17 @@ we use the simpler version of interpereting polar questions.]
 again: |Q Bool (\x. if x then Country France y else Not (Country
 France y))|
 
+
+*** Summary
+
+In sum, we leverage a feature of linear-logic proof search: at any
+point in the scenario, the context can refer to metavariables.
+
+In a dialogue application, metavariables represent a certain amount of
+flexibility in the scenario: /so far/ the scenario works for any value
+which could be assigned to the metavariable. This means that at a
+further point the metavariable can be instanciated to some other
+value. 
 
 * Kos-inspired dialogue management with linear logic
 - image with basic SDS architecture
