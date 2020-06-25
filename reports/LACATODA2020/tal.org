@@ -911,38 +911,76 @@ countergreeting preconditioned by a greeting from the other party:
 counterGreeting :
   (x y : DP) -> 
   HasTurn x            -*
-  Pending (Greet y x)  -o
+  Pending (Greet y x)  ⊸
   Agenda (CounterGreet x y);
 #+END_code
-*** QUD identification
-Another important rule accounts for setting the current question under discussion (|QUD|) to the latest move.
+*** QUD incrementation
+Another important rule accounts for pushing the content of the last move, in the case if it is an |Ask| move, on top of the questions under discussion (|QUD|) stack.
 
 #+BEGIN_code
-setQUD :
-   (ms : List Move) ->
-   (q : Question) ->
-   (x y : DP) ->
-   Moves (Cons (Ask q x y) ms) -* QUD Nil ⊸ QUD q;
+pushQUD :
+   (q : Question) -> (qs : List Question) ->
+   (x y : DP)           -> 
+   Pending (Ask q x y)  ⊸ 
+   QUD qs               ⊸ 
+   QUD (Cons q qs)
+#+END_code
+*** Integrating the answers
+If the user asserts something that relates to the top |QUD|, then the |QUD| can be resolved and therefore removed from the stack. The corresponding proposition |p| is saved as a |UserFact|[fn::For the current purposes we only remove the top QUD, but in a more general case we can implement the policy that can potentially resolve any QUD from the stack.]
+#+BEGIN_code
+processAssert : (a : Type) -> (x : a) ->  (p : Prop) -> 
+  (qs : List Question) -> (dp dp1 : DP) ->
+  Pending (Assert p dp1 dp)          -o 
+  QUD (Cons (Question dp a x p) qs)  -o
+  [  _ :: UserFact p;
+     _ :: QUD qs];
 #+END_code
 
-*** Question resolution
-Variant of |produceAnswer| rule that works as part of dialogue management
+Short answers are processed in a very similar way to the assertions:
+#+BEGIN_code
+processShort : (a : Type) -> (x : a) ->  (p : Prop) -> 
+  (qs : List Question) -> (dp dp1 : DP) ->
+  Pending (ShortAnswer a x dp1 dp)   -o 
+  QUD (Cons (Question dp a x p) qs)  -o
+  [  _ :: UserFact p;
+     _ :: QUD qs];
+#+END_code
+
+*** Questions and clarifications
+Just as we described in ref:sec:, we use uniqueness check to determine
+whether system can resolve the question (|produceAnswer|) or it needs
+to initiate a clarifying side sequence (|produceCR|).
 
 #+BEGIN_code
 produceAnswer :
-   (a : Type) ->
-   (x : a) !->
-   (p : Prop) ->
-   QUD (Q a x p) -o
-   p -*
-   Agenda Nil -o
-   [_ :: Agenda (ShortAnswer x a SYSTEM USER); 
-    _ :: Answered (Q a x p)];
+   (a : Type)            ->
+   (x : a)              !->
+   (p : Prop)            ->
+   (qs : List Question)  ->	
+   QUD (Cons (Question USER a x p) qs)  -o
+   p  -*
+   [  _ :: Agenda (ShortAnswer a x SYSTEM USER);
+      _ :: QUD qs;
+      _ :: Answered (Question USER a x p)];
 #+END_code
+#+BEGIN_code
+produceCR :
+   [  a : Type ;
+      x : a ;
+      p : Prop ;
+      qs : List Question ;
+      _  :: QUD (Cons (Question USER a x p) qs) ;
+      _  :: p   ] ?-> CR;
+#+END_code
+
+The clarifying side sequence itself (|CR|) is supposed to be specified
+by a dialogue developer, because it is domain-specifica and the choice
+of the possible options is wide. We will provide an example of
+domain-specific |CR| in the section ref:sec:example below.
 
 *** Note on turn taking
 - how can be turned into something more advanced
-** Example
+** Example label:sec:example
 Now we turn into how the simple of system of rules above can handle the following exchange:
 #+begin_quote
 U: Hello!\\
