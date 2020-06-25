@@ -262,7 +262,7 @@ CRs:
 
 ** Proof search as a programming language
 
-The prevailing tradition in formal semantics (TODO:citations) is to
+The prevailing tradition in formal semantics, including in most pieces of work cited above, is to
 represent (declarative) statements as propositions, formalized in an
 underlying logic (often first-order logic).
 
@@ -278,7 +278,7 @@ axioms and rules represents a database of facts. For example, the
 axiom |(Leave 55 Gotaplatsen 11.50)| can model the fact that bus 55
 leaves from Götaplatsen at 11:50. The rule |(Leave x Gotaplatsen y ->
 Arrive x CentralStationen (y+0.75))| can represent travelling times on
-a certain line.
+a certain line. 
 
 Then, the user may define a query (or goal) as a logical formula. The
 system can then search for a proof of a goal as a way to query the
@@ -288,6 +288,10 @@ lowercase letters.]. For example, the goal |(Leave x Götaplatsen y)|
 corresponds to a request to list all the buses leaving from
 Götaplatsen (as |x|) together with their departure time (as |y|).
 
+Because statements are propositions, it is only natural to use
+proof-search as a means to represent possible moves in dialog seen as
+a game. (TODO: cite GoDIS)
+
 
 *** Linear logic
 Typically, and in particular in the archetypal logic programming
@@ -295,18 +299,19 @@ language prolog (TODO citation), axioms and rules are expressed within the gener
 framework of first order logic. However, several authors
 cite:dixon2009plans,martens2015programming have proposed to use
 linear logic cite:girard1995linear instead. For our purpose, the
-crucial feature of linear logic is that facts may be used /only
+crucial feature of linear logic is that hypotheses may be used /only
 once/. For example, one could have a rule |IsAt x Gotaplatsen y ⊸ IsAt x
 CentralStationen (y+0.75)|. Consequently, after firing the above rule,
 the premiss |(Is x Gotaplatsen y)| becomes unavailable for any other rule.
 Thereby the linear arrow |⊸| can be used to conveniently model that a
 bus cannot be at two places simultaneously.
 
-Thus, the hypotheses available for proof search correspond to the
-/state/ of the system. In our application they will correspond to the
-/information state/ of the dialog participant.
+In general, the linear arrow correspond to /destructive state
+updates/. Thus, the hypotheses available for proof search correspond
+to the /state/ of the system. In our application they will correspond
+to the /information state/ of the dialog participant.
 
-We note that in linear logic, facts (hypotheses) to not come in a
+We note that in linear logic, facts (or hypotheses) to not come in a
 hierarchy (TODO as above). Either we have a fact, or we don't. However
 in second order variants of intuitionistic logic, like the one we use,
 one can conveniently wrap propositions in constructors, to indicate
@@ -333,7 +338,12 @@ In an actual dialogue, the scenario is therefore suspended between
 every interaction, and the state represents the current mental state
 of the agent which is modelled.[fn::possibly remove this sentence]
 
-TODO: forward reference to example.
+Therefore, in our implementation, the information state is represented
+by a set we treat the information state as a multiset [?] of /linear
+hypotheses/ that can be queried. Because they are linear, these
+hypotheses can also be removed from the state.
+
+TODO: preview example.
 
 It is important to note that we will not forego the unrestricted
 (i.e. non-linear) implication (|->|). Rather, both implications will
@@ -341,8 +351,14 @@ co-exist in our implementation, thus we can represent simultaneously
 transient facts, or states, (introduced by the linear arrow) and
 immutable facts (introduced by the unrestricted arrow).
 
-TODO: Difference from cite:dixon2009plans: we have the additional unicity
-operators (~X !-> Y~) and (~X ?-> Y~). Also we explicitly deal with QA and CR.
+*** Transition rules
+
+In particular, we have set of immuable rules (they remain available
+even after being used).
+
+Each such rule manipulates a part of the information state (captured
+by its premisses) and leaves everything else in the state
+alone. 
 
 *** Metavariables and unification
 
@@ -350,28 +366,17 @@ In prolog-like languages, metavariables play the role of unknowns,
 whose value can become fixed for a goal to be reached.
 
 In the context of linear-logic proof search, this means that, at any
-point in the scenario, state can refer to metavariables.
+point in the scenario, the state can refer to metavariables.
 
-TODO: forward reference to example.
+TODO: example snippet.
 
 In this situation, metavariables represent a certain amount of
 flexibility in the scenario: /so far/ the scenario works for any value
-which could be assigned to the metavariable. In this paper we explore
-the potential of using metavariables in this context.
-
-* Implementation
-In our implementation, the information state is represented by a set
-we treat the information state as a multiset [?] of /linear
-hypotheses/ that can be queried. Because they are linear, these
-hypotheses can also be removed from the state.
-
-On top of this, we have set of immuable rules (they remain available
-even after being used).
-
-- importantly each (LL) rule manipulates a part of the information
-  state (captured by its premisses) and leaves everything else in the
-  state alone. (This is what TTR tries to do with its "assymetric
-  merge" operation).
+which could be assigned to the metavariable. This means that at a
+further point the metavariable can be instanciated to some other
+value. In this paper we explore the potential of using metavariables
+in the context of dialog management, and in particular the
+representation of question/answering exchanges.
 
 ** TODO COMMENT Extras
 
@@ -1061,6 +1066,9 @@ question answering /CR with metavariable:
   # of the information state. [forward ref]
   # --> represent uncertainty and ways to clarify it
 
+(This is what TTR tries to do with its "assymetric merge"
+  operation).
+
 ** GoDIS
   - Updated and more natural version of GoDIS, that also uses Prolog,
     and therefore might have problems with deleting the information.
@@ -1068,6 +1076,9 @@ question answering /CR with metavariable:
 
 ** Linear logic for dialogue management:
 - cite:dixon2009plans
+
+TODO: Difference from cite:dixon2009plans: we have the additional unicity
+operators (~X !-> Y~) and (~X ?-> Y~). Also we explicitly deal with QA and CR.
 
 * Evaluation/Discussion/Future work
 - discussing the corrections
