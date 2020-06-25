@@ -143,6 +143,8 @@ framework:
 
 TODO: add forward references above and outline of the rest below.
 
+TODO: fix citet
+
 * Background
 
 ** Dialogue management
