@@ -223,8 +223,8 @@ cite:fgl07,ginzburg2012interactive and iconic gesture cite:lucking16.
 TODO: Questions and answers
 
 CRs:
-- what are CRs
-- why do they exist?
+- what are CRs -- signals of non-understanding
+- there are also side sequences, but the boundaries are somewhat blurred
 - how frequent are they?
 - what gets clarified
 
@@ -1211,7 +1211,7 @@ TODO briefly describe the evaluation benchmarks
 Table ref:table:ds originates from cite:ginzburg-nlphandbook, who
 proposed a series of benchmarks for comparing different approaches to
 developing dialogue systems (see section xxx of that paper). For each
-approach the symbol \checkmark \ indicates that the approach safisfies
+approach the symbol \checkmark indicates that the approach safisfies
 the benchmark in the corresponding row; $\sim$ that the benchmark
 could be met with some caveats, as explained in the text above; and
 --- that the benchmark is not met by a standard version of the
@@ -1223,29 +1223,29 @@ approach. Here we discuss
 \hline
 {Benchmarks}                         & {Our system} \\\hline\hline
 {\bf query and assertion}            & \\
-Q1 simple answers                    & \\
-Q2a non-resolving answers            & \\
-Q2b follow up queries                & \\
-Q3 overinformative answers           & \\
-Q4 sub-questions                     & \\
+Q1 simple answers                    & \checkmark \\
+Q2a non-resolving answers            & \checkmark \\
+Q2b follow up queries                & \checkmark \\
+Q3 overinformative answers           & \checkmark \\
+Q4 sub-questions                     & \checkmark \\
 Q5 topic changing                    & \\
-A1 propositional content update      & \\
+A1 propositional content update      & \checkmark \\
 A2 disagreement                      & \\ 
-SC scalability                       & \\
-DA domain adaptability               & \\ \hline
+SC scalability                       & $\sim$ \\
+DA domain adaptability               & \checkmark \\ \hline
 {\bf metacommunication}              & \\
 Ack1 completed acknowledgements      & \\
 Ack2 continuation acknowledgements   & \\
 Ack3 gestural acknowledgements       & \\
 CR1 repetition CRs                   & \\
 CR2 confirmation CRs                 & \\
-CR3 intended content CRs             & \\
+CR3 intended content CRs             & \checkmark \\
 CR4 intention recognition CRs        & \\
-SND distinct updates                 & \\
-FG fine-grained representations      & \\ \hline
+SND distinct updates                 & $\sim$ \\
+FG fine-grained representations      & $\sim$ \\ \hline
 {\bf fragments}                      & \\
-SF1 wide coverage of SFs             & \\
-SF2 basic answer resolution          & \\
+SF1 wide coverage of SFs             & $\sim$ \\
+SF2 basic answer resolution          & $\sim$ \\
 SF3 reprise fragment resolution      & \\
 SF4 long distance short answers      & \\
 SF5 genre sensitive initiating SFs   & \\
