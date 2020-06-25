@@ -227,9 +227,23 @@ CRs:
 - why do they exist?
 - how frequent are they?
 - what gets clarified
-- why it is crucial for SDS:
-  - why fine-grained
-  - user responses with open vocabulary ASR
+
+For spoken dialogue systems it is crucial to be able to produce and
+process clarifications requests. In the case of the low confidence of
+speech recognition and NLU, system can clarify its input with the
+user. It is important to allow user initiative in the occasion when
+user does not understand some information provided by the system. With
+recent advancements in speech recognition and overwhelming preference
+for open-vocabulary ASR and statistical NLU, systems provide more
+opportunities for user initiative, which therefore should be
+supported.
+
+In this work we provide a minimal and granular account for
+clarification requests initiated by any conversational party,
+following accounts of and supporting subset of cases that were
+thoroughly investigated in a CLARIE Prolog-based system
+citep:purver-rlc06, following corpus studies by citet:purver2003means
+and citet:rodriguez2004form.
 
 ** Proof search as a programming language
 
