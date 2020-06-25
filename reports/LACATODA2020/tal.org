@@ -1100,9 +1100,9 @@ corresponding row; $\sim$ that the benchmark could be met with some
 caveats, as explained in the text above; and --- that the benchmark is
 not met by a standard version of the approach. Here we discuss
 
-
-\begin{figure}\begin{center}
-\begin{tabular}{|l||c|c|c|}\hline
+\begin{table}
+\begin{tabular}{lccc}
+\hline
 {Benchmarks} & \, {FSMs} \, & \ {Frames} \ & {Inference} \\\hline\hline
 {\bf query and assertion}     & & & \\
 Q1 simple answers & \checkmark &  \checkmark &  \checkmark \\
@@ -1133,11 +1133,9 @@ SF4 long distance short answers & --- & --- & --- \\
 SF5 genre sensitive initiating SFs     & --- & \checkmark &  \checkmark \\
 D1 recognize and repair disfluencies  & \checkmark & \checkmark & \checkmark \\
 D2 keep disfluencies in context       & --- & --- & --- \\\hline
-\end{tabular}
-\end{center}\caption{Comparison of dialogue management approaches}
+\end{tabular}\caption{Comparison of dialogue management approaches}
 \label{table:ds}
-\end{figure} 
-
+\end{table}
 
 
 \bibliography{tal}
