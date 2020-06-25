@@ -645,15 +645,24 @@ Then, a probable answer would be a /clarification request/, namely
 
 To detect situations where a clarification request can be issued, we can use the following rule:
 #+BEGIN_code
-(a : Type) -> (x : a) ?-> (p : Prop)
-   -> QUD (Q x p) -> p -* CR
+[a : Type;
+ x : a; 
+ p : Prop;
+ havePAsQud :: QUD (Q x p);
+ proof :: p] ?-> -* CR
 #+END_code
 (We leave the exact form of the CR abstract for now and come back to it below)
 
 The conditions are similar to that of the answering rule. The
-principal difference is the use of the |?->| operator, which conditions
-on a metavariable which remains not (fully) grounded, or which can be
-unified to several ground terms --- the opposite of the |!->| operator.
+principal difference is the use of the |?->| operator, which takes as
+left operand the specification of a request and test for it to have a
+non-unique solution or it be not (fully) grounded. Essentially this
+does the the opposite of the |!->| operator.  However, because the
+components of the query are indeterminate, they cannot be determined,
+and the state update cannot depend on them. Here we use the record
+syntax to bound their scope. Additionally, note the use of the single
+colon (|:|) for metavariables and the double colon for
+information-state hypotheses (|::|).
 
 We can then turn our attention to the formulation of this clarification request.
 It is itself a question, and has a tricky representation:
