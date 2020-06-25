@@ -158,32 +158,7 @@ view we present the information available to each participant of the
 dialogue (either a human or an artificial agent) in a rich information
 state. Being rich entails that the information state contains a
 hierarchy of facts, including the ones that are thought to be shared
-and the ones that have not been yet publicised. As an
-illustration[ref:eq:isu-before-update] is a rough exemplification the
-information state of a very simple dialogue system, in Cooper's TTR
-notation.
-#
-\begin{equation}\label{eq:isu-before-update}
-\def\arraystretch{1.5}
-\setlength{\arraycolsep}{1pt}
-\ttr{
-\rf{private}{\ttr{\rf{tt_1}{TT(Bus52,0,Sko,Got)}
-                  \rf{tt_2}{TT(Bus18,1,Joh,Got)}}}
-\rf{public}{\ttr{\rf{LU}{Ask(U,Question(\lambda t.TT(b,t,d,Got)))}
-                 \rf{QUD}{set()}}}}
-\end{equation}
-
-What is expressed here is that the dialogue system was just asked (in the
-field |public.LU| -- latest utterance) by a user ($U$) a question like
-"When is there a bus from Gotaplatsen" (the underspecified[fn::TBD
-more about underspecification] variables $b$, $t$ and $d$ correspond
-to bus number, time and destination respectively). This information is
-/public/[fn::Later on, following cite:ginzburg2012interactive we will
-denote the public part of the information state as the Dialogue
-Gameboard (DGB).(TODO: is that true?)] and available to a user as well. What is private is
-the knowledge of the timetable ($TT$) available to the system and not
-yet made public, hence it is stored in the /private/ part of the
-information state.
+and the ones that have not been yet publicised.
 
 Let’s now consider the /update/, another essential component of ISU. In
 this case, we will rely on a set of rules, that will govern the
@@ -198,25 +173,15 @@ information state.
 if public.LU = Ask(U, Question(x)):
     push Question(x) into public.QUD
 #+END_code
-The updated state will look as follows:
-\begin{equation}
-\def\arraystretch{1.5}
-\setlength{\arraycolsep}{1pt}
-\ttr{
-\rf{private}{\ttr{\rf{tt_1}{TT(Bus52,0,Sko,Got)}
-                  \rf{tt_2}{TT(Bus18,1,Joh,Got)}}}
-\rf{public}{\ttr{\rf{LU}{Ask(U,Question(\lambda t.TT(b,t,d,Got)))}
-              \rf{QUD}{set(Question(\lambda t.TT(b,t,d,Got))}}}}
-\end{equation}
 
-The main benefit of using a rich representation of the information state
-with underspecified components is to be able to address a wide range
-of clarifications from both parties. This is especially beneficial in
-the case of automatic speech recognition or natural language understanding
-errors. But even putting such errors aside, we can also consider
-topically relevant follow-up questions by the system, e.g. "What
-bus?", or contributions when the user provides more information than
-they were asked, e.g. "Bus 18 to Skogome".
+The main benefit of using a rich representation of the information
+state with underspecified components is to be able to address a wide
+range of clarifications from both parties. This is especially
+beneficial in the case of automatic speech recognition or natural
+language understanding errors. But even putting such errors aside, we
+can also consider topically relevant follow-up questions by the
+system, e.g. "What bus?", or contributions when the user provides more
+information than they were asked, e.g. "Bus 18 to Skogome".
  
 *** KoS
 KoS (not an acronym but loosely corresponds to Conversation Oriented
@@ -433,8 +398,8 @@ always possible to receive a biasing answer ("I don't know") or no
 answer whatsoever --- but we leave this out of scope of our analysis.
 
 Yet even more complications are possible, by introduction of cases
-such as rhethorical and attitudinal questions ("Can you believe who I
-met yesterday?")[fn::TODO JG: better "do you know who"...], which are also out of scope.
+such as rhethorical and attitudinal questions ("Do you know who I met
+yesterday?"), which are also out of scope.
 
 
 \begin{sidewaystable} %[htbp]
@@ -544,15 +509,15 @@ not resolve the question "where does John live". That is, if
 resolving.
 
 Assume a two-place predicate |Eat| with agent as first argument and
-object as second argument. The phrase "John eats an apple" could then
-be represented as |Eat(John,Apple)|. According to our theory, one can
+object as second argument. The phrase "John eats Mars" could then
+be represented as |Eat(John,Mars)|. According to our theory, one can
 then represent the phrase "John eats" as |Eat(John,x)|, with |x| being
 a metavariable.
 
 Assume now a system with the state:
 
 #+BEGIN_code
-Eat(John,Apple)
+Eat(John,Mars)
 #+END_code
 
 Then the question "What does John eat", represented as |(Q Food x
@@ -593,7 +558,7 @@ contain any metavariable) and /unique/ by matching the rule. That is,
 it won't match in the previous example, because the answer is not
 grounded (it contains unknowns). Additionally, it won't match if the
 state of the system is composed of the two
-hypotheses |Eat(John,Apple)| and |Eat(John,Orange)|: the answer is not
+hypotheses |Eat(John,Mars)| and |Eat(John,Twix)|: the answer is not
 unique.
 
 Thus, the rule for answering can be written:
@@ -606,20 +571,20 @@ produceAnswer : (a : Type) -> (x : a) !-> (p : Prop)
 For example, if we have the following state:
 #+BEGIN_code
 QUD (Q Food x (Eat(John,x)))
-Eat(John,Apple)
+Eat(John,Mars)
 #+END_code
 
 The system can unify |QUD (Q Food x (Eat(John,x)))| and |QUD (Q a x
 p)|, yielding |a = Food|, |p=Eat(John,x)|. Then, we search for a
 proof |p|, and to do this, it can unify |Eat(John,x)|
-with |Eat(John,Apple)|, giving finally the answer |x=Apple| and
+with |Eat(John,Mars)|, giving finally the answer |x=Mars| and
 therefore the state becomes:
 #+BEGIN_code
-Eat(John,Apple)
-ShortAnswer Apple Food
+Eat(John,Mars)
+ShortAnswer Mars Food
 #+END_code
 
-Note that the fact |Eat(John,Apple)| is found both as hypothesis and a
+Note that the fact |Eat(John,Mars)| is found both as hypothesis and a
 conclusion of |produceAnswer|, and therefore it is remains in the
 information state.
 
@@ -628,25 +593,23 @@ information state.
 In this section we discuss an alternative kind of answering, which is
 to issue clarification requests.  To see how they can occur, consider
 again the question "what does john eat", in the same information state
-as above.
-A proper answer could be "An apple and an orange" or "An apple or an
-orange". However we consider here a third possibility: instead of
+as above.  A proper answer could be "Mars and Twix" or "Mars or
+Twix". However we consider here a third possibility: instead of
 answering, the agent can issue a clarification request (TODO: is this
-reasonable? When ... etc.) [fn:VM: maybe more intuitive example, e.g. with ’like’? like(john,bananas) like(john,dogs)]
-
+reasonable? When ... etc.)
 
 To illustrate, consider the question "What is being eaten?"
 represented as |Q x (Eat(y,x))|,  with the state
 #+BEGIN_code
-Eat(John,Apple)
-Eat(Mary,Apple)
+Eat(John,Mars)
+Eat(Mary,Mars)
 #+END_code
-Then the agent can unambguously answer "An apple": even if we do not
-know who we're talking about, it does not matter: only an apple is
+Then the agent can unambguously answer "Mars": even if we do not
+know who we're talking about, it does not matter: only Mars is
 being eaten. However, If the state is
 #+BEGIN_code
-Eat(John,Apple)
-Eat(Mary,Orange)
+Eat(John,Mars)
+Eat(Mary,Twix)
 #+END_code
 Then, a probable answer would be a /clarification request/, namely
 "By whom?".
@@ -687,16 +650,16 @@ will be bound to a ground term, and, in turn, the fact |z=y| will
 ensure that |y| becomes ground. 
 
 #+BEGIN_code
-Eat(John,Apple)
-Eat(Mary,Orange)
+Eat(John,Mars)
+Eat(Mary,Twix)
 ori  ::  QUD (Q Food x (Eat(y,x)))
 cr   ::  QUD (Q Person z (z=y))
 a    ::  ShortAnswer Mary Person
 #+END_code
 after applying |processShort|:
 #+BEGIN_code
-Eat(John,Apple)
-Eat(Mary,Orange)
+Eat(John,Mars)
+Eat(Mary,Twix)
 ori :: QUD (Q Food x (Eat(y,x)))
 r ::  Mary=y
 #+END_code
@@ -716,7 +679,7 @@ depending on the context.
 
 The above suposes a clear-cut distinction: if an answer is unique, it
 is given; otherwise a clarification request is issued. However,
-answers could simply be exhaustive ("An apple or an orange").  If the
+answers could simply be exhaustive ("Mars or Twix").  If the
 original questioners are unhappy with the ambiguity, they are free to
 issue more precise questions. In practice, one can easily imagine an
 ambiguity threshold after which clarification requests are
