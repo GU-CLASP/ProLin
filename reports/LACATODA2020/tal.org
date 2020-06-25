@@ -1106,6 +1106,10 @@ given rule. Cooper's TTR has a special "assymetric merge" operator for
 this purpose, but it is a less-studied \textit{ad-hoc} addition to
 type-theory.
 
+Furthermore, as it stands, KoS is lacking implementations, which, as
+we see it, are largely due to the semantic gap between its aims
+(information-state dialogue management) and its formalism (TTR).
+
 ** GoDIS
   - Updated and more natural version of GoDIS, that also uses Prolog,
     and therefore might have problems with deleting the information.
