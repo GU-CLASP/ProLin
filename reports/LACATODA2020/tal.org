@@ -1080,11 +1080,12 @@ TT B18 T15   Gotaplatsen     Johanneberg
 Therefore the question can be resolved and the resolving short answer
 can be put on the |Agenda|.
 #+BEGIN_code
-Answered (Question USER Time T15 (TT B18 T15 Gotaplatsen Johanneberg))
+Answered (Question  USER Time T15
+                    (TT B18 T15 Gotaplatsen Johanneberg))
 QUD Nil
 HasTurn SYSTEM
 Agenda (ShortAnswer Time T15 SYSTEM USER)
-Moves  [ ... ]  -- same as above
+Moves  […] -- same as above
 #+END_code
 *** Clarifying side sequence
 We can extend our minimal timetable example with another entry,
@@ -1101,25 +1102,27 @@ for clarification can be formulated as follows:
 specificCR :
   (t : Time) -> (n : Bus) -> (s d : Location) ->
   (qs : List Question) ->
-  CR -o
-  QUD (Cons (Question USER Time t  (TT n t s d))  qs)   -o
-  [_ :: QUD (Cons (Question SYSTEM Bus n (WantBus n)) 
-                  (Cons (Question USER Time t (TT n t s d)) qs));
-   _ :: Agenda (Ask (Question SYSTEM Bus n (WantBus n)) SYSTEM USER) ];
+  CR ⊸
+  QUD (Cons (Question USER Time t  (TT n t s d))  qs)   ⊸
+  [  _ :: QUD (Cons  (Question SYSTEM Bus n (WantBus n)) 
+                   (Cons (Question USER Time t (TT n t s d)) qs));
+     _ :: Agenda (Ask  (Question SYSTEM Bus n (WantBus n))
+                     SYSTEM USER) ];
 #+END_code
 
 As a result of applying it, the state becomes:
 #+BEGIN_code
 Agenda (Ask (Question SYSTEM Bus n0 (WantBus n0)) SYSTEM USER)
-QUD  [  Question SYSTEM Bus n0 (WantBus n0))
+QUD
+     [  Question SYSTEM Bus n0 (WantBus n0)
         Question USER Time t0 (TT n0 t0 Gotaplatsen d0) ]
 HasTurn SYSTEM  
-Moves [ ... ]  -- same as above
+Moves […]  -- same as above
 #+END_code
 
 Then, the system can utter the clarification request (|utterAndRemember| rule): 
 #+BEGIN_code
-QUD  [  Question SYSTEM Bus n0 (WantBus n0))
+QUD  [  Question SYSTEM Bus n0 (WantBus n0)
         Question USER Time t0 (TT n0 t0 Gotaplatsen d0) ]
 HasTurn SYSTEM  
 Moves  [  Ask (Question SYSTEM Bus n0 (WantBus n0)) SYSTEM USER
@@ -1136,9 +1139,9 @@ show the state after processing the short answer.
 QUD  [  Question USER Time t0 (TT B55 t0 Gotaplatsen d0) ]
 UserFact (WantBus B55)
 HasTurn SYSTEM
-Moves  [  (ShortAnswer Bus B55) USER SYSTEM
-          (Ask (Question SYSTEM Bus B55 (WantBus B55)) SYSTEM USER)
-          ...  ]
+Moves  [  ShortAnswer Bus B55) USER SYSTEM
+          Ask (Question SYSTEM Bus B55 (WantBus B55)) SYSTEM USER
+          …  ]
 #+END_code
 The reader can notice that the metavariable |n0| from the previous
 state is now unified with |B55| in the question under discussion,
@@ -1146,12 +1149,13 @@ therefore it now corresponds to one unique entry in the knowledge
 base. Hence, the answer can be issued (|produceAnswer|) rule.
 
 #+BEGIN_code
-Answered (Question USER Time T20 (TT B55 T20 Gotaplatsen SciencePark))
+Answered (Question  USER Time T20
+                    (TT B55 T20 Gotaplatsen SciencePark))
 QUD Nil
 Agenda (ShortAnswer Time T20 SYSTEM USER)
 UserFact (WantBus B55)
 HasTurn SYSTEM
-Moves [ ... ]  -- same as above
+Moves […]  -- same as above
 #+END_code
 
 
