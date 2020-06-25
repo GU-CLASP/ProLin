@@ -1152,11 +1152,10 @@ Moves [ ... ]  -- same as above
 * Related work
 
 ** purver on CRs
-** Ginzburg 2012
 
 ** KoS
 
-One of our main sources of inspiration is Ginzburg's KoS. However we
+One of our main sources of inspiration is Ginzburg's KoS cite:ginzburg2012interactive. However we
 recast it in the framework of proof search, and linear logic. We have
 argued that this has many advantages. First, it affords the use of
 metavariables to represent uncertaintly, which is absent from TTR.
