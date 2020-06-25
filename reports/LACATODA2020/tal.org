@@ -940,8 +940,8 @@ If the user asserts something that relates to the top |QUD|, then the |QUD| can 
 #+BEGIN_code
 processAssert : (a : Type) -> (x : a) ->  (p : Prop) -> 
   (qs : List Question) -> (dp dp1 : DP) ->
-  Pending (Assert p dp1 dp)          -o 
-  QUD (Cons (Question dp a x p) qs)  -o
+  Pending (Assert p dp1 dp)          ⊸ 
+  QUD (Cons (Question dp a x p) qs)  ⊸
   [  _ :: UserFact p;
      _ :: QUD qs];
 #+END_code
@@ -950,8 +950,8 @@ Short answers are processed in a very similar way to the assertions:
 #+BEGIN_code
 processShort : (a : Type) -> (x : a) ->  (p : Prop) -> 
   (qs : List Question) -> (dp dp1 : DP) ->
-  Pending (ShortAnswer a x dp1 dp)   -o 
-  QUD (Cons (Question dp a x p) qs)  -o
+  Pending (ShortAnswer a x dp1 dp)   ⊸ 
+  QUD (Cons (Question dp a x p) qs)  ⊸
   [  _ :: UserFact p;
      _ :: QUD qs];
 #+END_code
@@ -964,10 +964,10 @@ to initiate a clarifying side sequence (|produceCR|).
 #+BEGIN_code
 produceAnswer :
    (a : Type)            ->
-   (x : a)              !->
+   (x : a)               !->
    (p : Prop)            ->
    (qs : List Question)  ->	
-   QUD (Cons (Question USER a x p) qs)  -o
+   QUD (Cons (Question USER a x p) qs)  ⊸
    p  -*
    [  _ :: Agenda (ShortAnswer a x SYSTEM USER);
       _ :: QUD qs;
@@ -989,7 +989,7 @@ of the spectrum of possible options is wide. We will provide an example of
 domain-specific |CR| in the section ref:sec:example below.
 
 *** Note on turn taking
-- how can be turned into something more advanced
+- TODO: how can be turned into something more advanced
 ** Example label:sec:example
 Now we turn into how the simple of system of rules above can handle the following exchange:
 #+begin_quote
@@ -1009,10 +1009,10 @@ TT B55 T20   Gotaplatsen     SciencePark
 They are added to the initial domain-independent context
 outlined above. We also assume that user has the turn at the start. 
 #+BEGIN_code
-QUD Nil
-Agenda Nil
-Moves Nil
-HasTurn USER
+QUD      Nil
+Agenda   Nil
+HasTurn  USER
+Moves    Nil
 #+END_code
 
 The when the systems "hears" the greeting it can be integrated into
@@ -1020,19 +1020,20 @@ the state using |hearAndRemember| rule, therefore system updates its
 state accordingly:
 #+BEGIN_code
 -- Applied: hearAndRemember
-QUD Nil
-Agenda Nil
-Moves (Cons (Greet USER SYSTEM))
-HasTurn SYSTEM
+QUD      Nil
+Agenda   Nil
+HasTurn  SYSTEM
+Moves    [ Greet USER SYSTEM ]
 #+END_code
 
 In this context the system can issue a countergreeting by firing
 the |counterGreeting| rule:
 
 #+BEGIN_code
-Agenda (CounterGreet SYSTEM USER)
-HasTurn SYSTEM
-Moves [  Greet USER SYSTEM  ]
+-- Applied: counterGreeting
+Agenda   (CounterGreet SYSTEM USER)
+HasTurn  SYSTEM
+Moves    [ Greet USER SYSTEM ]
 #+END_code
 
 Everything which is on the agenda can be uttered
@@ -1041,9 +1042,11 @@ turn. System also hands the turn over to the user. Therefore, the
 state becomes:
 
 #+BEGIN_code
+-- Applied: utterAndRemember
 HasTurn USER
-Moves [ CounterGreet SYSTEM USER   
-        Greet USER SYSTEM         ]
+Moves
+[  CounterGreet  SYSTEM USER   
+   Greet         USER SYSTEM         ]
 #+END_code
 
 Now the systems hears the question (|Ask| move: |(Ask (Question t (TT
@@ -1054,14 +1057,16 @@ because the move is |Ask|, systems sets its QUD to the question that
 the move contains with the |pushQUD| rule. 
 
 #+BEGIN_code
+-- Applied: hearAndremember; pushQUD
 QUD [  Question USER Time t0 (TT n0 t0 Gotaplatsen d0)  ]
 HasTurn SYSTEM
-Moves [  Ask (Question USER Time t0 (TT n0 t0 Gotaplatsen d0)) USER SYSTEM
-         CounterGreet SYSTEM USER
-         Greet USER SYSTEM  ]
+Moves
+[  Ask (Question USER Time t0 (TT n0 t0 Gotaplatsen d0)) USER SYSTEM
+   CounterGreet  SYSTEM USER
+   Greet         USER SYSTEM  ]
 #+END_code
 
-Now, dependent on the state of the knowledge base, the system will
+Now, depending on the state of the knowledge base, the system will
 have two options: i) produce the answer straight away, or ii)
 integrate a clarifying side sequence.
 *** Straight answer
