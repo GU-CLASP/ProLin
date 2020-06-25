@@ -79,10 +79,10 @@ theory/. Our aim is to closely integrate dialogue systems with work in
 theoretical semantics and pragmatics of dialogue. This field has
 provided accounts for linguistic phenomena intrinsic to dialogue such
 as non-sentential utterances
-cite:schlangen-diss,flg08,ginzburg2012interactive, clarification
+cite:schlangen-diss,fgl07,ginzburg2012interactive, clarification
 requests cite:purver-rlc06,ginzburg2012interactive and self-repair
 cite:gfs-sp,houghpurver-disfl, where the resolution is intuitively
-tied to the coherence of what is being said.
+tied to the coherence of what is being said. 
 
 
 To this end, a formal and in particular a logical representation is
@@ -91,26 +91,28 @@ participant states and transitions in a unified logical framework.
 
 # Identify a gap.
 
-Even though this field is promising, we belive that it is crucial to
-use formal tools which are most appropriate for the task: one should
-be able to express the rules of various genres of dialog in a concise way,
-free, to any possible extent, of irrelevant technical details.
+Even though the progress in bridging dialogue management and
+theoretical research of dialogue is promising, we believe that it is
+crucial to use formal tools which are most appropriate for the task:
+one should be able to express the rules of various genres of dialog in
+a concise way, free, to any possible extent, of irrelevant technical
+details.
 
-In the view of citet:dixon2009plans , this is best done by
+In the view of citet:dixon2009plans this is best done by
 representing the information-state of the agents as updatable sets of
 propositions. Subsets of propositions in the information state can be
 treated independently, and, therefore, a suitable and flexible way to
 represent updates is as propositions in linear logic. We adopt this
 view here, and further argue for it in the body of the paper.
 
-We further extend this framework to deal with unclarity and
-ambiguity. Indeed, asking a question is typically not done in one
-utterance which leaves nothing to interpretation. Rather, an initial
-short and possbily ambiguous question is posed. If the answerer deems
-the question unclear, a dialogue will ensue before the question is
-finally resolved. In technical terms we propose to deal with
-question-answering and clarification requests in the context of dialog
-management.
+We further extend citet:dixon2009plans framework to deal with
+unclarity and ambiguity. Indeed, asking a question is typically not
+done in one utterance which leaves nothing to interpretation. Rather,
+an initial short and possbily ambiguous question is posed. If the
+answerer deems the question unclear, a dialogue will ensue before the
+question is finally resolved. In technical terms we propose to deal
+with question-answering and clarification requests in the context of
+dialog management.
 
 # How we plan to fill this gap?
 
@@ -139,6 +141,8 @@ framework:
 
 TODO: add forward references above and outline of the rest below.
 
+TODO: briefly mention ISU
+
 * Background
 
 ** Dialogue management
@@ -153,7 +157,8 @@ state. Being rich entails that the information state contains a
 hierarchy of facts, including the ones that are thought to be shared
 and the ones that have not been yet publicised. As an
 illustration[ref:eq:isu-before-update] is a rough exemplification the
-information state of a dialogue system, in Cooper's TTR notation.
+information state of a very simple dialogue system, in Cooper's TTR
+notation.
 #
 \begin{equation}\label{eq:isu-before-update}
 \def\arraystretch{1.5}
@@ -223,16 +228,16 @@ cite:fgl07,ginzburg2012interactive.[fn::TBD DS/TTR, incrementality?]
 
 In KoS (and other dynamic approaches to meaning), language is compared
 to a game, containing players (interlocutors), goals and rules. KoS
-represents language interaction by a dynamically
-changing context. The meaning of an utterance is then how it changes the
-context. Compared to most approaches [fn::TBD refs], which represent a
-single context for both dialogue participants), KoS keeps a separate
-representation for each participant, using the /Dialogue Game Board/
-(DGB). Thus, the information states of the participants
-comprise a private part and the dialogue gameboard that represents
-information arising from publicized interactions. The DGB tracks, at the
-very least, shared assumptions/visual space, moves (= utterances, form
-and content), and questions under discussion.
+represents language interaction by a dynamically changing context. The
+meaning of an utterance is then how it changes the context. Compared
+to most approaches [fn::TBD refs], which represent a single context
+for both dialogue participants), KoS keeps separate representations
+for each participant, using the /Dialogue Game Board/ (DGB). Thus, the
+information states of the participants comprise a private part and the
+dialogue gameboard that represents information arising from publicized
+interactions. The DGB tracks, at the very least, shared
+assumptions/visual space, moves (= utterances, form and content), and
+questions under discussion.
 
 KoS is based on Cooper's formalism, Type Theory with Records (TTR). There
 has been a wide range of work on top of this formalism, including the
@@ -336,10 +341,9 @@ In an actual dialogue, the scenario is therefore suspended between
 every interaction, and the state represents the current mental state
 of the agent which is modelled.[fn::possibly remove this sentence]
 
-Therefore, in our implementation, the information state is represented
-by a set we treat the information state as a multiset [?] of /linear
-hypotheses/ that can be queried. Because they are linear, these
-hypotheses can also be removed from the state.
+Therefore, in our implementation, we treat the information state as a
+multiset [?] of /linear hypotheses/ that can be queried. Because they
+are linear, these hypotheses can also be removed from the state.
 
 TODO: preview example.
 
@@ -421,12 +425,12 @@ live?" as in the context "Where were you born?".)
 Additionally, in the framework of a full dialogue management system,
 the |AmbiguousNo| case should be treated as unresolving (the question
 effectively remains unanswered). However, in such a framework, it is
-always possible to recieve a biasing answer ("I don't know") or no
+always possible to receive a biasing answer ("I don't know") or no
 answer whatsoever --- but we leave this out of scope of our analysis.
 
 Yet even more complications are possible, by introduction of cases
 such as rhethorical and attitudinal questions ("Can you believe who I
-met yesterday?"), which are also out of scope.
+met yesterday?")[fn::TODO JG: better "do you know who"...], which are also out of scope.
 
 
 \begin{sidewaystable} %[htbp]
@@ -507,7 +511,7 @@ processAssert  :  ∀ x a p. Assert p ⊸
                   QUD (Q x a p) ⊸ p
 #+END_code
 
-That is, (1) if |p| was asserted , (2) the proposition |q| is part of
+That is, (1) if |p| was asserted , (2) the proposition |p| is part of
 a question under discussion, and (3) p can be unified with q, then the
 assertion resolves the question. Additionally, the metavariable |x| is
 grounded to a concrete value by virtue of unification of |p|
@@ -527,7 +531,7 @@ More on ellipsis?
 - "he doesn't"
 - "he does"
 
-** Notion of unique and concrete answers
+** Notion of unique and concrete answers label:sec:unique-concrete
 
 However, one should consider the question resolved only if the answer
 is "unique". For example, the assertion "John lives somewhere" does
@@ -615,7 +619,7 @@ Note that the fact |Eat(John,Apple)| is found both as hypothesis and a
 conclusion of |produceAnswer|, and therefore it is remains in the
 information state.
 
-** Clarification requests and follow-up questions
+** Clarification requests and follow-up questions label:sec:cr
 
 In this section we discuss an alternative kind of answering, which is
 to issue clarification requests.  To see how they can occur, consider
@@ -754,8 +758,7 @@ integrate many arguments and use metavariables.
 *** Clarification via adding extra arguments: polar question
 Consider now the polar question "Does John live in Paris?". The
 questionee may decide that there is some ambiguity about /which/ Paris
-one is talking about --- after all there are several places called
-like this. To be able to model this, the |Live| relation needs to be
+one is talking about --- after all there are several places with this name. To be able to model this, the |Live| relation needs to be
 generalised to be a 3-place predicate, where the country is specified.
 
 We can then assume that the question can be encoded for simplicity
@@ -935,7 +938,7 @@ pushQUD :
    QUD (Cons q qs)
 #+END_code
 *** Integrating the answers
-If the user asserts something that relates to the top |QUD|, then the |QUD| can be resolved and therefore removed from the stack. The corresponding proposition |p| is saved as a |UserFact|[fn::For the current purposes we only remove the top QUD, but in a more general case we can implement the policy that can potentially resolve any QUD from the stack.]
+If the user asserts something that relates to the top |QUD|, then the |QUD| can be resolved and therefore removed from the stack. The corresponding proposition |p| is saved as a |UserFact|[fn::For the current purposes we only remove the top QUD, but in a more general case we can implement the policy that can potentially resolve any QUD from the stack.]. This rules extend the abstract rules that were introduced in section ref:sec:cr.
 #+BEGIN_code
 processAssert : (a : Type) -> (x : a) ->  (p : Prop) -> 
   (qs : List Question) -> (dp dp1 : DP) ->
@@ -956,7 +959,7 @@ processShort : (a : Type) -> (x : a) ->  (p : Prop) ->
 #+END_code
 
 *** Questions and clarifications
-Just as we described in ref:sec:, we use uniqueness check to determine
+Just as we described in ref:sec:unique-concrete, we use uniqueness check to determine
 whether system can resolve the question (|produceAnswer|) or it needs
 to initiate a clarifying side sequence (|produceCR|).
 
