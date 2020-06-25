@@ -139,12 +139,13 @@ framework:
 3. several examples which use the above to construct potential
    applications of the system.
 
-TODO: add forward references above and outline of the rest below.
+The rest of the paper is structured as follows.
+TODO: outline of the rest below.
 
 TODO: briefly mention ISU
 
 * Background
-
+label:sec:background
 ** Dialogue management
 
 *** Information state update approach
@@ -365,6 +366,7 @@ alone.
 
 
 * Questions and clarifications
+label:sec:qa&cr
 ** Question-answering with metavariables
 In prolog-like languages, metavariables play the role of unknowns,
 whose value can become fixed for a goal to be reached.
@@ -823,6 +825,7 @@ further point the metavariable can be instanciated to some other
 value. 
 
 * Kos-inspired dialogue management with linear logic
+label:sec:dm
 - image with basic SDS architecture
 
 - Additionally, the use of metavariables is new.
@@ -1160,9 +1163,11 @@ HasTurn SYSTEM
 Moves […]  -- same as above
 #+END_code
 
+label:sec:kos
 
 * Related work
 
+label:sec:related
 ** purver on CRs
 
 ** KoS
@@ -1264,6 +1269,7 @@ D2 keep disfluencies in context       & --- & --- & --- \\\hline
 
 \bibliography{tal}
 
+label:sec:discussion
 * COMMENT references
 bibliography:tal.bib
 
