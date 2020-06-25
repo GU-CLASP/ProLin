@@ -363,7 +363,7 @@ etc. (Table ref:tbl:qa-ex, last two rows).  In this instance |A = Prop
 
 # NEGATIVE QUESTIONS
 One complication are polar questions phrased in the negative
-(cite:cooper2012negative); for example: "Doesn't John like Bananas?".
+cite:cooper2012negative; for example: "Doesn't John like Bananas?".
 
 In this instance, a simple a simple "no" answer can be ambiguous, and
 a possible model would be a multi-valued kind of answer ("yes he does
