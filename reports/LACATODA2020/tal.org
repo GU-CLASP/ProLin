@@ -1113,8 +1113,10 @@ of implementations is largely due to the semantic gap between its aims
 
 citet:larsson2000godis proposed the use of Prolog (and hence, proof
 search), as a dialogue management framework. However, the lack of
-linear hypotheses means that destructive information-state updates are sometimes
-awkward to represent.
+linear hypotheses means that destructive information-state updates are
+sometimes awkward to represent. Besides, they do not consider the use
+of metavariables to represent uncertainty --- even though Prolog is in
+principle has the capacity to do it.
 
 ** Linear logic for dialogue management
 
