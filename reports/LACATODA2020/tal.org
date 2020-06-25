@@ -178,18 +178,18 @@ information than they were asked, e.g. "Bus 18 to Skogome".
 KoS (not an acronym but loosely corresponds to Conversation Oriented
 Semantics) cite:ginzburg2012interactive provides one of the most
 detailed theoretical treatments of domain-general conversational
-relevance, especially for query responses---see the work of citet:purver-rlc06 on
-Clarification Requests, and cite:lupkowski2017query for a general
-account---and this ties into the KoS treatment of non sentential
-utterances, again a domain crucial for naturalistic dialogue systems
-and where KoS has among the most detailed analyses
-cite:fgl07,ginzburg2012interactive.[fn::TBD DS/TTR, incrementality?]
+relevance, especially for query responses---see the work of
+citet:purver-rlc06 on Clarification Requests, and
+cite:lupkowski2017query for a general account---and this ties into the
+KoS treatment of non sentential utterances, again a domain crucial for
+naturalistic dialogue systems and where KoS has among the most
+detailed analyses cite:fgl07,ginzburg2012interactive.
 
 In KoS (and other dynamic approaches to meaning), language is compared
 to a game, containing players (interlocutors), goals and rules. KoS
 represents language interaction by a dynamically changing context. The
 meaning of an utterance is then how it changes the context. Compared
-to most approaches [fn::TBD refs], which represent a single context
+to most approaches [fn::TODO refs], which represent a single context
 for both dialogue participants), KoS keeps separate representations
 for each participant, using the /Dialogue Game Board/ (DGB). Thus, the
 information states of the participants comprise a private part and the
@@ -482,14 +482,7 @@ unification).
 
 Note that, in both cases (|processAssert| and |processShort|), the
 information state is updated with the proposition posed in the
-question. [fn:: should we have "Answered p" here?]
-
-*** A bit more on polar questions
-- Treatment of "no" (explain)
-
-More on ellipsis?
-- "he doesn't"
-- "he does"
+question. 
 
 ** Notion of unique and concrete answers label:sec:unique-concrete
 
@@ -763,7 +756,7 @@ Not (Country France Y)
 Because John lives in |X| but not in |Y| the question is
 ambiguous. One way to lift the ambiguity is raise the clarification
 request as above. Here it can be phrased as a polar question[fn::Here
-we use the simpler version of interpereting polar questions.]
+we use the simpler version of the treatment of polar questions.]
 again: |Q Bool (\x. if x then Country France y else Not (Country
 France y))|
 
@@ -896,7 +889,13 @@ pushQUD :
    QUD (Cons q qs)
 #+END_code
 *** Integrating the answers
-If the user asserts something that relates to the top |QUD|, then the |QUD| can be resolved and therefore removed from the stack. The corresponding proposition |p| is saved as a |UserFact|[fn::For the current purposes we only remove the top QUD, but in a more general case we can implement the policy that can potentially resolve any QUD from the stack.]. This rules extend the abstract rules that were introduced in section ref:sec:cr.
+If the user asserts something that relates to the top |QUD|, then
+the |QUD| can be resolved and therefore removed from the stack. The
+corresponding proposition |p| is saved as a |UserFact|[fn::For the
+current purposes we only remove the top QUD, but in a more general
+case we can implement the policy that can potentially resolve any QUD
+from the stack.]. This rules extend the abstract rules that were
+introduced in section ref:sec:cr.
 #+BEGIN_code
 processAssert : (a : Type) -> (x : a) ->  (p : Prop) -> 
   (qs : List Question) -> (dp dp1 : DP) ->
@@ -1167,16 +1166,18 @@ special-purpose operators | X !-> Y | and | X ?-> Y | to distinguish
 the presence or the absence of ambiguity.
 
 * Evaluation/Discussion/Future work
-- discussing the corrections
-- discuss the clarification requests in a more specific way: we can always redefine the referent
-- in dialogue systems meta-variables are always subject to clarification and correction (substitution)
+- discussing the corrections (limitation)
+- discuss the clarification requests in a more specific way: we can
+  always redefine the referent
+- in dialogue systems meta-variables are always subject to
+  clarification and correction (substitution)
 - dependencies between questions (who killed bill -> who was around?)
 
 - clarification could be narrowing from general types to subtypes.
 
 - how types/proofs can be implemented
 
-Table~\ref{table:ds} originates from cite:ginzburg-nlphandbook, who
+Table ref:table:ds originates from cite:ginzburg-nlphandbook, who
 proposed a series of benchmarks for comparing different approaches to
 developing dialogue systems (see section xxx of that paper).\footnote{
 The approaches compared were FSMs, Frames, Inference-based, and the
