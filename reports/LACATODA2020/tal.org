@@ -293,7 +293,7 @@ proof-search as a means to represent possible moves in dialog seen as
 a game. (TODO: cite GoDIS)
 
 
-*** Linear logic
+** Linear logic as a Dialog Management Framework
 Typically, and in particular in the archetypal logic programming
 language prolog (TODO citation), axioms and rules are expressed within the general
 framework of first order logic. However, several authors
@@ -358,7 +358,7 @@ even after being used).
 
 Each such rule manipulates a part of the information state (captured
 by its premisses) and leaves everything else in the state
-alone. 
+alone.
 
 *** Metavariables and unification
 
@@ -377,29 +377,6 @@ further point the metavariable can be instanciated to some other
 value. In this paper we explore the potential of using metavariables
 in the context of dialog management, and in particular the
 representation of question/answering exchanges.
-
-** TODO COMMENT Extras
-
-As an example, we can show how the rule for /QUD-incrementation/ from
-cite:ginzburg2012interactive can be formulated in this terms. Here
-we consider the dialogue between interlocutors /A/ and /B/, when /A/ asks
-/B/[fn::Here we omit addressees as the conversation is only two-party.]
-a question /Q/. The question /Q/ just have been posed and therefore has
-appeared on the DGBs of both /A/ and /B/ as the latest ~Ask~ move
-(~LatestMove~).
-#+BEGIN_SRC sh :exports code
--- context
-_ :: DGB A (LatestMove (Ask A Q));
-_ :: DGB B (LatestMove (Ask A Q));
-#+END_SRC
-
-Now we can define our update rule that act on the contextual resources:
-#+BEGIN_SRC
-_ : (q : Question) -> (x y : User) ->
-    DGB x (LatestMove (Ask y q)) ⊸ DGB x (QUD q);
-#+END_SRC
-Here, for any interlocutor, her ~LatestMove~ asking a question is
-consumed and her ~QUD~ is updated with the question from the ~Ask~ move.
 
 
 * Questions and clarifications
@@ -738,8 +715,9 @@ list, say, 20 different kinds of food, it is easy to imagine that the
 answer won't be fully given. In fact, this question can be the topic
 of an experimental study.
 
-*** Context-dependent arguments
-TODO: flow sentence.
+
+*** Clarification via adding extra arguments
+# JP: can be removed because it's the same as next section.
 
 Consider the exchange:
 
@@ -770,7 +748,7 @@ above.
 In sum, in our model, to support clarification requests, a system must
 integrate many arguments and use metavariables.
 
-*** Clarification via adding extra arguments
+*** Clarification via adding extra arguments: polar question
 Consider now the polar question "Does John live in Paris?". The
 questionee may decide that there is some ambiguity about /which/ Paris
 one is talking about --- after all there are several places called
@@ -780,9 +758,6 @@ generalised to be a 3-place predicate, where the country is specified.
 We can then assume that the question can be encoded for simplicity
 as |\x. if x then (Live John Paris y) else Not (Live John Paris y)|.
 That is, the country is implicit and represented by a metavariable.
-
-***Ultimately this requires rampant polymorphism (a separate arg for country, county
-***district, etc Better to treat this as multiple reference
 
 If the system has the following facts:
 #+begin_code
@@ -796,14 +771,18 @@ formulation of the question and the context. In this case "Do you mean
 Paris, France?"  would be suitable.
 
 *** Clarification via adding named contextual parameters
+The above presentation (using a ternary predicate) is useful
+conceptually, but not ideal in practice: in the most general case one
+would end-up with predicates with lots of arguments, for example
+country, county, district, etc.
 
-The above presentation (using a ternary predicate) is perhaps not
-ideal. (Because the country is functionally dependent on the location,
-these two concepts should be linked directly together rather than
-involve the |Live| predicate.) Using an intermediary entity type for
-locations and binary predicates, one can represent the question "Does
-John live in Paris?" as follows: |\x. if x then (Live John y -> Name y
-Paris) else Not (Live John y -> Name y Paris) |
+However, there is a standard solution to the issue: because the
+country is functionally dependent on the location, these two concepts
+should be linked directly together rather than involve the |Live|
+predicate. Using an intermediary entity type for locations and binary
+predicates, one can represent the question "Does John live in Paris?"
+as follows: |\x. if x then (Live John y -> Name y Paris) else Not
+(Live John y -> Name y Paris) |
 
 Literally, "Does John live in a place called Paris?".
 
@@ -831,6 +810,8 @@ France y))|
 
 - Additionally, the use of metavariables is new.
 
+- Explain the structure of the rest of the section
+
 ** Domain-independent rules
 *** Interface with language understanding and generation
 Here we assume that the information that comes from a source which is
@@ -848,9 +829,10 @@ Assert        p  spkr  addr
 
 These moves can either be received as input or produced as outputs. If
 they are inputs, they come from the NLU component, and they enter the
-context with |Heard| predicate. For example, if one hears a greeting,
-the proposition |Heard (Greet S A)| is added to the context, without
-any rule being fired --- this is what we mean by an external source.
+context with |Heard : Move -> Prop| predicate. For example, if one
+hears a greeting, the proposition |Heard (Greet S A)| is added to the
+information state/context, without any rule being fired --- this is
+what we mean by an external source.
 
 
 If they are outputs, to be further used by the NLG component, some
@@ -1184,3 +1166,27 @@ introduction:
 
 evaluation:
 - notion of benchmarks, like GoDIS ticklist (fernandes&ginzubrg 2010)
+
+* COMMENT Attic
+
+As an example, we can show how the rule for /QUD-incrementation/ from
+cite:ginzburg2012interactive can be formulated in this terms. Here
+we consider the dialogue between interlocutors /A/ and /B/, when /A/ asks
+/B/[fn::Here we omit addressees as the conversation is only two-party.]
+a question /Q/. The question /Q/ just have been posed and therefore has
+appeared on the DGBs of both /A/ and /B/ as the latest ~Ask~ move
+(~LatestMove~).
+#+BEGIN_SRC sh :exports code
+-- context
+_ :: DGB A (LatestMove (Ask A Q));
+_ :: DGB B (LatestMove (Ask A Q));
+#+END_SRC
+
+Now we can define our update rule that act on the contextual resources:
+#+BEGIN_SRC
+_ : (q : Question) -> (x y : User) ->
+    DGB x (LatestMove (Ask y q)) ⊸ DGB x (QUD q);
+#+END_SRC
+Here, for any interlocutor, her ~LatestMove~ asking a question is
+consumed and her ~QUD~ is updated with the question from the ~Ask~ move.
+
