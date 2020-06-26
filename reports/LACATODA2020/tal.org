@@ -338,7 +338,7 @@ immutable facts (introduced by the unrestricted arrow).
 
 *** Transition rules
 
-In particular, we have set of immuable rules (they remain available
+In particular, we have set of immutable rules (they remain available
 even after being used).
 
 Each such rule manipulates a part of the information state (captured
