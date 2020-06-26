@@ -1290,6 +1290,9 @@ this sense our approach follows citet:lison2015hybrid, which is based
 on probabilistic rules, but in our case the structure of information
 state is rich and derived from the theoretical outlook on dialogue,
 and dialogue management has a core set of domain-independent rules.
+We can also imagine combining such ideas with probabilistic meaning
+for sentences
+cite:goodman_probabilistic_2015,bernardy_compositional_2018.
 
 TODO other limitations 
 TODO briefly describe the evaluation benchmarks
