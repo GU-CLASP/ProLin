@@ -34,6 +34,11 @@
 #+LATEX_HEADER: \newcommand{\mf}[3]{\mathrm{#1=#2} & : & \mathit{#3}\\}
 #+LATEX_HEADER: \newcommand{\type}[1]{$\mathit{#1}$}
 #+LATEX_HEADER: \newcommand{\jg}[1]{\noindent \textcolor{blue}{\textbf{\emph{[jg:  #1]}}}}
+#+LATEX_HEADER: \usepackage{tikz}
+#+LATEX_HEADER: \usetikzlibrary{shapes,arrows,positioning,fit}
+#+LATEX_HEADER: \tikzstyle{block} = [draw, rectangle, minimum height=3em, minimum width=3em]
+#+LATEX_HEADER: \tikzstyle{virtual} = [coordinate]
+#+LATEX_HEADER: \usepackage{wasysym}
 
 #+TITLE: Linear logic, metavariables and Q/A
 
@@ -798,11 +803,45 @@ value.
 
 * Kos-inspired dialogue management with linear logic
 label:sec:dm
-- image with basic SDS architecture
 
 - Additionally, the use of metavariables is new.
 
 - Explain the structure of the rest of the section
+
+Figure ref:fig:ds shows such a dialogue manager integrated into a spoken dialogue system.
+\begin{figure}
+\centering
+\begin{tikzpicture}[auto, node distance=2.5cm]
+
+    \node [block]                 (input)     {Knowledge Base};
+    \node [block, below of=input]   (tc)     {Type Checker};
+    \node [block, below of=tc] (appl)    {Rule application};
+    \node [block, below right of=appl] (eval)    {Evaluation};
+    \node [block, below left of=appl] (sub)    {Subtyping};
+    \node [virtual, below of=tc] (feedback)  {};
+    
+    \node [block, fit={(tc) (appl) (eval) (sub)}, align=left,
+           rounded corners, inner sep=8pt] (dm) {DM \\ $s : S$};
+           
+	\node at (6cm, -3cm) [block, rounded corners] (nlu) {NLU and ASR};
+    \node at (6cm, -6cm) [block, rounded corners] (nlg) {NLG and TTS};
+    \node at (9cm, -4.5cm) [inner sep=5pt, align=center] (user)
+    {\Huge\smiley\normalsize\\user};
+    % Connect nodes
+    \draw [->] (input) -- node {rules} (tc);
+    \draw [->] (tc) -- node {verified rules} (appl);
+    \draw [<->] (appl) -- node {} (sub);
+    \draw [<->] (appl) -- node {} (eval);
+    \draw [->] (nlu) -- node {user moves} (dm);
+    \draw [->] (dm) -- node {agent moves} (nlg);
+    \draw [->] (user) -- node {} (nlu);
+    \draw [<-] (user) -- node {} (nlg);
+    %\draw [->] (model) -- node [name=y] {$y$}(output);
+    %\draw [->] (y) |- (feedback);
+\end{tikzpicture}
+\caption{Architecture of a spoken dialogue system with a proof-theoretic dialogue manager.}
+\label{fig:ds}
+\end{figure}
 
 ** Domain-independent rules
 *** Interface with language understanding and generation
@@ -1305,6 +1344,11 @@ introduction:
 
 evaluation:
 - notion of benchmarks, like GoDIS ticklist (fernandes&ginzubrg 2010)
+
+** questions <2020-06-26 Fri>
+- how bools are unified with assertions
+- concrete answers - what are these?
+- should we have ∀ everywhere?
 
 * COMMENT Attic
 
