@@ -473,8 +473,8 @@ to a question |(A : Type; P : A -> Prop)| can be of either of the two following 
 Therefore, one way to process a short answer is by the |processShort| rule:
 
 #+BEGIN_code
-processShort : ∀ x a p. ShortAnswer a x
-             ⊸ QUD (Q x a p) ⊸ p
+processShort : ∀ x a p. ShortAnswer a x ⊸
+             QUD (Q x a p) ⊸ p
 #+END_code
 
 We demand in particular that types in the answer and in the question
