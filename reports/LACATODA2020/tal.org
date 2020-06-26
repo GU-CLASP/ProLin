@@ -246,10 +246,11 @@ supported.
 
 In this work we provide a minimal and granular account for
 clarification requests initiated by any conversational party,
-following accounts of and supporting subset of cases that were
+following accounts of and supporting a subset of cases that were
 thoroughly investigated in a CLARIE Prolog-based system
 citep:purver-rlc06, following corpus studies by citet:purver2003means
 and citet:rodriguez2004form.
+TODO: This paragraph feels out of place here this should go to related work (purver section.)
 
 ** Proof search as a programming language
 
@@ -298,12 +299,12 @@ rule, the premiss |(Is x Gotaplatsen y)| becomes unavailable for any
 other rule.  Thereby the linear arrow |⊸| can be used to conveniently
 model that a bus cannot be at two places simultaneously.
 
-In general, the linear arrow correspond to /destructive state
+In general, the linear arrow corresponds to /destructive state
 updates/. Thus, the hypotheses available for proof search correspond
 to the /state/ of the system. In our application they will correspond
 to the /information state/ of the dialogue participant.
 
-We note that in linear logic, facts (or hypotheses) to not come in a
+We note that in linear logic, facts (or hypotheses) do not come in a
 hierarchy. Either we have a fact, or we don't. However, in second
 order variants of intuitionistic logic, like the one we use, one can
 conveniently wrap propositions in constructors, to indicate that they
@@ -311,7 +312,7 @@ come with a qualification. For example, we can write |Unsure P| to
 indicate that the proposition |P| may hold (for example if
 clarification is required).
 
-This way, the firing of a linear rule corresponds to an /action/ of an
+This way, firing a linear rule corresponds to triggering an /action/ of an
 agent, and a complete proof corresponds to a /scenario/, i.e. a sequence
 of actions, possibly involving action from several agents.  However,
 the information state (typically in the literature and in this paper
@@ -343,9 +344,9 @@ immutable facts (introduced by the unrestricted arrow).
 
 *** Transition rules
 
-In particular, we have set of immutable rules (they remain available
+In particular, we have a fixed set of rules (they remain available
 even after being used).
-
+#
 Each such rule manipulates a part of the information state (captured
 by its premisses) and leaves everything else in the state
 alone.
@@ -357,7 +358,6 @@ label:sec:qa&cr
 ** Question-answering with metavariables
 In prolog-like languages, metavariables play the role of unknowns,
 whose value can become fixed for a goal to be reached.
-
 In this subsection we show how a metavariable can represent what is
 being asked, as the unknown in a proposition.
 
@@ -431,24 +431,6 @@ Does John live in Paris? & |Bool        | & \makecell[l]{|\x.if x then (Live Joh
 What time is it?         & |Time        | & |\x.IsTime x                             | & It is 5am. & |Assert (IsTime 5.00)| \\\hline
 Does John live in Paris? & |Prop -> Prop| & |\m. m (Live John Paris)                 | & yes & |ShortAnswer (\x. x)  (Prop -> Prop)| \\
 Does John live in Paris? & |Prop -> Prop| & |\m. m (Live John Paris)                 | & from January & \makecell[l]{|ShortAnswer (\x. FromJanuary(x))|\\|(Prop -> Prop)|} \\\hline
-Does John live in Paris? & \makecell[l]{|QuestionPolarity ->|\\|Prop -> Prop|} & |\m. m Positive (Live John Paris)| & yes & |ShortAnswer (\x. x)  (Prop -> Prop)| \\
-Doesn't John live in Paris? & \makecell[l]{|QuestionPolarity ->|\\|Prop -> Prop|} & |\m. m Negative (Live John Paris)| & no / oui &
-\begin{minipage}{3cm}
-\begin{code}
-ShortAnswer (\ pol prop .
-  if   Positive then Not prop
-  else prop) (Prop -> Prop)
-\end{code}
-\end{minipage}\\
-Doesn't John live in Paris? & \makecell[l]{|QuestionPolarity ->|\\|Prop -> Prop|} & |\m. m Negative (Live John Paris)| & si &
-\begin{minipage}{3cm}
-\begin{code}
-ShortAnswer (\ pol prop . 
-  if   Positive then ERROR 
-  else Not prop) (Prop -> Prop)
-        \end{code}
-\end{minipage}\\
-\end{tabular}
 \caption{Examples of questions and the possible corresponding answers.\label{tbl:qa-ex}}
 \end{sidewaystable}
 
@@ -460,7 +442,7 @@ metavariable |x|, and a proposition where |x| occurs.
 
 We stress that |P x| is /not/ part of the information state of the
 agent yet, rather the fact that the above question is /under
-discussion/ is a fact. For example, after asking "when does John
+discussion/ is a fact. For example, after asking "Where does John
 live", we have:
 
 #+BEGIN_code
@@ -1420,3 +1402,24 @@ _ : (q : Question) -> (x y : User) ->
 Here, for any interlocutor, her ~LatestMove~ asking a question is
 consumed and her ~QUD~ is updated with the question from the ~Ask~ move.
 
+** Not explained in the text
+
+Does John live in Paris? & \makecell[l]{|QuestionPolarity ->|\\|Prop -> Prop|} & |\m. m Positive (Live John Paris)| & yes & |ShortAnswer (\x. x)  (Prop -> Prop)| \\
+Doesn't John live in Paris? & \makecell[l]{|QuestionPolarity ->|\\|Prop -> Prop|} & |\m. m Negative (Live John Paris)| & no / oui &
+
+\begin{minipage}{3cm}
+\begin{code}
+ShortAnswer (\ pol prop .
+  if   Positive then Not prop
+  else prop) (Prop -> Prop)
+\end{code}
+\end{minipage}\\
+Doesn't John live in Paris? & \makecell[l]{|QuestionPolarity ->|\\|Prop -> Prop|} & |\m. m Negative (Live John Paris)| & si &
+\begin{minipage}{3cm}
+\begin{code}
+ShortAnswer (\ pol prop . 
+  if   Positive then ERROR 
+  else Not prop) (Prop -> Prop)
+        \end{code}
+\end{minipage}\\
+\end{tabular}
