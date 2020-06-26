@@ -394,9 +394,9 @@ as |DefiniteNo|, "no" as |AmbiguousNo| / "He does in the weekend"
 #+begin_code
 Q Multi ( \x. case x of
     AmbiguousNo -> Trivial
-    DefiniteNo -> not P
-    DefiniteYes -> P
-    Qualifier m -> m P
+    DefiniteNo -> not (Like John Bananas)
+    DefiniteYes -> Like John Bananas
+    Qualifier m -> m (Like John Bananas)
   )
 #+end_code
 
