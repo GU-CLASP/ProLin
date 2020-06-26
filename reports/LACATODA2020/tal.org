@@ -690,19 +690,15 @@ answer won't be fully given. In fact, this question can be the topic
 of an experimental study.
 
 
-*** Clarification via adding extra arguments :TODORemovalCandidate:
-# JP: can be removed because it's the same as next section.
+*** Clarification via adding extra arguments
 
-Consider the exchange:
-
-#+BEGIN_quote
-A: Where does John live? \\
-B: Do you mean while he is in confinement?
-#+END_quote
-
-In the above, there is an (implicit) extra argument to the |Live|
-predicate, corresponding to, say, a time
-interval: |Live(who,location,confinement)|.
+The scope of what is subject to clarification is anything which can be
+represented as an argument in a relation.
+For instance, consider the polar question "Where does John live?". The
+questionee may decide that there is some ambiguity about /which/ Paris
+one is talking about --- after all there are several places with this name. 
+To be able to model this, the |Live| relation needs to be
+generalised to be a 3-place predicate, where the country is specified.
 
 However most of the time one may choose to leave this parameter
 implicit. This is what is done for example when asking the above
@@ -711,26 +707,17 @@ question:
 #+BEGIN_code
 Q Location x Live(John,x,y)
 #+END_code
-assuming a metavariable |y| of type |Bool|.
 
-If the question can be answered without regard for whether there is
-confinement or not, then the metavariable will remain free for the
-duration of the dialogue. If on the other hand, answering the question
-demands clarification, this can be done using the mechanisms described
-above.
-
+If the question can be answered without regard for the country, then
+the metavariable will remain free for the duration of the dialogue. If
+on the other hand, answering the question demands clarification, this
+can be done using the mechanisms described above.
 In sum, in our model, to support clarification requests, a system must
 integrate many arguments and use metavariables.
 
-*** Clarification via adding extra arguments: polar question
-Consider now the polar question "Does John live in Paris?". The
-questionee may decide that there is some ambiguity about /which/ Paris
-one is talking about --- after all there are several places with this name. To be able to model this, the |Live| relation needs to be
-generalised to be a 3-place predicate, where the country is specified.
-
-We can then assume that the question can be encoded for simplicity
+The same technique can apply to polar questions. Considering "Does John live in Paris?",
+we can assume that the question can be encoded (for simplicity)
 as |\x. if x then (Live John Paris y) else Not (Live John Paris y)|.
-That is, the country is implicit and represented by a metavariable.
 
 If the system has the following facts:
 #+begin_code
