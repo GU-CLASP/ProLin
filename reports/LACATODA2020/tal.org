@@ -1224,6 +1224,12 @@ to eschew the assymetric merge operation.  As we see it, this sparsity
 of implementations is largely due to the semantic gap between its aims
 (information-state dialogue management) and its formalism (TTR).
 
+An oft-touted advantage of TTR is that propositions are witnessed by
+proof objects. We benefit from the same advantage: we use an
+intuitionistic system, and as such every proposition in the
+information state is associated a witness, even if we have not shown
+them for concision (they play little role in our analysis).
+
 ** GoDIS
 
 citet:larsson2000godis proposed the use of Prolog (and hence, proof
@@ -1248,14 +1254,20 @@ the presence or the absence of ambiguity.
 * Evaluation/Discussion/Future work
 label:sec:discussion
 
-JP:
-- discussing the corrections (limitation): JP
-- discuss the clarification requests in a more specific way: we can
-  always redefine the referent
-- in dialogue systems meta-variables are always subject to
-  clarification and correction (substitution)
-- how types/proofs can be implemented
+A kind of dialogue move often studied in parallel to clarifications
+are /corrections/. It would be elegant if corrections could be
+formalised in a way similar clarifications. However, in our analysis,
+metavariables disappear once they have been grounded. Therefore,
+corrections cannot involve metavariables and thus require a different
+treatment. A solution could be to keep metavariables in terms (apply unification substitutions
+lazily). We leave a detailed study to further work.
 
+We note that the use of (meta)variables to refer to discourse objects
+is a very general device. Anything which can be subject to
+clarification can occur as an argument to predicates. We already
+showed how "Paris" can be clarified. But we could also clarify "Live"
+by making the verb be an argument to a general |Apply| predicate,
+taking say a verb and its arguments.
 
 
 Prior studies have noted the phenomenon of semantic dependency
