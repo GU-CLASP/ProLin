@@ -815,20 +815,20 @@ label:sec:dm
 Figure ref:fig:ds shows such a dialogue manager integrated into a spoken dialogue system.
 \begin{figure}
 \centering
-\begin{tikzpicture}[auto, node distance=2.5cm]
+\begin{tikzpicture}[auto, node distance=2.2cm]
 
     \node [block]                 (input)     {Knowledge Base};
     \node [block, below of=input]   (tc)     {Type Checker};
     \node [block, below of=tc] (appl)    {Rule application};
-    \node [block, below left of=appl, align=center] (sub)    {Information state\\ Linear propositions};
+    \node [block, below of=appl, align=center] (sub)    {Information state:\\ \emph{linear propositions}};
     \node [virtual, below of=tc] (feedback)  {};
     
     \node [block, fit={(appl) (sub)}, align=left,
            rounded corners, inner sep=8pt] (dm) {DM};
            
-	\node at (6cm, -3cm) [block, rounded corners] (nlu) {NLU and ASR};
-    \node at (6cm, -6cm) [block, rounded corners] (nlg) {NLG and TTS};
-    \node at (9cm, -4.5cm) [inner sep=5pt, align=center] (user)
+	\node at (5cm, -4cm) [block, rounded corners] (nlu) {NLU and ASR};
+    \node at (5cm, -7cm) [block, rounded corners] (nlg) {NLG and TTS};
+    \node at (8cm, -5.5cm) [inner sep=5pt, align=center] (user)
     {\Huge\smiley\normalsize\\user};
     % Connect nodes
     \draw [->] (input) -- node {rules} (tc);
@@ -841,7 +841,7 @@ Figure ref:fig:ds shows such a dialogue manager integrated into a spoken dialogu
     %\draw [->] (model) -- node [name=y] {$y$}(output);
     %\draw [->] (y) |- (feedback);
 \end{tikzpicture}
-\caption{Architecture of a spoken dialogue system with a proof-theoretic dialogue manager.}
+\caption{Architecture of a spoken dialogue system with a dialogue manager based on linear logic framework.}
 \label{fig:ds}
 \end{figure}
 
