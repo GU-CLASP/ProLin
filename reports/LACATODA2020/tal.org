@@ -451,9 +451,9 @@ haveQud : QUD (Q Location x (Live John x))
 
 Resolving a question can be done by communicating an answer. An answer
 to a question |(A : Type; P : A -> Prop)| can be of either of the two following forms: 
-1) *ShortAnswer* is a pair of an element |X:A| and its type |A|,
+1) A *ShortAnswer* is a pair of an element |X:A| and its type |A|,
    represented as |ShortAnswer A X|
-2) *Assertion* is a proposition |P|, represented as |Assert P|
+2) An *Assertion* is a proposition |Q : Prop|, represented as |Assert Q|
 
 
 
@@ -463,9 +463,9 @@ Therefore, one way to process a short answer is by the |processShort| rule:
 processShort :  (a : Type) -> (x : a) -> (p : Prop) -> 
                 ShortAnswer a x ⊸ QUD (Q a x p) ⊸ p
 #+END_code
-Above we use Π type binders to declare metavariables (|(a : Type)
+Above we use Π type binders to declare metavariables (Written here |(a : Type)
 ->|, |(x : a) ->|, etc.). This terminology will make sense to readers
-aware of dependent types. For the others, such binders can be thought
+familiar with dependent types. For the others, such binders can be thought
 as universal quantification (|∀ a, ∀ x|, etc.), the difference is that
 the type of the bound variable is specified.
 
@@ -487,7 +487,7 @@ processAssert :  (a : Type) -> (x : a) -> (p : Prop) ->
                  Assert p ⊸ QUD (Q a x p) ⊸ p
 #+END_code
 
-That is, (1) if |p| was asserted, and (2) the proposition |q| is part
+That is, if (1) |p| was asserted, and (2) the proposition |q| is part
 of a question under discussion, and (3) |p| can be unified with |q|
 (we ensure this unification by simply using the same metavariable |p|
 in both roles in the above rule), then the assertion resolves the
@@ -515,7 +515,7 @@ be represented as |Eat(John,Mars)|. According to our theory, one can
 then represent the phrase "John eats" as |Eat(John,x)|, with |x| being
 a metavariable.
 
-Assume now a system with the state:
+Assume now a system with the following state:
 
 #+BEGIN_code
 Eat(John,Mars)
@@ -524,7 +524,7 @@ Eat(John,Mars)
 Then the question "What does John eat", represented as |(Q Food x
 (Eat(John,x)))|, can be answered.  From the point of view of modelling
 with linear logic, we could attempt to model the answering by the
-rule:
+rule as follows:
 
 #+BEGIN_code
 (a : Type) -> (x : a) -> (p : Prop) -> 
@@ -538,12 +538,13 @@ from here on we use the syntactic sugar |A -* P| for it, so the above rule will 
   QUD (Q a x p) -> p -* Answer x (Q x p)
 #+END_code
 
-The above states that, if |x| makes the proposition |p| true (more
+The above states that if |x| makes the proposition |p| true (more
 precisely, provable --- we require that |p| is a fact in the last
 argument) then it is valid to answer |x| if |Q a x p| is under
-discussion. However, there is an issue with the above rule: if |x| is
-/not unique/, then one would not consider $x$ a suitable
-answer. Indeed, assume instead that the system is in the state:
+discussion. However, there is an issue with the above rule: there are
+several values making |p| true, i.e. if |x| is /not unique/, then
+intuitively one would not consider $x$ a suitable answer. Indeed,
+assume instead that the system is in the state:
 
 #+BEGIN_code
 Eat(John,x)
@@ -562,8 +563,7 @@ state of the system is composed of the two
 hypotheses |Eat(John,Mars)| and |Eat(John,Twix)|: the answer is not
 unique.
 
-Thus, the rule for answering can be written:
-
+Thus, the rule for answering can be written like so:
 #+BEGIN_code
 produceAnswer : (a : Type) -> (x : a) !-> (p : Prop)
 -> QUD (Q a x p) -> p -* ShortAnswer a x
@@ -576,8 +576,8 @@ Eat(John,Mars)
 #+END_code
 
 The system can unify |QUD (Q Food x (Eat(John,x)))| and |QUD (Q a x
-p)|, yielding |a = Food|, |p=Eat(John,x)|. Then, we search for a
-proof |p|, and to do this, it can unify |Eat(John,x)|
+p)|, yielding |a = Food| and |p=Eat(John,x)|. Then, we search for a
+proof |p|, and to do this, we can unify |Eat(John,x)|
 with |Eat(John,Mars)|, giving finally the answer |x=Mars| and
 therefore the state becomes:
 #+BEGIN_code
@@ -594,7 +594,7 @@ information state.
 In this section we discuss an alternative kind of answering, which is
 to issue clarification requests.  To see how they can occur, consider
 again the question "what does john eat", in the same information state
-as above.  A proper answer could be "Mars and Twix" or "Mars or
+as above.  A proper answer could be "Mars and Twix" or even "Mars or
 Twix". However we consider here a third possibility: instead of
 answering, the agent can issue a clarification request.
 
@@ -629,9 +629,9 @@ principal difference is the use of the |?->| operator, which takes as
 left operand the specification of a request and test for it to have a
 non-unique solution or it be not (fully) made ground. Essentially this
 does the the opposite of the |!->| operator.  However, because the
-components of the query are indeterminate, they cannot be determined,
-and the state update cannot depend on them. Here we use the record
-syntax to bound their scope. Additionally, note the use of the single
+components of the query are indeterminate, they cannot be fixed when firing the rule,
+and therefore the state update cannot depend on them. Therefore we use the record
+syntax to bound their scope, ensuring that they won't occur in the state update. Additionally, note the use of the single
 colon (|:|) for metavariables and the double colon for
 information-state hypotheses (|::|).
 
@@ -660,8 +660,8 @@ after applying |processShort|:
 #+BEGIN_code
 Eat(John,Mars)
 Eat(Mary,Twix)
-ori :: QUD (Q Food x (Eat(y,x)))
-r ::  Mary=y
+ori  :: QUD (Q Food x (Eat(y,x)))
+r    ::  Mary=y
 #+END_code
 
 
@@ -690,7 +690,7 @@ answer won't be fully given. In fact, this question can be the topic
 of an experimental study.
 
 
-*** Clarification via adding extra arguments
+*** Clarification via adding extra arguments :TODORemovalCandidate:
 # JP: can be removed because it's the same as next section.
 
 Consider the exchange:
@@ -711,7 +711,7 @@ question:
 #+BEGIN_code
 Q Location x Live(John,x,y)
 #+END_code
-assuming a metavariable y of type |Bool|.
+assuming a metavariable |y| of type |Bool|.
 
 If the question can be answered without regard for whether there is
 confinement or not, then the metavariable will remain free for the
@@ -1186,7 +1186,7 @@ label:sec:kos
 * Related work
 
 label:sec:related
-** purver on CRs
+** TODO purver on CRs 
 
 ** KoS
 
