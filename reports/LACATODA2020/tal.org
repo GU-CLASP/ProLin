@@ -666,13 +666,13 @@ r    ::  Mary=y
 
 
 This means the original question will, by unification, become |Q Food
-x (Eat(Mary,x))|, and it can be unambiguously answered using the
-/canAnswer/ rule. We note that the logical form of the question (|z|
-such that |z=y|) is typically realised in a complicated way. In our
-example, it could be "By whom"; echoing part of the original question
-and assuming cooperative communication so that the questioner properly
-relates the clarification request to the implicits of the original
-questions. 
+x (Eat(Mary,x))|, and it can be unambiguously answered using
+the |produceAnswer| rule. We note that the logical form of the
+question ( |z| such that |z=y|) is typically realised in a complicated
+way. In our example, it could be "By whom"; echoing part of the
+original question and assuming cooperative communication so that the
+questioner properly relates the clarification request to the implicits
+of the original questions.
 
 In practice, the form of clarification questions will greatly vary
 depending on the context.
