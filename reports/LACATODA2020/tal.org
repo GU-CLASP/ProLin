@@ -364,14 +364,14 @@ P  : A  -> Prop
 #+END_code
 
 The intent of the question is to find out about a value |x| of
-type |A| which makes |P x| true, or at least held true by the other participant. We show several examples in table
-ref:tbl:qa-ex.  It is worth stressing that the type |A| can be large
-(for example asking for any location) or as small as a boolean (if one
-requires a simple yes/no answer).  We note in passing that, typically,
-polar questions can be answered not just by a boolean but by qualifing
-the predicate in question, for example "maybe", "on tuesdays",
-etc. (Table ref:tbl:qa-ex, last two rows).  In this instance |A = Prop
--> Prop|.
+type |A| which makes |P x| true, or at least held true by the other
+participant. We show several examples in table ref:tbl:qa-ex.  It is
+worth stressing that the type |A| can be large (for example asking for
+any location) or as small as a boolean (if one requires a simple
+yes/no answer).  We note in passing that, typically, polar questions
+can be answered not just by a boolean but by qualifing the predicate
+in question, for example "maybe", "on tuesdays", etc. (Table
+ref:tbl:qa-ex, last two rows).  In this instance |A = Prop -> Prop|.
 
 # NEGATIVE QUESTIONS
 One complication are polar questions phrased in the negative
@@ -399,9 +399,9 @@ answer provide no information, in the form of a trivial proposition
 One potentially surprising feature is that, in our account, the
 meaning of simple answers (such as "no") depend on the
 context. However, we do not see this as a problem: indeed, the meaning
-of short answers is /always/ context-dependent. (For example "Paris"
-has a does not mean the same thing in the context of "Where do you
-live?" as in the context "Where were you born?".)
+of short answers is /always/ context-dependent. (For example "Paris" has
+a does not mean the same thing in the context of "Where do you live?"
+as in the context "Where were you born?".)
 
 Additionally, in the framework of a full dialogue management system,
 the |AmbiguousNo| case should be treated as unresolving (the question
@@ -422,7 +422,8 @@ Where does John live?    & |Location    | & |\x.Live John x                     
 Does John live in Paris? & |Bool        | & \makecell[l]{|\x.if x then (Live John Paris)| \\ |else Not (Live John Paris)|} & yes & |ShortAnswer Bool True| \\
 What time is it?         & |Time        | & |\x.IsTime x                             | & It is 5am. & |Assert (IsTime 5.00)| \\\hline
 Does John live in Paris? & |Prop -> Prop| & |\m. m (Live John Paris)                 | & yes & |ShortAnswer  (Prop -> Prop) (\x. x)| \\
-Does John live in Paris? & |Prop -> Prop| & |\m. m (Live John Paris)                 | & from January & \makecell[l]{|ShortAnswer (Prop -> Prop)|\\|(\x. FromJanuary(x))|} \\\hline
+Does John live in Paris? & |Prop -> Prop| & |\m. m (Live John Paris)                 | & from January & \makecell[l]{|ShortAnswer (Prop -> Prop)|\\|(\x. FromJanuary(x))|} \\
+\end{tabular}
 \caption{Examples of questions and the possible corresponding answers.\label{tbl:qa-ex}}
 \end{sidewaystable}
 
