@@ -276,7 +276,7 @@ Then, the user may define a query (or goal) as a logical formula. The
 system can then search for a proof of a goal as a way to query the
 database of facts. In the most useful cases, goals contain
 /metavariables/[fn::here, we use the convention that metavariables are
-lowercase letters.]. For example, the goal |(Leave x Götaplatsen y)|
+lowercase letters.]. For example, the goal |(Leave x Gotaplatsen y)|
 corresponds to a request to list all the buses leaving from
 Götaplatsen (as |x|) together with their departure time (as |y|).
 
