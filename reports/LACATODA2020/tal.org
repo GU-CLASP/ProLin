@@ -90,7 +90,7 @@ participant states and transitions in a unified logical framework.
 Even though the progress in bridging dialogue management and
 theoretical research of dialogue is promising, we believe that it is
 crucial to use formal tools which are most appropriate for the task:
-one should be able to express the rules of various genres of dialog in
+one should be able to express the rules of various genres of dialogue in
 a concise way, free, to any possible extent, of irrelevant technical
 details.
 
@@ -108,7 +108,7 @@ an initial short and possbily ambiguous question is posed. If the
 answerer deems the question unclear, a dialogue will ensue before the
 question is finally resolved. In technical terms we propose to deal
 with question-answering and clarification requests in the context of
-dialog management.
+dialogue management.
 
 # How we plan to fill this gap?
 
@@ -276,11 +276,11 @@ corresponds to a request to list all the buses leaving from
 Götaplatsen (as |x|) together with their departure time (as |y|).
 
 Because statements are propositions, it is only natural to use
-proof-search as a means to represent possible moves in dialog seen as
+proof-search as a means to represent possible moves in dialogue seen as
 a game cite:larsson2000godis.
 
 
-** Linear logic as a Dialog Management Framework
+** Linear logic as a Dialogue Management Framework
 Typically, and in particular in the archetypal logic programming
 language prolog cite:bratko2001prolog, axioms and rules are expressed
 within the general framework of first order logic. However, several
@@ -296,7 +296,7 @@ model that a bus cannot be at two places simultaneously.
 In general, the linear arrow correspond to /destructive state
 updates/. Thus, the hypotheses available for proof search correspond
 to the /state/ of the system. In our application they will correspond
-to the /information state/ of the dialog participant.
+to the /information state/ of the dialogue participant.
 
 We note that in linear logic, facts (or hypotheses) to not come in a
 hierarchy. Either we have a fact, or we don't. However, in second
