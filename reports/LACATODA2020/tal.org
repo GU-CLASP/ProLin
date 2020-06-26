@@ -478,9 +478,14 @@ to a question |(A : Type; P : A -> Prop)| can be of either of the two following 
 Therefore, one way to process a short answer is by the |processShort| rule:
 
 #+BEGIN_code
-processShort : ∀ x a p. ShortAnswer a x ⊸
-             QUD (Q x a p) ⊸ p
+processShort :  (a : Type) -> (x : a) -> (p : Prop) -> 
+                ShortAnswer a x ⊸ QUD (Q a x p) ⊸ p
 #+END_code
+Above we use Π type binders to declare metavariables (|(a : Type)
+->|, |(x : a) ->|, etc.). This terminology will make sense to readers
+aware of dependent types. For the others, such binders can be thought
+as universal quantification (|∀ a, ∀ x|, etc.), the difference is that
+the type of the bound variable is specified.
 
 We demand in particular that types in the answer and in the question
 match (|a| occurs in both places). Additionally, because |x| occurs
@@ -496,8 +501,8 @@ Live John Paris
 To process assertions, we can use the following rule:
 
 #+BEGIN_code
-processAssert  :  ∀ x a p. Assert p ⊸
-                  QUD (Q x a p) ⊸ p
+processAssert :  (a : Type) -> (x : a) -> (p : Prop) ->
+                 Assert p ⊸ QUD (Q a x p) ⊸ p
 #+END_code
 
 That is, (1) if |p| was asserted , (2) the proposition |p| is part of
@@ -803,8 +808,6 @@ value.
 
 * Kos-inspired dialogue management with linear logic
 label:sec:dm
-
-- Additionally, the use of metavariables is new.
 
 - Explain the structure of the rest of the section
 
