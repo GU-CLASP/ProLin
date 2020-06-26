@@ -426,11 +426,11 @@ yesterday?"), which are also out of scope.
 \begin{tabular}{lllll}
 utterance & A & P & a\\
 \hline
-Where does John live?    & |Location    | & |\x.Live John x                          | & in London & |ShortAnswer London Location| \\
-Does John live in Paris? & |Bool        | & \makecell[l]{|\x.if x then (Live John Paris)| \\ |else Not (Live John Paris)|} & yes & |ShortAnswer True Bool| \\
+Where does John live?    & |Location    | & |\x.Live John x                          | & in London & |ShortAnswer Location London| \\
+Does John live in Paris? & |Bool        | & \makecell[l]{|\x.if x then (Live John Paris)| \\ |else Not (Live John Paris)|} & yes & |ShortAnswer Bool True| \\
 What time is it?         & |Time        | & |\x.IsTime x                             | & It is 5am. & |Assert (IsTime 5.00)| \\\hline
-Does John live in Paris? & |Prop -> Prop| & |\m. m (Live John Paris)                 | & yes & |ShortAnswer (\x. x)  (Prop -> Prop)| \\
-Does John live in Paris? & |Prop -> Prop| & |\m. m (Live John Paris)                 | & from January & \makecell[l]{|ShortAnswer (\x. FromJanuary(x))|\\|(Prop -> Prop)|} \\\hline
+Does John live in Paris? & |Prop -> Prop| & |\m. m (Live John Paris)                 | & yes & |ShortAnswer  (Prop -> Prop) (\x. x)| \\
+Does John live in Paris? & |Prop -> Prop| & |\m. m (Live John Paris)                 | & from January & \makecell[l]{|ShortAnswer (Prop -> Prop)|\\|(\x. FromJanuary(x))|} \\\hline
 \caption{Examples of questions and the possible corresponding answers.\label{tbl:qa-ex}}
 \end{sidewaystable}
 
@@ -452,7 +452,7 @@ haveQud : QUD (Q Location x (Live John x))
 Resolving a question can be done by communicating an answer. An answer
 to a question |(A : Type; P : A -> Prop)| can be of either of the two following forms: 
 1) *ShortAnswer* is a pair of an element |X:A| and its type |A|,
-   represented as |ShortAnswer X A|
+   represented as |ShortAnswer A X|
 2) *Assertion* is a proposition |P|, represented as |Assert P|
 
 
@@ -566,7 +566,7 @@ Thus, the rule for answering can be written:
 
 #+BEGIN_code
 produceAnswer : (a : Type) -> (x : a) !-> (p : Prop)
--> QUD (Q a x p) -> p -* ShortAnswer x a
+-> QUD (Q a x p) -> p -* ShortAnswer a x
 #+END_code
 
 For example, if we have the following state:
@@ -582,7 +582,7 @@ with |Eat(John,Mars)|, giving finally the answer |x=Mars| and
 therefore the state becomes:
 #+BEGIN_code
 Eat(John,Mars)
-ShortAnswer Mars Food
+ShortAnswer Food Mars
 #+END_code
 
 Note that the fact |Eat(John,Mars)| is found both as hypothesis and a
@@ -654,7 +654,7 @@ Eat(John,Mars)
 Eat(Mary,Twix)
 ori  ::  QUD (Q Food x (Eat(y,x)))
 cr   ::  QUD (Q Person z (z=y))
-a    ::  ShortAnswer Mary Person
+a    ::  ShortAnswer Person Mary
 #+END_code
 after applying |processShort|:
 #+BEGIN_code
@@ -1404,7 +1404,7 @@ consumed and her ~QUD~ is updated with the question from the ~Ask~ move.
 
 ** Not explained in the text
 
-Does John live in Paris? & \makecell[l]{|QuestionPolarity ->|\\|Prop -> Prop|} & |\m. m Positive (Live John Paris)| & yes & |ShortAnswer (\x. x)  (Prop -> Prop)| \\
+Does John live in Paris? & \makecell[l]{|QuestionPolarity ->|\\|Prop -> Prop|} & |\m. m Positive (Live John Paris)| & yes & |ShortAnswer  (Prop -> Prop) (\x. x)| \\
 Doesn't John live in Paris? & \makecell[l]{|QuestionPolarity ->|\\|Prop -> Prop|} & |\m. m Negative (Live John Paris)| & no / oui &
 
 \begin{minipage}{3cm}
