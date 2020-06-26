@@ -820,12 +820,11 @@ Figure ref:fig:ds shows such a dialogue manager integrated into a spoken dialogu
     \node [block]                 (input)     {Knowledge Base};
     \node [block, below of=input]   (tc)     {Type Checker};
     \node [block, below of=tc] (appl)    {Rule application};
-    \node [block, below right of=appl] (eval)    {Evaluation};
-    \node [block, below left of=appl] (sub)    {Subtyping};
+    \node [block, below left of=appl, align=center] (sub)    {Information state\\ Linear propositions};
     \node [virtual, below of=tc] (feedback)  {};
     
-    \node [block, fit={(tc) (appl) (eval) (sub)}, align=left,
-           rounded corners, inner sep=8pt] (dm) {Information state \\ Linear propositions};
+    \node [block, fit={(appl) (sub)}, align=left,
+           rounded corners, inner sep=8pt] (dm) {DM};
            
 	\node at (6cm, -3cm) [block, rounded corners] (nlu) {NLU and ASR};
     \node at (6cm, -6cm) [block, rounded corners] (nlg) {NLG and TTS};
@@ -835,7 +834,6 @@ Figure ref:fig:ds shows such a dialogue manager integrated into a spoken dialogu
     \draw [->] (input) -- node {rules} (tc);
     \draw [->] (tc) -- node {verified rules} (appl);
     \draw [<->] (appl) -- node {} (sub);
-    \draw [<->] (appl) -- node {} (eval);
     \draw [->] (nlu) -- node {user moves} (dm);
     \draw [->] (dm) -- node {agent moves} (nlg);
     \draw [->] (user) -- node {} (nlu);
@@ -1238,20 +1236,26 @@ the presence or the absence of ambiguity.
 
 * Evaluation/Discussion/Future work
 label:sec:discussion
-- discussing the corrections (limitation)
+
+JP:
+- discussing the corrections (limitation): JP
 - discuss the clarification requests in a more specific way: we can
   always redefine the referent
 - in dialogue systems meta-variables are always subject to
   clarification and correction (substitution)
-- dependencies between questions (who killed bill -> who was around?)
-
-- clarification could be narrowing from general types to subtypes.
-
-- scaling up to probabilistic DM
-
 - how types/proofs can be implemented
 
 
+
+VM:  
+- dependencies between questions (who killed bill -> who was around?)
+- clarification could be narrowing from general types to subtypes.
+- scaling up to probabilistic DM
+
+
+
+
+TODO other limitations 
 TODO briefly describe the evaluation benchmarks
 
 Table ref:table:ds originates from cite:ginzburg-nlphandbook, who
