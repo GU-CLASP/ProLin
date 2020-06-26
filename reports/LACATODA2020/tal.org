@@ -156,40 +156,6 @@ ref:sec:discussion.
 label:sec:background
 ** Dialogue management
 
-*** Information state update approach
-In this work we are employing an information-state update (ISU)
-approach, following several authors, including citet:traum1999model,
-citet:larsson2002issue, and citet:ginzburg2012interactive. In this
-view we present the information available to each participant of the
-dialogue (either a human or an artificial agent) in a rich information
-state. Being rich entails that the information state contains a
-hierarchy of facts, including the ones that are thought to be shared
-and the ones that have not been yet publicised.
-
-Let’s now consider the /update/, another essential component of ISU. In
-this case, we will rely on a set of rules, that will govern the
-updates. citet:ginzburg2012interactive defines one of the most basic
-rules -- the rule of QUD-incrementation -- the procedure of updating
-the current set of questions under discussions (|QUD|) if the latest
-utterance (|LU|) is a question. This operation is salient to a user
-and therefore it constitutes the update of the public part of the
-information state.
-
-#+BEGIN_code
-if public.LU = Ask(U, Question(x)):
-    push Question(x) into public.QUD
-#+END_code
-
-The main benefit of using a rich representation of the information
-state with underspecified components is to be able to address a wide
-range of clarifications from both parties. This is especially
-beneficial in the case of automatic speech recognition or natural
-language understanding errors. But even putting such errors aside, we
-can also consider topically relevant follow-up questions by the
-system, e.g. "What bus?", or contributions when the user provides more
-information than they were asked, e.g. answering "Bus 18 to Skogome"
-(destination is provided as well).
- 
 *** KoS
 KoS (not an acronym but loosely corresponds to Conversation Oriented
 Semantics) cite:ginzburg2012interactive provides one of the most
@@ -226,6 +192,40 @@ cite:purver-rlc06,ginzburg2012interactive, negation
 cite:cooper2012negative, non-sentential utterance resolution
 cite:fgl07,ginzburg2012interactive and iconic gesture cite:lucking16.
 
+*** Information state update approach
+In this work we are employing an information-state update (ISU)
+approach, following several authors, including citet:traum1999model,
+citet:larsson2002issue, and citet:ginzburg2012interactive. In this
+view we present the information available to each participant of the
+dialogue (either a human or an artificial agent) in a rich information
+state. Being rich entails that the information state contains a
+hierarchy of facts, including the ones that are thought to be shared
+and the ones that have not been yet publicised.
+
+Let’s now consider the /update/, another essential component of ISU. In
+this case, we will rely on a set of rules, that will govern the
+updates. For instance, citet:ginzburg2012interactive defines one of
+the most basic rules -- the rule of QUD-incrementation -- the
+procedure of updating the current set of questions under discussions
+(|QUD|) if the latest utterance is a question. This operation is
+salient to a user and therefore it constitutes the update of the
+public part of the information state.
+
+# #+BEGIN_code
+# if public.LU = Ask(U, Question(x)):
+#     push Question(x) into public.QUD
+# #+END_code
+
+The main benefit of using a rich representation of the information
+state with underspecified components is to be able to address a wide
+range of clarifications from both parties. This is especially
+beneficial in the case of automatic speech recognition or natural
+language understanding errors. But even putting such errors aside, we
+can also consider topically relevant follow-up questions by the
+system, e.g. "What bus?", or contributions when the user provides more
+information than they were asked, e.g. answering "Bus 18 to Skogome"
+(destination is provided as well).
+ 
 *** TODO Questions and clarifications
 TODO: Questions and CRs
 
@@ -338,11 +338,9 @@ immutable facts (introduced by the unrestricted arrow).
 *** Transition rules
 
 In particular, we have a fixed set of rules (they remain available
-even after being used).
-#
-Each such rule manipulates a part of the information state (captured
-by its premisses) and leaves everything else in the state
-alone.
+even after being used). Each such rule manipulates a part of the
+information state (captured by its premisses) and leaves everything
+else in the state alone.
 
 
 
@@ -429,12 +427,10 @@ Does John live in Paris? & |Prop -> Prop| & |\m. m (Live John Paris)            
 \end{sidewaystable}
 
 Within the state of the agent, if the value of the requested answer is
-represented as a metavariable |x|, then the question can be represented as: |Q A x (P x)|.
-
-That is, the pending question is a triple of a type, a
-metavariable |x|, and a proposition where |x| occurs.
-
-We stress that |P x| is /not/ part of the information state of the
+represented as a metavariable |x|, then the question can be
+represented as: |Q A x (P x)|.  That is, the pending question is a
+triple of a type, a metavariable |x|, and a proposition where |x|
+occurs. We stress that |P x| is /not/ part of the information state of the
 agent yet, rather the fact that the above question is /under
 discussion/ is a fact. For example, after asking "Where does John
 live", we have:
@@ -1194,7 +1190,7 @@ intuitionistic system, and as such every proposition in the
 information state is associated a witness, even if we have not shown
 them for concision (they play little role in our analysis).
 
-** GoDIS
+** Dialogue management
 
 citet:larsson2000godis proposed the use of Prolog (and hence, proof
 search), as a dialogue management framework. However, the lack of
@@ -1202,8 +1198,6 @@ linear hypotheses means that destructive information-state updates are
 sometimes awkward to represent. Besides, they do not consider the use
 of metavariables to represent uncertainty --- even though Prolog is in
 principle has the capacity to do it.
-
-** Linear logic for dialogue management
 
 To our knowledge citet:dixon2009plans were the first to advocate the
 use of linear logic for dialogue management and planning. Compared to
@@ -1258,7 +1252,7 @@ We can also imagine combining such ideas with probabilistic meaning
 for sentences
 cite:goodman_probabilistic_2015,bernardy_compositional_2018.
 
-TODO other limitations 
+TODO other limitations?
 TODO briefly describe the evaluation benchmarks
 
 Table ref:table:ds originates from cite:ginzburg-nlphandbook, who
