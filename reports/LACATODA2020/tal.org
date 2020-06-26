@@ -825,7 +825,7 @@ Figure ref:fig:ds shows such a dialogue manager integrated into a spoken dialogu
     \node [virtual, below of=tc] (feedback)  {};
     
     \node [block, fit={(tc) (appl) (eval) (sub)}, align=left,
-           rounded corners, inner sep=8pt] (dm) {DM \\ $s : S$};
+           rounded corners, inner sep=8pt] (dm) {Information state \\ Linear propositions};
            
 	\node at (6cm, -3cm) [block, rounded corners] (nlu) {NLU and ASR};
     \node at (6cm, -6cm) [block, rounded corners] (nlg) {NLG and TTS};
