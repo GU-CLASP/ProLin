@@ -508,7 +508,7 @@ processAssert :  (a : Type) -> (x : a) -> (p : Prop) ->
 That is, (1) if |p| was asserted , (2) the proposition |p| is part of
 a question under discussion, and (3) p can be unified with q, then the
 assertion resolves the question. Additionally, the metavariable |x| is
-grounded to a concrete value by virtue of unification of |p|
+ground to a value provided by |p|, by virtue of unification of |p|
 and |q|. For example, "John lives in Paris" answers both questions
 "Where does John live" and "Does John live in Paris" (there is
 unification), but, not, for example "What time is it?" (there is no
@@ -544,15 +544,15 @@ with linear logic, we could attempt to model the answering by the
 rule:
 
 #+BEGIN_code
-(a : Type) -> (x : a) -> (p : Prop)
--> QUD (Q a x p) -> p ⊸ (p ⊗ Answer x (Q x p))
+(a : Type) -> (x : a) -> (p : Prop) -> 
+  QUD (Q a x p) -> p ⊸ (p ⊗ Answer x (Q x p))
 #+END_code
 Note: taking a linear argument and producing it again is a common
 pattern, which can be spelled out |A ⊸ (A ⊗ P)|. It is so common that
 from here on we use the syntactic sugar |A -* P| for it, so the above rule will be written:
 #+BEGIN_code
-(a : Type) -> (x : a) -> (p : Prop)
--> QUD (Q a x p) -> p -* Answer x (Q x p)
+(a : Type) -> (x : a) -> (p : Prop) -> 
+  QUD (Q a x p) -> p -* Answer x (Q x p)
 #+END_code
 
 The above states that, if |x| makes the proposition |p| true (more
@@ -571,10 +571,10 @@ unknown thing. The proper answer is then "I do not know".
 
 Hence, we introduce another type-former |(x : A) !-> B|. As for |(x :
 A) -> B|, it introduces the metavariable |x|. However, the rule fires
-only when |x| is made /grounded/ (it is bound to a term which does not
+only when |x| is made /ground/ (it is bound to a term which does not
 contain any metavariable) and /unique/ by matching the rule. That is,
 it won't match in the previous example, because the answer is not
-grounded (it contains unknowns). Additionally, it won't match if the
+ground (it contains unknowns). Additionally, it won't match if the
 state of the system is composed of the two
 hypotheses |Eat(John,Mars)| and |Eat(John,Twix)|: the answer is not
 unique.
@@ -644,7 +644,7 @@ To detect situations where a clarification request can be issued, we can use the
 The conditions are similar to that of the answering rule. The
 principal difference is the use of the |?->| operator, which takes as
 left operand the specification of a request and test for it to have a
-non-unique solution or it be not (fully) grounded. Essentially this
+non-unique solution or it be not (fully) made ground. Essentially this
 does the the opposite of the |!->| operator.  However, because the
 components of the query are indeterminate, they cannot be determined,
 and the state update cannot depend on them. Here we use the record
