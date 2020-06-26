@@ -244,14 +244,6 @@ for open-vocabulary ASR and statistical NLU, systems provide more
 opportunities for user initiative, which therefore should be
 supported.
 
-In this work we provide a minimal and granular account for
-clarification requests initiated by any conversational party,
-following accounts of and supporting a subset of cases that were
-thoroughly investigated in a CLARIE Prolog-based system
-citep:purver-rlc06, following corpus studies by citet:purver2003means
-and citet:rodriguez2004form.
-TODO: This paragraph feels out of place here this should go to related work (purver section.)
-
 ** Proof search as a programming language
 
 The prevailing tradition in formal semantics, including in most pieces
@@ -1171,21 +1163,26 @@ Moves […]  -- same as above
 label:sec:kos
 
 * Related work
-
 label:sec:related
-** TODO purver on CRs 
+
+In this work we provide a minimal and granular account for
+clarification requests initiated by any conversational party,
+following accounts of and supporting a subset of cases that were
+thoroughly investigated in a CLARIE Prolog-based system
+citep:purver-rlc06, following corpus studies by citet:purver2003means
+and citet:rodriguez2004form.
 
 ** KoS
 
-One of our main sources of inspiration is Ginzburg's KoS cite:ginzburg2012interactive. However we
-recast it in the framework of proof search, and linear logic. We have
-argued that this has many advantages. First, it affords the use of
-metavariables to represent uncertaintly, which is absent from TTR.
-Second, expressing updates using linear logic rules means that only
-the relevant parts of the information state must be dealt with in any
-given rule. Cooper's TTR has a special "assymetric merge" operator for
-this purpose, but it is a less-studied \textit{ad-hoc} addition to
-type-theory.
+One of our main sources of inspiration is Ginzburg's KoS
+cite:ginzburg2012interactive. However we recast it in the framework of
+proof search, and linear logic. We have argued that this has many
+advantages. First, it affords the use of metavariables to represent
+uncertaintly, which is absent from TTR.  Second, expressing updates
+using linear logic rules means that only the relevant parts of the
+information state must be dealt with in any given rule. Cooper's TTR
+has a special "assymetric merge" operator for this purpose, but it is
+a less-studied \textit{ad-hoc} addition to type-theory.
 
 Furthermore, as it stands, KoS is lacking implementations, with the
 exception of the work of citet:maraev_kosttr-based_2018, who adapt KoS
