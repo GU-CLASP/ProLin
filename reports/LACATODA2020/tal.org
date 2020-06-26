@@ -57,8 +57,8 @@ Two families of approaches to dialogue management can be considered:
 hand-crafted dialogue strategies
 cite:allen1995trains,larsson2002issue,jokinen2009constructive and
 statistical modelling of dialogue
-cite:rieser2011reinforcement,young2010hidden. Frameworks for
-hand-crafted strategies range from finite-state machines and
+cite:rieser2011reinforcement,young2010hidden,williams2017hybrid. Frameworks
+for hand-crafted strategies range from finite-state machines and
 form-filling to more complex dialogue planning and logical inference
 systems, such as Information State Update (ISU) cite:larsson2002issue
 that we employ here. Statistical models help to contend with the
@@ -1247,11 +1247,25 @@ JP:
 
 
 
-VM:  
-- dependencies between questions (who killed bill -> who was around?)
-- clarification could be narrowing from general types to subtypes.
-- scaling up to probabilistic DM
+Prior studies have noted the phenomenon of semantic dependency
+relations between questions cite:wisniewski2015semantics, e.g. the
+answer to "Who killed Bill?" can depend on the answer to "Who was in
+town?". The cases of dependencies covered in this study is limited to
+clarification of metavariables from the original question. This is
+meant to serve as a proof-of-concept rather than thorough coverage of
+all possible cases of question dependence. Similar issue concerns
+follow-up questions that are meant to clarify the type of the
+metavariable, e.g. "What does John like? Do you mean
+foodwise?". Generally, further work is needed to be carried out in
+order to extend our system to full-scale coverage of interrelations
+between QUD.
 
+A natural progression of this work is to allow the assignment of
+probabilities to rules and to the components of the information state
+and to train the probabilities according to the new observations. In
+this sense our approach follows citep:lison2015hybrid, which is based
+on probabilistic rules, but in our case the domain-independent rules
+will play an important role.
 
 
 
