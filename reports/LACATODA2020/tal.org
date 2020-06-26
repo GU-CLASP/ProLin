@@ -505,20 +505,21 @@ processAssert :  (a : Type) -> (x : a) -> (p : Prop) ->
                  Assert p ⊸ QUD (Q a x p) ⊸ p
 #+END_code
 
-That is, (1) if |p| was asserted , (2) the proposition |p| is part of
-a question under discussion, and (3) p can be unified with q, then the
-assertion resolves the question. Additionally, the metavariable |x| is
-ground to a value provided by |p|, by virtue of unification of |p|
-and |q|. For example, "John lives in Paris" answers both questions
-"Where does John live" and "Does John live in Paris" (there is
-unification), but, not, for example "What time is it?" (there is no
-unification).
+That is, (1) if |p| was asserted, and (2) the proposition |q| is part
+of a question under discussion, and (3) |p| can be unified with |q|
+(we ensure this unification by simply using the same metavariable |p|
+in both roles in the above rule), then the assertion resolves the
+question. Additionally, the metavariable |x| is ground to a value
+provided by |p|, by virtue of unification of |p| and |q|. For example,
+"John lives in Paris" answers both questions "Where does John live"
+and "Does John live in Paris" (there is unification), but, not, for
+example "What time is it?" (there is no unification).
 
 Note that, in both cases (|processAssert| and |processShort|), the
 information state is updated with the proposition posed in the
 question. 
 
-** Notion of unique and concrete answers label:sec:unique-concrete
+** Notion of unique and concrete values label:sec:unique-concrete
 
 However, one should consider the question resolved only if the answer
 is "unique". For example, the assertion "John lives somewhere" does
@@ -572,7 +573,7 @@ unknown thing. The proper answer is then "I do not know".
 Hence, we introduce another type-former |(x : A) !-> B|. As for |(x :
 A) -> B|, it introduces the metavariable |x|. However, the rule fires
 only when |x| is made /ground/ (it is bound to a term which does not
-contain any metavariable) and /unique/ by matching the rule. That is,
+contain any metavariable) and /unique/ by matching the rule --- this is what we call a unique and concrete value. That is,
 it won't match in the previous example, because the answer is not
 ground (it contains unknowns). Additionally, it won't match if the
 state of the system is composed of the two
