@@ -810,9 +810,18 @@ value.
 * Kos-inspired dialogue management with linear logic
 label:sec:dm
 
-- Explain the structure of the rest of the section
+In this section we integrate our question/answering framework in a
+more complete dialog manager (DM).  We stress that this DM models the
+information-state of only one participant. Regardless, this
+participant can record its own beliefs about the state of other
+participants. Figure ref:fig:ds shows how such a DM can be integrated
+into a spoken dialogue system. In general, the core of DM is comprised
+of a set of linear-logic rules which depend on the domain of
+application. However, many rules will be domain-independent (such as
+generic processing of answers). We show these generic rules first, and
+then illustrate them with an example application.
 
-Figure ref:fig:ds shows such a dialogue manager integrated into a spoken dialogue system.
+
 \begin{figure}
 \centering
 \begin{tikzpicture}[auto, node distance=2.2cm]
@@ -847,10 +856,13 @@ Figure ref:fig:ds shows such a dialogue manager integrated into a spoken dialogu
 
 ** Domain-independent rules
 *** Interface with language understanding and generation
-Here we assume that the information that comes from a source which is
+To be useful, a DM must interact with the outside world, and this
+interaction cannot be represented using logical rules, which can only
+manipulate data which is already integrated in the information state.
+Here, we assume that the information that comes from sources which are
 external to the dialogue manager is expressed in terms of semantic
 interpretations of moves, and contains information about the speaker
-and the addressee in a structured way. Here we provide 5 basic types
+and the addressee in a structured way. We provide 5 basic types
 of moves as an illustration:
 #+BEGIN_code
 Greet         spkr  addr
@@ -873,29 +885,32 @@ rule will place them in |Agenda|. For example, to issue a
 countergreeting, a rule will place the proposition |Agenda
 (CounterGreet A S)| in the information state.
 
-As it is easily noticed, each move is accompanied by the information
+Thereby each move is accompanied by the information
 about who has uttered it, and towards whom was it addressed. All the
-moves are stacked in the |Moves| part of the participant’s dialogue
-gameboard.
+moves are recored in the |Moves| part of the participant’s dialogue
+gameboard, as a |Cons|-list (stack).
 
 Additionally, we record any move |m| which one has yet to actively
-react to, in the hypothesis |Pending m|. We cannot use the |Moves|
+react to, in an hypothesis of the form |Pending m|. We cannot use the |Moves|
 part of the state for this purpose, because it is meant to be static
 (not to be consumed). |Pending| thus allows to make the difference
-between a moves which is fully processed or not.
+between a move which is fully processed and a pending one.
 
 *** Initial state
-In general, we start with empty |QUD| and |Agenda|. An empty |QUD| can
-be adjusted if in a certain domain some open questions are assumed
-from the start. The |Agenda| might not be empty if one would want the
-system to initiate the conversation. There are also no moves: nothing
-has been said by neither party.
+In general, we start with empty |QUD| and |Agenda|. An non-empty |QUD|
+can be prepared if, in a certain domain, some open questions are
+assumed from the start. The |Agenda| might not be empty if one wants
+the system to initiate the conversation. There are also no moves:
+nothing has been said by neither party.
 
 #+BEGIN_code
 _ :: QUD Nil;
 _ :: Agenda Nil;
 _ :: Moves Nil;
 #+END_code
+
+(We often do not care about the proof object witnessing a propositions,
+in which case we denote it with an underscore).
 
 *** Hearing
 The capacity of "hearing" or, in other words, starting the processing
@@ -906,14 +921,15 @@ hearAndRemember  :
   (m : DP -> DP -> Move) -> (x y : DP) -> (ms : List Move) ->
   Heard (m x y)  ⊸
   Moves ms       ⊸
-  HasTurn x      ⊸
-  [  _ :: Moves (Cons (m x y) ms);
-     _ :: Pending (m x y) ;
-     _ :: HasTurn y ];
+  HasTurn x      ⊸ [  _ :: Moves (Cons (m x y) ms);
+                      _ :: Pending (m x y) ;
+                      _ :: HasTurn y ];
 #+END_code
 where |(m x y)| is a semantic representation of the utterance. Here it
-is assumed that participant |x| has a turn and, as a result, turn was
-taken by her partner |y|. |DP| type stands for /dialogue
+is assumed that participant |x| has the turn and, as a result, turn was
+taken by their partner |y|[fn::For now we have a very simple model of turn-taking, which can be
+improved in many ways: certain moves may not induce turn-change, there
+can be more than two participants, etc.]. The |DP| type stands for /dialogue
 participant/. As a result we do several things: i) place the move in a move
 list for further references (|PushMove|), ii) record the
 turn-switching (which in a complete system may not apply to all cases
@@ -929,33 +945,32 @@ utterAndRemember :
   (m : DP -> DP -> Move) -> (ms : List Move) -> (x y : DP) ->
   Agenda (m x y)  ⊸
   Moves ms        ⊸
-  HasTurn x       ⊸
-  [  _ :: Utter (m x y);
-     _ :: Moves (Cons (m x y) ms);
-     _ :: HasTurn y];
+  HasTurn x       ⊸ [  _ :: Utter (m x y);
+                       _ :: Moves (Cons (m x y) ms);
+                       _ :: HasTurn y];
 #+END_code
 
-Here also we take care of turn-taking in the same rule. As a result, the system consumes the |Agenda| passes the move to the NLG component. The move is also memorised in the |Moves| stack.
+Here also we take care of turn-taking in the same rule. As a result,
+the system consumes the |Agenda| and passes the move to the NLG
+component. The move is also memorised in the |Moves| stack.
 *** Basic adjacency: greeting
 We can show how basic move adjacency can be defined in the example of
 countergreeting preconditioned by a greeting from the other party:
 #+BEGIN_code
-counterGreeting :
-  (x y : DP) -> 
-  HasTurn x            -*
-  Pending (Greet y x)  ⊸
-  Agenda (CounterGreet x y);
+counterGreeting :  (x y : DP) -> 
+                   HasTurn x            -*
+                   Pending (Greet y x)  ⊸
+                   Agenda (CounterGreet x y);
 #+END_code
 *** QUD incrementation
 Another important rule accounts for pushing the content of the last move, in the case if it is an |Ask| move, on top of the questions under discussion (|QUD|) stack.
 
 #+BEGIN_code
-pushQUD :
-   (q : Question) -> (qs : List Question) ->
-   (x y : DP)           -> 
-   Pending (Ask q x y)  ⊸ 
-   QUD qs               ⊸ 
-   QUD (Cons q qs)
+pushQUD :  (q : Question) -> (qs : List Question) ->
+           (x y : DP)           -> 
+           Pending (Ask q x y)  ⊸ 
+           QUD qs               ⊸ 
+           QUD (Cons q qs)
 #+END_code
 *** Integrating the answers
 If the user asserts something that relates to the top |QUD|, then
@@ -963,25 +978,23 @@ the |QUD| can be resolved and therefore removed from the stack. The
 corresponding proposition |p| is saved as a |UserFact|[fn::For the
 current purposes we only remove the top QUD, but in a more general
 case we can implement the policy that can potentially resolve any QUD
-from the stack.]. This rules extend the abstract rules that were
+from the stack.]. This rule extends the abstract rule that were
 introduced in section ref:sec:cr.
 #+BEGIN_code
 processAssert : (a : Type) -> (x : a) ->  (p : Prop) -> 
   (qs : List Question) -> (dp dp1 : DP) ->
   Pending (Assert p dp1 dp)          ⊸ 
-  QUD (Cons (Question dp a x p) qs)  ⊸
-  [  _ :: UserFact p;
-     _ :: QUD qs];
+  QUD (Cons (Question dp a x p) qs)  ⊸ [  _ :: UserFact p;
+                                          _ :: QUD qs];
 #+END_code
 
-Short answers are processed in a very similar way to the assertions:
+Short answers are processed in a very similar way to assertions:
 #+BEGIN_code
 processShort : (a : Type) -> (x : a) ->  (p : Prop) -> 
   (qs : List Question) -> (dp dp1 : DP) ->
   Pending (ShortAnswer a x dp1 dp)   ⊸ 
-  QUD (Cons (Question dp a x p) qs)  ⊸
-  [  _ :: UserFact p;
-     _ :: QUD qs];
+  QUD (Cons (Question dp a x p) qs)  ⊸ [  _ :: UserFact p;
+                                          _ :: QUD qs];
 #+END_code
 
 *** Questions and clarifications
@@ -1011,17 +1024,14 @@ produceCR :
       _  :: p   ] ?-> CR;
 #+END_code
 
-The clarifying side sequence itself (|CR|) is meant to be specified
-by a dialogue developer, because it is domain-specific and the choice
-of the spectrum of possible options is wide. We will provide an example of
+The clarifying side sequence itself (|CR|) is meant to be specified by
+a dialogue developer, possibly informed by machine-learning systems,
+because it is domain-specific and the choice of the spectrum of
+possible options is wide. We provide an example of a
 domain-specific |CR| in the section ref:sec:example below.
 
-*** Note on turn taking
-For now we have a very simple model of turn-taking, which can be
-improved in many ways: certain moves may not induce turn-change, there
-can be more than two participants, etc.
 ** Example label:sec:example
-Now we turn into how the simple of system of rules above can handle the following exchange:
+We now turn to how the generic system of rules above can handle the following exchange:
 #+begin_quote
 U: Hello!\\
 S: Hello, USER.\\
@@ -1029,7 +1039,7 @@ U: When there is a bus from Gotaplatsen?\\
 S: In 15 minutes.
 #+end_quote
 
-Let’s now assume the following system’s context, which contains
+Let us further assume the following system context, which contains
 up-to-date public transport information (we just give a few
 examples, |kbX| for "knowledge base").
 #+BEGIN_code
@@ -1037,7 +1047,7 @@ TT B18 T15   Gotaplatsen     Johanneberg
 TT B55 T20   Gotaplatsen     SciencePark
 #+END_code
 They are added to the initial domain-independent context
-outlined above. We also assume that user has the turn at the start. 
+outlined above. We also assume that the user has the turn at the start. 
 #+BEGIN_code
 QUD      Nil
 Agenda   Nil
@@ -1045,7 +1055,7 @@ HasTurn  USER
 Moves    Nil
 #+END_code
 
-The when the systems "hears" the greeting it can be integrated into
+The when the systems hears the greeting it can be integrated into
 the state using |hearAndRemember| rule, therefore system updates its
 state accordingly:
 #+BEGIN_code
@@ -1078,12 +1088,13 @@ Moves
 [  CounterGreet  SYSTEM USER   
    Greet         USER SYSTEM         ]
 #+END_code
+(we use bracket syntax instead of |Cons| for readability)
 
 Now the systems hears the question (|Ask| move: |(Ask (Question t (TT
 n t Gotaplatsen d)))|. It is domain specific, and basically requests
 the timetable information for the given departure station. Again, we
 use |hearAndRemember| rule to itegrate it into state, but also,
-because the move is |Ask|, systems sets its QUD to the question that
+because the move is |Ask|, the system sets its QUD to the question that
 the move contains with the |pushQUD| rule. 
 
 #+BEGIN_code
@@ -1118,7 +1129,7 @@ Agenda (ShortAnswer Time T15 SYSTEM USER)
 Moves  […] -- same as above
 #+END_code
 *** Clarifying side sequence
-We can extend our minimal timetable example with another entry,
+In contrast, we can extend our minimal timetable example with another entry,
 therefore making it non-unique, w.r.t. time. 
 #+BEGIN_code
 TT B18 T15   Gotaplatsen     Johanneberg
@@ -1161,7 +1172,7 @@ Moves  [  Ask (Question SYSTEM Bus n0 (WantBus n0)) SYSTEM USER
           Greet USER SYSTEM  ]
 #+END_code
 
-User can reply to this with a short answer |(ShortAnswer Bus B55)| or
+The user can reply to this with a short answer |(ShortAnswer Bus B55)| or
 an assertion |(Assert (WantBus B55)|, which can be integrated
 using |processShort| or |processAssert| rule correspondingly. Here we
 show the state after processing the short answer.
@@ -1176,7 +1187,7 @@ Moves  [  ShortAnswer Bus B55 USER SYSTEM
 The reader can notice that the metavariable |n0| from the previous
 state is now unified with |B55| in the question under discussion,
 therefore it now corresponds to one unique entry in the knowledge
-base. Hence, the answer can be issued (|produceAnswer|) rule.
+base. Hence, the answer can be issued, by the |produceAnswer| rule.
 
 #+BEGIN_code
 Answered (Question  USER Time T20
