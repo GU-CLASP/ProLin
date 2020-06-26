@@ -1264,10 +1264,9 @@ A natural progression of this work is to allow the assignment of
 probabilities to rules and to the components of the information state
 and to train the probabilities according to the new observations. In
 this sense our approach follows citep:lison2015hybrid, which is based
-on probabilistic rules, but in our case the domain-independent rules
-will play an important role.
-
-
+on probabilistic rules, but in our case the structure of information
+state is rich and derived from the theoretical outlook on dialogue,
+and dialogue management has a core set of domain-independent rules.
 
 TODO other limitations 
 TODO briefly describe the evaluation benchmarks
