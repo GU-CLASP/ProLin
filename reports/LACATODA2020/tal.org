@@ -95,16 +95,14 @@ participant states and transitions in a unified logical framework.
 Even though the progress in bridging dialogue management and
 theoretical research of dialogue is promising, we believe that it is
 crucial to use formal tools which are most appropriate for the task:
-one should be able to express the rules of various genres of dialogue in
-a concise way, free, to any possible extent, of irrelevant technical
-details.
-
-In the view of citet:dixon2009plans this is best done by
-representing the information-state of the agents as updatable sets of
-propositions. Subsets of propositions in the information state can be
-treated independently, and, therefore, a suitable and flexible way to
-represent updates is as propositions in linear logic. We adopt this
-view here, and further argue for it in the body of the paper.
+one should be able to express the rules of various genres of dialogue
+in a concise way, free, to any possible extent, of irrelevant
+technical details.  In the view of citet:dixon2009plans this is best
+done by representing the information-state of the agents as updatable
+sets of propositions. Subsets of propositions in the information state
+can be treated independently, and, therefore, a suitable and flexible
+way to represent updates is as propositions in linear logic. We adopt
+this view here, and further argue for it in the body of the paper.
 
 We further extend citet:dixon2009plans framework to deal with
 unclarity and ambiguity. Indeed, asking a question is typically not
@@ -172,7 +170,7 @@ to a game, containing players (interlocutors), goals and rules. KoS
 represents language interaction by a dynamically changing context. The
 meaning of an utterance is then how it changes the context. Compared
 to most approaches (e.g. cite:roberts2012information), which represent
-a single context for both dialogue participants), KoS keeps separate
+a single context for both dialogue participants, KoS keeps separate
 representations for each participant, using the /Dialogue Game Board/
 (DGB). Thus, the information states of the participants comprise a
 private part and the dialogue gameboard that represents information
@@ -222,9 +220,8 @@ range of clarifications from both parties. This is especially
 beneficial in the case of automatic speech recognition or natural
 language understanding errors. But even putting such errors aside, we
 can also consider topically relevant follow-up questions by the
-system, e.g. "What bus?", or contributions when the user provides more
-information than they were asked, e.g. answering "Bus 18 to Skogome"
-(destination is provided as well).
+system, or contributions when the user provides more
+information than they were asked (over-answering).
  
 *** Questions and clarifications
 One of the greatest challenges in theoretical semantics and pragmatics
@@ -232,22 +229,22 @@ is the treatment of interrogatives in the context of dialogue
 cite:wisniewski2015semantics,ginzburg2012interactive. Here we
 distinguish /questions/ as general surface form and more contextualised
 forms of them, such as questions that initiate side sequences and
-clarification requests (CRs). Side sequences usually refer to
-introduction of some new question under discussion, for instance,
+constitute clarification requests (CRs). Side sequences usually refer
+to introducing some new question under discussion, for instance,
 requesting some additional information, whereas clarification requests
 generally account for cases of non-understanding, but the boundaries
 between them are often blurred. In the current study we exemplify our
 approach by accounting for requests for additional information, but it
-can also be tested for the cases of user-initiated CRs.
+is only tested for the cases of system-initiated CRs.
 
 For spoken dialogue systems it is crucial to be able to produce and
 process clarifications requests cite:purver2003means. In the case of
 the low confidence of speech recognition and NLU, system can clarify
 its input with the user. It is important to allow user initiative in
-the occasion when user does not understand some information provided
-by the system. With recent advancements in speech recognition and
-overwhelming preference for open-vocabulary ASR and statistical NLU,
-systems provide more opportunities for user initiative, which
+the occasion when the user does not understand some information
+provided by the system. With recent advancements in speech recognition
+and overwhelming preference for open-vocabulary ASR and statistical
+NLU, systems provide more opportunities for user initiative, which
 therefore should be supported.
 
 ** Proof search as a programming language
@@ -255,21 +252,18 @@ therefore should be supported.
 The prevailing tradition in formal semantics, including in most pieces
 of work cited above, is to represent (declarative) statements as
 propositions, formalized in an underlying logic (often first-order
-logic).
+logic).  In particular, in linguistic theories based on intuitionistic
+logic (such as TTR), true statements corresponds to propositions which
+admit a proof.
 
-In particular, in linguistic theories based on intuitionistic logic
-(such as TTR), true statements corresponds to propositions which admit
-a proof.
-
-There is a long history  of using
-proof search as a declarative programming paradigm.  In the most
-abstract sense, the programmer specifies /axioms/ and /rules of inference/
-which model their application domain. Typically such a system of
-axioms and rules represents a database of facts. For example, the
-axiom |(Leave 55 Gotaplatsen 11.50)| can model the fact that bus 55
-leaves from Götaplatsen at 11:50. The rule |(Leave x Gotaplatsen y ->
-Arrive x CentralStationen (y+0.75))| can represent travelling times on
-a certain line. 
+There is a long history of using proof search as a declarative
+programming paradigm.  In the most abstract sense, the programmer
+specifies /axioms/ and /rules of inference/ which model their application
+domain. Typically such a system of axioms and rules represents a
+database of facts. For example, the axiom |(Leave 55 Gotaplatsen
+11.50)| can model the fact that bus 55 leaves from Götaplatsen at
+11:50. The rule |(Leave x Gotaplatsen y -> Arrive x CentralStationen
+(y+0.75))| can represent travelling times on a certain line.
 
 Then, the user may define a query (or goal) as a logical formula. The
 system can then search for a proof of a goal as a way to query the
@@ -380,7 +374,6 @@ ref:tbl:qa-ex, last two rows).  In this instance |A = Prop -> Prop|.
 # NEGATIVE QUESTIONS
 One complication are polar questions phrased in the negative
 cite:cooper2012negative; for example: "Doesn't John like Bananas?".
-
 In this instance, a simple a simple "no" answer can be ambiguous, and
 a possible model would be a multi-valued kind of answer ("yes he does
 " represented as |DefiniteYes|; "no he doesn't", represented
@@ -448,7 +441,7 @@ Resolving a question can be done by communicating an answer. An answer
 to a question |(A : Type; P : A -> Prop)| can be of either of the two following forms: 
 1) A *ShortAnswer* is a pair of an element |X:A| and its type |A|,
    represented as |ShortAnswer A X|
-2) An *Assertion* is a proposition |Q : Prop|, represented as |Assert Q|
+2) An *Assertion* is a proposition |R : Prop|, represented as |Assert R|
 
 
 
@@ -458,7 +451,7 @@ Therefore, one way to process a short answer is by the |processShort| rule:
 processShort :  (a : Type) -> (x : a) -> (p : Prop) -> 
                 ShortAnswer a x ⊸ QUD (Q a x p) ⊸ p
 #+END_code
-Above we use Π type binders to declare metavariables (Written here |(a : Type)
+Above we use Π type binders to declare metavariables (written here |(a : Type)
 ->|, |(x : a) ->|, etc.). This terminology will make sense to readers
 familiar with dependent types. For the others, such binders can be thought
 as universal quantification (|∀ a, ∀ x|, etc.), the difference is that
@@ -486,7 +479,7 @@ That is, if (1) |p| was asserted, and (2) the proposition |q| is part
 of a question under discussion, and (3) |p| can be unified with |q|
 (we ensure this unification by simply using the same metavariable |p|
 in both roles in the above rule), then the assertion resolves the
-question. Additionally, the metavariable |x| is ground to a value
+question. Additionally, the metavariable |x| is made ground to a value
 provided by |p|, by virtue of unification of |p| and |q|. For example,
 "John lives in Paris" answers both questions "Where does John live"
 and "Does John live in Paris" (there is unification), but, not, for
@@ -499,10 +492,10 @@ question.
 ** Notion of unique and concrete values label:sec:unique-concrete
 
 However, one should consider the question resolved only if the answer
-is "unique". For example, the assertion "John lives somewhere" does
-not resolve the question "where does John live". That is, if
-"somewhere" is represented by a metavariable, then the answer is not
-resolving.
+is "unique". For example, the assertion "John lives somewhere"
+generally does not resolve the question "where does John live". That
+is, if "somewhere" is represented by a metavariable, then the answer
+is not resolving.
 
 Assume a two-place predicate |Eat| with agent as first argument and
 object as second argument. The phrase "John eats Mars" could then
@@ -551,12 +544,12 @@ unknown thing. The proper answer is then "I do not know".
 Hence, we introduce another type-former |(x : A) !-> B|. As for |(x :
 A) -> B|, it introduces the metavariable |x|. However, the rule fires
 only when |x| is made /ground/ (it is bound to a term which does not
-contain any metavariable) and /unique/ by matching the rule --- this is what we call a unique and concrete value. That is,
-it won't match in the previous example, because the answer is not
-ground (it contains unknowns). Additionally, it won't match if the
-state of the system is composed of the two
-hypotheses |Eat(John,Mars)| and |Eat(John,Twix)|: the answer is not
-unique.
+contain any metavariable) and /unique/ by matching the rule --- this is
+what we call a unique and concrete value. That is, it won't match in
+the previous example, because the answer is not made ground (it
+contains unknowns). Additionally, it won't match if the state of the
+system is composed of the two hypotheses |Eat(John,Mars)|
+and |Eat(John,Twix)|: the answer is not unique.
 
 Thus, the rule for answering can be written like so:
 #+BEGIN_code
@@ -601,12 +594,12 @@ Eat(Mary,Mars)
 #+END_code
 Then the agent can unambguously answer "Mars": even if we do not
 know who we're talking about, it does not matter: only Mars is
-being eaten. However, If the state is
+being eaten. However, if the state is
 #+BEGIN_code
 Eat(John,Mars)
 Eat(Mary,Twix)
 #+END_code
-Then, a probable answer would be a /clarification request/, namely
+then, a probable answer would be a /clarification request/, namely
 "By whom?".
 
 To detect situations where a clarification request can be issued, we can use the following rule:
@@ -617,7 +610,8 @@ To detect situations where a clarification request can be issued, we can use the
  havePAsQud :: QUD (Q x p);
  proof :: p] ?-> CR
 #+END_code
-(We leave the exact form of the CR abstract for now and come back to it below)
+(We leave the exact form of the CR abstract for now and come back to
+it below in section ref:sec:dm)
 
 The conditions are similar to that of the answering rule. The
 principal difference is the use of the |?->| operator, which takes as
@@ -663,7 +657,7 @@ r    ::  Mary=y
 This means the original question will, by unification, become |Q Food
 x (Eat(Mary,x))|, and it can be unambiguously answered using
 the |produceAnswer| rule. We note that the logical form of the
-question ( |z| such that |z=y|) is typically realised in a complicated
+question (|z| such that |z=y|) is typically realised in a complicated
 way. In our example, it could be "By whom"; echoing part of the
 original question and assuming cooperative communication so that the
 questioner properly relates the clarification request to the implicits
@@ -728,7 +722,7 @@ Paris, France?"  would be suitable.
 *** Clarification via adding named contextual parameters
 The above presentation (using a ternary predicate) is useful
 conceptually, but not ideal in practice: in the most general case one
-would end-up with predicates with lots of arguments, for example
+would end up with predicates with lots of arguments, for example
 country, county, district, etc.
 
 However, there is a standard solution to the issue: because the
@@ -736,9 +730,11 @@ country is functionally dependent on the location, these two concepts
 should be linked directly together rather than involve the |Live|
 predicate. Using an intermediary entity type for locations and binary
 predicates, one can represent the question "Does John live in Paris?"
-as follows: |\x. if x then (Live John y -> Name y Paris) else Not
-(Live John y -> Name y Paris) |
-
+as follows: 
+#+BEGIN_code
+\x. if x  then (Live John y -> Name y Paris)
+          else Not (Live John y -> Name y Paris)
+#+END_code
 Literally, "Does John live in a place called Paris?".
 
 The ambiguity of the |Paris| name can be represented by several
@@ -756,20 +752,21 @@ Because John lives in |X| but not in |Y| the question is
 ambiguous. One way to lift the ambiguity is raise the clarification
 request as above. Here it can be phrased as a polar question[fn::Here
 we use the simpler version of the treatment of polar questions.]
-again: |Q Bool (\x. if x then Country France y else Not (Country
-France y))|
+again: 
+#+BEGIN_code
+Q Bool (\x. if x then Country France y else Not (Country France y))
+#+END_code
 
 
 *** Summary
 
 In sum, we leverage a feature of linear-logic proof search: at any
-point in the scenario, the context can refer to metavariables.
-
-In a dialogue application, metavariables represent a certain amount of
+point in the scenario, the context can refer to metavariables. In a
+dialogue application, metavariables represent a certain amount of
 flexibility in the scenario: /so far/ the scenario works for any value
 which could be assigned to the metavariable. This means that at a
-further point the metavariable can be instanciated to some other
-value. 
+further point the metavariable can be instantiated to some other
+value.
 
 * Kos-inspired dialogue management with linear logic
 label:sec:dm
