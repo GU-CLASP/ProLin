@@ -48,7 +48,7 @@
 
 
 * Introduction
-A key aspect of dialogue systems design is the coherence of system’s
+A key aspect of dialogue systems design is the coherence of the system’s
 responses.  In this respect, a key component of a dialogue system is
 the dialogue manager, which selects appropriate system actions
 depending on the current state and the external context.
@@ -104,14 +104,14 @@ can be treated independently, and, therefore, a suitable and flexible
 way to represent updates is as propositions in linear logic. We adopt
 this view here, and further argue for it in the body of the paper.
 
-We further extend citet:dixon2009plans framework to deal with
+We further extend the citet:dixon2009plans framework to deal with
 unclarity and ambiguity. Indeed, asking a question is typically not
 done in one utterance which leaves nothing to interpretation. Rather,
-an initial short and possbily ambiguous question is posed. If the
+an initial short and possibly ambiguous question is posed. If the
 answerer deems the question unclear, a dialogue will ensue before the
-question is finally resolved. In technical terms we propose to deal
-with question-answering and clarification requests in the context of
-dialogue management.
+question is finally resolved. In technical terms we deal with
+question-answering and clarification requests in a unified way,
+following some earlier work, in the context of dialogue management.
 
 # How we plan to fill this gap?
 
@@ -120,7 +120,7 @@ To deal with such ambiguity and unclarity, we propose here the use of
 proof search in various logical frameworks.  That is, meta-variables
 will stand in for any piece of information which is left to further
 interpretation. In particular, in this paper we explore the potential
-of using metavariables in the representation of question/answering
+of using metavariables in the representation of question/answer
 exchanges.
 
 By using well-known techniques which correspond well with the
@@ -141,12 +141,12 @@ framework:
 The rest of the paper is structured as follows. In section
 ref:sec:background we review important background for formalisation
 and implementation theories: dialogue management, linear logic and
-proof search. In section ref:sec:qa&cr we expose a treatment of
+proof search. In section ref:sec:qa&cr we sketch a treatment of
 question, answers and clarification using the aforementioned
-formalisms. This treatment ignores part of the dialogue management
+formalisms. This treatment ignores certain dialogue management
 complexities, which we address in section ref:sec:dm. We discuss
-related work in ref:sec:related. Concluding remarks are provided in
-ref:sec:discussion.
+related work in section ref:sec:related. Concluding remarks are
+provided in section ref:sec:discussion.
 
 
 
@@ -175,7 +175,7 @@ representations for each participant, using the /Dialogue Game Board/
 (DGB). Thus, the information states of the participants comprise a
 private part and the dialogue gameboard that represents information
 arising from publicized interactions. The DGB tracks, at the very
-least, shared assumptions/visual space, moves (= utterances, form and
+least, shared assumptions/visual field, moves (= utterances, form and
 content), and questions under discussion.
 
 KoS is based on Cooper's formalism, Type Theory with Records (TTR). There
@@ -200,14 +200,14 @@ state. Being rich entails that the information state contains a
 hierarchy of facts, including the ones that are thought to be shared
 and the ones that have not been yet publicised.
 
-Let’s now consider the /update/, another essential component of ISU. In
-this case, we will rely on a set of rules, that will govern the
-updates. For instance, citet:ginzburg2012interactive defines one of
-the most basic rules -- the rule of QUD-incrementation -- the
-procedure of updating the current set of questions under discussions
-(|QUD|) if the latest utterance is a question. This operation is
-salient to a user and therefore it constitutes the update of the
-public part of the information state.
+Let us now consider the /update/, another essential component of ISU. In
+this case, we rely on a set of rules that will govern the updates. For
+instance, citet:ginzburg2012interactive defines one of the most basic
+rules -- the rule of QUD-incrementation -- the procedure of updating
+the current set of questions under discussions (|QUD|) if the latest
+utterance is a question. This operation is salient to a user and
+therefore it constitutes the update of the public part of the
+information state.
 
 # #+BEGIN_code
 # if public.LU = Ask(U, Question(x)):
@@ -362,8 +362,8 @@ P  : A  -> Prop
 #+END_code
 
 The intent of the question is to find out about a value |x| of
-type |A| which makes |P x| true, or at least held true by the other
-participant. We show several examples in table ref:tbl:qa-ex.  It is
+type |A| which makes |P x| true, or at least entertained by the other
+participant. We provide several examples in table ref:tbl:qa-ex.  It is
 worth stressing that the type |A| can be large (for example asking for
 any location) or as small as a boolean (if one requires a simple
 yes/no answer).  We note in passing that, typically, polar questions
@@ -393,12 +393,11 @@ To represent ambiguity in the case of |AmbiguousNo|, we make the
 answer provide no information, in the form of a trivial proposition
 (which is always true regardless of context).
 
-One potentially surprising feature is that, in our account, the
-meaning of simple answers (such as "no") depend on the
-context. However, we do not see this as a problem: indeed, the meaning
-of short answers is /always/ context-dependent. (For example "Paris" has
-a does not mean the same thing in the context of "Where do you live?"
-as in the context "Where were you born?".)
+One very natural feature is of our account, the meaning of simple
+answers (such as "no") depends on the context. Indeed, the meaning of
+short answers is /always/ context-dependent. ("Paris" has does not mean
+the same thing in the context of "Where do you live?"  as in the
+context "Where were you born?".)
 
 Additionally, in the framework of a full dialogue management system,
 the |AmbiguousNo| case should be treated as unresolving (the question
@@ -406,9 +405,9 @@ effectively remains unanswered). However, in such a framework, it is
 always possible to receive a biasing answer ("I don't know") or no
 answer whatsoever --- but we leave this out of scope of our analysis.
 
-Yet even more complications are possible, by introduction of cases
-such as rhethorical and attitudinal questions ("Do you know who I met
-yesterday?"), which are also out of scope.
+More complications are possible, by introduction of cases such as
+rhetorical and attitudinal questions ("Do you know who I met
+yesterday?"), which are also out of scope in the current paper.
 
 
 \begin{sidewaystable} %[htbp]
@@ -426,12 +425,12 @@ Does John live in Paris? & |Prop -> Prop| & |\m. m (Live John Paris)            
 
 Within the state of the agent, if the value of the requested answer is
 represented as a metavariable |x|, then the question can be
-represented as: |Q A x (P x)|.  That is, the pending question is a
-triple of a type, a metavariable |x|, and a proposition where |x|
-occurs. We stress that |P x| is /not/ part of the information state of the
-agent yet, rather the fact that the above question is /under
-discussion/ is a fact. For example, after asking "Where does John
-live", we have:
+represented as: |Q A x (P x)|.  That is, the pending question (|Q|
+denotes a question constructor) is a triple of a type, a
+metavariable |x|, and a proposition where |x| occurs. We stress
+that |P x| is /not/ part of the information state of the agent yet,
+rather the fact that the above question is /under discussion/ is a
+fact. For example, after asking "Where does John live", we have:
 
 #+BEGIN_code
 haveQud : QUD (Q Location x (Live John x))
@@ -610,19 +609,20 @@ To detect situations where a clarification request can be issued, we can use the
  havePAsQud :: QUD (Q x p);
  proof :: p] ?-> CR
 #+END_code
-(We leave the exact form of the CR abstract for now and come back to
-it below in section ref:sec:dm)
+(We leave unspecified the exact form of the CR abstract for now and
+come back to it below in section ref:sec:dm)
 
 The conditions are similar to that of the answering rule. The
 principal difference is the use of the |?->| operator, which takes as
-left operand the specification of a request and test for it to have a
-non-unique solution or it be not (fully) made ground. Essentially this
-does the the opposite of the |!->| operator.  However, because the
-components of the query are indeterminate, they cannot be fixed when firing the rule,
-and therefore the state update cannot depend on them. Therefore we use the record
-syntax to bound their scope, ensuring that they won't occur in the state update. Additionally, note the use of the single
-colon (|:|) for metavariables and the double colon for
-information-state hypotheses (|::|).
+left operand the specification of a request and tests whether it has a
+non-unique solution or cannot be made fully ground. Essentially this
+does the opposite of the |!->| operator.  However, because the
+components of the query are indeterminate, they cannot be fixed when
+firing the rule, and therefore the state update cannot depend on
+them. Therefore we use the record syntax to bound their scope,
+ensuring that they won't occur in the state update. Additionally, note
+the use of the single colon (|:|) for metavariables and the double
+colon for information-state hypotheses (|::|).
 
 We can then turn our attention to the formulation of this clarification request.
 It is itself a question, and has a tricky representation:
@@ -664,7 +664,7 @@ questioner properly relates the clarification request to the implicits
 of the original questions.
 
 In practice, the form of clarification questions will greatly vary
-depending on the context.
+depending on the context cite:purver2004theory.
 
 The above suposes a clear-cut distinction: if an answer is unique, it
 is given; otherwise a clarification request is issued. However,
@@ -682,12 +682,12 @@ of an experimental study.
 *** Clarification via adding extra arguments
 
 The scope of what is subject to clarification is anything which can be
-represented as an argument in a relation.
-For instance, consider the polar question "Where does John live?". The
-questionee may decide that there is some ambiguity about /which/ Paris
-one is talking about --- after all there are several places with this name. 
-To be able to model this, the |Live| relation needs to be
-generalised to be a 3-place predicate, where the country is specified.
+represented as an argument in a relation.  For instance, consider the
+polar question "Where does John live?". The questionee may decide that
+there is some ambiguity about /which/ location one is talking about ---
+after all there are several places with this name.  To be able to
+model this, the |Live| relation needs to be generalised to be a
+3-place predicate, where the country is specified.
 
 However most of the time one may choose to leave this parameter
 implicit. This is what is done for example when asking the above
@@ -768,10 +768,10 @@ which could be assigned to the metavariable. This means that at a
 further point the metavariable can be instantiated to some other
 value.
 
-* Kos-inspired dialogue management with linear logic
+* KoS-inspired dialogue management with linear logic
 label:sec:dm
 
-In this section we integrate our question/answering framework in a
+In this section we integrate our question/answering framework within
 more complete dialog manager (DM).  We stress that this DM models the
 information-state of only one participant. Regardless, this
 participant can record its own beliefs about the state of other
@@ -811,7 +811,7 @@ then illustrate them with an example application.
     %\draw [->] (model) -- node [name=y] {$y$}(output);
     %\draw [->] (y) |- (feedback);
 \end{tikzpicture}
-\caption{Architecture of a spoken dialogue system with a dialogue manager based on linear logic framework.}
+\caption{Architecture of a spoken dialogue system with a dialogue manager based on a linear logic framework.}
 \label{fig:ds}
 \end{figure}
 
@@ -854,7 +854,7 @@ gameboard, as a |Cons|-list (stack).
 Additionally, we record any move |m| which one has yet to actively
 react to, in an hypothesis of the form |Pending m|. We cannot use the |Moves|
 part of the state for this purpose, because it is meant to be static
-(not to be consumed). |Pending| thus allows to make the difference
+(not to be consumed). |Pending| thus allows one to make the difference
 between a move which is fully processed and a pending one.
 
 *** Initial state
@@ -862,7 +862,7 @@ In general, we start with empty |QUD| and |Agenda|. An non-empty |QUD|
 can be prepared if, in a certain domain, some open questions are
 assumed from the start. The |Agenda| might not be empty if one wants
 the system to initiate the conversation. There are also no moves:
-nothing has been said by neither party.
+nothing has been said by either party.
 
 #+BEGIN_code
 _ :: QUD Nil;
@@ -1164,7 +1164,7 @@ label:sec:related
 In this work we provide a minimal and granular account for
 clarification requests initiated by any conversational party,
 following accounts of and supporting a subset of cases that were
-thoroughly investigated in a CLARIE Prolog-based system
+thoroughly investigated in the CLARIE Prolog-based system
 citep:purver-rlc06, following corpus studies by citet:purver2003means
 and citet:rodriguez2004form.
 
@@ -1177,14 +1177,17 @@ advantages. First, it affords the use of metavariables to represent
 uncertaintly, which is absent from TTR.  Second, expressing updates
 using linear logic rules means that only the relevant parts of the
 information state must be dealt with in any given rule. Cooper's TTR
-has a special "assymetric merge" operator for this purpose, but it is
-a less-studied \textit{ad-hoc} addition to type-theory.
+has a special "asymmetric merge" operator for this purpose, but it is
+a less-studied \textit{ad-hoc} addition to type-theory, though see
+cite:carp93,lascarides96,grover94.
 
 Furthermore, as it stands, KoS is lacking implementations, with the
 exception of the work of citet:maraev_kosttr-based_2018, who adapt KoS
-to eschew the assymetric merge operation.  As we see it, this sparsity
-of implementations is largely due to the semantic gap between its aims
-(information-state dialogue management) and its formalism (TTR).
+to eschew the assymetric merge operation.
+
+# As we see it, this sparsity
+# of implementations is largely due to the semantic gap between its aims
+# (information-state dialogue management) and its formalism (TTR).
 
 An oft-touted advantage of TTR is that propositions are witnessed by
 proof objects. We benefit from the same advantage: we use an
@@ -1219,8 +1222,9 @@ are /corrections/. It would be elegant if corrections could be
 formalised in a way similar clarifications. However, in our analysis,
 metavariables disappear once they have been grounded. Therefore,
 corrections cannot involve metavariables and thus require a different
-treatment. A solution could be to keep metavariables in terms (apply unification substitutions
-lazily). We leave a detailed study to further work.
+treatment. A solution could be to keep metavariables in terms (apply
+unification substitutions lazily). We leave a detailed study to
+further work.
 
 We note that the use of (meta)variables to refer to discourse objects
 is a very general device. Anything which can be subject to
@@ -1254,17 +1258,22 @@ We can also imagine combining such ideas with probabilistic meaning
 for sentences
 cite:goodman_probabilistic_2015,bernardy_compositional_2018.
 
-TODO other limitations?
-TODO briefly describe the evaluation benchmarks
+The main current weakness  of our approach is that we do not have
+any detailed utterance processing  of the user and no word by word
+incremental processing. This means we cannot deal with form-based
+parallelism needed for various types of acknowledgements, CRs, and
+self-repair. Nor, as things stand, do we engage in
+grounding interaction, modelled extensively in cite:larsson2002issue.
+
 
 Table ref:table:ds originates from cite:ginzburg-nlphandbook, who
 proposed a series of benchmarks for comparing different approaches to
-developing dialogue systems (see section xxx of that paper). For each
+developing dialogue systems (see section 2 of that paper). For each
 approach the symbol \checkmark indicates that the approach safisfies
 the benchmark in the corresponding row; $\sim$ that the benchmark
 could be met with some caveats, as explained in the text above; and
 --- that the benchmark is not met by a standard version of the
-approach. Here we discuss
+approach. 
 
 \begin{table}
 \centering
@@ -1277,30 +1286,30 @@ Q2a non-resolving answers            & \checkmark \\
 Q2b follow up queries                & \checkmark \\
 Q3 overinformative answers           & \checkmark \\
 Q4 sub-questions                     & \checkmark \\
-Q5 topic changing                    & \\
+Q5 topic changing                    & $\sim$\\
 A1 propositional content update      & \checkmark \\
-A2 disagreement                      & \\ 
+A2 disagreement                      & $\sim$\\ 
 SC scalability                       & $\sim$ \\
 DA domain adaptability               & \checkmark \\ \hline
 {\bf metacommunication}              & \\
-Ack1 completed acknowledgements      & \\
-Ack2 continuation acknowledgements   & \\
-Ack3 gestural acknowledgements       & \\
-CR1 repetition CRs                   & \\
-CR2 confirmation CRs                 & \\
+Ack1 completed acknowledgements      & ---\\
+Ack2 continuation acknowledgements   & ---\\
+Ack3 gestural acknowledgements       & ---\\
+CR1 repetition CRs                   & ---\\
+CR2 confirmation CRs                 & ---\\
 CR3 intended content CRs             & \checkmark \\
-CR4 intention recognition CRs        & \\
+CR4 intention recognition CRs        & ---\\
 SND distinct updates                 & $\sim$ \\
 FG fine-grained representations      & $\sim$ \\ \hline
 {\bf fragments}                      & \\
 SF1 wide coverage of SFs             & $\sim$ \\
 SF2 basic answer resolution          & $\sim$ \\
-SF3 reprise fragment resolution      & \\
-SF4 long distance short answers      & \\
-SF5 genre sensitive initiating SFs   & \\
-D1 recognize and repair disfluencies & \\
-D2 keep disfluencies in context      & \\\hline
-\end{tabular}\caption{System evaluation}
+SF3 reprise fragment resolution      & --- \\
+SF4 long distance short answers      & $\sim$\\
+SF5 genre sensitive initiating SFs   & $\sim$\\
+D1 recognize and repair disfluencies & ---\\
+D2 keep disfluencies in context      & ---\\\hline
+\end{tabular}\caption{System evaluation. Q5---understand that irrelevant answers imply ``change the topic'', A2---disagree with user if her utterance is incompatible with own belief, SND---an utterance can give rise to distinct updates across participants. For other, more obvious benchmarks we refer our readers to \citep{ginzburg-nlphandbook}.}
 \label{table:ds}
 \end{table}
 
