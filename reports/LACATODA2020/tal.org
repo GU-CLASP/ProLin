@@ -643,8 +643,8 @@ a    ::  ShortAnswer Person Mary
 #+END_code
 after applying |processShort|:
 #+BEGIN_code
-Eat(John,Mars)
-Eat(Mary,Twix)
+Eat John Mars
+Eat Mary Twix
 ori  :: QUD (Q Food x (Eat y x))
 r    ::  Mary=y
 #+END_code
@@ -690,7 +690,7 @@ implicit. This is what is done for example when asking the above
 question:
 
 #+BEGIN_code
-Q Location x Live(John,x,y)
+Q Location x (Live John x y)
 #+END_code
 
 If the question can be answered without regard for the country, then
