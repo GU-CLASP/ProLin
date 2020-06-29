@@ -549,8 +549,8 @@ and |Eat(John,Twix)|: the answer is not unique.
 
 Thus, the rule for answering can be written like so:
 #+BEGIN_code
-produceAnswer : (a : Type) -> (x : a) !-> (p : Prop)
--> QUD (Q a x p) -> p -* ShortAnswer a x
+produceAnswer : (a : Type) -> (x : a) !-> (p : Prop) -> 
+              QUD (Q a x p) -> p -* ShortAnswer a x
 #+END_code
 
 For example, if we have the following state:
@@ -602,9 +602,7 @@ To detect situations where a clarification request can be issued, we
 can use the following rule (we leave unspecified the exact form of the
 CR abstract for now and come back to it below in section ref:sec:dm):
 #+BEGIN_code
-[a : Type; x : a; p : Prop;
- havePAsQud :: QUD (Q x p);
- proof :: p] ?-> CR
+[a : Type; x : a; p : Prop; havePAsQud :: QUD (Q x p); proof :: p] ?-> CR
 #+END_code
 
 The conditions are similar to that of the answering rule. The
@@ -859,9 +857,7 @@ the system to initiate the conversation. There are also no moves:
 nothing has been said by either party.
 
 #+BEGIN_code
-_ :: QUD Nil;
-_ :: Agenda Nil;
-_ :: Moves Nil;
+_ :: QUD Nil; _ :: Agenda Nil; _ :: Moves Nil;
 #+END_code
 
 (We often do not care about the proof object witnessing a propositions,
@@ -874,11 +870,9 @@ implemented with the following rule:
 #+BEGIN_code
 hearAndRemember  :
   (m : DP -> DP -> Move) -> (x y : DP) -> (ms : List Move) ->
-  Heard (m x y)  ⊸
-  Moves ms       ⊸
+  Heard (m x y)  ⊸ Moves ms ⊸
   HasTurn x      ⊸ [  _ :: Moves (Cons (m x y) ms);
-                      _ :: Pending (m x y) ;
-                      _ :: HasTurn y ];
+                      _ :: Pending (m x y) ; _ :: HasTurn y ];
 #+END_code
 where |(m x y)| is a semantic representation of the utterance. Here it
 is assumed that participant |x| has the turn and, as a result, turn was
@@ -898,11 +892,9 @@ by |Agenda| that contains a move that is just about to be uttered.
 #+BEGIN_code
 utterAndRemember :
   (m : DP -> DP -> Move) -> (ms : List Move) -> (x y : DP) ->
-  Agenda (m x y)  ⊸
-  Moves ms        ⊸
+  Agenda (m x y)  ⊸ Moves ms ⊸
   HasTurn x       ⊸ [  _ :: Utter (m x y);
-                       _ :: Moves (Cons (m x y) ms);
-                       _ :: HasTurn y];
+                       _ :: Moves (Cons (m x y) ms); _ :: HasTurn y];
 #+END_code
 
 Here also we take care of turn-taking in the same rule. As a result,
@@ -912,9 +904,7 @@ component. The move is also memorised in the |Moves| stack.
 We can show how basic move adjacency can be defined in the example of
 countergreeting preconditioned by a greeting from the other party:
 #+BEGIN_code
-counterGreeting :  (x y : DP) -> 
-                   HasTurn x            -*
-                   Pending (Greet y x)  ⊸
+counterGreeting :  (x y : DP) -> HasTurn x -* Pending (Greet y x)  ⊸
                    Agenda (CounterGreet x y);
 #+END_code
 *** QUD incrementation
@@ -922,9 +912,7 @@ Another important rule accounts for pushing the content of the last move, in the
 
 #+BEGIN_code
 pushQUD :  (q : Question) -> (qs : List Question) -> (x y : DP) -> 
-           Pending (Ask q x y)  ⊸ 
-           QUD qs               ⊸ 
-           QUD (Cons q qs)
+           Pending (Ask q x y) ⊸ QUD qs ⊸ QUD (Cons q qs)
 #+END_code
 *** Integrating the answers
 If the user asserts something that relates to the top |QUD|, then
@@ -938,8 +926,7 @@ introduced in section ref:sec:cr.
 processAssert : (a : Type) -> (x : a) -> (p : Prop) -> 
   (qs : List Question) -> (dp dp1 : DP) ->
   Pending (Assert p dp1 dp)          ⊸ 
-  QUD (Cons (Question dp a x p) qs)  ⊸ [  _ :: UserFact p;
-                                          _ :: QUD qs];
+  QUD (Cons (Question dp a x p) qs)  ⊸ [  _ :: UserFact p; _ :: QUD qs];
 #+END_code
 
 Short answers are processed in a very similar way to assertions:
@@ -947,8 +934,7 @@ Short answers are processed in a very similar way to assertions:
 processShort : (a : Type) -> (x : a) ->  (p : Prop) -> 
   (qs : List Question) -> (dp dp1 : DP) ->
   Pending (ShortAnswer a x dp1 dp)   ⊸ 
-  QUD (Cons (Question dp a x p) qs)  ⊸ [  _ :: UserFact p;
-                                          _ :: QUD qs];
+  QUD (Cons (Question dp a x p) qs)  ⊸ [  _ :: UserFact p; _ :: QUD qs];
 #+END_code
 
 *** Questions and clarifications
@@ -958,21 +944,15 @@ to initiate a clarifying side sequence (|produceCR|).
 
 #+BEGIN_code
 produceAnswer :
-   (a : Type)            ->
-   (x : a)               !->
-   (p : Prop)            ->
-   (qs : List Question)  ->	
-   QUD (Cons (Question USER a x p) qs)  ⊸
-   p  -*
-   [  _ :: Agenda (ShortAnswer a x SYSTEM USER);
-      _ :: QUD qs;
+   (a : Type) ->   (x : a) !-> (p : Prop) -> (qs : List Question)  ->	
+   QUD (Cons (Question USER a x p) qs)  ⊸ p  -*
+   [  _ :: Agenda (ShortAnswer a x SYSTEM USER); _ :: QUD qs;
       _ :: Answered (Question USER a x p)];
 #+END_code
 #+BEGIN_code
 produceCR :
    [  a : Type ; x : a ;  p : Prop ; qs : List Question ;
-      _  :: QUD (Cons (Question USER a x p) qs) ;
-      _  :: p   ] ?-> CR;
+      _  :: QUD (Cons (Question USER a x p) qs) ; _  :: p ] ?-> CR;
 #+END_code
 
 The clarifying side sequence itself (|CR|) is meant to be specified by
@@ -992,7 +972,7 @@ S: In 15 minutes.
 
 Let us further assume the following system context, which contains
 up-to-date public transport information (we just give a few
-examples, |kbX| for "knowledge base").
+examples).
 #+BEGIN_code
 TT B18 T15   Gotaplatsen     Johanneberg
 TT B55 T20   Gotaplatsen     SciencePark
@@ -1033,8 +1013,7 @@ readability):
 
 #+BEGIN_code
 HasTurn U
-Moves   [  CounterGreet  S U   
-           Greet         U S ]
+Moves   [  CounterGreet  S U, Greet         U S ]
 #+END_code
 
 Now the systems hears the question |(Ask (Question t (TT
@@ -1047,9 +1026,8 @@ the move contains with the |pushQUD| rule.
 #+BEGIN_code
 QUD      [  Question U Time t0 (TT n0 t0 Gotaplatsen d0)  ]
 HasTurn  S
-Moves    [  Ask (Question U Time t0 (TT n0 t0 Gotaplatsen d0)) U S
-            CounterGreet  S U
-            Greet         U S  ]
+Moves    [  Ask (Question U Time t0 (TT n0 t0 Gotaplatsen d0)) U S,
+            CounterGreet  S U, Greet         U S  ]
 #+END_code
 
 Now, depending on the state of the knowledge base, the system will
@@ -1097,7 +1075,7 @@ specificCR :
 As a result of applying it, the state becomes:
 #+BEGIN_code
 Agenda   (Ask (Question S Bus n0 (WantBus n0)) S U)
-QUD      [  Question S Bus n0 (WantBus n0)
+QUD      [  Question S Bus n0 (WantBus n0),
             Question U Time t0 (TT n0 t0 Gotaplatsen d0) ]
 HasTurn  S  
 Moves    […]  -- same as above
@@ -1105,13 +1083,12 @@ Moves    […]  -- same as above
 
 Then, the system can utter the clarification request (|utterAndRemember| rule): 
 #+BEGIN_code
-QUD  [  Question S Bus n0 (WantBus n0)
+QUD  [  Question S Bus n0 (WantBus n0),
         Question U Time t0 (TT n0 t0 Gotaplatsen d0) ]
 HasTurn S  
 Moves  [  Ask (Question S Bus n0 (WantBus n0)) S U
           Ask (Question U Time t0 (TT n0 t0 Gotaplatsen d0)) U S
-          CounterGreet S U
-          Greet U S  ]
+          CounterGreet S U, Greet U S  ]
 #+END_code
 
 The user can reply to this with a short answer |(ShortAnswer Bus B55)| or
@@ -1122,8 +1099,8 @@ show the state after processing the short answer.
 QUD  [  Question U Time t0 (TT B55 t0 Gotaplatsen d0) ]
 UserFact (WantBus B55)
 HasTurn S
-Moves  [  ShortAnswer Bus B55 U S
-          Ask (Question S Bus B55 (WantBus B55)) S U
+Moves  [  ShortAnswer Bus B55 U S,
+          Ask (Question S Bus B55 (WantBus B55)) S U,
           …  ]
 #+END_code
 The reader can notice that the metavariable |n0| from the previous
@@ -1193,9 +1170,8 @@ To our knowledge citet:dixon2009plans were the first to advocate the
 use of linear logic for dialogue management and planning. Compared to
 the present work, they focus primarily on the planning part of
 dialogue, rather than question-answering. In particular, they do not
-discuss the role of metavariables and clarification requests.
-
-We additionally propose the extension of linear logic with
+discuss the role of metavariables and clarification requests. We
+additionally propose the extension of linear logic with
 special-purpose operators | X !-> Y | and | X ?-> Y | to distinguish
 the presence or the absence of ambiguity.
 
