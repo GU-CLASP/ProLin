@@ -781,29 +781,27 @@ then illustrate them with an example application.
 
 \begin{figure}
 \centering
-\begin{tikzpicture}[auto, node distance=2.2cm]
+\begin{tikzpicture}[auto, node distance=2cm]
 
     \node [block]                 (input)     {Knowledge Base};
-    \node [block, below of=input]   (tc)     {Type Checker};
-    \node [block, below of=tc] (appl)    {Rule application};
+    \node [block, above of=input]   (tc)      {Type Checker};
+    \node [block] (appl) [right=2cm of tc]    {Rule application};
     \node [block, below of=appl, align=center] (sub)    {Information state:\\ \emph{linear propositions}};
-    \node [virtual, below of=tc] (feedback)  {};
     
     \node [block, fit={(appl) (sub)}, align=left,
            rounded corners, inner sep=8pt] (dm) {DM};
            
-	\node at (5cm, -4cm) [block, rounded corners] (nlu) {NLU and ASR};
-    \node at (5cm, -7cm) [block, rounded corners] (nlg) {NLG and TTS};
-    \node at (8cm, -5.5cm) [inner sep=5pt, align=center] (user)
-    {\Huge\smiley\normalsize\\user};
+	\node [block, rounded corners] (nlu) [right=2cm of appl] {NLU and ASR};
+    \node [block, rounded corners, below of=nlu] (nlg) {NLG and TTS};
+    % \node at (8cm, -5.5cm) [inner sep=5pt, align=center] (user) {\Huge\smiley\normalsize\\user};
     % Connect nodes
     \draw [->] (input) -- node {rules} (tc);
     \draw [->] (tc) -- node {verified rules} (appl);
     \draw [<->] (appl) -- node {} (sub);
     \draw [->] (nlu) -- node {user moves} (dm);
     \draw [->] (dm) -- node {agent moves} (nlg);
-    \draw [->] (user) -- node {} (nlu);
-    \draw [<-] (user) -- node {} (nlg);
+%    \draw [->] (user) -- node {} (nlu);
+%    \draw [<-] (user) -- node {} (nlg);
     %\draw [->] (model) -- node [name=y] {$y$}(output);
     %\draw [->] (y) |- (feedback);
 \end{tikzpicture}
