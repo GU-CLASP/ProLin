@@ -382,11 +382,10 @@ as |DefiniteNo|, "no" as |AmbiguousNo| / "He does in the weekend"
 
 #+begin_code
 Q Multi ( \x. case x of
-    AmbiguousNo -> Trivial
-    DefiniteNo -> not (Like John Bananas)
-    DefiniteYes -> Like John Bananas
-    Qualifier m -> m (Like John Bananas)
-  )
+    AmbiguousNo  -> Trivial
+    DefiniteNo   -> not (Like John Bananas)
+    DefiniteYes  -> Like John Bananas
+    Qualifier m  -> m (Like John Bananas))
 #+end_code
 
 To represent ambiguity in the case of |AmbiguousNo|, we make the
@@ -410,7 +409,7 @@ rhetorical and attitudinal questions ("Do you know who I met
 yesterday?"), which are also out of scope in the current paper.
 
 
-\begin{sidewaystable} %[htbp]
+\begin{sidewaystable}[htbp]
 \begin{tabular}{lllll}
 utterance & A & P & a\\
 \hline
@@ -437,12 +436,10 @@ haveQud : QUD (Q Location x (Live John x))
 #+END_code
 
 Resolving a question can be done by communicating an answer. An answer
-to a question |(A : Type; P : A -> Prop)| can be of either of the two following forms: 
-1) A *ShortAnswer* is a pair of an element |X:A| and its type |A|,
-   represented as |ShortAnswer A X|
-2) An *Assertion* is a proposition |R : Prop|, represented as |Assert R|
-
-
+to a question |(A : Type; P : A -> Prop)| can be of either of the two
+following forms: i) A *ShortAnswer* is a pair of an element |X:A| and
+its type |A|, represented as |ShortAnswer A X| or ii) An *Assertion* is
+a proposition |R : Prop|, represented as |Assert R|.
 
 Therefore, one way to process a short answer is by the |processShort| rule:
 
@@ -603,9 +600,7 @@ then, a probable answer would be a /clarification request/, namely
 
 To detect situations where a clarification request can be issued, we can use the following rule:
 #+BEGIN_code
-[a : Type;
- x : a; 
- p : Prop;
+[a : Type; x : a; p : Prop;
  havePAsQud :: QUD (Q x p);
  proof :: p] ?-> CR
 #+END_code
@@ -927,8 +922,7 @@ counterGreeting :  (x y : DP) ->
 Another important rule accounts for pushing the content of the last move, in the case if it is an |Ask| move, on top of the questions under discussion (|QUD|) stack.
 
 #+BEGIN_code
-pushQUD :  (q : Question) -> (qs : List Question) ->
-           (x y : DP)           -> 
+pushQUD :  (q : Question) -> (qs : List Question) -> (x y : DP) -> 
            Pending (Ask q x y)  ⊸ 
            QUD qs               ⊸ 
            QUD (Cons q qs)
@@ -977,10 +971,7 @@ produceAnswer :
 #+END_code
 #+BEGIN_code
 produceCR :
-   [  a : Type ;
-      x : a ;
-      p : Prop ;
-      qs : List Question ;
+   [  a : Type ; x : a ;  p : Prop ; qs : List Question ;
       _  :: QUD (Cons (Question USER a x p) qs) ;
       _  :: p   ] ?-> CR;
 #+END_code
@@ -995,7 +986,7 @@ domain-specific |CR| in the section ref:sec:example below.
 We now turn to how the generic system of rules above can handle the following exchange:
 #+begin_quote
 U: Hello!\\
-S: Hello, USER.\\
+S: Hello, U.\\
 U: When there is a bus from Gotaplatsen?\\
 S: In 15 minutes.
 #+end_quote
@@ -1012,7 +1003,7 @@ outlined above. We also assume that the user has the turn at the start.
 #+BEGIN_code
 QUD      Nil
 Agenda   Nil
-HasTurn  USER
+HasTurn  U
 Moves    Nil
 #+END_code
 
@@ -1022,17 +1013,17 @@ state accordingly:
 #+BEGIN_code
 QUD      Nil
 Agenda   Nil
-HasTurn  SYSTEM
-Moves    [ Greet USER SYSTEM ]
+HasTurn  S
+Moves    [ Greet U S ]
 #+END_code
 
 In this context the system can issue a countergreeting by firing
 the |counterGreeting| rule:
 
 #+BEGIN_code
-Agenda   (CounterGreet SYSTEM USER)
-HasTurn  SYSTEM
-Moves    [ Greet USER SYSTEM ]
+Agenda   (CounterGreet S U)
+HasTurn  S
+Moves    [ Greet U S ]
 #+END_code
 
 Everything which is on the agenda can be uttered
@@ -1041,10 +1032,9 @@ turn. System also hands the turn over to the user. Therefore, the
 state becomes:
 
 #+BEGIN_code
-HasTurn USER
-Moves
-[  CounterGreet  SYSTEM USER   
-   Greet         USER SYSTEM         ]
+HasTurn U
+Moves   [  CounterGreet  S U   
+           Greet         U S ]
 #+END_code
 (we use bracket syntax instead of |Cons| for readability)
 
@@ -1056,12 +1046,11 @@ because the move is |Ask|, the system sets its QUD to the question that
 the move contains with the |pushQUD| rule. 
 
 #+BEGIN_code
-QUD [  Question USER Time t0 (TT n0 t0 Gotaplatsen d0)  ]
-HasTurn SYSTEM
-Moves
-[  Ask (Question USER Time t0 (TT n0 t0 Gotaplatsen d0)) USER SYSTEM
-   CounterGreet  SYSTEM USER
-   Greet         USER SYSTEM  ]
+QUD      [  Question U Time t0 (TT n0 t0 Gotaplatsen d0)  ]
+HasTurn  S
+Moves    [  Ask (Question U Time t0 (TT n0 t0 Gotaplatsen d0)) U S
+            CounterGreet  S U
+            Greet         U S  ]
 #+END_code
 
 Now, depending on the state of the knowledge base, the system will
@@ -1078,11 +1067,11 @@ TT B18 T15   Gotaplatsen     Johanneberg
 Therefore the question can be resolved and the resolving short answer
 can be put on the |Agenda|.
 #+BEGIN_code
-Answered (Question  USER Time T15
+Answered (Question  U Time T15
                     (TT B18 T15 Gotaplatsen Johanneberg))
 QUD Nil
-HasTurn SYSTEM
-Agenda (ShortAnswer Time T15 SYSTEM USER)
+HasTurn S
+Agenda (ShortAnswer Time T15 S U)
 Moves  […] -- same as above
 #+END_code
 *** Clarifying side sequence
@@ -1098,35 +1087,32 @@ destination. We decided to go with the bus number here, and the rule
 for clarification can be formulated as follows:
 #+BEGIN_code
 specificCR :
-  (t : Time) -> (n : Bus) -> (s d : Location) ->
-  (qs : List Question) ->
+  (t : Time) -> (n : Bus) -> (s d : Location) -> (qs : List Question) ->
   CR ⊸
-  QUD (Cons (Question USER Time t  (TT n t s d))  qs)   ⊸
-  [  _ :: QUD (Cons  (Question SYSTEM Bus n (WantBus n)) 
-                   (Cons (Question USER Time t (TT n t s d)) qs));
-     _ :: Agenda (Ask  (Question SYSTEM Bus n (WantBus n))
-                     SYSTEM USER) ];
+  QUD (Cons (Question U Time t  (TT n t s d))  qs)   ⊸
+  [  _ :: QUD (Cons  (Question S Bus n (WantBus n)) 
+                     (Cons (Question U Time t (TT n t s d)) qs));
+     _ :: Agenda (Ask  (Question S Bus n (WantBus n)) S U) ];
 #+END_code
 
 As a result of applying it, the state becomes:
 #+BEGIN_code
-Agenda (Ask (Question SYSTEM Bus n0 (WantBus n0)) SYSTEM USER)
-QUD
-     [  Question SYSTEM Bus n0 (WantBus n0)
-        Question USER Time t0 (TT n0 t0 Gotaplatsen d0) ]
-HasTurn SYSTEM  
-Moves […]  -- same as above
+Agenda   (Ask (Question S Bus n0 (WantBus n0)) S U)
+QUD      [  Question S Bus n0 (WantBus n0)
+            Question U Time t0 (TT n0 t0 Gotaplatsen d0) ]
+HasTurn  S  
+Moves    […]  -- same as above
 #+END_code
 
 Then, the system can utter the clarification request (|utterAndRemember| rule): 
 #+BEGIN_code
-QUD  [  Question SYSTEM Bus n0 (WantBus n0)
-        Question USER Time t0 (TT n0 t0 Gotaplatsen d0) ]
-HasTurn SYSTEM  
-Moves  [  Ask (Question SYSTEM Bus n0 (WantBus n0)) SYSTEM USER
-          Ask (Question USER Time t0 (TT n0 t0 Gotaplatsen d0)) USER SYSTEM
-          CounterGreet SYSTEM USER
-          Greet USER SYSTEM  ]
+QUD  [  Question S Bus n0 (WantBus n0)
+        Question U Time t0 (TT n0 t0 Gotaplatsen d0) ]
+HasTurn S  
+Moves  [  Ask (Question S Bus n0 (WantBus n0)) S U
+          Ask (Question U Time t0 (TT n0 t0 Gotaplatsen d0)) U S
+          CounterGreet S U
+          Greet U S  ]
 #+END_code
 
 The user can reply to this with a short answer |(ShortAnswer Bus B55)| or
@@ -1134,11 +1120,11 @@ an assertion |(Assert (WantBus B55)|, which can be integrated
 using |processShort| or |processAssert| rule correspondingly. Here we
 show the state after processing the short answer.
 #+BEGIN_code
-QUD  [  Question USER Time t0 (TT B55 t0 Gotaplatsen d0) ]
+QUD  [  Question U Time t0 (TT B55 t0 Gotaplatsen d0) ]
 UserFact (WantBus B55)
-HasTurn SYSTEM
-Moves  [  ShortAnswer Bus B55 USER SYSTEM
-          Ask (Question SYSTEM Bus B55 (WantBus B55)) SYSTEM USER
+HasTurn S
+Moves  [  ShortAnswer Bus B55 U S
+          Ask (Question S Bus B55 (WantBus B55)) S U
           …  ]
 #+END_code
 The reader can notice that the metavariable |n0| from the previous
@@ -1147,12 +1133,12 @@ therefore it now corresponds to one unique entry in the knowledge
 base. Hence, the answer can be issued, by the |produceAnswer| rule.
 
 #+BEGIN_code
-Answered (Question  USER Time T20
+Answered (Question  U Time T20
                     (TT B55 T20 Gotaplatsen SciencePark))
 QUD Nil
-Agenda (ShortAnswer Time T20 SYSTEM USER)
+Agenda (ShortAnswer Time T20 S U)
 UserFact (WantBus B55)
-HasTurn SYSTEM
+HasTurn S
 Moves […]  -- same as above
 #+END_code
 
