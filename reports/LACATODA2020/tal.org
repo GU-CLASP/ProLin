@@ -375,10 +375,10 @@ ref:tbl:qa-ex, last two rows).  In this instance |A = Prop -> Prop|.
 One complication are polar questions phrased in the negative
 cite:cooper2012negative; for example: "Doesn't John like Bananas?".
 In this instance, a simple a simple "no" answer can be ambiguous, and
-a possible model would be a multi-valued kind of answer ("yes he does
-" represented as |DefiniteYes|; "no he doesn't", represented
-as |DefiniteNo|, "no" as |AmbiguousNo| / "He does in the weekend"
--> |Qualifier OnWeekend|:
+a possible model would be a multi-valued kind of answer ("yes he does"
+represented as |DefiniteYes|; "no he doesn't", represented
+as |DefiniteNo|, "no" as |AmbiguousNo| and "He does in the weekend"
+as |Qualifier OnWeekend|):
 
 #+begin_code
 Q Multi ( \x. case x of
