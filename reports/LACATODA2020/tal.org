@@ -847,7 +847,6 @@ nothing has been said by either party.
 #+BEGIN_code
 _ :: QUD Nil; _ :: Agenda Nil; _ :: Moves Nil;
 #+END_code
-
 (We often do not care about the proof object witnessing a propositions,
 in which case we denote it with an underscore).
 
