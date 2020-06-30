@@ -209,7 +209,6 @@ the current set of questions under discussions (|QUD|) if the latest
 utterance is a question. This operation is salient to a user and
 therefore it constitutes the update of the public part of the
 information state.
-
 # #+BEGIN_code
 # if public.LU = Ask(U, Question(x)):
 #     push Question(x) into public.QUD
@@ -348,12 +347,10 @@ else in the state alone.
 label:sec:qa&cr
 ** Question-answering with metavariables
 In prolog-like languages, metavariables play the role of unknowns,
-whose value can become fixed for a goal to be reached.
-In this subsection we show how a metavariable can represent what is
-being asked, as the unknown in a proposition.
-#
-A first use for metavariables is to represent the requested answer of
-a question.
+whose value can become fixed for a goal to be reached.  In this
+subsection we show how a metavariable can represent what is being
+asked, as the unknown in a proposition. A first use for metavariables
+is to represent the requested answer of a question.
 
 In this paper, we represent a question by a predicate |P| over a
 type |A|. That is, using a typed intuitionistic logic:
@@ -386,7 +383,6 @@ Q Multi ( \x. case x of  AmbiguousNo  -> Trivial
                          DefiniteYes  -> Like John Bananas
                          Qualifier m  -> m (Like John Bananas))
 #+end_code
-
 To represent ambiguity in the case of |AmbiguousNo|, we make the
 answer provide no information, in the form of a trivial proposition
 (which is always true regardless of context).
@@ -475,7 +471,6 @@ To process assertions, we can use the following rule:
 processAssert :  (a : Type) -> (x : a) -> (p : Prop) ->
                  Assert p ⊸ QUD (Q a x p) ⊸ p
 #+END_code
-
 That is, if (1) |p| was asserted, and (2) the proposition |q| is part
 of a question under discussion, and (3) |p| can be unified with |q|
 (we ensure this unification by simply using the same metavariable |p|
@@ -939,8 +934,6 @@ produceAnswer :
    QUD (Cons (Question USER a x p) qs)  ⊸ p  -*
    [  _ :: Agenda (ShortAnswer a x SYSTEM USER); _ :: QUD qs;
       _ :: Answered (Question USER a x p)];
-#+END_code
-#+BEGIN_code
 produceCR :
    [  a : Type ; x : a ;  p : Prop ; qs : List Question ;
       _  :: QUD (Cons (Question USER a x p) qs) ; _  :: p ] ?-> CR;
@@ -961,11 +954,9 @@ U: When there is a bus from Gotaplatsen?\\
 S: In 15 minutes.
 #+end_quote
 Let us further assume the following system context, which contains
-up-to-date public transport information (we just give a few
-examples).
+up-to-date public transport information in the following format:
 #+BEGIN_code
-TT B18 T15   Gotaplatsen     Johanneberg
-TT B55 T20   Gotaplatsen     SciencePark
+TT Bus Time Origin Destination
 #+END_code
 They are added to the initial domain-independent context
 outlined above. We also assume that the user has the turn at the start. 
@@ -1043,8 +1034,8 @@ TT B18 T15   Gotaplatsen     Johanneberg
 TT B55 T20   Gotaplatsen     SciencePark
 #+END_code
 In order to make it unique we can either clarify the bus number or the
-destination. We decided to go with the bus number here, and the rule
-for clarification can be formulated as follows:
+destination. For the bus number the rule for clarification can be
+formulated as follows:
 #+BEGIN_code
 specificCR :
   (t : Time) -> (n : Bus) -> (s d : Location) -> (qs : List Question) ->
@@ -1080,8 +1071,7 @@ QUD  [  Question U Time t0 (TT B55 t0 Gotaplatsen d0) ]
 UserFact (WantBus B55)
 HasTurn S
 Moves  [  ShortAnswer Bus B55 U S,
-          Ask (Question S Bus B55 (WantBus B55)) S U,
-          …  ]
+          Ask (Question S Bus B55 (WantBus B55)) S U, …  ]
 #+END_code
 The reader can see that the metavariable |n0| from the previous
 state is now unified with |B55| in the QUD,
@@ -1097,20 +1087,15 @@ UserFact (WantBus B55)
 HasTurn S
 Moves […]  -- same as above
 #+END_code
-
-label:sec:kos
-
 * Related work
 label:sec:related
 
 The present work provides a minimal and granular account for
 clarification requests initiated by any conversational party,
-following accounts of and supporting a subset of cases that were
-thoroughly investigated in the CLARIE Prolog-based system
-citep:purver-rlc06, following corpus studies by citet:purver2003means
-and citet:rodriguez2004form.
-
-** KoS
+following accounts of and supporting a subset of cases thoroughly
+investigated in the CLARIE Prolog-based system citep:purver-rlc06,
+following corpus studies by citet:purver2003means and
+citet:rodriguez2004form.
 
 One of our main sources of inspiration is Ginzburg's KoS
 cite:ginzburg2012interactive. However we recast it in the framework of
@@ -1121,23 +1106,19 @@ using linear logic rules means that only the relevant parts of the
 information state must be dealt with in any given rule. Cooper's TTR
 has a special "asymmetric merge" operator for this purpose, but it is
 a less-studied \textit{ad-hoc} addition to type-theory, though see
-cite:carp93,lascarides96,grover94.
+cite:carp93,lascarides96,grover94. As it stands, KoS is lacking
+implementations, with the exception of the work of
+citet:maraev_kosttr-based_2018, who adapt KoS to eschew the assymetric
+merge operation.  An oft-touted advantage of TTR is that propositions
+are witnessed by proof objects. We benefit from the same advantage: we
+use an intuitionistic system, and as such every proposition in the
+information state is associated a witness, even if we have not shown
+them for concision (they play little role in our analysis).
 
 
 # As we see it, this sparsity
 # of implementations is largely due to the semantic gap between its aims
 # (information-state dialogue management) and its formalism (TTR).
-
-Furthermore, as it stands, KoS is lacking implementations, with the
-exception of the work of citet:maraev_kosttr-based_2018, who adapt KoS
-to eschew the assymetric merge operation.
-An oft-touted advantage of TTR is that propositions are witnessed by
-proof objects. We benefit from the same advantage: we use an
-intuitionistic system, and as such every proposition in the
-information state is associated a witness, even if we have not shown
-them for concision (they play little role in our analysis).
-
-** Dialogue management
 
 citet:larsson2000godis proposed the use of Prolog (and hence, proof
 search), as a dialogue management framework. However, the lack of
@@ -1189,10 +1170,10 @@ order to extend our system to full-scale coverage of interrelations
 between QUDs.
 
 A natural progression of this work is to allow the assignment of
-probabilities to rules and to the components of the information state,
-and to train the probabilities according to the new observations. In
-this sense our approach follows citet:lison2015hybrid, which is based
-on probabilistic rules, but in our case the structure of information
+probabilities to rules and to the components of the state,
+and to train the probabilities according to the new observations. Our
+approach follows citet:lison2015hybrid, which is based on
+probabilistic rules, but in our case the structure of information
 state is rich and derived from the theoretical outlook on dialogue,
 and dialogue management has a core set of domain-independent rules.
 We can also imagine combining such ideas with probabilistic meaning
@@ -1205,7 +1186,6 @@ incremental processing. This means we cannot deal with form-based
 parallelism needed for various types of acknowledgements, CRs, and
 self-repair. Nor, as things stand, do we engage in
 grounding interaction, modelled extensively in cite:larsson2002issue.
-
 
 Table ref:table:ds originates from cite:ginzburg-nlphandbook, who
 proposed a series of benchmarks for comparing different approaches to
