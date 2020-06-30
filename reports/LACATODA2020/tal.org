@@ -350,7 +350,7 @@ In prolog-like languages, metavariables play the role of unknowns,
 whose value can become fixed for a goal to be reached.
 In this subsection we show how a metavariable can represent what is
 being asked, as the unknown in a proposition.
-
+#
 A first use for metavariables is to represent the requested answer of
 a question.
 
@@ -360,7 +360,6 @@ type |A|. That is, using a typed intuitionistic logic:
 A  : Type
 P  : A  -> Prop
 #+END_code
-
 The intent of the question is to find out about a value |x| of
 type |A| which makes |P x| true, or at least entertained by the other
 participant. We provide several examples in table ref:tbl:qa-ex.  It is
@@ -381,11 +380,10 @@ as |DefiniteNo|, "no" as |AmbiguousNo| and "He does in the weekend"
 as |Qualifier OnWeekend|):
 
 #+begin_code
-Q Multi ( \x. case x of
-    AmbiguousNo  -> Trivial
-    DefiniteNo   -> not (Like John Bananas)
-    DefiniteYes  -> Like John Bananas
-    Qualifier m  -> m (Like John Bananas))
+Q Multi ( \x. case x of  AmbiguousNo  -> Trivial
+                         DefiniteNo   -> not (Like John Bananas)
+                         DefiniteYes  -> Like John Bananas
+                         Qualifier m  -> m (Like John Bananas))
 #+end_code
 
 To represent ambiguity in the case of |AmbiguousNo|, we make the
@@ -459,10 +457,7 @@ in |p|, the information state will mention the concrete |x| which was
 provided in the answer.  For example, if the QUD was |(Q Location x
 (Live John x))| and the system processes the answer |ShortAnswer
 Location Paris|, then |x| unifies with |Paris|, and the new state will
-include:
-#+begin_code
-Live John Paris
-#+end_code
+include |Live John Paris|.
 
 To process assertions, we can use the following rule:
 
@@ -504,7 +499,6 @@ Assume now a system with the following state:
 #+BEGIN_code
 Eat John Mars
 #+END_code
-
 Then the question "What does John eat", represented as |(Q Food x
 (Eat John x))|, can be answered.  From the point of view of modelling
 with linear logic, we could attempt to model the answering by the
@@ -533,7 +527,6 @@ assume instead that the system is in the state:
 #+BEGIN_code
 Eat John x
 #+END_code
-
 Then the question cannot be answered, because |x| stands for some
 unknown thing. The proper answer is then "I do not know".
 
@@ -569,7 +562,7 @@ Eat John Mars
 ShortAnswer Food Mars
 #+END_code
 
-Note that the fact |(Eat John Mars)| is found both as hypothesis and a
+Note that the fact |Eat John Mars| is found both as hypothesis and a
 conclusion of |produceAnswer|, and therefore it is remains in the
 information state.
 
@@ -604,7 +597,6 @@ CR abstract for now and come back to it below in section ref:sec:dm):
 #+BEGIN_code
 [a : Type; x : a; p : Prop; havePAsQud :: QUD (Q x p); proof :: p] ?-> CR
 #+END_code
-
 The conditions are similar to that of the answering rule. The
 principal difference is the use of the |?->| operator, which takes as
 left operand the specification of a request and tests whether it has a
@@ -624,7 +616,6 @@ representation:
 #+BEGIN_code
 Q Person z (z = y)
 #+END_code
-
 That is, the question is asking about some aspect which was left
 implicit in the original question (what is being eaten). In our terms,
 it must refer to the metavariable (|y|) which the original
@@ -656,7 +647,6 @@ way. In our example, it could be "By whom"; echoing part of the
 original question and assuming cooperative communication so that the
 questioner properly relates the clarification request to the implicits
 of the original questions.
-
 In practice, the form of clarification questions will greatly vary
 depending on the context cite:purver2004theory.
 
@@ -690,7 +680,6 @@ question:
 #+BEGIN_code
 Q Location x (Live John x y)
 #+END_code
-
 If the question can be answered without regard for the country, then
 the metavariable will remain free for the duration of the dialogue. If
 on the other hand, answering the question demands clarification, this
@@ -730,7 +719,6 @@ as follows:
           else Not (Live John y -> Name y Paris)
 #+END_code
 Literally, "Does John live in a place called Paris?".
-
 The ambiguity of the |Paris| name can be represented by several
 locations named |Paris|, |X| and |Y| in our illustration:
 #+begin_code
@@ -741,7 +729,6 @@ Not (Live John Y)
 Country France X
 Not (Country France Y)
 #+end_code
-
 Because John lives in |X| but not in |Y| the question is
 ambiguous. One way to lift the ambiguity is raise the clarification
 request as above. Here it can be phrased as a polar question[fn::Here
