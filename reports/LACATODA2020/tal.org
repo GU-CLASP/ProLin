@@ -448,7 +448,6 @@ to a question |(A : Type; P : A -> Prop)| can be of either of the two
 following forms: i) A *ShortAnswer* is a pair of an element |X:A| and
 its type |A|, represented as |ShortAnswer A X| or ii) An *Assertion* is
 a proposition |R : Prop|, represented as |Assert R|.
-
 Therefore, one way to process a short answer is by the |processShort| rule:
 
 #+BEGIN_code
@@ -485,7 +484,6 @@ provided by |p|, by virtue of unification of |p| and |q|. For example,
 "John lives in Paris" answers both questions "Where does John live"
 and "Does John live in Paris" (there is unification), but, not, for
 example "What time is it?" (there is no unification).
-
 Note that, in both cases (|processAssert| and |processShort|), the
 information state is updated with the proposition posed in the
 question. 
@@ -503,7 +501,6 @@ object as second argument. The phrase "John eats Mars" could then
 be represented as |Eat(John,Mars)|. According to our theory, one can
 then represent the phrase "John eats" as |Eat(John,x)|, with |x| being
 a metavariable.
-
 Assume now a system with the following state:
 
 #+BEGIN_code
@@ -525,7 +522,6 @@ from here on we use the syntactic sugar |A -* P| for it, so the above rule will 
 (a : Type) -> (x : a) -> (p : Prop) -> 
   QUD (Q a x p) -> p -* Answer x (Q x p)
 #+END_code
-
 The above states that if |x| makes the proposition |p| true (more
 precisely, provable --- we require that |p| is a fact in the last
 argument) then it is valid to answer |x| if |Q a x p| is under
@@ -571,7 +567,6 @@ therefore the state becomes:
 Eat John Mars
 ShortAnswer Food Mars
 #+END_code
-
 Note that the fact |Eat John Mars| is found both as hypothesis and a
 conclusion of |produceAnswer|, and therefore it is remains in the
 information state.
