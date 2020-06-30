@@ -958,14 +958,13 @@ possible options is wide. We provide an example of a
 domain-specific |CR| in the section ref:sec:example below.
 
 ** Example label:sec:example
-We now turn to how the generic system of rules above can handle the following exchange:
+We now show how the generic system of rules above can handle the exchange:
 #+begin_quote
 U: Hello!\\
 S: Hello, U.\\
 U: When there is a bus from Gotaplatsen?\\
 S: In 15 minutes.
 #+end_quote
-
 Let us further assume the following system context, which contains
 up-to-date public transport information (we just give a few
 examples).
@@ -981,8 +980,7 @@ Agenda   Nil
 HasTurn  U
 Moves    Nil
 #+END_code
-
-The when the systems hears the greeting it can be integrated into
+When the systems hears the greeting it can be integrated into
 the state using |hearAndRemember| rule, therefore system updates its
 state accordingly:
 #+BEGIN_code
@@ -991,7 +989,6 @@ Agenda   Nil
 HasTurn  S
 Moves    [ Greet U S ]
 #+END_code
-
 In this context the system can issue a countergreeting by firing
 the |counterGreeting| rule:
 
@@ -1000,7 +997,6 @@ Agenda   (CounterGreet S U)
 HasTurn  S
 Moves    [ Greet U S ]
 #+END_code
-
 Everything which is on the agenda can be uttered
 using |utterAndRemember| rule, given that the system has the
 turn. System also hands the turn over to the user. Therefore, the
@@ -1011,8 +1007,7 @@ readability):
 HasTurn U
 Moves   [  CounterGreet  S U, Greet         U S ]
 #+END_code
-
-Now the systems hears the question |(Ask (Question t (TT
+Now the system hears the question |(Ask (Question t (TT
 n t Gotaplatsen d)))|. It is domain specific, and basically requests
 the timetable information for the given departure station. Again, we
 use |hearAndRemember| rule to itegrate it into state, but also,
@@ -1025,7 +1020,6 @@ HasTurn  S
 Moves    [  Ask (Question U Time t0 (TT n0 t0 Gotaplatsen d0)) U S,
             CounterGreet  S U, Greet         U S  ]
 #+END_code
-
 Now, depending on the state of the knowledge base, the system will
 have two options: i) produce the answer straight away, or ii)
 integrate a clarifying side sequence.
@@ -1036,7 +1030,6 @@ timetable:
 #+BEGIN_code
 TT B18 T15   Gotaplatsen     Johanneberg
 #+END_code
-
 Therefore the question can be resolved and the resolving short answer
 can be put on the |Agenda|.
 #+BEGIN_code
@@ -1054,7 +1047,6 @@ therefore making it non-unique, w.r.t. time.
 TT B18 T15   Gotaplatsen     Johanneberg
 TT B55 T20   Gotaplatsen     SciencePark
 #+END_code
-
 In order to make it unique we can either clarify the bus number or the
 destination. We decided to go with the bus number here, and the rule
 for clarification can be formulated as follows:
@@ -1067,7 +1059,6 @@ specificCR :
                      (Cons (Question U Time t (TT n t s d)) qs));
      _ :: Agenda (Ask  (Question S Bus n (WantBus n)) S U) ];
 #+END_code
-
 As a result of applying it, the state becomes:
 #+BEGIN_code
 Agenda   (Ask (Question S Bus n0 (WantBus n0)) S U)
@@ -1076,7 +1067,6 @@ QUD      [  Question S Bus n0 (WantBus n0),
 HasTurn  S  
 Moves    […]  -- same as above
 #+END_code
-
 Then, the system can utter the clarification request (|utterAndRemember| rule): 
 #+BEGIN_code
 QUD  [  Question S Bus n0 (WantBus n0),
@@ -1086,11 +1076,10 @@ Moves  [  Ask (Question S Bus n0 (WantBus n0)) S U
           Ask (Question U Time t0 (TT n0 t0 Gotaplatsen d0)) U S
           CounterGreet S U, Greet U S  ]
 #+END_code
-
-The user can reply to this with a short answer |(ShortAnswer Bus B55)| or
-an assertion |(Assert (WantBus B55)|, which can be integrated
-using |processShort| or |processAssert| rule correspondingly. Here we
-show the state after processing the short answer.
+The user can reply to this with a short answer |ShortAnswer Bus B55| or
+an assertion |Assert (WantBus B55)|, which can be integrated
+using |processShort| or |processAssert| rule respectively. We
+show the state after processing the short answer:
 #+BEGIN_code
 QUD  [  Question U Time t0 (TT B55 t0 Gotaplatsen d0) ]
 UserFact (WantBus B55)
@@ -1099,8 +1088,8 @@ Moves  [  ShortAnswer Bus B55 U S,
           Ask (Question S Bus B55 (WantBus B55)) S U,
           …  ]
 #+END_code
-The reader can notice that the metavariable |n0| from the previous
-state is now unified with |B55| in the question under discussion,
+The reader can see that the metavariable |n0| from the previous
+state is now unified with |B55| in the QUD,
 therefore it now corresponds to one unique entry in the knowledge
 base. Hence, the answer can be issued, by the |produceAnswer| rule.
 
@@ -1119,7 +1108,7 @@ label:sec:kos
 * Related work
 label:sec:related
 
-In this work we provide a minimal and granular account for
+The present work provides a minimal and granular account for
 clarification requests initiated by any conversational party,
 following accounts of and supporting a subset of cases that were
 thoroughly investigated in the CLARIE Prolog-based system
@@ -1139,14 +1128,14 @@ has a special "asymmetric merge" operator for this purpose, but it is
 a less-studied \textit{ad-hoc} addition to type-theory, though see
 cite:carp93,lascarides96,grover94.
 
-Furthermore, as it stands, KoS is lacking implementations, with the
-exception of the work of citet:maraev_kosttr-based_2018, who adapt KoS
-to eschew the assymetric merge operation.
 
 # As we see it, this sparsity
 # of implementations is largely due to the semantic gap between its aims
 # (information-state dialogue management) and its formalism (TTR).
 
+Furthermore, as it stands, KoS is lacking implementations, with the
+exception of the work of citet:maraev_kosttr-based_2018, who adapt KoS
+to eschew the assymetric merge operation.
 An oft-touted advantage of TTR is that propositions are witnessed by
 proof objects. We benefit from the same advantage: we use an
 intuitionistic system, and as such every proposition in the
