@@ -52,6 +52,7 @@ in stdenv.mkDerivation {
                        mathpartir
                        minted
                        makecell
+                       multirow
                        mweights
                        ncclatex
                        ncctools

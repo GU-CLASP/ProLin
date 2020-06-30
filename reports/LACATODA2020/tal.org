@@ -25,6 +25,7 @@
 #+LATEX_HEADER: \usepackage{xcolor}
 #+LATEX_HEADER: \urlstyle{same}
 #+LATEX_HEADER: \usepackage{makecell}
+#+LATEX_HEADER: \usepackage{multirow}
 #+LATEX_HEADER: \usepackage{rotating}
 
 #+LATEX_HEADER: \usepackage{mathtools}
@@ -1218,38 +1219,35 @@ approach.
 
 \begin{table}
 \centering
-\begin{tabular}{lc}
+\begin{tabular}{clc}
 \hline
-{Benchmarks}                         & {Our system} \\\hline\hline
-{\bf query and assertion}            & \\
-Q1 simple answers                    & \checkmark \\
-Q2a non-resolving answers            & \checkmark \\
-Q2b follow up queries                & \checkmark \\
-Q3 overinformative answers           & \checkmark \\
-Q4 sub-questions                     & \checkmark \\
-Q5 topic changing                    & $\sim$\\
-A1 propositional content update      & \checkmark \\
-A2 disagreement                      & $\sim$\\ 
-SC scalability                       & $\sim$ \\
-DA domain adaptability               & \checkmark \\ \hline
-{\bf metacommunication}              & \\
-Ack1 completed acknowledgements      & ---\\
-Ack2 continuation acknowledgements   & ---\\
-Ack3 gestural acknowledgements       & ---\\
-CR1 repetition CRs                   & ---\\
-CR2 confirmation CRs                 & ---\\
-CR3 intended content CRs             & \checkmark \\
-CR4 intention recognition CRs        & ---\\
-SND distinct updates                 & $\sim$ \\
-FG fine-grained representations      & $\sim$ \\ \hline
-{\bf fragments}                      & \\
-SF1 wide coverage of SFs             & $\sim$ \\
-SF2 basic answer resolution          & $\sim$ \\
-SF3 reprise fragment resolution      & --- \\
-SF4 long distance short answers      & $\sim$\\
-SF5 genre sensitive initiating SFs   & $\sim$\\
-D1 recognize and repair disfluencies & ---\\
-D2 keep disfluencies in context      & ---\\\hline
+& {Benchmarks}                         & {Our system} \\\hline\hline
+\multirow{10}{*}[-3.9em]{\rotcell{\rlap{\bf query and assertion}}}& Q1 simple answers                    & \checkmark \\
+& Q2a non-resolving answers            & \checkmark \\
+& Q2b follow up queries                & \checkmark \\
+& Q3 overinformative answers           & \checkmark \\
+& Q4 sub-questions                     & \checkmark \\
+& Q5 topic changing                    & $\sim$\\
+& A1 propositional content update      & \checkmark \\
+& A2 disagreement                      & $\sim$\\ 
+& SC scalability                       & $\sim$ \\
+& DA domain adaptability               & \checkmark \\ \hline
+\multirow{9}{*}[-4.1em]{\rotcell{\rlap{\bf metacommunication}}}   &  Ack1 completed acknowledgements      & ---\\
+& Ack2 continuation acknowledgements   & ---\\
+& Ack3 gestural acknowledgements       & ---\\
+& CR1 repetition CRs                   & ---\\
+& CR2 confirmation CRs                 & ---\\
+& CR3 intended content CRs             & \checkmark \\
+& CR4 intention recognition CRs        & ---\\
+& SND distinct updates                 & $\sim$ \\
+& FG fine-grained representations      & $\sim$ \\ \hline
+\multirow{9}{*}[-0.5em]{\rotcell{\rlap{\bf fragments}}}   & SF1 wide coverage of SFs             & $\sim$ \\
+& SF2 basic answer resolution          & $\sim$ \\
+& SF3 reprise fragment resolution      & --- \\
+& SF4 long distance short answers      & $\sim$\\
+& SF5 genre sensitive initiating SFs   & $\sim$\\
+& D1 recognize and repair disfluencies & ---\\
+& D2 keep disfluencies in context      & ---\\\hline
 \end{tabular}\caption{System evaluation. Q5---understand that irrelevant answers imply ``change the topic'', A2---disagree with user if her utterance is incompatible with own belief, SND---an utterance can give rise to distinct updates across participants. For other, more obvious benchmarks we refer our readers to \citep{ginzburg-nlphandbook}.}
 \label{table:ds}
 \end{table}
