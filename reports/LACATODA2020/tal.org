@@ -863,9 +863,8 @@ implemented with the following rule:
 #+BEGIN_code
 hearAndRemember  :
   (m : DP -> DP -> Move) -> (x y : DP) -> (ms : List Move) ->
-  Heard (m x y)  ⊸ Moves ms ⊸
-  HasTurn x      ⊸ [  _ :: Moves (Cons (m x y) ms);
-                      _ :: Pending (m x y) ; _ :: HasTurn y ];
+  Heard (m x y)  ⊸ Moves ms ⊸ HasTurn x ⊸ 
+  [  _ :: Moves (Cons (m x y) ms); _ :: Pending (m x y) ; _ :: HasTurn y ];
 #+END_code
 where |(m x y)| is a semantic representation of the utterance. Here it
 is assumed that participant |x| has the turn and, as a result, turn was
