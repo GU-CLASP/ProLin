@@ -1217,7 +1217,7 @@ could be met with some caveats, as explained in the text above; and
 --- that the benchmark is not met by a standard version of the
 approach. 
 
-\begin{table}
+\begin{table}[htbp]
 \centering
 \begin{tabular}{clc}
 \hline
@@ -1254,7 +1254,6 @@ approach.
 
 
 \bibliography{tal}
-
 * COMMENT references
 bibliography:tal.bib
 
