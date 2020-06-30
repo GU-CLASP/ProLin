@@ -420,6 +420,16 @@ Does John live in Paris? & |Prop -> Prop| & |\m. m (Live John Paris)            
 \caption{Examples of questions and the possible corresponding answers.\label{tbl:qa-ex}}
 \end{sidewaystable}
 
+# \begin{table}
+# \begin{tabular}{llllll}
+# Where does John live? &
+# Does John live in Paris?&
+# What time is it? &
+# Does John live in Paris?&
+# Does John live in Paris?\\
+# \end{tabular}
+# \end{table}
+
 Within the state of the agent, if the value of the requested answer is
 represented as a metavariable |x|, then the question can be
 represented as: |Q A x (P x)|.  That is, the pending question (|Q|
@@ -879,9 +889,8 @@ by |Agenda| that contains a move that is just about to be uttered.
 #+BEGIN_code
 utterAndRemember :
   (m : DP -> DP -> Move) -> (ms : List Move) -> (x y : DP) ->
-  Agenda (m x y)  ⊸ Moves ms ⊸
-  HasTurn x       ⊸ [  _ :: Utter (m x y);
-                       _ :: Moves (Cons (m x y) ms); _ :: HasTurn y];
+  Agenda (m x y)  ⊸ Moves ms ⊸ HasTurn x ⊸ 
+  [  _ :: Utter (m x y); _ :: Moves (Cons (m x y) ms); _ :: HasTurn y];
 #+END_code
 
 Here also we take care of turn-taking in the same rule. As a result,
