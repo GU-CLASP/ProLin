@@ -1,0 +1,494 @@
+#+OPTIONS: toc:nil ':t ":t 
+#+LATEX_CLASS: article
+
+#+LATEX_HEADER: \usepackage[hyperref]{acl2020}
+
+#+LATEX_HEADER: %include polycode.fmt
+#+LATEX_HEADER: %format -* = "\rightarrowtriangle"
+# alternative:                 -{\kern -1.3ex}*
+#+LATEX_HEADER: %format !-> = "\rightarrow_{!}"
+#+LATEX_HEADER: %format ?-> = "\rightarrow_{?}"
+#+LATEX_HEADER: %format . = "."
+#+LATEX_HEADER: %format \_ = "\_"
+#+LATEX_HEADER: %let operator = "."
+#+LATEX_HEADER: \usepackage{soul}
+#+LATEX_HEADER: \usepackage{url}
+#+LATEX_HEADER: \usepackage{newunicodechar}
+#+LATEX_HEADER: \input{newunicodedefs}
+
+#+LATEX_HEADER: \usepackage{times}
+#+LATEX_HEADER: \usepackage{latexsym}
+#+LATEX_HEADER: \renewcommand{\UrlFont}{\ttfamily\small}
+#+LATEX_HEADER: \usepackage{microtype}
+#+LATEX_HEADER: \usepackage{tikz}
+#+LATEX_HEADER: \usetikzlibrary{shapes,arrows,positioning,fit}
+#+LATEX_HEADER: \tikzstyle{block} = [draw, rectangle, minimum height=3em, minimum width=3em]
+#+LATEX_HEADER: \tikzstyle{virtual} = [coordinate]
+
+#+TITLE: LDM: Linear Dialogue Manager
+#+AUTHOR:
+
+#+begin_abstract
+new abstract
+#+end_abstract
+
+* Introduction
+A key aspect of dialogue systems design is the coherence of the system’s
+responses.  In this respect, a key component of a dialogue system is
+the dialogue manager, which selects appropriate system actions
+depending on the current state and the external context.
+
+Two families of approaches to dialogue management can be considered:
+hand-crafted dialogue strategies
+cite:allen1995trains,larsson2002issue,jokinen2009constructive and
+statistical modelling of dialogue
+cite:rieser2011reinforcement,young2010hidden,williams2017hybrid. Frameworks
+for hand-crafted strategies range from finite-state machines and
+form-filling to more complex dialogue planning and logical inference
+systems, such as Information State Update (ISU) cite:larsson2002issue
+that we employ here. Although there has been a lot of development in dialogue systems in
+recent years, only a few approaches reflect advancements in /dialogue
+theory/. Our aim is to closely integrate dialogue systems with work in
+theoretical semantics and pragmatics of dialogue.
+
+We believe that it is crucial to use formal tools which are most
+appropriate for the task: one should be able to express the rules of
+various genres of dialogue in a concise way, free, to any possible
+extent, of irrelevant technical details.  In the view of
+citet:dixon2009plans this is best done by representing the
+information-state of the agents as updatable sets of
+propositions. Subsets of propositions in the information state can be
+treated independently, and, therefore, a suitable and flexible way to
+represent updates is as propositions in linear logic. 
+
+We further extend the citet:dixon2009plans framework to deal with
+unclarity and ambiguity. Indeed, asking a question is typically not
+done in one utterance which leaves nothing to interpretation. Rather,
+an initial short and possibly ambiguous question is posed. If the
+answerer deems the question unclear, a dialogue will ensue before the
+question is finally resolved. In technical terms we deal with
+question-answering and clarification requests in a unified way,
+following some earlier work, in the context of dialogue management.
+
+To deal with such ambiguity and unclarity, we propose here the use of
+/metavariables/, thereby leveraging much research on unification and
+proof search in various logical frameworks.  That is, meta-variables
+will stand in for any piece of information which is left to further
+interpretation. By using well-known techniques which correspond well with the
+intuition of information-state based dialogue management, we are able
+to provide a fully working prototype of the components of our
+framework:
+
+1. a proof-search engine based on linear logic, modified to support
+   inputs from external systems (representing inputs and outputs of
+   the agent)
+
+2. a set of rules which function as a core framework for dialogue
+   management (in the style of KoS cite:ginzburg2012interactive)
+
+3. several examples which use the above to construct potential
+   applications of the system.
+
+* Background
+
+** KoS
+KoS (not an acronym but loosely corresponds to Conversation Oriented
+Semantics) cite:ginzburg2012interactive provides one of the most
+detailed theoretical treatments of domain-general conversational
+relevance.
+
+In KoS (and other dynamic approaches to meaning), language is compared
+to a game, containing players (interlocutors), goals and rules. KoS
+represents language interaction by a dynamically changing context. The
+meaning of an utterance is then how it changes the context. KoS keeps
+separate representations for each participant, using the /Dialogue Game
+Board/ (DGB). Thus, the information states of the participants comprise
+a private part and the dialogue gameboard that represents information
+arising from publicized interactions.
+
+** Linear logic as a Dialogue Management Framework
+Typically, and in particular in the archetypal logic programming
+language prolog cite:bratko2001prolog, axioms and rules are expressed
+within the general framework of first order logic. However, several
+authors cite:dixon2009plans,martens2015programming have proposed to
+use linear logic cite:girard1995linear instead. For our purpose, the
+crucial feature of linear logic is that hypotheses may be used /only
+once/. For example, one could have a rule |IsAt x Gotaplatsen y ⊸ IsAt
+x CentralStationen (y+0.75)|. Consequently, after firing the above
+rule, the premiss |(Is x Gotaplatsen y)| becomes unavailable for any
+other rule.  Thereby the linear arrow |⊸| can be used to conveniently
+model that a bus cannot be at two places simultaneously.
+
+In general, the linear arrow corresponds to /destructive state
+updates/. Thus, the hypotheses available for proof search correspond
+to the /state/ of the system. In our application they will correspond
+to the /information state/ of the dialogue participant.
+
+This way, firing a linear rule corresponds to triggering an /action/ of an
+agent, and a complete proof corresponds to a /scenario/, i.e. a sequence
+of actions, possibly involving action from several agents.  However,
+the information state (typically in the literature and in this paper
+as well), corresponds to the state of a /single/ agent. Thus, a scenario
+is conceived as a sequence of actions and updates of the information
+state of a single agent $a$, even though such actions can be
+attributed to any other dialogue participant $b$. (That is, they are
+$a$'s representation of actions of $b$.)  Scenarios can be realised as
+a sequence of actual actions and updates. That is, an action can
+result in sending a message to the outside world (in the form of
+speech, movement, etc.). Conversely, events happening in the outside
+world can result in updates of the information state (through a model
+of the perceptory subsystem).
+
+In our implementation, we treat the information state as a
+multiset of /linear hypotheses/ that can be queried. Because they are
+linear, these hypotheses can also be removed from the state.
+
+It is important to note that we will not forego the unrestricted
+(i.e. non-linear) implication (|->|). Rather, both implications will
+co-exist in our implementation, thus we can represent simultaneously
+transient facts, or states, (introduced by the linear arrow) and
+immutable facts (introduced by the unrestricted arrow).
+
+In particular, we have a fixed set of rules (they remain available
+even after being used). Each such rule manipulates a part of the
+information state (captured by its premisses) and leaves everything
+else in the state alone.
+
+* KoS-inspired dialogue management with linear logic
+label:sec:dm
+
+Figure ref:fig:ds shows how our a DM can be integrated into a spoken
+dialogue system. In general, the core of DM is comprised of a set of
+linear-logic rules which depend on the domain of application. However,
+many rules will be domain-independent (such as generic processing of
+answers). We show these generic rules first, and then illustrate them
+with an example application.
+
+
+\begin{figure*}
+\centering
+\begin{tikzpicture}[auto, node distance=2cm]
+
+    \node [block]                 (input)     {Knowledge Base};
+    \node [block, above of=input]   (tc)      {Type Checker};
+    \node [block] (appl) [right=2cm of tc]    {Rule application};
+    \node [block, below of=appl, align=center] (sub)    {Information state:\\ \emph{linear propositions}};
+    
+    \node [block, fit={(appl) (sub)}, align=left,
+           rounded corners, inner sep=8pt] (dm) {DM};
+           
+	\node [block, rounded corners] (nlu) [right=2cm of appl] {NLU and ASR};
+    \node [block, rounded corners, below of=nlu] (nlg) {NLG and TTS};
+    % \node at (8cm, -5.5cm) [inner sep=5pt, align=center] (user) {\Huge\smiley\normalsize\\user};
+    % Connect nodes
+    \draw [->] (input) -- node {rules} (tc);
+    \draw [->] (tc) -- node {verified rules} (appl);
+    \draw [<->] (appl) -- node {} (sub);
+    \draw [->] (nlu) -- node {user moves} (dm);
+    \draw [->] (dm) -- node {agent moves} (nlg);
+%    \draw [->] (user) -- node {} (nlu);
+%    \draw [<-] (user) -- node {} (nlg);
+    %\draw [->] (model) -- node [name=y] {$y$}(output);
+    %\draw [->] (y) |- (feedback);
+\end{tikzpicture}
+\caption{Architecture of a spoken dialogue system with a dialogue manager based on a linear logic framework.}
+\label{fig:ds}
+\end{figure*}
+
+** Domain-independent rules
+*** Interface with language understanding and generation
+To be useful, a DM must interact with the outside world, and this
+interaction cannot be represented using logical rules, which can only
+manipulate data which is already integrated in the information state.
+Here, we assume that the information that comes from sources which are
+external to the dialogue manager is expressed in terms of semantic
+interpretations of moves, and contains information about the speaker
+and the addressee in a structured way. We provide 5 basic types
+of moves as an illustration:
+#+BEGIN_code
+Greet         spkr  addr
+CounterGreet  spkr  addr
+Ask           question  spkr  addr
+ShortAnswer   vtype v spkr  addr
+Assert        p  spkr  addr
+#+END_code
+
+These moves can either be received as input or produced as outputs. If
+they are inputs, they come from the NLU component, and they enter the
+context with |Heard : Move -> Prop| predicate. For example, if one
+hears a greeting, the proposition |Heard (Greet S A)| is added to the
+information state/context, without any rule being fired --- this is
+what we mean by an external source.
+
+
+If they are outputs, to be further used by the NLG component, some
+rule will place them in |Agenda|. For example, to issue a
+countergreeting, a rule will place the proposition |Agenda
+(CounterGreet A S)| in the information state.
+
+Thereby each move is accompanied by the information
+about who has uttered it, and towards whom was it addressed. All the
+moves are recored in the |Moves| part of the participant’s dialogue
+gameboard, as a |Cons|-list (stack).
+
+Additionally, we record any move |m| which one has yet to actively
+react to, in an hypothesis of the form |Pending m|. We cannot use the |Moves|
+part of the state for this purpose, because it is meant to be static
+(not to be consumed). |Pending| thus allows one to make the difference
+between a move which is fully processed and a pending one.
+
+*** Initial state
+In general, we start with empty |QUD| and |Agenda|. An non-empty |QUD|
+can be prepared if, in a certain domain, some open questions are
+assumed from the start. The |Agenda| might not be empty if one wants
+the system to initiate the conversation. There are also no moves:
+nothing has been said by either party.
+
+#+BEGIN_code
+_ :: QUD Nil; _ :: Agenda Nil; _ :: Moves Nil;
+#+END_code
+(We often do not care about the proof object witnessing a propositions,
+in which case we denote it with an underscore).
+
+*** Hearing
+The capacity of "hearing" or, in other words, starting the processing
+of semantic representations of utterances from the NLU component, is
+implemented with the following rule:
+#+BEGIN_code
+hearAndRemember  :
+  (m : DP -> DP -> Move) -> (x y : DP) -> (ms : List Move) ->
+  Heard (m x y)  ⊸ Moves ms ⊸ HasTurn x ⊸ 
+  [  _ :: Moves (Cons (m x y) ms); _ :: Pending (m x y) ; _ :: HasTurn y ];
+#+END_code
+where |(m x y)| is a semantic representation of the utterance. Here it
+is assumed that participant |x| has the turn and, as a result, turn was
+taken by their partner |y|[fn::For now we have a very simple model of turn-taking, which can be
+improved in many ways: certain moves may not induce turn-change, there
+can be more than two participants, etc.]. The |DP| type stands for /dialogue
+participant/. As a result we do several things: i) place the move in a move
+list for further references (|PushMove|), ii) record the
+turn-switching (which in a complete system may not apply to all cases
+--- then additional hypotheses would be added.), and iii) prepare to
+process the move (|Pending|).
+
+*** Uttering
+The capacity of "uttering" represents an ability to generate
+information for the NLG component. NLP component is represented
+by |Agenda| that contains a move that is just about to be uttered.
+#+BEGIN_code
+utterAndRemember :
+  (m : DP -> DP -> Move) -> (ms : List Move) -> (x y : DP) ->
+  Agenda (m x y)  ⊸ Moves ms ⊸ HasTurn x ⊸ 
+  [  _ :: Utter (m x y); _ :: Moves (Cons (m x y) ms); _ :: HasTurn y];
+#+END_code
+
+Here also we take care of turn-taking in the same rule. As a result,
+the system consumes the |Agenda| and passes the move to the NLG
+component. The move is also memorised in the |Moves| stack.
+*** Basic adjacency: greeting
+We can show how basic move adjacency can be defined in the example of
+countergreeting preconditioned by a greeting from the other party:
+#+BEGIN_code
+counterGreeting :  (x y : DP) -> HasTurn x -* Pending (Greet y x)  ⊸
+                   Agenda (CounterGreet x y);
+#+END_code
+*** QUD incrementation
+Another important rule accounts for pushing the content of the last move, in the case if it is an |Ask| move, on top of the questions under discussion (|QUD|) stack.
+
+#+BEGIN_code
+pushQUD :  (q : Question) -> (qs : List Question) -> (x y : DP) -> 
+           Pending (Ask q x y) ⊸ QUD qs ⊸ QUD (Cons q qs)
+#+END_code
+*** Integrating the answers
+If the user asserts something that relates to the top |QUD|, then
+the |QUD| can be resolved and therefore removed from the stack. The
+corresponding proposition |p| is saved as a |UserFact|[fn::For the
+current purposes we only remove the top QUD, but in a more general
+case we can implement the policy that can potentially resolve any QUD
+from the stack.]. This rule extends the abstract rule that were
+introduced in section ref:sec:cr.
+#+BEGIN_code
+processAssert : (a : Type) -> (x : a) -> (p : Prop) -> 
+  (qs : List Question) -> (dp dp1 : DP) ->
+  Pending (Assert p dp1 dp)          ⊸ 
+  QUD (Cons (Question dp a x p) qs)  ⊸ [  _ :: UserFact p; _ :: QUD qs];
+#+END_code
+
+Short answers are processed in a very similar way to assertions:
+#+BEGIN_code
+processShort : (a : Type) -> (x : a) ->  (p : Prop) -> 
+  (qs : List Question) -> (dp dp1 : DP) ->
+  Pending (ShortAnswer a x dp1 dp)   ⊸ 
+  QUD (Cons (Question dp a x p) qs)  ⊸ [  _ :: UserFact p; _ :: QUD qs];
+#+END_code
+
+*** Questions and clarifications
+Just as we described in ref:sec:unique-concrete, we use uniqueness check to determine
+whether system can resolve the question (|produceAnswer|) or it needs
+to initiate a clarifying side sequence (|produceCR|).
+
+#+BEGIN_code
+produceAnswer :
+   (a : Type) ->   (x : a) !-> (p : Prop) -> (qs : List Question)  ->	
+   QUD (Cons (Question USER a x p) qs)  ⊸ p  -*
+   [  _ :: Agenda (ShortAnswer a x SYSTEM USER); _ :: QUD qs;
+      _ :: Answered (Question USER a x p)];
+produceCR :
+   [  a : Type ; x : a ;  p : Prop ; qs : List Question ;
+      _  :: QUD (Cons (Question USER a x p) qs) ; _  :: p ] ?-> CR;
+#+END_code
+
+The clarifying side sequence itself (|CR|) is meant to be specified by
+a dialogue developer, possibly informed by machine-learning systems,
+because it is domain-specific and the choice of the spectrum of
+possible options is wide. We provide an example of a
+domain-specific |CR| in the section ref:sec:example below.
+
+** Example label:sec:example
+We now show how the generic system of rules above can handle the exchange:
+#+begin_quote
+U: Hello!\\
+S: Hello, U.\\
+U: When there is a bus from Gotaplatsen?\\
+S: In 15 minutes.
+#+end_quote
+Let us further assume the following system context, which contains
+up-to-date public transport information in the following format:
+#+BEGIN_code
+TT Bus Time Origin Destination
+#+END_code
+They are added to the initial domain-independent context
+outlined above. We also assume that the user has the turn at the start. 
+#+BEGIN_code
+QUD      Nil
+Agenda   Nil
+HasTurn  U
+Moves    Nil
+#+END_code
+When the systems hears the greeting it can be integrated into
+the state using |hearAndRemember| rule, therefore system updates its
+state accordingly:
+#+BEGIN_code
+QUD      Nil
+Agenda   Nil
+HasTurn  S
+Moves    [ Greet U S ]
+#+END_code
+In this context the system can issue a countergreeting by firing
+the |counterGreeting| rule:
+
+#+BEGIN_code
+Agenda   (CounterGreet S U)
+HasTurn  S
+Moves    [ Greet U S ]
+#+END_code
+Everything which is on the agenda can be uttered
+using |utterAndRemember| rule, given that the system has the
+turn. System also hands the turn over to the user. Therefore, the
+state becomes (we use bracket syntax instead of |Cons| for
+readability):
+
+#+BEGIN_code
+HasTurn U
+Moves   [  CounterGreet  S U, Greet         U S ]
+#+END_code
+Now the system hears the question |(Ask (Question t (TT
+n t Gotaplatsen d)))|. It is domain specific, and basically requests
+the timetable information for the given departure station. Again, we
+use |hearAndRemember| rule to itegrate it into state, but also,
+because the move is |Ask|, the system sets its QUD to the question that
+the move contains with the |pushQUD| rule. 
+
+#+BEGIN_code
+QUD      [  Question U Time t0 (TT n0 t0 Gotaplatsen d0)  ]
+HasTurn  S
+Moves    [  Ask (Question U Time t0 (TT n0 t0 Gotaplatsen d0)) U S,
+            CounterGreet  S U, Greet         U S  ]
+#+END_code
+Now, depending on the state of the knowledge base, the system will
+have two options: i) produce the answer straight away, or ii)
+integrate a clarifying side sequence.
+*** Straight answer
+For this case we will consider a knowledge base that includes
+information just about the unique (w.r.t. the time) entry in the
+timetable:
+#+BEGIN_code
+TT B18 T15   Gotaplatsen     Johanneberg
+#+END_code
+Therefore the question can be resolved and the resolving short answer
+can be put on the |Agenda|.
+#+BEGIN_code
+Answered (Question  U Time T15
+                    (TT B18 T15 Gotaplatsen Johanneberg))
+QUD Nil
+HasTurn S
+Agenda (ShortAnswer Time T15 S U)
+Moves  […] -- same as above
+#+END_code
+*** Clarifying side sequence
+In contrast, we can extend our minimal timetable example with another entry,
+therefore making it non-unique, w.r.t. time. 
+#+BEGIN_code
+TT B18 T15   Gotaplatsen     Johanneberg
+TT B55 T20   Gotaplatsen     SciencePark
+#+END_code
+In order to make it unique we can either clarify the bus number or the
+destination. For the bus number the rule for clarification can be
+formulated as follows:
+#+BEGIN_code
+specificCR :
+  (t : Time) -> (n : Bus) -> (s d : Location) -> (qs : List Question) ->
+  CR ⊸
+  QUD (Cons (Question U Time t  (TT n t s d))  qs)   ⊸
+  [  _ :: QUD (Cons  (Question S Bus n (WantBus n)) 
+                     (Cons (Question U Time t (TT n t s d)) qs));
+     _ :: Agenda (Ask  (Question S Bus n (WantBus n)) S U) ];
+#+END_code
+As a result of applying it, the state becomes:
+#+BEGIN_code
+Agenda   (Ask (Question S Bus n0 (WantBus n0)) S U)
+QUD      [  Question S Bus n0 (WantBus n0),
+            Question U Time t0 (TT n0 t0 Gotaplatsen d0) ]
+HasTurn  S  
+Moves    […]  -- same as above
+#+END_code
+Then, the system can utter the clarification request (|utterAndRemember| rule): 
+#+BEGIN_code
+QUD  [  Question S Bus n0 (WantBus n0),
+        Question U Time t0 (TT n0 t0 Gotaplatsen d0) ]
+HasTurn S  
+Moves  [  Ask (Question S Bus n0 (WantBus n0)) S U
+          Ask (Question U Time t0 (TT n0 t0 Gotaplatsen d0)) U S
+          CounterGreet S U, Greet U S  ]
+#+END_code
+The user can reply to this with a short answer |ShortAnswer Bus B55| or
+an assertion |Assert (WantBus B55)|, which can be integrated
+using |processShort| or |processAssert| rule respectively. We
+show the state after processing the short answer:
+#+BEGIN_code
+QUD  [  Question U Time t0 (TT B55 t0 Gotaplatsen d0) ]
+UserFact (WantBus B55)
+HasTurn S
+Moves  [  ShortAnswer Bus B55 U S,
+          Ask (Question S Bus B55 (WantBus B55)) S U, …  ]
+#+END_code
+The reader can see that the metavariable |n0| from the previous
+state is now unified with |B55| in the QUD,
+therefore it now corresponds to one unique entry in the knowledge
+base. Hence, the answer can be issued, by the |produceAnswer| rule.
+
+#+BEGIN_code
+Answered (Question  U Time T20
+                    (TT B55 T20 Gotaplatsen SciencePark))
+QUD Nil
+Agenda (ShortAnswer Time T20 S U)
+UserFact (WantBus B55)
+HasTurn S
+Moves […]  -- same as above
+#+END_code
+
+bibliography:../TAL/tal.bib
+\bibliographystyle{acl_natbib}
+
+* COMMENT references
+bibliography:../TAL/tal.bib
