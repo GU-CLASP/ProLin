@@ -9,6 +9,7 @@ import Context
 import HaskToProlin
 import Expr
 import Data.Maybe (maybe)
+import Options
 
 extractOutput :: R -> (Maybe String,R)
 extractOutput r =
@@ -29,7 +30,7 @@ clientLoop h r rs = do
        let p' = encode p
        putStrLn ("Encoded as: " ++ show p')
        -- Push p in the context so the manager can deal with it.
-       r' <- run 20 (pushInContext (Symb "p",Symb "Message" `app` (p')) r) rs
+       r' <- run defaults (pushInContext (Symb "p",Symb "Message" `app` (p')) r) rs
        let (reply,r'') = extractOutput r'
        hPutStrLn h (maybe "Tell me more..." id reply)
        clientLoop h r'' rs

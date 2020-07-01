@@ -1,3 +1,4 @@
+{-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE AllowAmbiguousTypes #-}
 {-# LANGUAGE TypeApplications #-}
 
@@ -11,6 +12,8 @@ import Types
 import Expr
 import Context
 import qualified Exp.Abs as CF
+import Control.Monad (when)
+import Options
 
 -- | loadModule fileName fileContents -> Either error (context,[(ruleName,ruleExpression)])
 loadModule :: String -> String ->  Either String (Ctx, [(String,AnyRule)])
@@ -39,20 +42,26 @@ loadAndPrepareModule fname = do
     Left err -> error err
     Right (cx,rs) -> (prepareContext cx,rs)
 
--- | run fuel initialState lookupName rules
-run :: Int -> R -> [(String, AnyRule)] -> IO R
-run 0  r _rs = do
-  putStrLn "No more fuel"
-  return r
-run n  r rs = do
-  putStrLn "-------------------"
-  putStrLn "State:"
-  print r
-  case applyAnyRule rs [r] of
-    [] -> do
-      putStrLn "No more rules to apply"
-      return r
-    ((ruleName,r'):_) -> do
-      putStrLn ("Applied: " ++ ruleName)
-      run (n-1) r' rs
-
+run :: Options -> R -> [(String, AnyRule)] -> IO R
+run Options {..} = go optFuel
+ where
+     -- | run fuel initialState lookupName rules
+   go :: Int -> R -> [(String, AnyRule)] -> IO R
+   go 0  r _rs = do
+     putStrLn "No more fuel"
+     return r
+   go n  r rs = do
+     putStrLn "-------------------"
+     putStrLn "State:"
+     print r
+     case applyAnyRule rs [r] of
+       [] -> do
+         putStrLn "No more rules to apply"
+         return r
+       ((ruleName,r'):_) -> do
+         when optPauseStep $ do
+           putStrLn "Press <ENTER> to continue"
+           _ <- getLine
+           return ()
+         putStrLn ("Applied: " ++ ruleName)
+         go (n-1) r' rs
