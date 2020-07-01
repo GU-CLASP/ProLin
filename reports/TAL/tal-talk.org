@@ -1,0 +1,170 @@
+#+TITLE: Linear logic, metavariables and Q/A
+
+* Key idea
+- use metavariables to account for resolving the questions and issuing
+  CRs
+
+* Background
+- ISU
+- some inspiration from Kos
+
+** proof search as programming language
+Traditional Prolog: set of axioms and rule of inferences:
+: Leave 55 Götaplatsen 11.50
+: Leave x Götaplatsen y -> Arrive x CentralStationen (y+0.75)
+
+- ~x~ and ~y~ are metavariables
+- proof-search as means to represent possible moves in dialogue (GoDis)
+
+
+*Linear logic*
+- one hypothesis may be used *only once*
+: IsAt x Gotaplatsen y ⊸ IsAt x CentralStationen (y+0.75)
+
+- no hierarchy of propositions, but in intutionistic logic we can wrap
+  propositions in constructors, e.g.
+: Unsure P
+
+- we can build such rules to manipulate the information state, naturally being able to remove information from the IS
+
+* Questions and answers
+** Questions have the following type
+#+BEGIN_code
+  A  : Type
+  P  : A  -> Prop
+#+END_code
+the intent of the question is to find ~x:A~, which makes ~P(x)~ true.
+
+a few examples
+1. "Where does John live?"
+   : A = Location
+   : P = λx.Live John x
+
+2. "Does John live in Paris?"
+   - 2
+     : A = Bool
+     : P = λx.if x then Live John Paris else ¬(Live John Paris)
+     a = true
+
+   - 2*
+     : A = Prop → Prop
+     : P = λm.m(Live John Paris)
+
+     a:A
+     a = λx.x
+** Answers: assertion or a short answer  
+(for short answers the type is provided)
+1. "London"/"John lives in London"
+: ShortAnswer London Location
+: Assert (Live John London)
+
+1. "yes"
+   - 2
+     : ShortAnswer True Bool
+   - 2
+     : ShortAnswer (λx.x) (Prop → Prop)
+
+** Negative questions
+Negative questions are somewhat problematic, because:
+- "no" can be ambiguous 
+- "no" can be context-dependent
+
+"Doesn't John like Twix?"
+
+#+begin_code
+Q Multi ( \x. case x of
+    AmbiguousNo -> Trivial   -- "no"
+    DefiniteNo -> not P      -- "no he doesn’t"
+    DefiniteYes -> P         -- "si"/"yes he does"
+    Qualifier m -> m P       -- "quite unlikely"
+  )
+#+end_code
+
+* Question answering
+: QUD (Question A x (P x))
+where ~x~ (a metavariable) is the value of the requested answer 
+e.g.
+: QUD (Question Location x (Live John x))
+
+Answers:
+- ~ShortAnswer X A~  (where ~X:A~)
+- ~Assert P~
+
+ISU rule
+#+BEGIN_code
+processShort : (a : Type) -> (x : a) -> (p : Prop) ->
+               ShortAnswer x a ⊸
+               QUD (Q a x p) ⊸ p
+#+END_code
+e.g. "where does john live"
+: QUD (Question Location x (Live John x))
+: ShortAnswer Paris Location
+: x = Paris
+: a = Location
+: p = (Live John Paris)
+
+#+BEGIN_code
+processAssert : (a : Type) -> (x : a) -> (p : Prop) ->
+                AssertMove p ⊸
+                QUD (Q x a p) ⊸ UserFact p
+#+END_code
+e.g. "john lives in Paris"
+: Assert (Live John Paris)
+
+note that it  will resolve:
+- ~QUD (Question Location x (Live John x)~)
+- ~QUD (Question Bool x (λx.if true then (Live John Paris) else ¬(Live John Paris))~)
+
+* Unique answers
+Assume that the system knows something...
+
+: Eat John Mars
+
+#+BEGIN_code
+(a : Type) -> (x : a) -> (p : Prop)
+-> QUD (Q a x p) -> p -* Answer x (Q x p)
+#+END_code
+
+~p~ includes ~x~, therefore ~x~ acts as a proof for ~p~
+
+: Eat John x0
+is not provable
+
+We introduce a special *uniqueness* rule 
+: (x : A) !-> B
+1. ~x~ should be bound to a term which doesn't contain any metavariable
+2. ~x~ is unique
+
+
+#+BEGIN_code
+produceAnswer : (a : Type) -> (x : a) !-> (p : Prop)
+-> QUD (Q a x p) -> p -* ShortAnswer x a
+#+END_code
+
+
+** ?->
+
+
+#+BEGIN_code
+[a : Type;
+ x : a; 
+ p : Prop;
+ havePAsQud :: QUD (Q x p);
+ proof :: p] ?-> CR
+#+END_code
+
+#+BEGIN_code
+Eat(John,Mars)
+Eat(Mary,Twix)
+ori  ::  QUD (Q Food x (Eat(y,x)))
+cr   ::  QUD (Q Person z (z=y))
+a    ::  ShortAnswer Mary Person
+#+END_code
+
+after applying |processShort|:
+#+BEGIN_code
+Eat(John,Mars)
+Eat(Mary,Twix)
+ori :: QUD (Q Food x (Eat(y,x)))
+r ::  Mary=y
+#+END_code

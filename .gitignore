@@ -25,3 +25,11 @@ cabal.project.local~
 /.styx
 /Exp/*
 /cabal.project
+/reports/TAL/ltximg/*.svg
+*.bbl
+*.blg
+*.log
+*.out
+*.ptb
+*.fdb_latexmk
+*.fls
