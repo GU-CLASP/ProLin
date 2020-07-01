@@ -144,7 +144,7 @@ about the state of other participants.In general, the core of DM is
 comprised of a set of linear-logic rules which depend on the domain of
 application. However, many rules will be domain-independent (such as
 generic processing of answers). We show these generic rules here, and
-the demo will illustrate them with in an example application.
+the demo will illustrate them within an example application.
 
 *Integrating moves from NLU and NLG*:
 #+BEGIN_code
