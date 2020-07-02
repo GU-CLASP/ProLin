@@ -1,6 +1,7 @@
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE AllowAmbiguousTypes #-}
 {-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module TopLevel where
 
@@ -13,6 +14,7 @@ import Context
 import qualified Exp.Abs as CF
 import Control.Monad (when)
 import Options
+import Control.Applicative
 
 -- | loadModule fileName fileContents -> Either error (context,[(ruleName,ruleExpression)])
 loadModule :: String -> String ->  Either String (Ctx, [(String,AnyRule)])
@@ -41,6 +43,12 @@ loadAndPrepareModule fname = do
     Left err -> error err
     Right (cx,rs) -> (prepareContext cx,rs)
 
+pause :: IO ()
+pause = do
+  putStrLn "Press <ENTER> to continue"
+  _ <- getLine
+  return ()
+
 run :: Options -> R -> [(String, AnyRule)] -> IO R
 run Options {..} = go optFuel
  where
@@ -50,17 +58,23 @@ run Options {..} = go optFuel
      putStrLn "No more fuel"
      return r
    go n  r rs = do
-     putStrLn "-------------------"
-     putStrLn "State:"
-     print r
+     if optPauseInteractive
+       then case (("heard:" <>) . snd <$> haveConstructor "Heard" r) <|>
+                 (("utter:" <>) . snd <$> haveConstructor "Utter" r) of
+              Nothing -> return ()
+              Just d -> do
+                print d
+                pause
+       else do putStrLn "-------------------"
+               putStrLn "State:"
+               print r
      case applyAnyRule rs [r] of
        [] -> do
          putStrLn "No more rules to apply"
          return r
        ((ruleName,r'):_) -> do
-         when (optPauseStep || optPauseInteractive && (haveConstructor "Utter" r || haveConstructor "Heard" r)) $ do
-           putStrLn "Press <ENTER> to continue"
-           _ <- getLine
-           return ()
+         when (optPauseStep) $ do
+           pause
          putStrLn ("Applied: " ++ ruleName)
          go (n-1) r' rs
+

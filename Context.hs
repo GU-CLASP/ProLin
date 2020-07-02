@@ -50,6 +50,9 @@ type Avail v w = [(Exp (v+w) -- term
 --        R w
 -- mkR = R
 
+data R0 v w = R0 (w -> String)  -- names of context variables
+                 (Metas v w)  -- metavariables introduced
+                 (Avail v w) -- context
 
 data R  where
   R :: forall v w. (Enumerable v, Eq w) =>
@@ -205,17 +208,20 @@ applyAnyRule rs ctxs = do
   ctx <- ctxs
   (ruleName,) <$> (applyRule ruleName r ctx)
 
-
-prettyR :: Bool -> R -> D
-prettyR showTerms (R ctxNames m a)
-  = vcat [hang 2 "metas" (vcat [text n <+> ":" <+> pretty (nm <$> e) | (n,_,e) <- m])
-         ,hang 2 "lins"  (vcat [(if showTerms then ((pretty (nm <$> e) <+> ":") <+>) else id)
-                                (pretty (nm <$> t)) | (e,t) <- a])]
+prettyTerm :: Show v => Eq v => R0 v w -> Exp (v + w) -> D
+prettyTerm (R0 ctxNames m _) t = pretty (nm <$> t)
      where names = [(v,n) | (n,v,_) <- m]
            nm (Right v) = ctxNames v
            nm (Left v) = case lookup v names of
              Nothing -> error ("found unknown name for meta:" ++ show v)
              Just x -> x
+
+prettyR :: Bool -> R -> D
+prettyR showTerms (R ctxNames m a)
+  = vcat [hang 2 "metas" (vcat [text n <+> ":" <+> prettyTerm r0 e | (n,_,e) <- m])
+         ,hang 2 "lins"  (vcat [(if showTerms then ((prettyTerm r0 e <+> ":") <+>) else id)
+                                (prettyTerm r0 t) | (e,t) <- a])]
+     where r0 = R0 ctxNames m a
 
 exampleRules :: [Exp Zero]
 exampleRules =
@@ -242,19 +248,16 @@ pushInContext :: (Exp Zero,Exp Zero) -> R -> R
 pushInContext x (R wN metas ctx) = R wN metas (both (exNihilo <$>) x:ctx)
 
 
--- | Extract an "Output"
-pullOutputFromContext :: R -> Maybe (R,Exp Zero)
-pullOutputFromContext r = case applyRule "pull" pullRule r of
-  [] -> Nothing
-  (R _ _ []:_) -> error "pullOutputFromContext: panic: could pull but nothing remains in the context"
-  (R wN metas ((_pullTerm,msg):avails):_) -> case isClosed msg of
-    Nothing -> error "manager attempted to output a message with free variables."
-    Just msg' -> Just (R wN metas avails,msg')
-  where pullRule = foral "m" $ \msg -> (Symb "Output" @@ msg) ⊸ msg
+pullOutputFromContext :: R -> Maybe (R,D)
+pullOutputFromContext = haveConstructor "Output"
 
 -- | does a certain rule apply in the context?
-doesRuleApply :: Exp Zero -> R -> Bool
-doesRuleApply rule r = not $ null $ applyRule "rule_hardcoded" rule r
+doesRuleApply :: Exp Zero -> R -> Maybe (R,D)
+doesRuleApply rule r = case applyRule "rule_hardcoded" rule r of
+  [] -> Nothing
+  (R _ _ []:_) -> error "doesRuleApply: panic: could pull but nothing remains in the context"
+  (R wN metas a@((_pullTerm,returned):avails):_) ->
+    Just (R wN metas avails,prettyTerm (R0 wN metas a) returned)
 
-haveConstructor :: String -> R -> Bool
-haveConstructor c r = doesRuleApply (foral "m" $ \msg -> (Symb c @@ msg) ⊸ msg) r
+haveConstructor :: String -> R -> (Maybe (R, D))
+haveConstructor c = doesRuleApply (foral "m" $ \msg -> (Symb c @@ msg) ⊸ msg)
