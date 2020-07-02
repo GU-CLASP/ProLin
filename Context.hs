@@ -25,6 +25,7 @@ import Data.Maybe (isJust)
 data Entry w = Entry w (Exp w) deriving Functor
 type Context w = [Entry w] -- things available in a context.
 type Rule = Exp
+
 select :: [a] -> [(a,[a])]
 select [] = []
 select (x:xs) = (x,xs):[(y,x:ys) | (y,ys) <- select xs]
@@ -78,6 +79,7 @@ findFreshName n x xs | candidate `elem` xs = findFreshName (n+1) x xs
 
 isGround :: Exp (v+w) -> Bool
 isGround = getAll . foldMap (All . isRight)
+
 
 -- v is the set of free variables introduced by the matching process.
 -- w are the variables of the context.
@@ -240,6 +242,7 @@ pushInContext :: (Exp Zero,Exp Zero) -> R -> R
 pushInContext x (R wN metas ctx) = R wN metas (both (exNihilo <$>) x:ctx)
 
 
+-- | Extract an "Output"
 pullOutputFromContext :: R -> Maybe (R,Exp Zero)
 pullOutputFromContext r = case applyRule "pull" pullRule r of
   [] -> Nothing
@@ -248,3 +251,10 @@ pullOutputFromContext r = case applyRule "pull" pullRule r of
     Nothing -> error "manager attempted to output a message with free variables."
     Just msg' -> Just (R wN metas avails,msg')
   where pullRule = foral "m" $ \msg -> (Symb "Output" @@ msg) ⊸ msg
+
+-- | does a certain rule apply in the context?
+doesRuleApply :: Exp Zero -> R -> Bool
+doesRuleApply rule r = not $ null $ applyRule "rule_hardcoded" rule r
+
+haveConstructor :: String -> R -> Bool
+haveConstructor c r = doesRuleApply (foral "m" $ \msg -> (Symb c @@ msg) ⊸ msg) r

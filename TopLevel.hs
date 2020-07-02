@@ -7,7 +7,6 @@ module TopLevel where
 import Exp.Par
 import Exp.ErrM
 import Resolver
-import Data.Monoid
 import Types
 import Expr
 import Context
@@ -59,7 +58,7 @@ run Options {..} = go optFuel
          putStrLn "No more rules to apply"
          return r
        ((ruleName,r'):_) -> do
-         when optPauseStep $ do
+         when (optPauseStep || optPauseInteractive && (haveConstructor "Utter" r || haveConstructor "Heard" r)) $ do
            putStrLn "Press <ENTER> to continue"
            _ <- getLine
            return ()
