@@ -58,16 +58,16 @@ run Options {..} = go optFuel
      putStrLn "No more fuel"
      return r
    go n  r rs = do
-     if optPauseInteractive
-       then case (("heard:" <>) . snd <$> haveConstructor "Heard" r) <|>
-                 (("utter:" <>) . snd <$> haveConstructor "Utter" r) of
-              Nothing -> return ()
-              Just d -> do
-                print d
-                pause
-       else do putStrLn "-------------------"
-               putStrLn "State:"
-               print r
+     when optPauseInteractive $
+       case (("<<< heard:" <>) . snd <$> haveConstructor "Heard" r) <|>
+            ((">>> utter:" <>) . snd <$> haveConstructor "Utter" r) of
+         Nothing -> return ()
+         Just d -> do
+           print d
+           pause
+     when optShowState $ do putStrLn "-------------------"
+                            putStrLn "State:"
+                            print r
      case applyAnyRule rs [r] of
        [] -> do
          putStrLn "No more rules to apply"
@@ -75,6 +75,7 @@ run Options {..} = go optFuel
        ((ruleName,r'):_) -> do
          when (optPauseStep) $ do
            pause
-         putStrLn ("Applied: " ++ ruleName)
+         when optShowRules $ do
+           putStrLn ("Applied: " ++ ruleName)
          go (n-1) r' rs
 
