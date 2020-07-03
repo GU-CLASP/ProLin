@@ -1,11 +1,9 @@
 nixpkgs:
-  url: https://github.com/NixOS/nixpkgs-channels/archive/nixos-20.03.tar.gz
+  url: https://github.com/NixOS/nixpkgs-channels/archive/55668eb671b915b49bcaaeec4518cc49d8de0a99.tar.gz
 
 local-packages:
   prolin:
     location: .
-  # pretty-compact:
-  #   location: ../../prettiest
 
 nix-deps:
   - BNFC
@@ -15,6 +13,6 @@ source-deps:
   parsek:
     location: https://github.com/jyp/Parsek.git
     revision: cb92f2cfc5dde7b4ebc6c9e0de66455ee269281d
-  # pretty-compact:
-  #   location: https://github.com/jyp/prettiest.git
-  #   revision: 0fb7f1b2209d6763b9467c5aae2f952f8a929aed
+  pretty-compact:
+    location: https://github.com/jyp/prettiest.git
+    revision: 0fb7f1b2209d6763b9467c5aae2f952f8a929aed
