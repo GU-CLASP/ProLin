@@ -217,3 +217,14 @@ bibliography:../TAL/tal.bib
 
 * COMMENT references
 bibliography:../TAL/tal.bib
+
+* COMMENT demo plan
+- motivate modular system, domain-general rules
+- dialogue manager inspired by theory (Kos)
+- demo
+  - show dialogue
+  - show the states
+  - show rules
+  
+
+
