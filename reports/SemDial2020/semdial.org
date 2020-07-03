@@ -25,11 +25,19 @@
 #+LATEX_HEADER: \tikzstyle{block} = [draw, rectangle, minimum height=3em, minimum width=3em]
 #+LATEX_HEADER: \tikzstyle{virtual} = [coordinate]
 
-#+TITLE: LDM: Linear Dialogue Manager
+#+TITLE: LDM: A Linear Dialogue Manager
 #+AUTHOR:
 
 #+begin_abstract
-new abstract
+For this system demonstration, we presents a modular dialog manager
+comprised of the following components. At the lowest level, we have
+implemented a proof-search engine based on linear logic. This engine
+features unification. In this engine we have implemented a suite of
+generic dialog-management rules, inspired from Ginzburg's KoS
+framework, such that firing a rule correspond to an information-state
+update of the agent. These generic rules can then be complemented by
+domain-specific rules. We show in particular how a question-answering
+agent, such as one operating an information kiosk, can be implemented.
 #+end_abstract
 
 * Introduction
@@ -60,23 +68,11 @@ citet:dixon2009plans this is best done by representing the
 information-state of the agents as updatable sets of
 propositions. Subsets of propositions in the information state can be
 treated independently, and, therefore, a suitable and flexible way to
-represent updates is as propositions in linear logic. 
+represent updates is as propositions in linear logic.
 
-We further extend the citet:dixon2009plans framework to deal with
-unclarity and ambiguity. Indeed, asking a question is typically not
-done in one utterance which leaves nothing to interpretation. Rather,
-an initial short and possibly ambiguous question is posed. If the
-answerer deems the question unclear, a dialogue will ensue before the
-question is finally resolved. In technical terms we deal with
-question-answering and clarification requests in a unified way,
-following some earlier work, in the context of dialogue management. To
-deal with such ambiguity and unclarity, we propose here the use of
-/metavariables/, thereby leveraging much research on unification and
-proof search in various logical frameworks.  That is, meta-variables
-will stand in for any piece of information which is left to further
-interpretation. By using well-known techniques which correspond well
-with the intuition of information-state based dialogue management, we
-are able to provide a fully working prototype of the components of our
+By using well-known techniques which correspond well with the
+intuition of information-state based dialogue management, we are able
+to provide a fully working prototype of the components of our
 framework:
 
 1. a proof-search engine based on linear logic, modified to support
@@ -89,7 +85,6 @@ framework:
 3. several examples which use the above to construct potential
    applications of the system.
 
-
 * Linear logic as a Dialogue Management Framework
 Typically, and in particular in the archetypal logic programming
 language prolog cite:bratko2001prolog, axioms and rules are expressed
@@ -97,11 +92,13 @@ within the general framework of first order logic. However, several
 authors cite:dixon2009plans,martens2015programming have proposed to
 use linear logic cite:girard1995linear instead. For our purpose, the
 crucial feature of linear logic is that hypotheses may be used /only
-once/. For example, one could have a rule |IsAt x Gotaplatsen y ⊸ IsAt
-x CentralStationen (y+0.75)|. Consequently, after firing the above
-rule, the premiss |(Is x Gotaplatsen y)| becomes unavailable for any
-other rule.  Thereby the linear arrow |⊸| can be used to conveniently
-model that a bus cannot be at two places simultaneously.
+once/. 
+
+# For example, one could have a rule |IsAt x Gotaplatsen y ⊸ IsAt
+# x CentralStationen (y+0.75)|. Consequently, after firing the above
+# rule, the premiss |(Is x Gotaplatsen y)| becomes unavailable for any
+# other rule.  Thereby the linear arrow |⊸| can be used to conveniently
+# model that a bus cannot be at two places simultaneously.
 
 In general, the linear arrow corresponds to /destructive state
 updates/. Thus, the hypotheses available for proof search correspond
