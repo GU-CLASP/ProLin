@@ -6,10 +6,11 @@ data Options = Options {optFuel :: Int
                        ,optPauseInteractive :: Bool
                        ,optShowRules :: Bool
                        ,optShowState :: Bool
+                       ,optServer :: Bool
                        ,optProgramFile :: String}
 
 defaults :: Options
-defaults = Options 10 False False True True "<interactive>"
+defaults = Options 10 False False True True False "<interactive>"
 
 options :: ParserInfo Options
 options =
@@ -19,6 +20,7 @@ options =
          switch (long "interactive" <> short 'i' <> help "pause at each interaction (Utter/Heard)") <*>
          flag True False (long "no-show-rules" <> short 'r' <> help "don't show the rules that are applied") <*>
          flag True False (long "no-show-state" <> short 's' <> help "don't show the state after each step") <*>
+         switch (long "server" <> help "start a server for interaction") <*>
          (argument str (metavar "INPUT"))
         ) <**> helper) (fullDesc <> progDesc "pli checker and interpreter")
 
