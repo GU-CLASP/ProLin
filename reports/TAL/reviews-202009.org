@@ -1,0 +1,244 @@
+> The reviewers mainly ask you to clarify the presentational aspects of
+> your contribution and to make a number of improvements in order to
+> easen the reception of your work by the audience.
+
+>  This article deals with dialogue management systems. It proposes an
+> information state update approach using a logical inference system
+> based on linear logic. The latter is a resource conscious logic that
+> allows for controlling whether a fact should be used once and only
+> once in a logical inference, hence "removed" from the information
+> state for later reasoning. A modeling of question-answering dialogues,
+> possibly requiring clarification questions, is provided, showing how
+> metavariables occurring in questions are made ground in answers. An
+> example of such a dialog and how the information state is being
+> updated is also given.
+
+>  The article is mostly clear and well structured. The general ideas and
+> motivations are very well presented, making the approach quite
+> convincing and interesting to me. In addition to the use of linear
+> logic for dialogue (already proposed, as indicated by the authors, in
+> Dixon et al. 2009), the originality of the contribution comes from
+> putting it together with dependent types and a dedicated role of
+> metavariables in question-answering dialogues.
+
+>  Some aspects needs to be further developed and precisely specified,
+> though. First, the underlying logic is quite involved, as it uses
+> intuitionistic linear logic with exponential together with dependent
+> types. Moreover, some connectives bear special meanings that seem
+> outside the usual scope of logic, such as checking whether solutions
+> can be made fully ground, although it makes sense in the logical
+> programming paradigm. So a clear description of the logic and of the
+> logic programming system (for instance, does it rely on Alice/Lolli,
+> as in Dixon et al. 2009? Is it some other system? Based on something
+> available for TTR?) would be very much welcome.
+
+>  Second, although the different rules are quite clearly presented,
+> their status are unclear. How are they formulated within a logical
+> programming system? What are the body and the goal of the rules?
+> Similarly, the queries used during the interaction process and which
+> is usually the input of such a program, are not specified. Is the
+> system guided by whatever theorem can be proved? It seems to me this
+> can be quite a lot. (It might be that paragraph 4, section 2.3, aims
+> at describing how interaction takes place, but it remained quite
+> obscure to me.)
+
+>  A comprehensive list of the predicates, constructors, etc. as well as
+> their types would be quite helpful (for instance, it seems to me that
+> you sometimes use Q, sometimes Question, sometimes with 3 arguments
+> ((Q A x (P x)) p8, (Q x p) p11, (Q Bool P) p 14, (Question dp a x p)
+> p17, etc.)). Font distinction as well, for instance to distinguish
+> variables and one letter predicates), and a proof search example could
+> be also quite interesting.
+
+>  Finally, the abstract claims to provide a "small scale
+> implementation." I was expecting to find the name of a system, and
+> possibly an example program that could be run and tested, but is seems
+> that "implementation" here means a set of rules.
+
+>  Here are some minor remarks:
+> + p5, fn1: here -> Here (and metavariables¹. -> metavariables.¹)
+> + p8: "Paris" has does not mean -> "Paris" does not mean
+> + p9: more details should be provided to comment Table 1
+> + p11: it is remains -> it remains
+> + p11: "in the same information state as above" is not clear enough. May be use an example environment for "above" and refer to it
+> + p11: unambguously -> unambiguously
+> + p12: the [ ] syntax is not introduced (do you really mean a list, here, or a linear conjunction?). Similarly, for the :: syntax
+> + p13: the way negation is modeled should be mode detailed (do you plan to list all the predicates that do no hold?)
+> + p14: "Name y Paris" or "Name Paris y"?
+> + p16: I dont quite understand why you're using the :: constuctor since the list are "internalized" under the variant constructors Moves or QUD
+
+
+>   ********************************
+
+>  The paper presents a suggestion for the handling of questions and
+> clarification questions in dialog systems. The main suggestion is to
+> use linear logic in order to handle destructive information-state
+> updates.
+
+>  The paper is well written and clearly structured, though the
+> contextualization of the approach presented in comparison with
+> previous work in section 5 comes surprisingly late. The article
+> furthermore clearly describes in what aspects it departs from previous
+> work, which is however not in many respects.
+
+>  Detailed comments:
+
+>  The introduction suffers a bit from quite general statements whose
+> relevance for the line of argumentation then does not become
+> clear. For instance, p. 2 "Even though the progress in bridging
+> dialogue management and theoretical research is promising..." seems
+> unrelated to what comes next. Statements like "By using well-known
+> techniques..." require in my view some references. Finally, the
+> description of the linguistic phenomena addressed is quite vague and
+> could profit from references, for instance, to conversation analytic
+> work, such as Schegloff (1972) on insertion sequences (also nicely
+> summarized in Levinson 1983: Pragmatics, CUP).
+
+>  The description of KoSS p.3 is also quite vague (and ungrammatical)
+> when you write that KoS has among the most detailed analyses. If this
+> is meant as a topic sentence, then remove the paragraph break that is
+> following. What is Cooper's formalism used for? (p.4)
+
+>  Last paragraph on p.4: the first sentence is not related to the
+> following. Last paragraph of 2.1.3: what are the conclusions from what
+> you are writing?
+
+>  Section 2.2: Here you introduce the notion of metavariable, but you
+> don't define (ever) what a metavariable is and what is 'meta' about
+> it.
+
+>  p. 6, it remains unclear why the scenario would have to be suspended.
+
+>  p.7: Transition rules are not defined nor explained sufficiently, and
+> it is weird to start the section with 'In particular'.
+
+>  p.7: you introduce some elements of your formalism, but not others. At
+> least a brief paraphrase in a footnote would be useful.
+
+>  p. 7: it remains unclear what is trivial about an utterance like "He
+> does in the weekend", which is an instantiation of the AmbiguousNo
+> category.
+
+>  p. 8: "Do you know who I met yesterday?" is neither rhetorical nor
+> attitudinal, but a pre to a telling, i.e. a conventional means to a
+> multi-unit turn (e.g. Schegloff 1982).
+
+>  p. 10: The solution to represent encyclopedic information, such as
+> that 'somewhere' is not a satisfactory answer, as a metavariable seems
+> very ad hoc; what about 'in a city', 'on this planet', which are
+> satisfactory in some contexts and vacuous in others?
+
+>  p. 17: Maybe this method to account for adjancency works for
+> greetings, but in most other adjacency pairs, insertion sequences are
+> possible.
+
+>  p. 22: what do you mean by "keep metavariables in terms"?
+
+>  p. 22: "The main current weakness of our approach" does not refer to
+> any of the topics you have discussed in the paper, but to the work
+> your group does in general. I'm not sure that it is relevant here.
+
+>  p. 23: Your system evaluation is actually a self-evaluation; that is,
+> you claim that it accounts for certain phenomena and not for others,
+> which is not really an evaluation.
+
+>  Minor issues:
+
+>  - inconsistent spelling of publicized - publicised
+
+>  - The use of the verb 'to ground' is strange (p. 12) - ground in what?
+>   If you use the DGB, then use the corresponding terminology (that you
+>   have introduced before), or else use the verb in its usual,
+>   grammatically correct manner.
+
+>  - p. 13: "several places with this name" - you have not mentioned Paris yet.
+
+>  - p. 18: U's second utterance is ungrammatical - intentionally?
+
+>  - p. 18: What or who are 'they'?
+
+>  - there are typos and grammatical issues as well as run-on sentences throughout the paper.
+
+>  ********************************
+
+>  The article presents a proof-of-concept for the formalisation of
+> dialogue management rules using linear logic, and investigates in
+> particular how to model questions and clarification requests using
+> metavariables.
+
+>  The article is generally well-written, and it is certainly refreshing
+> to read a paper that for once does not focus on yet another neural
+> model applied to a benchmark dataset. However, I must admit I
+> struggled to grasp the main novelty of the paper. The general idea of
+> framing dialogue management in terms of rules operating on a dialogue
+> state represented in terms of logical propositions (including
+> metavariables waiting to be "filled") is certainly not new, and is
+> present in the work of Larsson, Ginzburg, Traum and several
+> others. The use of linear logic for dialogue is perhaps more original,
+> although (as cited by the authors) it has been investigated by Dixon,
+> Smaill & Tsang (2009). However, as pointed by the authors of the
+> current paper, Dixon et al did not seem to consider how to capture
+> questions and clarification requests using metavariables.
+
+>  But since the paper wishes to focus on modelling aspects, I do see a
+> number of shortcomings to the presented approach:
+
+>  1) the paper indicates that the formalisation is able to capture
+>    uncertainties and ambiguities. This is a somewhat excessive claim,
+>    as doing so would require some kind of probabilistic semantics,
+>    both for the dialogue state and for the rules operating on it. What
+>    the paper presents is an approach able to express the existence of
+>    unknowns that should be resolved, or indicates that a particular
+>    expression is underspecified or can receive several
+>    interpretations. This is IMHO quite different from reasoning over
+>    uncertainties or natural language ambiguities, which necessitates
+>    some form of probabilistic inference.
+
+>  2) Another modelling aspect that I find problematic relates to the
+>    decision-making part. In dialogue, there is typically not one
+>    single goal to achieve, but a multitude of goals (and costs) that
+>    should be taken into account, with complex trade-offs with one
+>    another. Such goals may related to external goals to achieve but
+>    may also pertain to grounding tasks, social obligations,
+>    rapport-building, efficiency considerations, etc. This is why
+>    dialogue is (at least in my view) best framed as an optimisation
+>    problem rather than a classical planning problem. As far as I can
+>    see, linear logic cannot really capture such type of
+>    decision-making, as there no direct notion of utility or cost
+>    associated to a resource.
+
+>  3) One third limiting factor is that is requires both questions and
+>    answers to be formalised in terms of logical expressions (with
+>    metavariables to fill), and the reliance on explicit logical
+>    expressions to capture the semantics of natural language utterances
+>    is of course known to be difficult when applied beyond toy
+>    examples. Although this may work in conversational domains that
+>    have a very clear semantics and where questions/answer pairs are
+>    expected to have a specific structure (for instance for querying
+>    structured databases using natural language), this is much harder
+>    to apply to more open-ended interactions such as social chat.
+
+>  I also have a few more specific comments:
+
+>  - Is there a particular reason for not adopting the standard notion of
+>   predicate logic for predicates and arguments, such as Leave(55,
+>   Gotaplatsen, 11.50) instead of (Leave 55 Gotaplatsen 11.50)? I know
+>   that logic programming frameworks often rely on specific notational
+>   conventions, but it would in any case be useful to say a few words
+>   on this notation.
+
+>  - Similarly, is there a particular reason for using the term
+>   "metavariable" instead of "free (non-bound) variable"?
+
+>  - The paper indicates that the approach is "implemented". In such a
+>   case, the authors should provide more information about
+>   implementation-level aspects, in particular how inference (proof
+>   search) is conducted and how the inputs/outputs of the dialogue
+>   manager are handled. Otherwise, I would suggest to use the term
+>   "formalised", as it seems closer to the actual contribution of the
+>   paper.
+
+>  - Table 2 is hard to make sense of, as the different rows are not
+>   explained (beyond a reference to Ginzburg and Ferna?ndez, 2010). I
+>   would suggest to either leave it out or provide additional
+>   explanations, such that it is possible to understand it on its own.
