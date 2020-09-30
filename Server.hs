@@ -1,4 +1,4 @@
--- module Server where
+module Server where
 
 import Network.Simple.TCP
 import TransportationParser
@@ -35,15 +35,11 @@ clientLoop h r rs = do
        hPutStrLn h (maybe "Tell me more..." id reply)
        clientLoop h r'' rs
 
-startServer :: IO ()
-startServer =  do
+startServer opts r rs =  do
   putStrLn ("starting server on port " ++ port)
   serve (Host "127.0.0.1") port $ \(connectionSocket, remoteAddr) -> do
     putStrLn $ "TCP connection established from " ++ show remoteAddr
-    (r,rs) <- loadAndPrepareModule "transport.pli"
     h <- socketToHandle connectionSocket ReadWriteMode
     clientLoop h r rs
   where port = "8000"
 
-main :: IO ()
-main = startServer

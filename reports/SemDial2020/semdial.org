@@ -1,4 +1,4 @@
-#+OPTIONS: toc:nil ':t ":t 
+#+OPTIONS: toc:nil ':t ":t author:nil
 #+LATEX_CLASS: article
 
 #+LATEX_HEADER: \usepackage[hyperref]{acl2020}
@@ -25,8 +25,10 @@
 #+LATEX_HEADER: \tikzstyle{block} = [draw, rectangle, minimum height=3em, minimum width=3em]
 #+LATEX_HEADER: \tikzstyle{virtual} = [coordinate]
 
+#+LATEX_HEADER: \aclfinalcopy % Uncomment this line for the final submission
+
 #+TITLE: LDM: A Linear Dialogue Manager
-#+AUTHOR:
+#+LATEX_HEADER: \author{Vladislav Maraev$^*$, Jean-Philippe Bernardy$^*$ and Jonathan Ginzburg$^\dagger$\\ $^*$Centre for Linguistic Theory and Studies in Probability (CLASP),\\ Department of Philosophy, Linguistics and Theory of Science, University of Gothenburg \\ {\tt \{vladislav.maraev,jean-philippe.bernardy\}@@gu.se} \\ $^\dagger$Laboratoire Linguistique Formelle (UMR 7110), Universit\'{e} de Paris \\ \texttt{yonatan.ginzburg@@univ-paris-diderot.fr} \\}
 
 #+begin_abstract
 For this system demonstration, we presents a modular dialog manager
@@ -217,3 +219,69 @@ bibliography:../TAL/tal.bib
 
 * COMMENT references
 bibliography:../TAL/tal.bib
+
+* COMMENT demo
+
+
+*LDM: LINEAR DIALOGUE MANAGER*
+
+Vladislav Maraev (University of Gothenburg)
+Jean-Philippe Bernardy (University of Gothenburg)
+Jonathan Ginzburg (Université de Paris)
+
+※   modular system with domain-general rules
+
+※   dialogue manager that goes hand in hand
+     with the theory (KoS)
+
+※   rich information state, ISU approach
+
+※   a proof-search engine based on linear logic
+
+
+- logical representation of semantic representations
+- I will show you the internal representation of the information state of the system, as it evolves over time
+- "we have shown how the information state is represented as a (multi)set of propositions" and how state updates are linear-logic function types
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1. a proof-search engine based on linear logic, modified to support
+   inputs from external systems (representing inputs and outputs of
+   the agent)
+
+2. a set of rules which function as a core framework for dialogue
+   management (in the style of KoS cite:ginzburg2012interactive)
+
+3. several examples which use the above to construct potential
+   applications of the system.
+
+
+
+
+
+
+
+
+
+
+
+- demo
+  - show dialogue
+  - show the applied rules, mention that only one rule is specific -> so
+    answering can be done in a generic way
+  - show the state, rich IS, ISU
+  - adjacency
+  - unification
+
