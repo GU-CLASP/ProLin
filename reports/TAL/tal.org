@@ -257,7 +257,7 @@ logic (such as TTR), true statements corresponds to propositions which
 admit a proof.
 
 There is a long history of using proof search as a declarative
-programming paradigm.  In the most abstract sense, the programmer
+programming paradigm, where the programmer
 specifies /axioms/ and /rules of inference/ which model their application
 domain. Typically such a system of axioms and rules represents a
 database of facts. For example, the axiom |(Leave 55 Gotaplatsen
@@ -267,7 +267,7 @@ database of facts. For example, the axiom |(Leave 55 Gotaplatsen
 
 Then, the user may define a query (or goal) as a logical formula. The
 system can then search for a proof of a goal as a way to query the
-database of facts. In the most useful cases, goals contain
+database of facts. Often, goals contain
 /metavariables/[fn::here, we use the convention that metavariables are
 lowercase letters.]. For example, the goal |(Leave x Gotaplatsen y)|
 corresponds to a request to list all the buses leaving from
