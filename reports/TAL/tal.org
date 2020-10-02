@@ -273,7 +273,8 @@ Then, the user may define a query (or goal) as a logical formula. The
 system can then search for a proof of a goal as a way to query the
 database of facts. Often, goals contain
 /metavariables/[fn::here, we use the convention that metavariables are
-lowercase letters.]. For example, the goal |(Leave x Gotaplatsen y)|
+lowercase letters.], which play the role of unknowns for unification:
+their value can be fixed to any term for a goal to be reached. For example, the goal |(Leave x Gotaplatsen y)|
 corresponds to a request to list all the buses leaving from
 Götaplatsen (as |x|) together with their departure time (as |y|).
 
@@ -336,19 +337,17 @@ It is important to note that we will not forego the unrestricted
 co-exist in our implementation, thus we can represent simultaneously
 transient facts, or states, (introduced by the linear arrow) and
 immutable facts (introduced by the unrestricted arrow).
-
-*** Transition rules
-In particular, we have a fixed set of rules (they remain available
-even after being used). Each such rule manipulates a part of the
+Besides, we have a /fixed/ set of rules (they remain available
+even after being used), such as (|IsAt x Gotaplatsen y ⊸ IsAt
+x CentralStationen (y+0.75)|) above. Each such rule manipulates a part of the
 information state (captured by its premisses) and leaves everything
-else in the state alone.
+else in the state unchanged.
 
 
 * Questions and clarifications
 label:sec:qa&cr
 ** Question-answering with metavariables
-In prolog-like languages, metavariables play the role of unknowns,
-whose value can become fixed for a goal to be reached.  In this
+In this
 subsection we show how a metavariable can represent what is being
 asked, as the unknown in a proposition. A first use for metavariables
 is to represent the requested answer of a question.
@@ -376,7 +375,7 @@ cite:cooper2012negative; for example: "Doesn't John like Bananas?".
 In this instance, a simple a simple "no" answer can be ambiguous, and
 a possible model would be a multi-valued kind of answer ("yes he does"
 represented as |DefiniteYes|; "no he doesn't", represented
-as |DefiniteNo|, "no" as |AmbiguousNo| and "He does in the weekend"
+as |DefiniteNo|, "no" as |AmbiguousNo|, and "He does in the weekend"
 as |Qualifier OnWeekend|):
 
 #+begin_code
@@ -398,7 +397,7 @@ effectively remains unanswered). However, in such a framework, it is
 always possible to receive a biasing answer ("I don't know") or no
 answer whatsoever.
 Even more complications are possible, by introduction of cases such as
-rhetorical and attitudinal questions ("Do you know who I met
+rhetorical and attitudinal questions ("Do you know whom I met
 yesterday?"). We deem such complications out of the scope of the current paper.
 
 
@@ -449,7 +448,7 @@ Therefore, one way to process a short answer is by the |processShort| rule:
 processShort :  (a : Type) -> (x : a) -> (p : Prop) -> 
                 ShortAnswer a x ⊸ QUD (Q a x p) ⊸ p
 #+END_code
-Above we use Π type binders to declare metavariables (written here |(a : Type)
+Above we use Π type binders to declare (meta)variables (written here |(a : Type)
 ->|, |(x : a) ->|, etc.). This terminology will make sense to readers
 familiar with dependent types. For the others, such binders can be thought
 as universal quantification (|∀ a, ∀ x|, etc.), the difference is that

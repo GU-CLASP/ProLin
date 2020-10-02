@@ -129,57 +129,91 @@ DONE: we have clarified the status in the enumeration list in the introduction.
 > work, such as Schegloff (1972) on insertion sequences (also nicely
 > summarized in Levinson 1983: Pragmatics, CUP).
 
-TODO
+TODO (Vlad)
 
 >  The description of KoS p.3 is also quite vague (and ungrammatical)
 > when you write that KoS has among the most detailed analyses. If this
 > is meant as a topic sentence, then remove the paragraph break that is
 > following. What is Cooper's formalism used for? (p.4)
 
-ok?
+TODO (Discuss)
 
 >  Last paragraph on p.4: the first sentence is not related to the
 > following. Last paragraph of 2.1.3: what are the conclusions from what
 > you are writing?
 
+TODO: check
+
 >  Section 2.2: Here you introduce the notion of metavariable, but you
 > don't define (ever) what a metavariable is and what is 'meta' about
 > it.
 
+DONE: metavariable can be fixed by unification in the proof
+search. This is now clarified at this point rather than later.
+
 >  p. 6, it remains unclear why the scenario would have to be suspended.
+
+TODO: this is only conceptual
 
 >  p.7: Transition rules are not defined nor explained sufficiently, and
 > it is weird to start the section with 'In particular'.
 
+DONE: clarified what we mean by transition rule and remove the useless
+section title.
+
 >  p.7: you introduce some elements of your formalism, but not others. At
 > least a brief paraphrase in a footnote would be useful.
+
+TODO: ???
 
 >  p. 7: it remains unclear what is trivial about an utterance like "He
 > does in the weekend", which is an instantiation of the AmbiguousNo
 > category.
 
+DONE: We are saing that "no" is AmbiguousNo, and "He does in the weekend".
+Added a comma to clarify the split position.
+
 >  p. 8: "Do you know who I met yesterday?" is neither rhetorical nor
 > attitudinal, but a pre to a telling, i.e. a conventional means to a
 > multi-unit turn (e.g. Schegloff 1982).
+
+TODO: vlad: change example or add "prelude to a telling"
 
 >  p. 10: The solution to represent encyclopedic information, such as
 > that 'somewhere' is not a satisfactory answer, as a metavariable seems
 > very ad hoc; what about 'in a city', 'on this planet', which are
 > satisfactory in some contexts and vacuous in others?
 
+TODO: This is precisely the point. We could of course have answers
+which *contain* a metavariable but are still more specific:
+
+Live John x ∧ IsCity x
+
+where x is a metavariable.
+
 >  p. 17: Maybe this method to account for adjancency works for
 > greetings, but in most other adjacency pairs, insertion sequences are
 > possible.
 
+TODO: vlad
+
 >  p. 22: what do you mean by "keep metavariables in terms"?
+
+TODO: This is explained in the following parenthetical phrase: we do
+not apply unification substitutions. Rather we keep such substitution
+in a separate state and apply them only when testing equality.
 
 >  p. 22: "The main current weakness of our approach" does not refer to
 > any of the topics you have discussed in the paper, but to the work
 > your group does in general. I'm not sure that it is relevant here.
 
+TODO: vlad
+
 >  p. 23: Your system evaluation is actually a self-evaluation; that is,
-> you claim that it accounts for certain phenomena and not for others,
+> you claiaroundm that it accounts for certain phenomena and not for others,
 > which is not really an evaluation.
+
+TODO: vlad
 
 >  Minor issues:
 
@@ -215,7 +249,7 @@ ok?
 > present in the work of Larsson, Ginzburg, Traum and several
 > others.
 
-TODO: maybe ask Staffan about this?
+TODO: vlad: maybe ask Staffan about this?
 
 > The use of linear logic for dialogue is perhaps more original,
 > although (as cited by the authors) it has been investigated by Dixon,
