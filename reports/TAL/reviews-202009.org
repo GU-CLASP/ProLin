@@ -271,7 +271,8 @@ TODO: vlad: maybe ask Staffan about this?
 >    uncertainties or natural language ambiguities, which necessitates
 >    some form of probabilistic inference.
 
-TODO: ok, we can reformulate to clarify that.
+DONE: we have clarified in the intro that we can only deal with a kind
+of non-probabilistic ambiguity.
 
 >  2) Another modelling aspect that I find problematic relates to the
 >    decision-making part. In dialogue, there is typically not one
@@ -286,7 +287,7 @@ TODO: ok, we can reformulate to clarify that.
 >    decision-making, as there no direct notion of utility or cost
 >    associated to a resource.
 
-Ok,  but out of scope. (List as future work if more space?)
+TODO: Ok,  but out of scope. (List as future work if more space?)
 
 >  3) One third limiting factor is that it requires both questions and
 >    answers to be formalised in terms of logical expressions (with
@@ -309,14 +310,20 @@ Ok,  but out of scope. (List as future work if more space?)
 >   conventions, but it would in any case be useful to say a few words
 >   on this notation.
 
-(We use a standard LISP-like notation)
+Even though we could use standard Prolog-notation, we use a standard
+LISP-like (or ML or Haskell like) notation. We have decided not to
+change the notation in the final version, because this would be a
+pervasive change which is liable to introduce (many) errors.
 
 >  - Similarly, is there a particular reason for using the term
 >   "metavariable" instead of "free (non-bound) variable"?
 
-TODO: check. Here metavariable emphasises that it can be subsituted
-for anything at a later point. (Free variables may be rigid --- not
-substitutable )
+We have clarified that metavariable can be subsituted for anything at
+a later point. (Free variables may be rigid --- not
+substitutable). This terminology is standard in higher-order languages
+with unification (where you can have both rigid and substitutable
+variables). However we don't exercise this distinction extensively
+here. So we could use this suggestion.
 
 >  - The paper indicates that the approach is "implemented". In such a
 >   case, the authors should provide more information about
@@ -326,8 +333,9 @@ substitutable )
 >   "formalised", as it seems closer to the actual contribution of the
 >   paper.
 
-You can run proof search, but the interaction with external systems is
-rudimentary. Add link to the implementation.
+TODO: Unfortunately there is not much space for this. We have clarified the status of the implementation in the introduction (enumeration). 
+
+TODO: Add link to the implementation.
 
 >  - Table 2 is hard to make sense of, as the different rows are not
 >   explained (beyond a reference to Ginzburg and Fernandez, 2010). I

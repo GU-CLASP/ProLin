@@ -106,7 +106,7 @@ way to represent updates is as propositions in linear logic. We adopt
 this view here, and further argue for it in the body of the paper.
 
 We further extend the citet:dixon2009plans framework to deal with
-unclarity and ambiguity. Indeed, asking a question is typically not
+unclarity (and certain cases of non-probabilistic ambiguity). Indeed, asking a question is typically not
 done in one utterance which leaves nothing to interpretation. Rather,
 an initial short and possibly ambiguous question is posed. If the
 answerer deems the question unclear, a dialogue will ensue before the
