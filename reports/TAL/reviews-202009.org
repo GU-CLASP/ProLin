@@ -92,15 +92,26 @@ DONE: we have clarified the status in the enumeration list in the introduction.
 
 >  Here are some minor remarks:
 > + p5, fn1: here -> Here (and metavariables¹. -> metavariables.¹)
+DONE
+
 > + p8: "Paris" has does not mean -> "Paris" does not mean
+DONE
 > + p9: more details should be provided to comment Table 1
+TODO: vlad
 > + p11: it is remains -> it remains
+DONE
 > + p11: "in the same information state as above" is not clear enough. May be use an example environment for "above" and refer to it
 > + p11: unambguously -> unambiguously
+DONE
 > + p12: the [ ] syntax is not introduced (do you really mean a list, here, or a linear conjunction?). Similarly, for the :: syntax
+TODO: discuss
 > + p13: the way negation is modeled should be mode detailed (do you plan to list all the predicates that do no hold?)
+TODO: discuss
+
 > + p14: "Name y Paris" or "Name Paris y"?
+DONE
 > + p16: I dont quite understand why you're using the :: constuctor since the list are "internalized" under the variant constructors Moves or QUD
+TODO: discuss
 
 
 * Review 2
@@ -218,6 +229,7 @@ TODO: vlad
 >  Minor issues:
 
 >  - inconsistent spelling of publicized - publicised
+TODO
 
 >  - The use of the verb 'to ground' is strange (p. 12) - ground in what?
 >   If you use the DGB, then use the corresponding terminology (that you
@@ -225,10 +237,13 @@ TODO: vlad
 >   grammatically correct manner.
 
 >  - p. 13: "several places with this name" - you have not mentioned Paris yet.
+TODO: vlad
 
 >  - p. 18: U's second utterance is ungrammatical - intentionally?
+TODO: discuss
 
 >  - p. 18: What or who are 'they'?
+TODO: discuss
 
 >  - there are typos and grammatical issues as well as run-on sentences throughout the paper.
 

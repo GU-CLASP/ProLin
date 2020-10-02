@@ -272,8 +272,8 @@ database of facts. For example, the axiom |(Leave 55 Gotaplatsen
 Then, the user may define a query (or goal) as a logical formula. The
 system can then search for a proof of a goal as a way to query the
 database of facts. Often, goals contain
-/metavariables/[fn::here, we use the convention that metavariables are
-lowercase letters.], which play the role of unknowns for unification:
+/metavariables/,[fn::here, we use the convention that metavariables are
+lowercase letters.] which play the role of unknowns for unification:
 their value can be fixed to any term for a goal to be reached. For example, the goal |(Leave x Gotaplatsen y)|
 corresponds to a request to list all the buses leaving from
 Götaplatsen (as |x|) together with their departure time (as |y|).
@@ -388,7 +388,7 @@ To represent ambiguity in the case of |AmbiguousNo|, we make the
 answer provide no information, in the form of a trivial proposition
 (which is always true regardless of context).
 This is very natural in account, because the meaning of short answers
-(such as "no") always depends on the context.  ("Paris" has does not
+(such as "no") always depends on the context.  ("Paris" does not
 mean the same thing in the context of "Where do you live?"  as in the
 context "Where were you born?".)
 Additionally, in the framework of a full dialogue management system,
@@ -562,7 +562,7 @@ Eat John Mars
 ShortAnswer Food Mars
 #+END_code
 Note that the fact |Eat John Mars| is found both as hypothesis and a
-conclusion of |produceAnswer|, and therefore it is remains in the
+conclusion of |produceAnswer|, and therefore it remains in the
 information state.
 
 ** Clarification requests and follow-up questions label:sec:cr
@@ -580,7 +580,7 @@ represented as |Q x (Eat y x))|,  with the state
 Eat John Mars
 Eat Mary Mars
 #+END_code
-Then the agent can unambguously answer "Mars": even if we do not
+Then the agent can unambiguously answer "Mars": even if we do not
 know who we're talking about, it does not matter: only Mars is
 being eaten. However, if the state is
 #+BEGIN_code
@@ -721,8 +721,8 @@ Literally, "Does John live in a place called Paris?".
 The ambiguity of the |Paris| name can be represented by several
 locations named |Paris|, |X| and |Y| in our illustration:
 #+begin_code
-Name Paris X
-Name Paris Y
+Name X Paris
+Name Y Paris
 Live John X
 Not (Live John Y)
 Country France X
