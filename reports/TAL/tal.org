@@ -129,15 +129,19 @@ intuition of information-state based dialogue management, we are able
 to provide a fully working prototype of the components of our
 framework:
 
-1. a proof-search engine based on linear logic, modified to support
+1. a new proof-search engine based on linear logic, modified to support
    inputs from external systems (representing inputs and outputs of
-   the agent)
+   the agent).
 
 2. a set of rules which function as a core framework for dialogue
-   management (in the style of KoS cite:ginzburg2012interactive)
+   management (in the style of KoS cite:ginzburg2012interactive).  The
+   rules which we present below are provided to this engine, in the
+   same form (modulo typesetting).
 
 3. several examples which use the above to construct potential
-   applications of the system.
+   applications of the system. The engine is able to run
+   domain-specific rules and generic rules together, forming a working
+   system.
 
 The rest of the paper is structured as follows. In section
 ref:sec:background we review important background for formalisation
@@ -289,20 +293,20 @@ once/. For example, one could have a rule |IsAt x Gotaplatsen y ⊸ IsAt
 x CentralStationen (y+0.75)|. Consequently, after firing the above
 rule, the premiss |(Is x Gotaplatsen y)| becomes unavailable for any
 other rule.  Thereby the linear arrow |⊸| can be used to conveniently
-model that a bus cannot be at two places simultaneously.
+model that a bus cannot be at two places simultaneously.[fn::If several arrows are present in a rule (such as |A ⊸ B ⊸ C|) then both |A| and |B| are linear consumed and |C| is produced.]
 
 In general, the linear arrow corresponds to /destructive state
 updates/. Thus, the hypotheses available for proof search correspond
 to the /state/ of the system. In our application they will correspond
-to the /information state/ of the dialogue participant.
-
-We note that in linear logic, facts (or hypotheses) do not come in a
+to the /information state/ of the dialogue participant. [fn::We note
+that in linear logic, facts (or hypotheses) do not come in a
 hierarchy. Either we have a fact, or we don't. However, in second
 order variants of intuitionistic logic, like the one we use, one can
 conveniently wrap propositions in constructors, to indicate that they
 come with a qualification. For example, we can write |Unsure P| to
 indicate that the proposition |P| may hold (for example if
-clarification is required).
+clarification is required).]
+# JP: made this paragraph a footnote because it breaks the flow.
 
 This way, firing a linear rule corresponds to triggering an /action/ of an
 agent, and a complete proof corresponds to a /scenario/, i.e. a sequence
@@ -321,12 +325,11 @@ of the perceptory subsystem).
 
 In an actual dialogue, the scenario is therefore suspended between
 every interaction, and the state represents the current mental state
-of the agent which is modelled.
-
-Therefore, in our implementation, we treat the information state as a
-multiset of /linear hypotheses/ that can be queried. Because they are
-linear, these hypotheses can also be removed from the state, as we
-discuss in detail in section ref:sec:dm.
+of the agent which is modelled.  Therefore, in our implementation, we
+treat the information state as a multiset of /linear hypotheses/ that
+can be queried using /rules/ (such as those we list below). Because
+they are linear, these hypotheses can also be removed from the state,
+as we discuss in detail in section ref:sec:dm.
 
 It is important to note that we will not forego the unrestricted
 (i.e. non-linear) implication (|->|). Rather, both implications will
@@ -335,12 +338,10 @@ transient facts, or states, (introduced by the linear arrow) and
 immutable facts (introduced by the unrestricted arrow).
 
 *** Transition rules
-
 In particular, we have a fixed set of rules (they remain available
 even after being used). Each such rule manipulates a part of the
 information state (captured by its premisses) and leaves everything
 else in the state alone.
-
 
 
 * Questions and clarifications
@@ -354,13 +355,14 @@ is to represent the requested answer of a question.
 
 In this paper, we represent a question by a predicate |P| over a
 type |A|. That is, using a typed intuitionistic logic:
-#+BEGIN_code
-A  : Type
-P  : A  -> Prop
-#+END_code
+
+\begin{tabular}{cccc}
+   & |A  : Type|   & \quad \quad\quad \quad \quad    &                    |P  : A  -> Prop|
+\end{tabular}
+
 The intent of the question is to find out about a value |x| of
 type |A| which makes |P x| true, or at least entertained by the other
-participant. We provide several examples in table ref:tbl:qa-ex.  It is
+participant. We provide several examples in Table ref:tbl:qa-ex.  It is
 worth stressing that the type |A| can be large (for example asking for
 any location) or as small as a boolean (if one requires a simple
 yes/no answer).  We note in passing that, typically, polar questions
@@ -386,22 +388,18 @@ Q Multi ( \x. case x of  AmbiguousNo  -> Trivial
 To represent ambiguity in the case of |AmbiguousNo|, we make the
 answer provide no information, in the form of a trivial proposition
 (which is always true regardless of context).
-
-One very natural feature is of our account, the meaning of simple
-answers (such as "no") depends on the context. Indeed, the meaning of
-short answers is /always/ context-dependent. ("Paris" has does not mean
-the same thing in the context of "Where do you live?"  as in the
+This is very natural in account, because the meaning of short answers
+(such as "no") always depends on the context.  ("Paris" has does not
+mean the same thing in the context of "Where do you live?"  as in the
 context "Where were you born?".)
-
 Additionally, in the framework of a full dialogue management system,
 the |AmbiguousNo| case should be treated as unresolving (the question
 effectively remains unanswered). However, in such a framework, it is
 always possible to receive a biasing answer ("I don't know") or no
-answer whatsoever --- but we leave this out of scope of our analysis.
-
-More complications are possible, by introduction of cases such as
+answer whatsoever.
+Even more complications are possible, by introduction of cases such as
 rhetorical and attitudinal questions ("Do you know who I met
-yesterday?"), which are also out of scope in the current paper.
+yesterday?"). We deem such complications out of the scope of the current paper.
 
 
 \begin{sidewaystable}[htbp]
@@ -455,7 +453,8 @@ Above we use Π type binders to declare metavariables (written here |(a : Type)
 ->|, |(x : a) ->|, etc.). This terminology will make sense to readers
 familiar with dependent types. For the others, such binders can be thought
 as universal quantification (|∀ a, ∀ x|, etc.), the difference is that
-the type of the bound variable is specified.
+the type of the bound variable is specified. (The reader worried about any theoretical difficulty
+regarding mixing linear and dependent types is directed to atkey_syntax_2018 and abel_unified_2020.)
 
 We demand in particular that types in the answer and in the question
 match (|a| occurs in both places). Additionally, because |x| occurs

@@ -40,21 +40,24 @@ The MAX is 25 pages.
 > as in Dixon et al. 2009? Is it some other system? Based on something
 > available for TTR?) would be very much welcome.
 
-TODO: cite papers mixing intuitionistic/linear and dependent types.
-TODO: explain better the unique solution system.
+DONE: We have cited entry point papers about the theory of mixing
+ intuitionistic/linear and dependent types. (We construct our new prototype system based on a new engine, this is clarified in the intro.)
 
+TODO: explain better the unique solution system.
 
 > Second, although the different rules are quite clearly presented,
 > their status are unclear. How are they formulated within a logical
 > programming system?
 
-TODO: clarify that. (Importantly there is no backtracking!)
+DONE: They are fed as input to our engine (as presented). Clarified in
+the intro (enumerated list.)
 
 > What are the body and the goal of the rules?
 
 
-TODO. Perhaps explain currification. (each of the arrow introduces a premiss.)
-Also, backtracking is cut after the last premiss matches.
+DONE: We have explained this in a footnote is: fn::If several arrows
+are present in a rule (such as |A ⊸ B ⊸ C|) then both |A| and |B| are
+linear consumed and |C| is produced.
 
 > Similarly, the queries used during the interaction process and which
 > is usually the input of such a program, are not specified. Is the
@@ -63,7 +66,8 @@ Also, backtracking is cut after the last premiss matches.
 > at describing how interaction takes place, but it remained quite
 > obscure to me.)
 
-TODO: clarify
+DONE: Indeed, the rules match conditions on the information state and
+update it as explained in sec. 2.3. We have clarified this in that section.
 
 >  A comprehensive list of the predicates, constructors, etc. as well as
 > their types would be quite helpful (for instance, it seems to me that
@@ -84,7 +88,7 @@ TODO, ok
 > possibly an example program that could be run and tested, but is seems
 > that "implementation" here means a set of rules.
 
-Clarify that the implementation is done, but we have small scale applications.
+DONE: we have clarified the status in the enumeration list in the introduction.
 
 >  Here are some minor remarks:
 > + p5, fn1: here -> Here (and metavariables¹. -> metavariables.¹)
