@@ -294,7 +294,9 @@ once/. For example, one could have a rule |IsAt x Gotaplatsen y ⊸ IsAt
 x CentralStationen (y+0.75)|. Consequently, after firing the above
 rule, the premiss |(Is x Gotaplatsen y)| becomes unavailable for any
 other rule.  Thereby the linear arrow |⊸| can be used to conveniently
-model that a bus cannot be at two places simultaneously.[fn::If several arrows are present in a rule (such as |A ⊸ B ⊸ C|) then both |A| and |B| are linear consumed and |C| is produced.]
+model that a bus cannot be at two places simultaneously.[fn::If several arrows are present in a rule (such as |A ⊸ B ⊸ C|) then both |A| and |B| are linear consumed and |C| is produced.] 
+
+# Vlad: linearLY ?
 
 In general, the linear arrow corresponds to /destructive state
 updates/. Thus, the hypotheses available for proof search correspond
@@ -448,12 +450,14 @@ Therefore, one way to process a short answer is by the |processShort| rule:
 processShort :  (a : Type) -> (x : a) -> (p : Prop) -> 
                 ShortAnswer a x ⊸ QUD (Q a x p) ⊸ p
 #+END_code
-Above we use Π type binders to declare (meta)variables (written here |(a : Type)
-->|, |(x : a) ->|, etc.). This terminology will make sense to readers
-familiar with dependent types. For the others, such binders can be thought
-as universal quantification (|∀ a, ∀ x|, etc.), the difference is that
-the type of the bound variable is specified. (The reader worried about any theoretical difficulty
-regarding mixing linear and dependent types is directed to atkey_syntax_2018 and abel_unified_2020.)
+Above we use Π type binders to declare (meta)variables (written
+here |(a : Type) ->|, |(x : a) ->|, etc.). This terminology will make
+sense to readers familiar with dependent types. For the others, such
+binders can be thought as universal quantification (|∀ a, ∀ x|, etc.),
+the difference is that the type of the bound variable is
+specified. (The reader worried about any theoretical difficulty
+regarding mixing linear and dependent types is directed to
+citep:atkey_syntax_2018 and citep:abel_unified_2020.)
 
 We demand in particular that types in the answer and in the question
 match (|a| occurs in both places). Additionally, because |x| occurs
