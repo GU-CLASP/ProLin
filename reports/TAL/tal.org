@@ -913,7 +913,7 @@ introduced in section ref:sec:cr.
 processAssert : (a : Type) -> (x : a) -> (p : Prop) -> 
   (qs : List Question) -> (dp dp1 : DP) ->
   Pending (Assert p dp1 dp)          ⊸ 
-  QUD (Cons (Question dp a x p) qs)  ⊸ [  _ :: UserFact p; _ :: QUD qs];
+  QUD (Cons (Q dp a x p) qs)  ⊸ [  _ :: UserFact p; _ :: QUD qs];
 #+END_code
 
 Short answers are processed in a very similar way to assertions:
@@ -921,7 +921,7 @@ Short answers are processed in a very similar way to assertions:
 processShort : (a : Type) -> (x : a) ->  (p : Prop) -> 
   (qs : List Question) -> (dp dp1 : DP) ->
   Pending (ShortAnswer a x dp1 dp)   ⊸ 
-  QUD (Cons (Question dp a x p) qs)  ⊸ [  _ :: UserFact p; _ :: QUD qs];
+  QUD (Cons (Q dp a x p) qs)  ⊸ [  _ :: UserFact p; _ :: QUD qs];
 #+END_code
 
 *** Questions and clarifications
@@ -932,12 +932,12 @@ to initiate a clarifying side sequence (|produceCR|).
 #+BEGIN_code
 produceAnswer :
    (a : Type) ->   (x : a) !-> (p : Prop) -> (qs : List Question)  ->	
-   QUD (Cons (Question USER a x p) qs)  ⊸ p  -*
+   QUD (Cons (Q USER a x p) qs)  ⊸ p  -*
    [  _ :: Agenda (ShortAnswer a x SYSTEM USER); _ :: QUD qs;
-      _ :: Answered (Question USER a x p)];
+      _ :: Answered (Q USER a x p)];
 produceCR :
    [  a : Type ; x : a ;  p : Prop ; qs : List Question ;
-      _  :: QUD (Cons (Question USER a x p) qs) ; _  :: p ] ?-> CR;
+      _  :: QUD (Cons (Q USER a x p) qs) ; _  :: p ] ?-> CR;
 #+END_code
 
 The clarifying side sequence itself (|CR|) is meant to be specified by
@@ -994,7 +994,7 @@ readability):
 HasTurn U
 Moves   [  CounterGreet  S U, Greet         U S ]
 #+END_code
-Now the system hears the question |(Ask (Question t (TT
+Now the system hears the question |(Ask (Q t (TT
 n t Gotaplatsen d)))|. It is domain specific, and basically requests
 the timetable information for the given departure station. Again, we
 use |hearAndRemember| rule to itegrate it into state, but also,
@@ -1004,7 +1004,7 @@ the move contains with the |pushQUD| rule.
 #+BEGIN_code
 QUD      [  Question U Time t0 (TT n0 t0 Gotaplatsen d0)  ]
 HasTurn  S
-Moves    [  Ask (Question U Time t0 (TT n0 t0 Gotaplatsen d0)) U S,
+Moves    [  Ask (Q U Time t0 (TT n0 t0 Gotaplatsen d0)) U S,
             CounterGreet  S U, Greet         U S  ]
 #+END_code
 Now, depending on the state of the knowledge base, the system will
@@ -1020,7 +1020,7 @@ TT B18 T15   Gotaplatsen     Johanneberg
 Therefore the question can be resolved and the resolving short answer
 can be put on the |Agenda|.
 #+BEGIN_code
-Answered (Question  U Time T15
+Answered (Q  U Time T15
                     (TT B18 T15 Gotaplatsen Johanneberg))
 QUD Nil
 HasTurn S
@@ -1041,14 +1041,14 @@ formulated as follows:
 specificCR :
   (t : Time) -> (n : Bus) -> (s d : Location) -> (qs : List Question) ->
   CR ⊸
-  QUD (Cons (Question U Time t  (TT n t s d))  qs)   ⊸
-  [  _ :: QUD (Cons  (Question S Bus n (WantBus n)) 
-                     (Cons (Question U Time t (TT n t s d)) qs));
-     _ :: Agenda (Ask  (Question S Bus n (WantBus n)) S U) ];
+  QUD (Cons (Q U Time t  (TT n t s d))  qs)   ⊸
+  [  _ :: QUD (Cons  (Q S Bus n (WantBus n)) 
+                     (Cons (Q U Time t (TT n t s d)) qs));
+     _ :: Agenda (Ask  (Q S Bus n (WantBus n)) S U) ];
 #+END_code
 As a result of applying it, the state becomes:
 #+BEGIN_code
-Agenda   (Ask (Question S Bus n0 (WantBus n0)) S U)
+Agenda   (Ask (Q S Bus n0 (WantBus n0)) S U)
 QUD      [  Question S Bus n0 (WantBus n0),
             Question U Time t0 (TT n0 t0 Gotaplatsen d0) ]
 HasTurn  S  
@@ -1059,8 +1059,8 @@ Then, the system can utter the clarification request (|utterAndRemember| rule):
 QUD  [  Question S Bus n0 (WantBus n0),
         Question U Time t0 (TT n0 t0 Gotaplatsen d0) ]
 HasTurn S  
-Moves  [  Ask (Question S Bus n0 (WantBus n0)) S U
-          Ask (Question U Time t0 (TT n0 t0 Gotaplatsen d0)) U S
+Moves  [  Ask (Q S Bus n0 (WantBus n0)) S U
+          Ask (Q U Time t0 (TT n0 t0 Gotaplatsen d0)) U S
           CounterGreet S U, Greet U S  ]
 #+END_code
 The user can reply to this with a short answer |ShortAnswer Bus B55| or
@@ -1072,7 +1072,7 @@ QUD  [  Question U Time t0 (TT B55 t0 Gotaplatsen d0) ]
 UserFact (WantBus B55)
 HasTurn S
 Moves  [  ShortAnswer Bus B55 U S,
-          Ask (Question S Bus B55 (WantBus B55)) S U, …  ]
+          Ask (Q S Bus B55 (WantBus B55)) S U, …  ]
 #+END_code
 The reader can see that the metavariable |n0| from the previous
 state is now unified with |B55| in the QUD,
@@ -1080,7 +1080,7 @@ therefore it now corresponds to one unique entry in the knowledge
 base. Hence, the answer can be issued, by the |produceAnswer| rule.
 
 #+BEGIN_code
-Answered (Question  U Time T20
+Answered (Q U Time T20
                     (TT B55 T20 Gotaplatsen SciencePark))
 QUD Nil
 Agenda (ShortAnswer Time T20 S U)

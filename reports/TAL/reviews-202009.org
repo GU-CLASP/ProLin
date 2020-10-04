@@ -75,13 +75,15 @@ update it as explained in sec. 2.3. We have clarified this in that section.
 > ((Q A x (P x)) p8, (Q x p) p11, (Q Bool P) p 14, (Question dp a x p)
 > p17, etc.)).
 
-TODO
+DONE: fixed (mostly occurred in domain-independent rules)
 
 > Font distinction as well, for instance to distinguish
 > variables and one letter predicates), and a proof search example could
 > be also quite interesting.
 
-TODO, ok
+TODO, ok Vlad: in some cases this would be hard, e.g. in (Q S Bus n
+(WantBus n)) -- Q and S are both one-letter but the difference is that
+Q is the /prefix/ of this lisp expression.
 
 >  Finally, the abstract claims to provide a "small scale
 > implementation." I was expecting to find the name of a system, and
