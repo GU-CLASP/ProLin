@@ -81,7 +81,7 @@ DONE: fixed (mostly occurred in domain-independent rules)
 > variables and one letter predicates), and a proof search example could
 > be also quite interesting.
 
-TODO, ok Vlad: in some cases this would be hard, e.g. in (Q S Bus n
+TODO, ok (Vlad): in some cases this would be hard, e.g. in (Q S Bus n
 (WantBus n)) -- Q and S are both one-letter but the difference is that
 Q is the /prefix/ of this lisp expression.
 
@@ -106,7 +106,14 @@ DONE
 > + p11: unambguously -> unambiguously
 DONE
 > + p12: the [ ] syntax is not introduced (do you really mean a list, here, or a linear conjunction?). Similarly, for the :: syntax
-TODO: discuss
+TODO: discuss.
+Vlad: 
+- I guess we should comment on the instance where [] is first used (tal.org:L977). [A B C] is a shorthand for (Cons A (Cons B (Cons C Nil)))
+- re ’:: see L611 "Additionally, note the use of the single colon
+  (|:|) for metavariables and the double colon for information-state
+  hypotheses (|::|)." is that not enough? I guess it is slightly
+  confusing when it is on the right hand (goal) side ("record synax"?).
+
 > + p13: the way negation is modeled should be mode detailed (do you plan to list all the predicates that do no hold?)
 TODO: discuss
 
@@ -152,10 +159,15 @@ TODO (Vlad)
 TODO (Discuss)
 
 >  Last paragraph on p.4: the first sentence is not related to the
-> following. Last paragraph of 2.1.3: what are the conclusions from what
+> following.
+
+TODO (discuss)
+
+> Last paragraph of 2.1.3: what are the conclusions from what
 > you are writing?
 
-TODO: check
+TODO: check (Vlad:) basically we need to write that the support of
+  user-initiated CRs is therefore useful
 
 >  Section 2.2: Here you introduce the notion of metavariable, but you
 > don't define (ever) what a metavariable is and what is 'meta' about
@@ -190,7 +202,9 @@ Added a comma to clarify the split position.
 > attitudinal, but a pre to a telling, i.e. a conventional means to a
 > multi-unit turn (e.g. Schegloff 1982).
 
-TODO: vlad: change example or add "prelude to a telling"
+TODO: vlad: change example or add "prelude to a telling". VM: Hmm this
+is debatable, but we might not need these two sentences at all if we
+need more space.
 
 >  p. 10: The solution to represent encyclopedic information, such as
 > that 'somewhere' is not a satisfactory answer, as a metavariable seems
@@ -204,11 +218,15 @@ Live John x ∧ IsCity x
 
 where x is a metavariable.
 
+VM: I guess the point is how to deal with ’in a city’ as a resolving
+answer...
+
 >  p. 17: Maybe this method to account for adjancency works for
 > greetings, but in most other adjacency pairs, insertion sequences are
 > possible.
 
 TODO: vlad
+- VM: hmm yes exactly, that what we show below with answers and CRs.
 
 >  p. 22: what do you mean by "keep metavariables in terms"?
 
@@ -220,23 +238,25 @@ in a separate state and apply them only when testing equality.
 > any of the topics you have discussed in the paper, but to the work
 > your group does in general. I'm not sure that it is relevant here.
 
-TODO: vlad
+TODO: vlad TODO: ask Jonathan
 
 >  p. 23: Your system evaluation is actually a self-evaluation; that is,
 > you claiaroundm that it accounts for certain phenomena and not for others,
 > which is not really an evaluation.
 
 TODO: vlad
+VM: fair point. Discuss with Jonathan.
 
 >  Minor issues:
 
 >  - inconsistent spelling of publicized - publicised
-TODO
+DONE
 
 >  - The use of the verb 'to ground' is strange (p. 12) - ground in what?
 >   If you use the DGB, then use the corresponding terminology (that you
 >   have introduced before), or else use the verb in its usual,
 >   grammatically correct manner.
+TODO 
 
 >  - p. 13: "several places with this name" - you have not mentioned Paris yet.
 TODO: vlad

@@ -179,7 +179,7 @@ a single context for both dialogue participants, KoS keeps separate
 representations for each participant, using the /Dialogue Game Board/
 (DGB). Thus, the information states of the participants comprise a
 private part and the dialogue gameboard that represents information
-arising from publicized interactions. The DGB tracks, at the very
+arising from publicised interactions. The DGB tracks, at the very
 least, shared assumptions/visual field, moves (= utterances, form and
 content), and questions under discussion.
 
@@ -496,8 +496,8 @@ is not resolving.
 
 Assume a two-place predicate |Eat| with agent as first argument and
 object as second argument. The phrase "John eats Mars" could then
-be represented as |Eat(John,Mars)|. According to our theory, one can
-then represent the phrase "John eats" as |Eat(John,x)|, with |x| being
+be represented as |(Eat John Mars)|. According to our theory, one can
+then represent the phrase "John eats" as |(Eat John x)|, with |x| being
 a metavariable.
 Assume now a system with the following state:
 
@@ -541,8 +541,8 @@ contain any metavariable) and /unique/ by matching the rule --- this is
 what we call a unique and concrete value. That is, it won't match in
 the previous example, because the answer is not made ground (it
 contains unknowns). Additionally, it won't match if the state of the
-system is composed of the two hypotheses |Eat(John,Mars)|
-and |Eat(John,Twix)|: the answer is not unique.
+system is composed of the two hypotheses |(Eat John Mars)|
+and |(Eat John Twix)|: the answer is not unique.
 
 Thus, the rule for answering can be written like so:
 #+BEGIN_code
@@ -557,7 +557,7 @@ Eat John Mars
 #+END_code
 
 The system can unify |QUD (Q Food x (Eat John x))| and |QUD (Q a x
-p)|, yielding |a = Food| and |p=Eat(John,x)|. Then, we search for a
+p)|, yielding |a = Food| and |p=(Eat John x)|. Then, we search for a
 proof |p|, and to do this, we can unify |(Eat John x)|
 with |(Eat John Mars)|, giving finally the answer |x=Mars| and
 therefore the state becomes:
