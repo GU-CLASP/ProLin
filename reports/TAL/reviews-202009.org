@@ -297,7 +297,9 @@ TODO: discuss
 > present in the work of Larsson, Ginzburg, Traum and several
 > others.
 
-TODO: vlad: maybe ask Staffan about this?
+TODO: vlad: maybe ask Staffan about this?  VM: it seems that we are
+already saying that we are using similar approach but with more
+appropriate tools.
 
 > The use of linear logic for dialogue is perhaps more original,
 > although (as cited by the authors) it has been investigated by Dixon,
