@@ -273,7 +273,7 @@ Then, the user may define a query (or goal) as a logical formula. The
 system can then search for a proof of a goal as a way to query the
 database of facts. Often, goals contain
 /metavariables/,[fn::here, we use the convention that metavariables are
-lowercase letters.] which play the role of unknowns for unification:
+lowercase letters, and constants (including predicates) with upper case.] which play the role of unknowns for unification:
 their value can be fixed to any term for a goal to be reached. For example, the goal |(Leave x Gotaplatsen y)|
 corresponds to a request to list all the buses leaving from
 Götaplatsen (as |x|) together with their departure time (as |y|).
@@ -405,7 +405,7 @@ yesterday?"). We deem such complications out of the scope of the current paper.
 
 \begin{sidewaystable}[htbp]
 \begin{tabular}{lllll}
-utterance & A & P & a\\
+question utterance & A & P & \makecell[c]{answer utterance} & x \\
 \hline
 Where does John live?    & |Location    | & |\x.Live John x                          | & in London & |ShortAnswer Location London| \\
 Does John live in Paris? & |Bool        | & \makecell[l]{|\x.if x then (Live John Paris)| \\ |else Not (Live John Paris)|} & yes & |ShortAnswer Bool True| \\
@@ -413,7 +413,12 @@ What time is it?         & |Time        | & |\x.IsTime x                        
 Does John live in Paris? & |Prop -> Prop| & |\m. m (Live John Paris)                 | & yes & |ShortAnswer  (Prop -> Prop) (\x. x)| \\
 Does John live in Paris? & |Prop -> Prop| & |\m. m (Live John Paris)                 | & from January & \makecell[l]{|ShortAnswer (Prop -> Prop)|\\|(\x. FromJanuary(x))|} \\
 \end{tabular}
-\caption{Examples of questions and the possible corresponding answers.\label{tbl:qa-ex}}
+\caption{\label{tbl:qa-ex}
+Examples of questions and the possible corresponding answers.
+The type |A| is the type of possible short answers.
+The proposition |P x| is the interpretation of a short answer |x|.
+The |x| column shows the formal representation of a possible answer, either in short form or assertion form.
+}
 \end{sidewaystable}
 
 # \begin{table}
@@ -573,10 +578,11 @@ information state.
 
 In this section we discuss an alternative kind of answering, which is
 to issue clarification requests.  To see how they can occur, consider
-again the question "what does john eat", in the same information state
-as above.  A proper answer could be "Mars and Twix" or even "Mars or
-Twix". However we consider here a third possibility: instead of
-answering, the agent can issue a clarification request.
+again the question "what does john eat", in the information state |Eat
+John Mars| and |Eat John Twix|.  A proper answer could be "Mars and
+Twix" or even "Mars or Twix". However we consider here a third
+possibility: instead of answering, the agent can issue a clarification
+request.
 
 To illustrate, consider the question "What is being eaten?"
 represented as |Q x (Eat y x))|,  with the state
@@ -607,8 +613,10 @@ non-unique solution or cannot be made fully ground. Essentially this
 does the opposite of the |!->| operator.  However, because the
 components of the query are indeterminate, they cannot be fixed when
 firing the rule, and therefore the state update cannot depend on
-them. Therefore we use the record syntax to bound their scope,
-ensuring that they won't occur in the state update. Additionally, note
+them. Therefore we use a record syntax to limit their scope,
+ensuring that they won't occur in the state update. Such a record can be understood as a conjunction which additionally v
+binds components to field names.
+Additionally, note
 the use of the single colon (|:|) for metavariables and the double
 colon for information-state hypotheses (|::|).
 
@@ -862,8 +870,9 @@ hearAndRemember  :
   Heard (m x y)  ⊸ Moves ms ⊸ HasTurn x ⊸ 
   [  _ :: Moves (Cons (m x y) ms); _ :: Pending (m x y) ; _ :: HasTurn y ];
 #+END_code
-where |(m x y)| is a semantic representation of the utterance. Here it
-is assumed that participant |x| has the turn and, as a result, turn was
+where |(m x y)| is a semantic representation of the utterance. Here we produce a record, whose
+fields will all be added to the information state. The rule
+demands that participant |x| has the turn and, as a result, turn was
 taken by their partner |y|[fn::For now we have a very simple model of turn-taking, which can be
 improved in many ways: certain moves may not induce turn-change, there
 can be more than two participants, etc.]. The |DP| type stands for /dialogue
@@ -976,6 +985,7 @@ Agenda   Nil
 HasTurn  S
 Moves    [ Greet U S ]
 #+END_code
+(To save space we use a list notation from now on, [A, B, C] is a shorthand for |(Cons A (Cons B (Cons C)))|.)
 In this context the system can issue a countergreeting by firing
 the |counterGreeting| rule:
 

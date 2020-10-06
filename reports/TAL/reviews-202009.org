@@ -43,8 +43,6 @@ The MAX is 25 pages.
 DONE: We have cited entry point papers about the theory of mixing
  intuitionistic/linear and dependent types. (We construct our new prototype system based on a new engine, this is clarified in the intro.)
 
-TODO: explain better the unique solution system.
-
 > Second, although the different rules are quite clearly presented,
 > their status are unclear. How are they formulated within a logical
 > programming system?
@@ -78,12 +76,16 @@ update it as explained in sec. 2.3. We have clarified this in that section.
 DONE: fixed (mostly occurred in domain-independent rules)
 
 > Font distinction as well, for instance to distinguish
-> variables and one letter predicates), and a proof search example could
-> be also quite interesting.
+> variables and one letter predicates), 
 
-TODO, ok (Vlad): in some cases this would be hard, e.g. in (Q S Bus n
-(WantBus n)) -- Q and S are both one-letter but the difference is that
-Q is the /prefix/ of this lisp expression.
+DONE: In fact, variables *always* start with a lower case
+letter. One-capital-letter symbols (Q, S, etc.) are constants like the
+others.  We make this clear in the paper: "we use the convention that metavariables are
+lowercase letters, and constants (including predicates) with upper case."
+
+> and a proof search example could be also quite interesting.
+
+We have a full example with dialogue-as-proof-search in the section with title "Example".
 
 >  Finally, the abstract claims to provide a "small scale
 > implementation." I was expecting to find the name of a system, and
@@ -98,28 +100,35 @@ DONE
 
 > + p8: "Paris" has does not mean -> "Paris" does not mean
 DONE
+
 > + p9: more details should be provided to comment Table 1
-TODO: vlad
+DONE: we have expanded the caption of the table to clarify which column contains what.
+
 > + p11: it is remains -> it remains
 DONE
+
 > + p11: "in the same information state as above" is not clear enough. May be use an example environment for "above" and refer to it
+DONE: clarified
+
 > + p11: unambguously -> unambiguously
 DONE
-> + p12: the [ ] syntax is not introduced (do you really mean a list, here, or a linear conjunction?). Similarly, for the :: syntax
-TODO: discuss.
-Vlad: 
-- I guess we should comment on the instance where [] is first used (tal.org:L977). [A B C] is a shorthand for (Cons A (Cons B (Cons C Nil)))
-- re ’:: see L611 "Additionally, note the use of the single colon
-  (|:|) for metavariables and the double colon for information-state
-  hypotheses (|::|)." is that not enough? I guess it is slightly
-  confusing when it is on the right hand (goal) side ("record synax"?).
 
-> + p13: the way negation is modeled should be mode detailed (do you plan to list all the predicates that do no hold?)
+> + p12: the [ ] syntax is not introduced (do you really mean a list, here, or a linear conjunction?). Similarly, for the :: syntax
+
+DONE: we have clarified that 
+ 1. we use lists in the late examples
+ 2. we explained briefly the record syntax at its first occurence.
+
+> + p13: the way negation is modeled should be made detailed (do you plan to list all the predicates that do not hold?)
 TODO: discuss
 
 > + p14: "Name y Paris" or "Name Paris y"?
 DONE
-> + p16: I dont quite understand why you're using the :: constuctor since the list are "internalized" under the variant constructors Moves or QUD
+
+> + p16: I dont quite understand why you're using the :: constuctor
+since the list are "internalized" under the variant constructors Moves
+or QUD
+
 TODO: discuss
 
 
