@@ -129,7 +129,9 @@ DONE
 since the list are "internalized" under the variant constructors Moves
 or QUD
 
-TODO: discuss
+We use this syntax to facilitate adding several elements to the
+information state. This is now clarified in the text. (We cannot
+re-use the Moves list because this is a special-purpose list.)
 
 
 * Review 2
