@@ -421,6 +421,9 @@ The |x| column shows the formal representation of a possible answer, either in s
 }
 \end{sidewaystable}
 
+# TODO: flip the table horizontally and make it look nicer? It is still too wide...
+
+
 # \begin{table}
 # \begin{tabular}{llllll}
 # Where does John live? &
@@ -619,6 +622,8 @@ binds components to field names.
 Additionally, note
 the use of the single colon (|:|) for metavariables and the double
 colon for information-state hypotheses (|::|).
+
+# Vlad: in the code above, what does it mean havePAsQud ?
 
 We can then turn our attention to the formulation of this
 clarification request.  It is itself a question, and has a tricky
