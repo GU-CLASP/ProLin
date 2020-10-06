@@ -126,8 +126,8 @@ exchanges.
 
 By using well-known techniques which correspond well with the
 intuition of information-state based dialogue management, we are able
-to provide a fully working prototype of the components of our
-framework:
+to provide a fully working prototype[fn::Source code and documentation
+are availabe at REDACTED.] of the components of our framework:
 
 1. a new proof-search engine based on linear logic, modified to support
    inputs from external systems (representing inputs and outputs of

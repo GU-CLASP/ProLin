@@ -350,6 +350,12 @@ TODO: Ok,  but out of scope. (List as future work if more space?)
 >    structured databases using natural language), this is much harder
 >    to apply to more open-ended interactions such as social chat.
 
+TODO: also out of scope, however we can say that some rules are quite
+general and can be used, e.g. to check the coherence of end-to-end
+systems. E.g. we have Ask move with unknown structure, and then it
+should be resolved with assertion or short answer (perhaps with the
+same topic).
+
 
 >  I also have a few more specific comments:
 
@@ -383,9 +389,9 @@ here. So we could use this suggestion.
 >   "formalised", as it seems closer to the actual contribution of the
 >   paper.
 
-TODO: Unfortunately there is not much space for this. We have clarified the status of the implementation in the introduction (enumeration). 
+TODO: Unfortunately there is not much space for this. We have clarified the status of the implementation in the introduction (enumeration). done?
 
-TODO: Add link to the implementation.
+DONE: Add link to the implementation.
 
 >  - Table 2 is hard to make sense of, as the different rows are not
 >   explained (beyond a reference to Ginzburg and Fernandez, 2010). I
