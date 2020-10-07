@@ -28,7 +28,7 @@
 #+LATEX_HEADER: \aclfinalcopy % Uncomment this line for the final submission
 
 #+TITLE: LDM: A Linear Dialogue Manager
-#+LATEX_HEADER: \author{Vladislav Maraev$^*$, Jean-Philippe Bernardy$^*$ and Jonathan Ginzburg$^\dagger$\\ $^*$Centre for Linguistic Theory and Studies in Probability (CLASP),\\ Department of Philosophy, Linguistics and Theory of Science, University of Gothenburg \\ {\tt \{vladislav.maraev,jean-philippe.bernardy\}@@gu.se} \\ $^\dagger$Laboratoire Linguistique Formelle (UMR 7110), Universit\'{e} de Paris \\ \texttt{yonatan.ginzburg@@univ-paris-diderot.fr} \\}
+#+LATEX_HEADER: \author{Vladislav Maraev$^\star$, Jean-Philippe Bernardy$^\star$ and Jonathan Ginzburg$^\dagger$\\ $^\star$Centre for Linguistic Theory and Studies in Probability (CLASP),\\ Department of Philosophy, Linguistics and Theory of Science, University of Gothenburg \\ {\tt \{vladislav.maraev,jean-philippe.bernardy\}@@gu.se} \\ $^\dagger$Laboratoire Linguistique Formelle (UMR 7110), Universit\'{e} de Paris \\ \texttt{yonatan.ginzburg@@univ-paris-diderot.fr} \\}
 
 #+begin_abstract
 For this system demonstration, we presents a modular dialog manager
@@ -222,26 +222,31 @@ bibliography:../TAL/tal.bib
 
 * COMMENT demo
 
+          *LDM: A LINEAR DIALOGUE MANAGER*
 
-*LDM: LINEAR DIALOGUE MANAGER*
+Vladislav Maraev        (University of Gothenburg)
+Jean-Philippe Bernardy  (University of Gothenburg)
+Jonathan Ginzburg       (Université de Paris)
 
-Vladislav Maraev (University of Gothenburg)
-Jean-Philippe Bernardy (University of Gothenburg)
-Jonathan Ginzburg (Université de Paris)
-
-※   modular system with domain-general rules
+※   modular system with ~domain-general rules~
 
 ※   dialogue manager that goes hand in hand
-     with the theory (KoS)
+     with the theory (~KoS~)
 
-※   rich information state, ISU approach
+※   rich information state, ~ISU approach~
 
-※   a proof-search engine based on linear logic
+※   a proof-search engine based on ~linear logic~
+
+
+
 
 
 - logical representation of semantic representations
-- I will show you the internal representation of the information state of the system, as it evolves over time
-- "we have shown how the information state is represented as a (multi)set of propositions" and how state updates are linear-logic function types
+- I will show you the internal representation of the information state
+  of the system, as it evolves over time
+- "we have shown how the information state is represented as a
+  (multi)set of propositions" and how state updates are linear-logic
+  function types
 
 
 
