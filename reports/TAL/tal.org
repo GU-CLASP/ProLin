@@ -124,7 +124,7 @@ interpretation. In particular, in this paper we explore the potential
 of using metavariables in the representation of question/answer
 exchanges.
 
-By using well-known techniques which correspond well with the
+By using well-known techniques cite:bratko2001prolog,girard1995linear which correspond well with the
 intuition of information-state based dialogue management, we are able
 to provide a fully working prototype[fn::Source code and documentation
 are availabe at REDACTED.] of the components of our framework:
@@ -326,8 +326,7 @@ speech, movement, etc.). Conversely, events happening in the outside
 world can result in updates of the information state (through a model
 of the perceptory subsystem).
 
-In an actual dialogue, the scenario is therefore suspended between
-every interaction, and the state represents the current mental state
+At any point in an actual dialogue the state represents the current mental state
 of the agent which is modelled.  Therefore, in our implementation, we
 treat the information state as a multiset of /linear hypotheses/ that
 can be queried using /rules/ (such as those we list below). Because
@@ -1161,7 +1160,7 @@ formalised in a way similar clarifications. However, in our analysis,
 metavariables disappear once they have been grounded. Therefore,
 corrections cannot involve metavariables and thus require a different
 treatment. A solution could be to keep metavariables in terms (apply
-unification substitutions lazily). We leave a detailed study to
+unification substitutions only at the point of testing equality between such variables). We leave a detailed study to
 further work.
 
 We note that the use of (meta)variables to refer to discourse objects

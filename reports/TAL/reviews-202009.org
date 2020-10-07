@@ -160,7 +160,7 @@ TODO: discuss
 > Statements like "By using well-known techniques..." require in my
 > view some references.
 
-TODO: discuss: change to "aforementioned techniques"?
+DONE: added references
 
 > Finally, the description of the linguistic phenomena addressed is
 > quite vague and could profit from references, for instance, to
@@ -200,7 +200,7 @@ search. This is now clarified at this point rather than later.
 
 >  p. 6, it remains unclear why the scenario would have to be suspended.
 
-TODO: this is only conceptual
+DONE: removed the confusing phrase
 
 >  p.7: Transition rules are not defined nor explained sufficiently, and
 > it is weird to start the section with 'In particular'.
@@ -211,7 +211,9 @@ section title.
 >  p.7: you introduce some elements of your formalism, but not others. At
 > least a brief paraphrase in a footnote would be useful.
 
-TODO: ???
+As far as we can see all critical elements have been introduced. It is
+unclear which elements the review refers to and so we have little
+ground to improve the paper here.
 
 >  p. 7: it remains unclear what is trivial about an utterance like "He
 > does in the weekend", which is an instantiation of the AmbiguousNo
@@ -233,7 +235,7 @@ need more space.
 > very ad hoc; what about 'in a city', 'on this planet', which are
 > satisfactory in some contexts and vacuous in others?
 
-TODO: This is precisely the point. We could of course have answers
+TODO: (discuss) This is precisely the point. We could of course have answers
 which *contain* a metavariable but are still more specific:
 
 Live John x ∧ IsCity x
@@ -252,9 +254,7 @@ TODO: vlad
 
 >  p. 22: what do you mean by "keep metavariables in terms"?
 
-TODO: This is explained in the following parenthetical phrase: we do
-not apply unification substitutions. Rather we keep such substitution
-in a separate state and apply them only when testing equality.
+DONE: clarified in the parenthetical remarks
 
 >  p. 22: "The main current weakness of our approach" does not refer to
 > any of the topics you have discussed in the paper, but to the work
@@ -400,9 +400,9 @@ here. So we could use this suggestion.
 >   "formalised", as it seems closer to the actual contribution of the
 >   paper.
 
-TODO: Unfortunately there is not much space for this. We have clarified the status of the implementation in the introduction (enumeration). done?
-
-DONE: Add link to the implementation.
+DONE: Unfortunately there is not much space to describe the implementation
+in full. We have clarified the status of the implementation in the
+introduction (enumeration), and added a link to it.
 
 >  - Table 2 is hard to make sense of, as the different rows are not
 >   explained (beyond a reference to Ginzburg and Fernandez, 2010). I
