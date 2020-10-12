@@ -328,9 +328,17 @@ DONE: Clarified
 > present in the work of Larsson, Ginzburg, Traum and several
 > others.
 
-TODO: vlad: maybe ask Staffan about this?  VM: it seems that we are
-already saying that we are using similar approach but with more
-appropriate tools.
+As far as we can see, while Larsson et al. take advantage of Prolog as
+a formalising framework, they have not fully study the role of
+metavariables in question answering, and this is a gap that we
+fill. In the paper, we already explained this:
+
+  Larsson et al. proposed the use of Prolog (and hence, proof
+  search), as a dialogue management framework. However, the lack of
+  linear hypotheses means that destructive information-state updates are
+  sometimes awkward to represent. Besides, they do not consider the use
+  of metavariables to represent uncertainty --- even though Prolog is in
+  principle has the capacity to do it.
 
 > The use of linear logic for dialogue is perhaps more original,
 > although (as cited by the authors) it has been investigated by Dixon,
