@@ -609,7 +609,7 @@ To detect situations where a clarification request can be issued, we
 can use the following rule (we leave unspecified the exact form of the
 CR abstract for now and come back to it below in section ref:sec:dm):
 #+BEGIN_code
-[a : Type; x : a; p : Prop; havePAsQud :: QUD (Q x p); proof :: p] ?-> CR
+[a : Type; x : a; p : Prop; qud :: QUD (Q x p); proof :: p] ?-> CR
 #+END_code
 The conditions are similar to that of the answering rule. The
 principal difference is the use of the |?->| operator, which takes as
