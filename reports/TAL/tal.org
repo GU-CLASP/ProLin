@@ -685,7 +685,7 @@ of an experimental study.
 
 The scope of what is subject to clarification is anything which can be
 represented as an argument in a relation.  For instance, consider the
-polar question "Where does John live?". The questionee may decide that
+polar question "Where does John live?" with the short answer "Paris". The questionee may decide that
 there is some ambiguity about /which/ location one is talking about ---
 after all there are several places with this name.  To be able to
 model this, the |Live| relation needs to be generalised to be a
@@ -968,7 +968,7 @@ We now show how the generic system of rules above can handle the exchange:
 #+begin_quote
 U: Hello!\\
 S: Hello, U.\\
-U: When there is a bus from Gotaplatsen?\\
+U: When is there a bus from Gotaplatsen?\\
 S: In 15 minutes.
 #+end_quote
 Let us further assume the following system context, which contains
@@ -976,7 +976,7 @@ up-to-date public transport information in the following format:
 #+BEGIN_code
 TT Bus Time Origin Destination
 #+END_code
-They are added to the initial domain-independent context
+This is added to the initial domain-independent context
 outlined above. We also assume that the user has the turn at the start. 
 #+BEGIN_code
 QUD      Nil

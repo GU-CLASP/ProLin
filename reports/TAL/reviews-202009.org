@@ -242,22 +242,30 @@ need more space.
 > very ad hoc; what about 'in a city', 'on this planet', which are
 > satisfactory in some contexts and vacuous in others?
 
-TODO: (discuss) This is precisely the point. We could of course have answers
-which *contain* a metavariable but are still more specific:
+The reviewer asks us to consider an answer which *contains* a
+metavariable but are still more specific. For example:
 
-Live John x ∧ IsCity x
+Assert (Live John x ∧ IsCity x)
 
-where x is a metavariable.
+where x is a metavariable. The proposition will unify with "Live John
+x" (and "IsCity x" will be added to the information state as well).
+According to our analysis, it is possible that "IsCity x" can lead the
+questioner to gain sufficient information to make 'x' concrete, and
+thus in turn the question will be resolved. It is true that in some
+applications the full grounding of the term is a too crude approximation,
+and could be replaced by a more fine-grained test. However
+we consider it accurate enough to illustrate our point. 
 
-VM: I guess the point is how to deal with ’in a city’ as a resolving
-answer...
+Furthermore, due to a lack of space we have not inserted this
+discussion in the paper.
 
 >  p. 17: Maybe this method to account for adjancency works for
 > greetings, but in most other adjacency pairs, insertion sequences are
 > possible.
 
-TODO: vlad
-- VM: hmm yes exactly, that what we show below with answers and CRs.
+DONE: Indeed, we show only a simple example for illustration. This is
+why we call the section "Basic adjacency". More complicated types of
+adjacency are modelled in the following sections.
 
 >  p. 22: what do you mean by "keep metavariables in terms"?
 
@@ -285,18 +293,26 @@ DONE
 >   If you use the DGB, then use the corresponding terminology (that you
 >   have introduced before), or else use the verb in its usual,
 >   grammatically correct manner.
-TODO 
+
+This is standard terminology in unification and proof-search
+domain. But to be sure we even define 'ground term': "it is bound to a
+term which does not contain any metavariable".
 
 >  - p. 13: "several places with this name" - you have not mentioned Paris yet.
-TODO: vlad
+
+DONE. Fixed as suggested
 
 >  - p. 18: U's second utterance is ungrammatical - intentionally?
-TODO: discuss
+
+DONE. Fixed
 
 >  - p. 18: What or who are 'they'?
-TODO: discuss
+
+DONE: Clarified
 
 >  - there are typos and grammatical issues as well as run-on sentences throughout the paper.
+
+
 
 * Review 3
 
