@@ -119,8 +119,10 @@ DONE: we have clarified that
  1. we use lists in the late examples
  2. we explained briefly the record syntax at its first occurence.
 
-> + p13: the way negation is modeled should be made detailed (do you plan to list all the predicates that do not hold?)
-TODO: discuss
+> + p13: the way negation is modeled should be made detailed (do you
+  plan to list all the predicates that do not hold?)
+
+DONE: This is out of scope for us (clarified)
 
 > + p14: "Name y Paris" or "Name Paris y"?
 DONE
@@ -155,12 +157,12 @@ re-use the Moves list because this is a special-purpose list.)
 > dialogue management and theoretical research is promising..." seems
 > unrelated to what comes next.
 
-TODO: discuss
+DONE: we have clarified this sentence.
 
 > Statements like "By using well-known techniques..." require in my
 > view some references.
 
-DONE: added references
+DONE: clarified and added references
 
 > Finally, the description of the linguistic phenomena addressed is
 > quite vague and could profit from references, for instance, to
@@ -171,25 +173,30 @@ DONE: added references
 TODO (Vlad) VM: I guess there is a confusion, we should’ve said
 "formalised theoretical accounts, as we only cite that". However it
 would be nice that we are covering phenomena that are studied in CA
-(it that a right place though?).
+(it that a right place though?). (This is the sentence after "extend
+the Dixon framework ... with ambiguity.")
+
 
 >  The description of KoS p.3 is also quite vague (and ungrammatical)
 > when you write that KoS has among the most detailed analyses. If this
 > is meant as a topic sentence, then remove the paragraph break that is
-> following. What is Cooper's formalism used for? (p.4)
+> following. 
 
-TODO (Discuss)
+DONE: improved the text.
+
+> What is Cooper's formalism used for? (p.4)
+
+DONE: clarified
 
 >  Last paragraph on p.4: the first sentence is not related to the
 > following.
 
-TODO (discuss)
+Unfortunately we could not spot what the reviewer referred to here.
 
 > Last paragraph of 2.1.3: what are the conclusions from what
 > you are writing?
 
-TODO: check (Vlad:) basically we need to write that the support of
-  user-initiated CRs is therefore useful
+DONE: we have clarified the connection with the body of the paper.
 
 >  Section 2.2: Here you introduce the notion of metavariable, but you
 > don't define (ever) what a metavariable is and what is 'meta' about
@@ -200,7 +207,7 @@ search. This is now clarified at this point rather than later.
 
 >  p. 6, it remains unclear why the scenario would have to be suspended.
 
-DONE: removed the confusing phrase
+DONE: rephrased to clarify
 
 >  p.7: Transition rules are not defined nor explained sufficiently, and
 > it is weird to start the section with 'In particular'.

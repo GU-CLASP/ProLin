@@ -84,7 +84,7 @@ as non-sentential utterances
 cite:schlangen-diss,fgl07,ginzburg2012interactive, clarification
 requests cite:purver-rlc06,ginzburg2012interactive and self-repair
 cite:gfs-sp,houghpurver-disfl, where the resolution is intuitively
-tied to the coherence of what is being said. 
+tied to the coherence of what is being said.
 
 
 To this end, a formal and in particular a logical representation is
@@ -95,10 +95,9 @@ participant states and transitions in a unified logical framework.
 
 Even though the progress in bridging dialogue management and
 theoretical research of dialogue is promising, we believe that it is
-crucial to use formal tools which are most appropriate for the task:
-one should be able to express the rules of various genres of dialogue
-in a concise way, free, to any possible extent, of irrelevant
-technical details.  In the view of citet:dixon2009plans this is best
+crucial to use formal tools which are most appropriate for the task,
+so that the formalisation and implementation of dialogue semantics closely matches the mental
+picture that experts have. In the view of citet:dixon2009plans this is best
 done by representing the information-state of the agents as updatable
 sets of propositions. Subsets of propositions in the information state
 can be treated independently, and, therefore, a suitable and flexible
@@ -124,10 +123,10 @@ interpretation. In particular, in this paper we explore the potential
 of using metavariables in the representation of question/answer
 exchanges.
 
-By using well-known techniques cite:bratko2001prolog,girard1995linear which correspond well with the
+By using a solid logical basis cite:bratko2001prolog,girard1995linear which corresponds well with the
 intuition of information-state based dialogue management, we are able
 to provide a fully working prototype[fn::Source code and documentation
-are availabe at REDACTED.] of the components of our framework:
+are available at REDACTED.] of the components of our framework:
 
 1. a new proof-search engine based on linear logic, modified to support
    inputs from external systems (representing inputs and outputs of
@@ -167,7 +166,7 @@ relevance, especially for query responses---see the work of
 citet:purver-rlc06 on Clarification Requests, and
 cite:lupkowski2017query for a general account---and this ties into the
 KoS treatment of non sentential utterances, again a domain crucial for
-naturalistic dialogue systems and where KoS has among the most
+naturalistic dialogue systems and where KoS has one of the most
 detailed analyses cite:fgl07,ginzburg2012interactive.
 
 In KoS (and other dynamic approaches to meaning), language is compared
@@ -183,8 +182,8 @@ arising from publicised interactions. The DGB tracks, at the very
 least, shared assumptions/visual field, moves (= utterances, form and
 content), and questions under discussion.
 
-KoS is based on Cooper's formalism, Type Theory with Records (TTR). There
-has been a wide range of work on top of this formalism, including the
+KoS is based on Cooper's formalism, Type Theory with Records (TTR),
+thus can leverage a wide range of work based on it, including the
 modelling of intentionality and mental attitudes cite:cooper-rlc,
 generalised quantifiers cite:cooper-gq13, co-predication and dot types
 in lexical innovation, frame semantics for temporal reasoning,
@@ -194,6 +193,8 @@ cite:ellen-aisb, clarification requests
 cite:purver-rlc06,ginzburg2012interactive, negation
 cite:cooper2012negative, non-sentential utterance resolution
 cite:fgl07,ginzburg2012interactive and iconic gesture cite:lucking16.
+Being based on types and record-like contexts, we hope that our
+framework can also benefit from all this literature.
 
 *** Information state update approach
 In this work we are employing an information-state update (ISU)
@@ -242,14 +243,12 @@ approach by accounting for requests for additional information, but it
 is only tested for the cases of system-initiated CRs.
 
 For spoken dialogue systems it is crucial to be able to produce and
-process clarifications requests cite:purver2003means. In the case of
-the low confidence of speech recognition and NLU, system can clarify
-its input with the user. It is important to allow user initiative in
-the occasion when the user does not understand some information
-provided by the system. With recent advancements in speech recognition
-and overwhelming preference for open-vocabulary ASR and statistical
-NLU, systems provide more opportunities for user initiative, which
-therefore should be supported.
+process clarifications requests cite:purver2003means. Even though this is
+not our focus here, in the context of
+the low confidence of speech recognition and NLU, the system could clarify
+its input with the user. Further, with recent advances in speech recognition
+and statistical NLU, users expect to be able to initiate CRs themselves. Because
+our theory is symmetric with respect to users and systems roles, it can be useful in this context.
 
 ** Proof search as a programming language
 
@@ -294,9 +293,9 @@ once/. For example, one could have a rule |IsAt x Gotaplatsen y ⊸ IsAt
 x CentralStationen (y+0.75)|. Consequently, after firing the above
 rule, the premiss |(Is x Gotaplatsen y)| becomes unavailable for any
 other rule.  Thereby the linear arrow |⊸| can be used to conveniently
-model that a bus cannot be at two places simultaneously.[fn::If several arrows are present in a rule (such as |A ⊸ B ⊸ C|) then both |A| and |B| are linear consumed and |C| is produced.] 
-
-# Vlad: linearLY ?
+model that a bus cannot be at two places simultaneously.[fn::If
+several arrows are present in a rule (such as |A ⊸ B ⊸ C|) then
+both |A| and |B| are consumed and |C| is produced.]
 
 In general, the linear arrow corresponds to /destructive state
 updates/. Thus, the hypotheses available for proof search correspond
@@ -311,27 +310,31 @@ indicate that the proposition |P| may hold (for example if
 clarification is required).]
 # JP: made this paragraph a footnote because it breaks the flow.
 
-This way, firing a linear rule corresponds to triggering an /action/ of an
-agent, and a complete proof corresponds to a /scenario/, i.e. a sequence
-of actions, possibly involving action from several agents.  However,
-the information state (typically in the literature and in this paper
-as well), corresponds to the state of a /single/ agent. Thus, a scenario
-is conceived as a sequence of actions and updates of the information
-state of a single agent $a$, even though such actions can be
-attributed to any other dialogue participant $b$. (That is, they are
-$a$'s representation of actions of $b$.)  Scenarios can be realised as
-a sequence of actual actions and updates. That is, an action can
-result in sending a message to the outside world (in the form of
-speech, movement, etc.). Conversely, events happening in the outside
-world can result in updates of the information state (through a model
-of the perceptory subsystem).
 
-At any point in an actual dialogue the state represents the current mental state
-of the agent which is modelled.  Therefore, in our implementation, we
-treat the information state as a multiset of /linear hypotheses/ that
-can be queried using /rules/ (such as those we list below). Because
-they are linear, these hypotheses can also be removed from the state,
-as we discuss in detail in section ref:sec:dm.
+This way, firing a linear rule corresponds to triggering an /action/
+of an agent, and a complete proof corresponds to a /scenario/, i.e. a
+sequence of actions, possibly involving action from several agents.
+Hence, the actions realised as actual interactions constitute the
+observable dialogue.  That is, an action can result in sending a
+message to the outside world (in the form of speech, movement,
+etc.). Conversely, events happening in the outside world can result in
+updates of the information state (through a model of the perceptory
+subsystem).
+
+At any point in the scenario, the multiset of available /linear
+hypotheses/ represents the current information-state of the agent
+which is modelled. To clarify, the information-state (typically in the
+literature and in this paper as well), corresponds to the state of a
+/single/ agent. Thus, a scenario is conceived as a sequence of actions
+and updates of the information state of a single agent $a$, even
+though such actions can be attributed to any other dialogue
+participant $b$. (That is, they are $a$'s representation of actions of
+$b$.)
+
+To reiterate, in our implementation, the information-state can
+be queried using /rules/ (such as those we list below). Because they
+are linear, these hypotheses can also be removed from the state, as we
+discuss in detail in section ref:sec:dm.
 
 It is important to note that we will not forego the unrestricted
 (i.e. non-linear) implication (|->|). Rather, both implications will
@@ -735,7 +738,8 @@ as follows:
 #+END_code
 Literally, "Does John live in a place called Paris?".
 The ambiguity of the |Paris| name can be represented by several
-locations named |Paris|, |X| and |Y| in our illustration:
+locations named |Paris|, |X| and |Y| in our illustration:[fn::The combination of negation and proof search leads
+to complications which are out of scope here, for this reason we simply assume that negated predicates are available in the information-state.]
 #+begin_code
 Name X Paris
 Name Y Paris
