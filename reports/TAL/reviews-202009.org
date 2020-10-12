@@ -233,9 +233,7 @@ Added a comma to clarify the split position.
 > attitudinal, but a pre to a telling, i.e. a conventional means to a
 > multi-unit turn (e.g. Schegloff 1982).
 
-TODO: vlad: change example or add "prelude to a telling". VM: Hmm this
-is debatable, but we might not need these two sentences at all if we
-need more space.
+DONE: we removed the offending phrase.
 
 >  p. 10: The solution to represent encyclopedic information, such as
 > that 'somewhere' is not a satisfactory answer, as a metavariable seems
@@ -281,8 +279,7 @@ TODO: vlad TODO: ask Jonathan
 > you claiaroundm that it accounts for certain phenomena and not for others,
 > which is not really an evaluation.
 
-TODO: vlad
-VM: fair point. Discuss with Jonathan.
+TODO: VM: fair point. Discuss with Jonathan.
 
 >  Minor issues:
 
@@ -371,7 +368,11 @@ of non-probabilistic ambiguity.
 >    decision-making, as there no direct notion of utility or cost
 >    associated to a resource.
 
-TODO: Ok,  but out of scope. (List as future work if more space?)
+This is a fair point. One possibility would be to extended our system
+with weighted rules, and the choice of set of rules would be done by
+minimizing the sum of weights. However, we deem this aspect out of
+scope for the current paper. We already have a discussion of this
+issue in the paragraph citing Lison's work.
 
 >  3) One third limiting factor is that it requires both questions and
 >    answers to be formalised in terms of logical expressions (with
@@ -384,11 +385,13 @@ TODO: Ok,  but out of scope. (List as future work if more space?)
 >    structured databases using natural language), this is much harder
 >    to apply to more open-ended interactions such as social chat.
 
-TODO: also out of scope, however we can say that some rules are quite
-general and can be used, e.g. to check the coherence of end-to-end
-systems. E.g. we have Ask move with unknown structure, and then it
-should be resolved with assertion or short answer (perhaps with the
-same topic).
+Another fair point. However, in our view, even accounting for the
+limitations of a logical approach, we find that our rules are quite
+general and can be used on top of say deep-learning systems, for
+example to check the coherence of end-to-end systems. E.g. we have
+"Ask move" with abstract structure, and then it should be resolved
+with assertion or short answer (perhaps with the same topic). We
+already touch this topic in the 3rd paragraph of the paper.
 
 
 >  I also have a few more specific comments:

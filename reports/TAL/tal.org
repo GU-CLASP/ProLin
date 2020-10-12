@@ -401,8 +401,8 @@ effectively remains unanswered). However, in such a framework, it is
 always possible to receive a biasing answer ("I don't know") or no
 answer whatsoever.
 Even more complications are possible, by introduction of cases such as
-rhetorical and attitudinal questions ("Do you know whom I met
-yesterday?"). We deem such complications out of the scope of the current paper.
+rhetorical questions.
+We deem such complications out of the scope of the current paper.
 
 
 \begin{sidewaystable}[htbp]
