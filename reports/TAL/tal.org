@@ -104,18 +104,18 @@ can be treated independently, and, therefore, a suitable and flexible
 way to represent updates is as propositions in linear logic. We adopt
 this view here, and further argue for it in the body of the paper.
 
-We further extend the citet:dixon2009plans framework to deal with
+We further extend the framework of citet:dixon2009plans to deal with
 unclarity (and certain cases of non-probabilistic ambiguity). Indeed,
 asking a question is typically not done in one utterance which leaves
 nothing to interpretation. Typically, in a conversation a question and
 its answer may be many utterances apart, and the intermediate
 utterances form insertion sequences citep:schegloff1972sequencing, for
-instance, a follow-up clarification request and a corresponding
+instance a follow-up clarification request and a corresponding
 answer. The insertion sequences are, in turn, conditioned on the
-preliminaries for the original question \citep[Chapter 6]{Levinson1983}.  
-In technical terms we deal with question-answering and clarification requests in a unified
-way, following some earlier work, in the context of dialogue
-management.
+preliminaries for the original question \citep[Chapter 6]{Levinson1983}. 
+In this paper, we deal with question-answering and clarification requests in a unified
+way, within a framework of dialogue
+management and a using linear logic formalisation.
 
 # How we plan to fill this gap?
 
