@@ -170,12 +170,8 @@ DONE: clarified and added references
 > sequences (also nicely summarized in Levinson 1983: Pragmatics,
 > CUP).
 
-TODO (Vlad) VM: I guess there is a confusion, we should’ve said
-"formalised theoretical accounts, as we only cite that". However it
-would be nice that we are covering phenomena that are studied in CA
-(it that a right place though?). (This is the sentence after "extend
-the Dixon framework ... with ambiguity.")
-
+DONE: clarified and added references. Unfortunately, there is not
+enough space to give full summary of CA literature on the subject.
 
 >  The description of KoS p.3 is also quite vague (and ungrammatical)
 > when you write that KoS has among the most detailed analyses. If this
