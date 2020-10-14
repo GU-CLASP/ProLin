@@ -269,13 +269,13 @@ DONE: clarified in the parenthetical remarks
 > any of the topics you have discussed in the paper, but to the work
 > your group does in general. I'm not sure that it is relevant here.
 
-TODO: vlad TODO: ask Jonathan
+DONE: clarified the relevance of this aspect.
 
 >  p. 23: Your system evaluation is actually a self-evaluation; that is,
-> you claiaroundm that it accounts for certain phenomena and not for others,
+> you claim that it accounts for certain phenomena and not for others,
 > which is not really an evaluation.
 
-TODO: VM: fair point. Discuss with Jonathan.
+In previous work these benchmarks were used to evaluate other systems. 
 
 >  Minor issues:
 
@@ -439,5 +439,4 @@ introduction (enumeration), and added a link to it.
 >   would suggest to either leave it out or provide additional
 >   explanations, such that it is possible to understand it on its own.
 
-TODO (Yonatan)
-
+DONE: clarified and provided examples.
