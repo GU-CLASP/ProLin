@@ -1222,8 +1222,7 @@ approach.
 
 \begin{table}[htbp]
 \begin{tabular}{clcl}
-\hline
-& {Benchmarks}                         &  & Example\\\hline\hline
+& {\bf Benchmark}                         &  & {\bf Example}\\\rule{0pt}{3ex}
 \multirow{10}{*}[-3.9em]{\rotcell{\rlap{\bf query and assertion}}}& Q1 simple answers                    & $\sim$ & A: Who slept? B: Bo/Not Bo \\
 & Q2a non-resolving answers            & \checkmark                                                               & A: Who slept? B: A student. \\
 & Q2b follow up queries                & \checkmark                                                               & B: A student. A: Who? \\
@@ -1233,7 +1232,7 @@ approach.
 & A1 propositional content update      & \checkmark \\
 & A2 disagreement                      & $\sim$                                                                   & A: A student. B: A teacher.\\ 
 & SC scalability                       & $\sim$ \\
-& DA domain adaptability               & \checkmark \\ \hline
+& DA domain adaptability               & \checkmark \\ \rule{0pt}{3ex}
 \multirow{9}{*}[-4.1em]{\rotcell{\rlap{\bf metacommunication}}}   
 & Ack1 completed acknowledgements      & --- & A: Move right. B: Mhm. \\
 & Ack2 continuation ack.   & ---  & A: Move- B: mm A: -to the left. \\
@@ -1243,7 +1242,7 @@ approach.
 & CR3 intended content CRs             & \checkmark & A: Where is Bo? B: Which Bo? \\
 & CR4 intention recognition CRs        & --- & A: Where is the bus? B: Why? \\
 & SND distinct updates                 & $\sim$ \\
-& FG fine-grained representations      & $\sim$ \\ \hline
+& FG fine-grained representations      & $\sim$ \\ \rule{0pt}{3ex}
 \multirow{9}{*}[-0.5em]{\rotcell{\rlap{\bf fragments}}}   
 & SF1 wide coverage of NSUs            & $\sim$ \\
 & SF2 basic answer resolution          & $\sim$ \\
@@ -1251,7 +1250,7 @@ approach.
 & SF4 long distance short answers      & $\sim$\\
 & SF5 genre sensitive initiating NSUs  & $\sim$ & (dialogue initially) The Aix bus? \\
 & D1 recognize and repair disfluencies & ---\\
-& D2 keep disfluencies in context      & ---\\\hline
+& D2 keep disfluencies in context      & ---\\\rule{0pt}{2ex}
 \end{tabular}\caption{System evaluation. Q5---understand that irrelevant answers imply ``change the topic'', A2---disagree with user if her utterance is incompatible with own belief, SND---an utterance can give rise to distinct updates across participants. SC---ensure approach scales down to monologue and up to multilogue. For other, more obvious benchmarks we refer our readers to \citep{ginzburg-nlphandbook}.}
 \label{table:ds}
 \end{table}
