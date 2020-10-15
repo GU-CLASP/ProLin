@@ -247,7 +247,7 @@ approach by accounting for requests for additional information, but it
 is only tested for the cases of system-initiated CRs.
 
 For spoken dialogue systems it is crucial to be able to produce and
-process clarifications requests cite:purver2003means. Even though this is
+process clarifications requests cite:purver2004theory. Even though this is
 not our focus here, in the context of
 the low confidence of speech recognition and NLU, the system could clarify
 its input with the user. Further, with recent advances in speech recognition
@@ -283,7 +283,7 @@ Götaplatsen (as |x|) together with their departure time (as |y|).
 
 Because statements are propositions, it is only natural to use
 proof-search as a means to represent possible moves in dialogue seen as
-a game cite:larsson2000godis.
+a game cite:larsson2002issue.
 
 
 ** Linear logic as a Dialogue Management Framework
@@ -1117,7 +1117,7 @@ The present work provides a minimal and granular account for
 clarification requests initiated by any conversational party,
 following accounts of and supporting a subset of cases thoroughly
 investigated in the CLARIE Prolog-based system citep:purver-rlc06,
-following corpus studies by citet:purver2003means and
+following corpus studies by citet:purver2004theory and
 citet:rodriguez2004form.
 
 One of our main sources of inspiration is Ginzburg's KoS
@@ -1143,7 +1143,7 @@ them for concision (they play little role in our analysis).
 # of implementations is largely due to the semantic gap between its aims
 # (information-state dialogue management) and its formalism (TTR).
 
-citet:larsson2000godis proposed the use of Prolog (and hence, proof
+citet:larsson2002issue proposed the use of Prolog (and hence, proof
 search), as a dialogue management framework. However, the lack of
 linear hypotheses means that destructive information-state updates are
 sometimes awkward to represent. Besides, they do not consider the use
