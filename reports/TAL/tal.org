@@ -411,11 +411,11 @@ We deem such complications out of the scope of the current paper.
 
 \begin{sidewaystable}[htbp]
 \begin{tabular}{lllll}
-question utterance & A & P & \makecell[c]{answer utterance} & x \\
-\hline
+{\bf question utterance} & {\bf A} & {\bf P} & \makecell[c]{{\bf answer utterance}} & {\bf x} \\
+\hline\rule{0pt}{4ex}
 Where does John live?    & |Location    | & |\x.Live John x                          | & in London & |ShortAnswer Location London| \\
 Does John live in Paris? & |Bool        | & \makecell[l]{|\x.if x then (Live John Paris)| \\ |else Not (Live John Paris)|} & yes & |ShortAnswer Bool True| \\
-What time is it?         & |Time        | & |\x.IsTime x                             | & It is 5am. & |Assert (IsTime 5.00)| \\\hline
+What time is it?         & |Time        | & |\x.IsTime x                             | & It is 5am. & |Assert (IsTime 5.00)| \\\rule{0pt}{4ex}
 Does John live in Paris? & |Prop -> Prop| & |\m. m (Live John Paris)                 | & yes & |ShortAnswer  (Prop -> Prop) (\x. x)| \\
 Does John live in Paris? & |Prop -> Prop| & |\m. m (Live John Paris)                 | & from January & \makecell[l]{|ShortAnswer (Prop -> Prop)|\\|(\x. FromJanuary(x))|} \\
 \end{tabular}
