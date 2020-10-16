@@ -56,9 +56,9 @@ depending on the current state and the external context.
 
 Two families of approaches to dialogue management can be considered:
 hand-crafted dialogue strategies
-cite:allen1995trains,larsson2002issue,jokinen2009constructive and
+cite:larsson2002issue,jokinen2009constructive and
 statistical modelling of dialogue
-cite:rieser2011reinforcement,young2010hidden,williams2017hybrid. Frameworks
+cite:rieser2011reinforcement,young2010hidden,huang2020challenges. Frameworks
 for hand-crafted strategies range from finite-state machines and
 form-filling to more complex dialogue planning and logical inference
 systems, such as Information State Update (ISU) cite:larsson2002issue
@@ -67,8 +67,8 @@ uncertainty that arises in human interaction; from noisy signals from
 speech recognition and other sensors to pragmatic ambiguities.
 
 End-to-end systems that do not specify a dialogue manager as an
-explicit component have gained lots of attention recently (e.g.,
-cite:roller2020recipes). Although most of them are focused on
+explicit component have gained lots of attention recently
+cite:huang2020challenges. Although most of them are focused on
 chit-chat dialogues, coherence plays a crucial role there
 too. Typically the main issues associated with such systems are
 related to memory limitations which cause repetition, contradiction
@@ -177,14 +177,13 @@ In KoS (and other dynamic approaches to meaning), language is compared
 to a game, containing players (interlocutors), goals and rules. KoS
 represents language interaction by a dynamically changing context. The
 meaning of an utterance is then how it changes the context. Compared
-to most approaches (e.g. cite:roberts2012information), which represent
-a single context for both dialogue participants, KoS keeps separate
-representations for each participant, using the /Dialogue Game Board/
-(DGB). Thus, the information states of the participants comprise a
-private part and the dialogue gameboard that represents information
-arising from publicised interactions. The DGB tracks, at the very
-least, shared assumptions/visual field, moves (= utterances, form and
-content), and questions under discussion.
+to most approaches, which represent a single context for both dialogue
+participants, KoS keeps separate representations for each participant,
+using the /Dialogue Game Board/ (DGB). Thus, the information states of
+the participants comprise a private part and the dialogue gameboard
+that represents information arising from publicised interactions. The
+DGB tracks, at the very least, shared assumptions/visual field, moves
+(= utterances, form and content), and questions under discussion.
 
 KoS is based on Cooper's formalism, Type Theory with Records (TTR),
 thus can leverage a wide range of work based on it, including the
@@ -202,13 +201,13 @@ framework can also benefit from all this literature.
 
 *** Information state update approach
 In this work we are employing an information-state update (ISU)
-approach, following several authors, including citet:traum1999model,
-citet:larsson2002issue, and citet:ginzburg2012interactive. In this
-view we present the information available to each participant of the
-dialogue (either a human or an artificial agent) in a rich information
-state. Being rich entails that the information state contains a
-hierarchy of facts, including the ones that are thought to be shared
-and the ones that have not been yet publicised.
+approach, following several authors, including citet:larsson2002issue
+and citet:ginzburg2012interactive. In this view we present the
+information available to each participant of the dialogue (either a
+human or an artificial agent) in a rich information state. Being rich
+entails that the information state contains a hierarchy of facts,
+including the ones that are thought to be shared and the ones that
+have not been yet publicised.
 
 Let us now consider the /update/, another essential component of ISU. In
 this case, we rely on a set of rules that will govern the updates. For
@@ -1129,7 +1128,7 @@ using linear logic rules means that only the relevant parts of the
 information state must be dealt with in any given rule. Cooper's TTR
 has a special "asymmetric merge" operator for this purpose, but it is
 a less-studied \textit{ad-hoc} addition to type-theory, though see
-cite:carp93,lascarides96,grover94. As it stands, KoS is lacking
+cite:carp93. As it stands, KoS is lacking
 implementations, with the exception of the work of
 citet:maraev_kosttr-based_2018, who adapt KoS to eschew the assymetric
 merge operation.  An oft-touted advantage of TTR is that propositions
@@ -1255,7 +1254,12 @@ approach.
 \label{table:ds}
 \end{table}
 
-
+#+begin_export latex
+\acknowledgements{
+% This research was supported by a grant from the Swedish Research Council for the establishment of the Centre for Linguistic Theory and Studies in Probability (CLASP) at the University of Gothenburg. We also acknowledge the support of the French Investissements d'Avenir-Labex EFL program (ANR-10-LABX-0083).
+% In addition, we would like to thank our anonymous reviewers for their useful comments.
+REDACTED: Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. }
+#+end_export
 \bibliography{tal}
 * COMMENT references
 bibliography:tal.bib
