@@ -235,7 +235,7 @@ information than they were asked (over-answering).
 One of the greatest challenges in theoretical semantics and pragmatics
 is the treatment of interrogatives in the context of dialogue
 cite:wisniewski2015semantics,ginzburg2012interactive. Here we
-distinguish /questions/ as general surface form and more contextualised
+distinguish /questions/ as a general surface form and more contextualised
 forms of them, such as questions that initiate side sequences and
 constitute clarification requests (CRs). Side sequences usually refer
 to introducing some new question under discussion, for instance,
@@ -269,7 +269,7 @@ domain. Typically such a system of axioms and rules represents a
 database of facts. For example, the axiom |(Leave 55 Gotaplatsen
 11.50)| can model the fact that bus 55 leaves from Götaplatsen at
 11:50. The rule |(Leave x Gotaplatsen y -> Arrive x CentralStationen
-(y+0.75))| can represent travelling times on a certain line.
+(y+45 minutes))| can represent travelling times on a certain line.
 
 Then, the user may define a query (or goal) as a logical formula. The
 system can then search for a proof of a goal as a way to query the
@@ -293,7 +293,7 @@ authors cite:dixon2009plans,martens2015programming have proposed to
 use linear logic cite:girard1995linear instead. For our purpose, the
 crucial feature of linear logic is that hypotheses may be used /only
 once/. For example, one could have a rule |IsAt x Gotaplatsen y ⊸ IsAt
-x CentralStationen (y+0.75)|. Consequently, after firing the above
+x CentralStationen (y+45 minutes)|. Consequently, after firing the above
 rule, the premiss |(Is x Gotaplatsen y)| becomes unavailable for any
 other rule.  Thereby the linear arrow |⊸| can be used to conveniently
 model that a bus cannot be at two places simultaneously.[fn::If
@@ -346,7 +346,7 @@ transient facts, or states, (introduced by the linear arrow) and
 immutable facts (introduced by the unrestricted arrow).
 Besides, we have a /fixed/ set of rules (they remain available
 even after being used), such as (|IsAt x Gotaplatsen y ⊸ IsAt
-x CentralStationen (y+0.75)|) above. Each such rule manipulates a part of the
+x CentralStationen (y+45 minutes)|) above. Each such rule manipulates a part of the
 information state (captured by its premisses) and leaves everything
 else in the state unchanged.
 
@@ -394,7 +394,7 @@ Q Multi ( \x. case x of  AmbiguousNo  -> Trivial
 To represent ambiguity in the case of |AmbiguousNo|, we make the
 answer provide no information, in the form of a trivial proposition
 (which is always true regardless of context).
-This is very natural in account, because the meaning of short answers
+This is a natural account, because the meaning of short answers
 (such as "no") always depends on the context.  ("Paris" does not
 mean the same thing in the context of "Where do you live?"  as in the
 context "Where were you born?".)
@@ -584,7 +584,7 @@ information state.
 
 ** Clarification requests and follow-up questions label:sec:cr
 
-In this section we discuss an alternative kind of answering, which is
+In this section we discuss an alternative kind of responding, which is
 to issue clarification requests.  To see how they can occur, consider
 again the question "what does john eat", in the information state |Eat
 John Mars| and |Eat John Twix|.  A proper answer could be "Mars and
@@ -621,12 +621,12 @@ non-unique solution or cannot be made fully ground. Essentially this
 does the opposite of the |!->| operator.  However, because the
 components of the query are indeterminate, they cannot be fixed when
 firing the rule, and therefore the state update cannot depend on
-them. Therefore we use a record syntax to limit their scope,
-ensuring that they won't occur in the state update. Such a record can be understood as a conjunction which additionally v
-binds components to field names.
-Additionally, note
-the use of the single colon (|:|) for metavariables and the double
-colon for information-state hypotheses (|::|).
+them. Therefore we use a record syntax to limit their scope, ensuring
+that they won't occur in the state update. Such a record can be
+understood as a conjunction which additionally binds components to
+field names.  Additionally, note the use of the single colon (|:|) for
+metavariables and the double colon for information-state hypotheses
+(|::|).
 
 # Vlad: in the code above, what does it mean havePAsQud ?
 
@@ -671,11 +671,11 @@ of the original questions.
 In practice, the form of clarification questions will greatly vary
 depending on the context cite:purver2004theory.
 
-The above suposes a clear-cut distinction: if an answer is unique, it
-is given; otherwise a clarification request is issued. However,
-answers could simply be exhaustive ("Mars or Twix").  If the
-original questioners are unhappy with the ambiguity, they are free to
-issue more precise questions. In practice, one can easily imagine an
+The above presupposes a clear-cut distinction: if an answer is unique,
+it is given; otherwise a clarification request is issued. However,
+answers could simply be exhaustive ("Mars or Twix").  If the original
+questioners are unhappy with the ambiguity, they are free to issue
+more precise questions. In practice, one can easily imagine an
 ambiguity threshold after which clarification requests are
 preferred. In the simplest form, this ambiguity threshold could be
 expressed by the length of the answer. In our example, if one has to
@@ -688,11 +688,12 @@ of an experimental study.
 
 The scope of what is subject to clarification is anything which can be
 represented as an argument in a relation.  For instance, consider the
-polar question "Where does John live?" with the short answer "Paris". The questionee may decide that
-there is some ambiguity about /which/ location one is talking about ---
-after all there are several places with this name.  To be able to
-model this, the |Live| relation needs to be generalised to be a
-3-place predicate, where the country is specified.
+question "Where does John live?" with the short answer "Paris". The
+questionee may decide that there is some ambiguity about /which/
+location one is talking about --- after all there are several places
+with this name.  To be able to model this, the |Live| relation needs
+to be generalised to be a 3-place predicate, where the country is
+specified.
 
 However most of the time one may choose to leave this parameter
 implicit. This is what is done for example when asking the above
@@ -859,7 +860,7 @@ part of the state for this purpose, because it is meant to be static
 between a move which is fully processed and a pending one.
 
 *** Initial state
-In general, we start with empty |QUD| and |Agenda|. An non-empty |QUD|
+In general, we start with empty |QUD| and |Agenda|. A non-empty |QUD|
 can be prepared if, in a certain domain, some open questions are
 assumed from the start. The |Agenda| might not be empty if one wants
 the system to initiate the conversation. There are also no moves:
@@ -1112,7 +1113,7 @@ Moves […]  -- same as above
 * Related work
 label:sec:related
 
-The present work provides a minimal and granular account for
+The present work provides a minimal and fine-grained account for
 clarification requests initiated by any conversational party,
 following accounts of and supporting a subset of cases thoroughly
 investigated in the CLARIE Prolog-based system citep:purver-rlc06,
@@ -1145,7 +1146,7 @@ them for concision (they play little role in our analysis).
 citet:larsson2002issue proposed the use of Prolog (and hence, proof
 search), as a dialogue management framework. However, the lack of
 linear hypotheses means that destructive information-state updates are
-sometimes awkward to represent. Besides, they do not consider the use
+sometimes awkward to represent. Besides, he does not consider the use
 of metavariables to represent uncertainty --- even though Prolog is in
 principle has the capacity to do it.
 
@@ -1163,7 +1164,7 @@ label:sec:discussion
 
 A kind of dialogue move often studied in parallel to clarifications
 are /corrections/. It would be elegant if corrections could be
-formalised in a way similar clarifications. However, in our analysis,
+formalised in a way similar to clarifications. However, in our analysis,
 metavariables disappear once they have been grounded. Therefore,
 corrections cannot involve metavariables and thus require a different
 treatment. A solution could be to keep metavariables in terms (apply
@@ -1179,17 +1180,16 @@ taking say a verb and its arguments.
 
 
 Prior studies have noted the phenomenon of semantic dependency
-relations between questions cite:wisniewski2015semantics, e.g. the
-answer to "Who killed Bill?" can depend on the answer to "Who was in
-town?". The cases of dependencies covered in this study are limited to
-clarification of metavariables from the original question. This is
-meant to serve as a proof-of-concept rather than thorough coverage of
-all possible cases of question dependence. A similar issue concern
-follow-up questions that are meant to clarify the type of the
-metavariable, e.g. "What does John like? Do you mean
-foodwise?". Generally, further work is needed to be carried out in
-order to extend our system to full-scale coverage of interrelations
-between QUDs.
+relations between questions cite:wisniewski2015semantics, e.g. "Who
+killed Bill?" can be responded by "Who was in town?". The cases of
+dependencies covered in this study are limited to clarification of
+metavariables from the original question. This is meant to serve as a
+proof-of-concept rather than thorough coverage of all possible cases
+of question dependence. A similar issue concern follow-up questions
+that are meant to clarify the type of the metavariable, e.g. "What
+does John like? Do you mean foodwise?". Generally, further work is
+needed to be carried out in order to extend our system to full-scale
+coverage of interrelations between QUDs.
 
 A natural progression of this work is to allow the assignment of
 probabilities to rules and to the components of the state,
@@ -1213,11 +1213,11 @@ cite:larsson2002issue.
 Table ref:table:ds originates from cite:ginzburg-nlphandbook, who
 proposed a series of benchmarks for comparing different approaches to
 developing dialogue systems (see section 2 of that paper). For each
-approach the symbol \checkmark indicates that the approach safisfies
-the benchmark in the corresponding row; $\sim$ that the benchmark
-could be met with some caveats, as explained in the text above for most cases; and
---- that the benchmark is not met by a standard version of the
-approach. 
+approach the symbol \checkmark indicates that the current approach
+safisfies the benchmark in the corresponding row; $\sim$ that the
+benchmark could be met with some caveats, as explained in the text
+above for most cases; and --- that the benchmark is not met by a
+standard version of the current approach.
 
 \begin{table}[htbp]
 \begin{tabular}{clcl}
