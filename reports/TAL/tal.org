@@ -1129,7 +1129,7 @@ using linear logic rules means that only the relevant parts of the
 information state must be dealt with in any given rule. Cooper's TTR
 has a special "asymmetric merge" operator for this purpose, but it is
 a less-studied \textit{ad-hoc} addition to type-theory, though see
-cite:carp93. As it stands, KoS is lacking
+/inter alia/ cite:grover94. As it stands, KoS is lacking
 implementations, with the exception of the work of
 citet:maraev_kosttr-based_2018, who adapt KoS to eschew the assymetric
 merge operation.  An oft-touted advantage of TTR is that propositions
