@@ -1,5 +1,7 @@
 default:
 	nix-shell --pure --run "make tal.pdf"
+reviews:
+	nix-shell --pure --run "make reviews-202009.pdf"
 
 %.pdf: %.tex
 	latexmk -pdf $<
@@ -10,4 +12,5 @@ default:
 %.lhs: %.org
 	emacs  --batch --eval="(load \"${MYEMACSLOAD}\")" $< -f org-latex-export-to-latex --kill
 	mv -f $*.tex $@
+
 

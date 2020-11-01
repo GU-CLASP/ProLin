@@ -1,334 +1,448 @@
+#+OPTIONS: toc:nil ':t ":t 
 
-* Editor remarks
+#+LATEX_CLASS: article
+#+LATEX_HEADER: %include polycode.fmt
+#+LATEX_HEADER: %format -* = "\rightarrowtriangle"
+# alternative:                 -{\kern -1.3ex}*
+#+LATEX_HEADER: %format !-> = "\rightarrow_{!}"
+#+LATEX_HEADER: %format ?-> = "\rightarrow_{?}"
+#+LATEX_HEADER: %format . = "."
+#+LATEX_HEADER: %format \_ = "\_"
+#+LATEX_HEADER: %let operator = "."
+#+LATEX_HEADER: \usepackage{newunicodechar}
+#+LATEX_HEADER: \input{newunicodedefs}
 
-> The reviewers mainly ask you to clarify the presentational aspects
-> of your contribution and to make a number of improvements in order
-> to easen the reception of your work by the audience.
+#+LATEX_HEADER: \usepackage{etoolbox}
+#+LATEX_HEADER: \AtBeginEnvironment{quote}{\it}
+
+We thank the editors and the three reviewers for their careful reading
+and their constructive comments.
+
+They have been very helpful and have lead to extensive revisions,
+including ...
+
+All reviews asked for ...
+
+We revised the manuscript accordingly.
+
+Below our responses to the individual comments.
+
+
+* COMMENT Editor remarks
+
+#+BEGIN_QUOTE
+The reviewers mainly ask you to clarify the presentational aspects
+of your contribution and to make a number of improvements in order
+to easen the reception of your work by the audience.
+#+END_QUOTE
 
 The MAX is 25 pages.
-
-
 * Review 1
 
-> This article deals with dialogue management systems. It proposes an
-> information state update approach using a logical inference system
-> based on linear logic. The latter is a resource conscious logic that
-> allows for controlling whether a fact should be used once and only
-> once in a logical inference, hence "removed" from the information
-> state for later reasoning. A modeling of question-answering
-> dialogues, possibly requiring clarification questions, is provided,
-> showing how metavariables occurring in questions are made ground in
-> answers. An example of such a dialog and how the information state
-> is being updated is also given.
+#+BEGIN_quote
+This article deals with dialogue management systems. It proposes an
+information state update approach using a logical inference system
+based on linear logic. The latter is a resource conscious logic that
+allows for controlling whether a fact should be used once and only
+once in a logical inference, hence "removed" from the information
+state for later reasoning. A modeling of question-answering
+dialogues, possibly requiring clarification questions, is provided,
+showing how metavariables occurring in questions are made ground in
+answers. An example of such a dialog and how the information state
+is being updated is also given.
 
->  The article is mostly clear and well structured. The general ideas
-> and motivations are very well presented, making the approach quite
-> convincing and interesting to me. In addition to the use of linear
-> logic for dialogue (already proposed, as indicated by the authors,
-> in Dixon et al. 2009), the originality of the contribution comes
-> from putting it together with dependent types and a dedicated role
-> of metavariables in question-answering dialogues.
+ The article is mostly clear and well structured. The general ideas
+and motivations are very well presented, making the approach quite
+convincing and interesting to me. In addition to the use of linear
+logic for dialogue (already proposed, as indicated by the authors,
+in Dixon et al. 2009), the originality of the contribution comes
+from putting it together with dependent types and a dedicated role
+of metavariables in question-answering dialogues.
 
->  Some aspects needs to be further developed and precisely specified,
-> though. First, the underlying logic is quite involved, as it uses
-> intuitionistic linear logic with exponential together with dependent
-> types. Moreover, some connectives bear special meanings that seem
-> outside the usual scope of logic, such as checking whether solutions
-> can be made fully ground, although it makes sense in the logical
-> programming paradigm. So a clear description of the logic and of the
-> logic programming system (for instance, does it rely on Alice/Lolli,
-> as in Dixon et al. 2009? Is it some other system? Based on something
-> available for TTR?) would be very much welcome.
+ Some aspects needs to be further developed and precisely specified,
+though. First, the underlying logic is quite involved, as it uses
+intuitionistic linear logic with exponential together with dependent
+types. Moreover, some connectives bear special meanings that seem
+outside the usual scope of logic, such as checking whether solutions
+can be made fully ground, although it makes sense in the logical
+programming paradigm. So a clear description of the logic and of the
+logic programming system (for instance, does it rely on Alice/Lolli,
+as in Dixon et al. 2009? Is it some other system? Based on something
+available for TTR?) would be very much welcome.
+#+END_quote
 
 DONE: We have cited entry point papers about the theory of mixing
- intuitionistic/linear and dependent types. (We construct our new prototype system based on a new engine, this is clarified in the intro.)
+ intuitionistic/linear and dependent types. (We construct our new
+ prototype system based on a new engine, this is clarified in the
+ intro.)
 
-> Second, although the different rules are quite clearly presented,
-> their status are unclear. How are they formulated within a logical
-> programming system?
+#+BEGIN_QUOTE
+Second, although the different rules are quite clearly presented,
+their status are unclear. How are they formulated within a logical
+programming system?
+#+END_QUOTE
 
 DONE: They are fed as input to our engine (as presented). Clarified in
 the intro (enumerated list.)
 
-> What are the body and the goal of the rules?
-
+#+BEGIN_QUOTE
+What are the body and the goal of the rules?
+#+END_QUOTE
 
 DONE: We have explained this in a footnote is: fn::If several arrows
 are present in a rule (such as |A ⊸ B ⊸ C|) then both |A| and |B| are
 linear consumed and |C| is produced.
 
-> Similarly, the queries used during the interaction process and which
-> is usually the input of such a program, are not specified. Is the
-> system guided by whatever theorem can be proved? It seems to me this
-> can be quite a lot. (It might be that paragraph 4, section 2.3, aims
-> at describing how interaction takes place, but it remained quite
-> obscure to me.)
+#+BEGIN_QUOTE
+Similarly, the queries used during the interaction process and which
+is usually the input of such a program, are not specified. Is the
+system guided by whatever theorem can be proved? It seems to me this
+can be quite a lot. (It might be that paragraph 4, section 2.3, aims
+at describing how interaction takes place, but it remained quite
+obscure to me.)
+#+END_QUOTE
 
 DONE: Indeed, the rules match conditions on the information state and
 update it as explained in sec. 2.3. We have clarified this in that section.
 
->  A comprehensive list of the predicates, constructors, etc. as well as
-> their types would be quite helpful (for instance, it seems to me that
-> you sometimes use Q, sometimes Question, sometimes with 3 arguments
-> ((Q A x (P x)) p8, (Q x p) p11, (Q Bool P) p 14, (Question dp a x p)
-> p17, etc.)).
+#+BEGIN_QUOTE
+ A comprehensive list of the predicates, constructors, etc. as well as
+their types would be quite helpful (for instance, it seems to me that
+you sometimes use Q, sometimes Question, sometimes with 3 arguments
+((Q A x (P x)) p8, (Q x p) p11, (Q Bool P) p 14, (Question dp a x p)
+p17, etc.)).
+#+END_QUOTE
 
 DONE: fixed (mostly occurred in domain-independent rules)
 
-> Font distinction as well, for instance to distinguish
-> variables and one letter predicates), 
+#+BEGIN_QUOTE
+Font distinction as well, for instance to distinguish
+variables and one letter predicates), 
+#+END_QUOTE
 
 DONE: In fact, variables *always* start with a lower case
 letter. One-capital-letter symbols (Q, S, etc.) are constants like the
 others.  We make this clear in the paper: "we use the convention that metavariables are
 lowercase letters, and constants (including predicates) with upper case."
 
-> and a proof search example could be also quite interesting.
+#+BEGIN_QUOTE
+and a proof search example could be also quite interesting.
+#+END_QUOTE
 
 We have a full example with dialogue-as-proof-search in the section with title "Example".
 
->  Finally, the abstract claims to provide a "small scale
-> implementation." I was expecting to find the name of a system, and
-> possibly an example program that could be run and tested, but is seems
-> that "implementation" here means a set of rules.
+#+BEGIN_QUOTE
+ Finally, the abstract claims to provide a "small scale
+implementation." I was expecting to find the name of a system, and
+possibly an example program that could be run and tested, but is seems
+that "implementation" here means a set of rules.
+#+END_QUOTE
 
 DONE: we have clarified the status in the enumeration list in the introduction.
 
->  Here are some minor remarks:
-> + p5, fn1: here -> Here (and metavariables¹. -> metavariables.¹)
+#+BEGIN_QUOTE
+ Here are some minor remarks:
++ p5, fn1: here -> Here (and metavariables$¹$. -> metavariables.$¹$)
+#+END_QUOTE
+
 DONE
 
-> + p8: "Paris" has does not mean -> "Paris" does not mean
+#+BEGIN_QUOTE
++ p8: "Paris" has does not mean -> "Paris" does not mean
+#+END_QUOTE
+
 DONE
 
-> + p9: more details should be provided to comment Table 1
+#+BEGIN_QUOTE
++ p9: more details should be provided to comment Table 1
+#+END_QUOTE
+
 DONE: we have expanded the caption of the table to clarify which column contains what.
 
-> + p11: it is remains -> it remains
+#+BEGIN_QUOTE
++ p11: it is remains -> it remains
+#+END_QUOTE
+
 DONE
 
-> + p11: "in the same information state as above" is not clear enough. May be use an example environment for "above" and refer to it
+#+BEGIN_QUOTE
++ p11: "in the same information state as above" is not clear enough. May be use an example environment for "above" and refer to it
+#+END_QUOTE
+
 DONE: clarified
 
-> + p11: unambguously -> unambiguously
+#+BEGIN_QUOTE
++ p11: unambguously -> unambiguously
+#+END_QUOTE
+
 DONE
 
-> + p12: the [ ] syntax is not introduced (do you really mean a list, here, or a linear conjunction?). Similarly, for the :: syntax
+#+BEGIN_QUOTE
++ p12: the [ ] syntax is not introduced (do you really mean a list, here, or a linear conjunction?). Similarly, for the ’:: syntax
+#+END_QUOTE
 
 DONE: we have clarified that 
  1. we use lists in the late examples
  2. we explained briefly the record syntax at its first occurence.
 
-> + p13: the way negation is modeled should be made detailed (do you
-  plan to list all the predicates that do not hold?)
+#+BEGIN_QUOTE
++ p13: the way negation is modeled should be made detailed (do you
+#+END_QUOTE
 
+  plan to list all the predicates that do not hold?)
 DONE: This is out of scope for us (clarified)
 
-> + p14: "Name y Paris" or "Name Paris y"?
+#+BEGIN_QUOTE
++ p14: "Name y Paris" or "Name Paris y"?
+#+END_QUOTE
+
 DONE
 
-> + p16: I dont quite understand why you're using the :: constuctor
+#+BEGIN_QUOTE
++ p16: I dont quite understand why you're using the ’:: constuctor
 since the list are "internalized" under the variant constructors Moves
 or QUD
+#+END_QUOTE
 
 We use this syntax to facilitate adding several elements to the
 information state. This is now clarified in the text. (We cannot
 re-use the Moves list because this is a special-purpose list.)
-
-
 * Review 2
 
->  The paper presents a suggestion for the handling of questions and
-> clarification questions in dialog systems. The main suggestion is to
-> use linear logic in order to handle destructive information-state
-> updates.
+#+BEGIN_QUOTE
+ The paper presents a suggestion for the handling of questions and
+clarification questions in dialog systems. The main suggestion is to
+use linear logic in order to handle destructive information-state
+updates.
 
->  The paper is well written and clearly structured, though the
-> contextualization of the approach presented in comparison with
-> previous work in section 5 comes surprisingly late. The article
-> furthermore clearly describes in what aspects it departs from previous
-> work, which is however not in many respects.
+ The paper is well written and clearly structured, though the
+contextualization of the approach presented in comparison with
+previous work in section 5 comes surprisingly late. The article
+furthermore clearly describes in what aspects it departs from previous
+work, which is however not in many respects.
 
->  Detailed comments:
+ Detailed comments:
 
->  The introduction suffers a bit from quite general statements whose
-> relevance for the line of argumentation then does not become
-> clear. For instance, p. 2 "Even though the progress in bridging
-> dialogue management and theoretical research is promising..." seems
-> unrelated to what comes next.
+ The introduction suffers a bit from quite general statements whose
+relevance for the line of argumentation then does not become
+clear. For instance, p. 2 "Even though the progress in bridging
+dialogue management and theoretical research is promising..." seems
+unrelated to what comes next.
+#+END_QUOTE
 
 DONE: we have clarified this sentence.
 
-> Statements like "By using well-known techniques..." require in my
-> view some references.
+#+BEGIN_QUOTE
+Statements like "By using well-known techniques..." require in my
+view some references.
+#+END_QUOTE
 
 DONE: clarified and added references
 
-> Finally, the description of the linguistic phenomena addressed is
-> quite vague and could profit from references, for instance, to
-> conversation analytic work, such as Schegloff (1972) on insertion
-> sequences (also nicely summarized in Levinson 1983: Pragmatics,
-> CUP).
+#+BEGIN_QUOTE
+Finally, the description of the linguistic phenomena addressed is
+quite vague and could profit from references, for instance, to
+conversation analytic work, such as Schegloff (1972) on insertion
+sequences (also nicely summarized in Levinson 1983: Pragmatics,
+CUP).
+#+END_QUOTE
 
 DONE: clarified and added references. Unfortunately, there is not
 enough space to give full summary of CA literature on the subject.
 
->  The description of KoS p.3 is also quite vague (and ungrammatical)
-> when you write that KoS has among the most detailed analyses. If this
-> is meant as a topic sentence, then remove the paragraph break that is
-> following. 
+#+BEGIN_QUOTE
+ The description of KoS p.3 is also quite vague (and ungrammatical)
+when you write that KoS has among the most detailed analyses. If this
+is meant as a topic sentence, then remove the paragraph break that is
+following. 
+#+END_QUOTE
 
 DONE: improved the text.
 
-> What is Cooper's formalism used for? (p.4)
+#+BEGIN_QUOTE
+What is Cooper's formalism used for? (p.4)
+#+END_QUOTE
 
 DONE: clarified
 
->  Last paragraph on p.4: the first sentence is not related to the
-> following.
+#+BEGIN_QUOTE
+ Last paragraph on p.4: the first sentence is not related to the
+following.
+#+END_QUOTE
 
 Unfortunately we could not spot what the reviewer referred to here.
 
-> Last paragraph of 2.1.3: what are the conclusions from what
-> you are writing?
+#+BEGIN_QUOTE
+Last paragraph of 2.1.3: what are the conclusions from what
+you are writing?
+#+END_QUOTE
 
 DONE: we have clarified the connection with the body of the paper.
 
->  Section 2.2: Here you introduce the notion of metavariable, but you
-> don't define (ever) what a metavariable is and what is 'meta' about
-> it.
+#+BEGIN_QUOTE
+ Section 2.2: Here you introduce the notion of metavariable, but you
+don't define (ever) what a metavariable is and what is 'meta' about
+it.
+#+END_QUOTE
 
 DONE: metavariable can be fixed by unification in the proof
 search. This is now clarified at this point rather than later.
 
->  p. 6, it remains unclear why the scenario would have to be suspended.
+#+BEGIN_QUOTE
+ p. 6, it remains unclear why the scenario would have to be suspended.
+#+END_QUOTE
 
 DONE: rephrased to clarify
 
->  p.7: Transition rules are not defined nor explained sufficiently, and
-> it is weird to start the section with 'In particular'.
+#+BEGIN_QUOTE
+ p.7: Transition rules are not defined nor explained sufficiently, and
+it is weird to start the section with 'In particular'.
+#+END_QUOTE
 
 DONE: clarified what we mean by transition rule and remove the useless
 section title.
 
->  p.7: you introduce some elements of your formalism, but not others. At
-> least a brief paraphrase in a footnote would be useful.
+#+BEGIN_QUOTE
+ p.7: you introduce some elements of your formalism, but not others. At
+least a brief paraphrase in a footnote would be useful.
+#+END_QUOTE
 
 As far as we can see all critical elements have been introduced. It is
 unclear which elements the review refers to and so we have little
 ground to improve the paper here.
 
->  p. 7: it remains unclear what is trivial about an utterance like "He
-> does in the weekend", which is an instantiation of the AmbiguousNo
-> category.
+#+BEGIN_QUOTE
+ p. 7: it remains unclear what is trivial about an utterance like "He
+does in the weekend", which is an instantiation of the AmbiguousNo
+category.
+#+END_QUOTE
 
 DONE: We are saing that "no" is AmbiguousNo, and "He does in the weekend".
 Added a comma to clarify the split position.
 
->  p. 8: "Do you know who I met yesterday?" is neither rhetorical nor
-> attitudinal, but a pre to a telling, i.e. a conventional means to a
-> multi-unit turn (e.g. Schegloff 1982).
+#+BEGIN_QUOTE
+ p. 8: "Do you know who I met yesterday?" is neither rhetorical nor
+attitudinal, but a pre to a telling, i.e. a conventional means to a
+multi-unit turn (e.g. Schegloff 1982).
+#+END_QUOTE
 
 DONE: we removed the offending phrase.
 
->  p. 10: The solution to represent encyclopedic information, such as
-> that 'somewhere' is not a satisfactory answer, as a metavariable seems
-> very ad hoc; what about 'in a city', 'on this planet', which are
-> satisfactory in some contexts and vacuous in others?
+#+BEGIN_QUOTE
+ p. 10: The solution to represent encyclopedic information, such as
+that 'somewhere' is not a satisfactory answer, as a metavariable seems
+very ad hoc; what about 'in a city', 'on this planet', which are
+satisfactory in some contexts and vacuous in others?
+#+END_QUOTE
 
 The reviewer asks us to consider an answer which *contains* a
-metavariable but are still more specific. For example:
+metavariable but are still more specific. For example: | Assert (Live
+John x ∧ IsCity x) | where x is a metavariable. The proposition will
+unify with |Live John x| (and |IsCity x| will be added to the
+information state as well).  According to our analysis, it is possible
+that (IsCity x) can lead the questioner to gain sufficient
+information to make |x| concrete, and thus in turn the question will
+be resolved. It is true that in some applications the full grounding
+of the term is a too crude approximation, and could be replaced by a
+more fine-grained test. However we consider it accurate enough to
+illustrate our point.  Furthermore, due to a lack of space we have not
+inserted this discussion in the paper.
 
-Assert (Live John x ∧ IsCity x)
-
-where x is a metavariable. The proposition will unify with "Live John
-x" (and "IsCity x" will be added to the information state as well).
-According to our analysis, it is possible that "IsCity x" can lead the
-questioner to gain sufficient information to make 'x' concrete, and
-thus in turn the question will be resolved. It is true that in some
-applications the full grounding of the term is a too crude approximation,
-and could be replaced by a more fine-grained test. However
-we consider it accurate enough to illustrate our point. 
-
-Furthermore, due to a lack of space we have not inserted this
-discussion in the paper.
-
->  p. 17: Maybe this method to account for adjancency works for
-> greetings, but in most other adjacency pairs, insertion sequences are
-> possible.
+#+BEGIN_QUOTE
+ p. 17: Maybe this method to account for adjancency works for
+greetings, but in most other adjacency pairs, insertion sequences are
+possible.
+#+END_QUOTE
 
 DONE: Indeed, we show only a simple example for illustration. This is
 why we call the section "Basic adjacency". More complicated types of
 adjacency are modelled in the following sections.
 
->  p. 22: what do you mean by "keep metavariables in terms"?
+#+BEGIN_QUOTE
+ p. 22: what do you mean by "keep metavariables in terms"?
+#+END_QUOTE
 
 DONE: clarified in the parenthetical remarks
 
->  p. 22: "The main current weakness of our approach" does not refer to
-> any of the topics you have discussed in the paper, but to the work
-> your group does in general. I'm not sure that it is relevant here.
+#+BEGIN_QUOTE
+ p. 22: "The main current weakness of our approach" does not refer to
+any of the topics you have discussed in the paper, but to the work
+your group does in general. I'm not sure that it is relevant here.
+#+END_QUOTE
 
 DONE: clarified the relevance of this aspect.
 
->  p. 23: Your system evaluation is actually a self-evaluation; that is,
-> you claim that it accounts for certain phenomena and not for others,
-> which is not really an evaluation.
+#+BEGIN_QUOTE
+ p. 23: Your system evaluation is actually a self-evaluation; that is,
+you claim that it accounts for certain phenomena and not for others,
+which is not really an evaluation.
+#+END_QUOTE
 
 In previous work these benchmarks were used to evaluate other systems. 
 
->  Minor issues:
+#+BEGIN_QUOTE
+ Minor issues:
+ - inconsistent spelling of publicized - publicised
+#+END_QUOTE
 
->  - inconsistent spelling of publicized - publicised
 DONE
 
->  - The use of the verb 'to ground' is strange (p. 12) - ground in what?
->   If you use the DGB, then use the corresponding terminology (that you
->   have introduced before), or else use the verb in its usual,
->   grammatically correct manner.
+#+BEGIN_QUOTE
+ - The use of the verb 'to ground' is strange (p. 12) - ground in what?
+  If you use the DGB, then use the corresponding terminology (that you
+  have introduced before), or else use the verb in its usual,
+  grammatically correct manner.
+#+END_QUOTE
 
 This is standard terminology in unification and proof-search
 domain. But to be sure we even define 'ground term': "it is bound to a
 term which does not contain any metavariable".
 
->  - p. 13: "several places with this name" - you have not mentioned Paris yet.
+#+BEGIN_QUOTE
+ - p. 13: "several places with this name" - you have not mentioned Paris yet.
+#+END_QUOTE
 
 DONE. Fixed as suggested
 
->  - p. 18: U's second utterance is ungrammatical - intentionally?
+#+BEGIN_QUOTE
+ - p. 18: U's second utterance is ungrammatical - intentionally?
+#+END_QUOTE
 
 DONE. Fixed
 
->  - p. 18: What or who are 'they'?
+#+BEGIN_QUOTE
+ - p. 18: What or who are 'they'?
+#+END_QUOTE
 
 DONE: Clarified
 
->  - there are typos and grammatical issues as well as run-on sentences throughout the paper.
-
-
+#+BEGIN_QUOTE
+ - there are typos and grammatical issues as well as run-on sentences throughout the paper.
+#+END_QUOTE
 
 * Review 3
 
->  The article presents a proof-of-concept for the formalisation of
-> dialogue management rules using linear logic, and investigates in
-> particular how to model questions and clarification requests using
-> metavariables.
+#+BEGIN_QUOTE
+ The article presents a proof-of-concept for the formalisation of
+dialogue management rules using linear logic, and investigates in
+particular how to model questions and clarification requests using
+metavariables.
 
->  The article is generally well-written, and it is certainly refreshing
-> to read a paper that for once does not focus on yet another neural
-> model applied to a benchmark dataset. However, I must admit I
-> struggled to grasp the main novelty of the paper. The general idea of
-> framing dialogue management in terms of rules operating on a dialogue
-> state represented in terms of logical propositions (including
-> metavariables waiting to be "filled") is certainly not new, and is
-> present in the work of Larsson, Ginzburg, Traum and several
-> others.
+ The article is generally well-written, and it is certainly refreshing
+to read a paper that for once does not focus on yet another neural
+model applied to a benchmark dataset. However, I must admit I
+struggled to grasp the main novelty of the paper. The general idea of
+framing dialogue management in terms of rules operating on a dialogue
+state represented in terms of logical propositions (including
+metavariables waiting to be "filled") is certainly not new, and is
+present in the work of Larsson, Ginzburg, Traum and several
+others.
+#+END_QUOTE
 
 As far as we can see, while Larsson et al. take advantage of Prolog as
 a formalising framework, they have not fully study the role of
 metavariables in question answering, and this is a gap that we
 fill. In the paper, we already explained this:
-
   Larsson et al. proposed the use of Prolog (and hence, proof
   search), as a dialogue management framework. However, the lack of
   linear hypotheses means that destructive information-state updates are
@@ -336,41 +450,44 @@ fill. In the paper, we already explained this:
   of metavariables to represent uncertainty --- even though Prolog is in
   principle has the capacity to do it.
 
-> The use of linear logic for dialogue is perhaps more original,
-> although (as cited by the authors) it has been investigated by Dixon,
-> Smaill & Tsang (2009). However, as pointed by the authors of the
-> current paper, Dixon et al did not seem to consider how to capture
-> questions and clarification requests using metavariables.
+#+BEGIN_QUOTE
+The use of linear logic for dialogue is perhaps more original,
+although (as cited by the authors) it has been investigated by Dixon,
+Smaill & Tsang (2009). However, as pointed by the authors of the
+current paper, Dixon et al did not seem to consider how to capture
+questions and clarification requests using metavariables.
 
->  But since the paper wishes to focus on modelling aspects, I do see a
-> number of shortcomings to the presented approach:
-
->  1) the paper indicates that the formalisation is able to capture
->    uncertainties and ambiguities. This is a somewhat excessive claim,
->    as doing so would require some kind of probabilistic semantics,
->    both for the dialogue state and for the rules operating on it. What
->    the paper presents is an approach able to express the existence of
->    *unknowns* that should be resolved, or indicates that a particular
->    expression is underspecified or can receive several
->    interpretations. This is IMHO quite different from reasoning over
->    uncertainties or natural language ambiguities, which necessitates
->    some form of probabilistic inference.
+ But since the paper wishes to focus on modelling aspects, I do see a
+number of shortcomings to the presented approach:
+ - the paper indicates that the formalisation is able to capture
+   uncertainties and ambiguities. This is a somewhat excessive claim,
+   as doing so would require some kind of probabilistic semantics,
+   both for the dialogue state and for the rules operating on it. What
+   the paper presents is an approach able to express the existence of
+   *unknowns* that should be resolved, or indicates that a particular
+   expression is underspecified or can receive several
+   interpretations. This is IMHO quite different from reasoning over
+   uncertainties or natural language ambiguities, which necessitates
+   some form of probabilistic inference.
+#+END_QUOTE
 
 DONE: we have clarified in the intro that we can only deal with a kind
 of non-probabilistic ambiguity.
 
->  2) Another modelling aspect that I find problematic relates to the
->    decision-making part. In dialogue, there is typically not one
->    single goal to achieve, but a multitude of goals (and costs) that
->    should be taken into account, with complex trade-offs with one
->    another. Such goals may be related to external goals to achieve but
->    may also pertain to grounding tasks, social obligations,
->    rapport-building, efficiency considerations, etc. This is why
->    dialogue is (at least in my view) best framed as an optimisation
->    problem rather than a classical planning problem. As far as I can
->    see, linear logic cannot really capture such type of
->    decision-making, as there no direct notion of utility or cost
->    associated to a resource.
+#+BEGIN_QUOTE
+ - Another modelling aspect that I find problematic relates to the
+   decision-making part. In dialogue, there is typically not one
+   single goal to achieve, but a multitude of goals (and costs) that
+   should be taken into account, with complex trade-offs with one
+   another. Such goals may be related to external goals to achieve but
+   may also pertain to grounding tasks, social obligations,
+   rapport-building, efficiency considerations, etc. This is why
+   dialogue is (at least in my view) best framed as an optimisation
+   problem rather than a classical planning problem. As far as I can
+   see, linear logic cannot really capture such type of
+   decision-making, as there no direct notion of utility or cost
+   associated to a resource.
+#+END_QUOTE
 
 This is a fair point. One possibility would be to extended our system
 with weighted rules, and the choice of set of rules would be done by
@@ -378,16 +495,18 @@ minimizing the sum of weights. However, we deem this aspect out of
 scope for the current paper. We already have a discussion of this
 issue in the paragraph citing Lison's work.
 
->  3) One third limiting factor is that it requires both questions and
->    answers to be formalised in terms of logical expressions (with
->    metavariables to fill), and the reliance on explicit logical
->    expressions to capture the semantics of natural language utterances
->    is of course known to be difficult when applied beyond toy
->    examples. Although this may work in conversational domains that
->    have a very clear semantics and where questions/answer pairs are
->    expected to have a specific structure (for instance for querying
->    structured databases using natural language), this is much harder
->    to apply to more open-ended interactions such as social chat.
+#+BEGIN_QUOTE
+ - One third limiting factor is that it requires both questions and
+   answers to be formalised in terms of logical expressions (with
+   metavariables to fill), and the reliance on explicit logical
+   expressions to capture the semantics of natural language utterances
+   is of course known to be difficult when applied beyond toy
+   examples. Although this may work in conversational domains that
+   have a very clear semantics and where questions/answer pairs are
+   expected to have a specific structure (for instance for querying
+   structured databases using natural language), this is much harder
+   to apply to more open-ended interactions such as social chat.
+#+END_QUOTE
 
 Another fair point. However, in our view, even accounting for the
 limitations of a logical approach, we find that our rules are quite
@@ -397,23 +516,25 @@ example to check the coherence of end-to-end systems. E.g. we have
 with assertion or short answer (perhaps with the same topic). We
 already touch this topic in the 3rd paragraph of the paper.
 
-
->  I also have a few more specific comments:
-
->  - Is there a particular reason for not adopting the standard notion of
->   predicate logic for predicates and arguments, such as Leave (55,
->   Gotaplatsen, 11.50) instead of (Leave 55 Gotaplatsen 11.50)? I know
->   that logic programming frameworks often rely on specific notational
->   conventions, but it would in any case be useful to say a few words
->   on this notation.
+#+BEGIN_QUOTE
+ I also have a few more specific comments:
+ - Is there a particular reason for not adopting the standard notion
+   of predicate logic for predicates and arguments, such as Leave (55,
+   Gotaplatsen, 11.50) instead of (Leave 55 Gotaplatsen 11.50)? I know
+   that logic programming frameworks often rely on specific notational
+   conventions, but it would in any case be useful to say a few words
+   on this notation.
+#+END_QUOTE
 
 Even though we could use standard Prolog-notation, we use a standard
 LISP-like (or ML or Haskell like) notation. We have decided not to
 change the notation in the final version, because this would be a
 pervasive change which is liable to introduce (many) errors.
 
->  - Similarly, is there a particular reason for using the term
->   "metavariable" instead of "free (non-bound) variable"?
+#+BEGIN_QUOTE
+ - Similarly, is there a particular reason for using the term
+   "metavariable" instead of "free (non-bound) variable"?
+#+END_QUOTE
 
 We have clarified that metavariable can be subsituted for anything at
 a later point. (Free variables may be rigid --- not
@@ -422,21 +543,25 @@ with unification (where you can have both rigid and substitutable
 variables). However we don't exercise this distinction extensively
 here. So we could use this suggestion.
 
->  - The paper indicates that the approach is "implemented". In such a
->   case, the authors should provide more information about
->   implementation-level aspects, in particular how inference (proof
->   search) is conducted and how the inputs/outputs of the dialogue
->   manager are handled. Otherwise, I would suggest to use the term
->   "formalised", as it seems closer to the actual contribution of the
->   paper.
+#+BEGIN_QUOTE
+ - The paper indicates that the approach is "implemented". In such a
+  case, the authors should provide more information about
+  implementation-level aspects, in particular how inference (proof
+  search) is conducted and how the inputs/outputs of the dialogue
+  manager are handled. Otherwise, I would suggest to use the term
+  "formalised", as it seems closer to the actual contribution of the
+  paper.
+#+END_QUOTE
 
 DONE: Unfortunately there is not much space to describe the implementation
 in full. We have clarified the status of the implementation in the
 introduction (enumeration), and added a link to it.
 
->  - Table 2 is hard to make sense of, as the different rows are not
->   explained (beyond a reference to Ginzburg and Fernandez, 2010). I
->   would suggest to either leave it out or provide additional
->   explanations, such that it is possible to understand it on its own.
+#+BEGIN_QUOTE
+ - Table 2 is hard to make sense of, as the different rows are not
+  explained (beyond a reference to Ginzburg and Fernandez, 2010). I
+  would suggest to either leave it out or provide additional
+  explanations, such that it is possible to understand it on its own.
+#+END_QUOTE
 
 DONE: clarified and provided examples.
