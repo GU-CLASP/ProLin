@@ -15,17 +15,25 @@
 #+LATEX_HEADER: \usepackage{etoolbox}
 #+LATEX_HEADER: \AtBeginEnvironment{quote}{\it}
 
-We thank the editors and the three reviewers for their careful reading
+We thank the editors and the reviewers for their careful reading
 and their constructive comments.
 
-They have been very helpful and have lead to extensive revisions,
-including ...
+They have been very helpful and have allowed us to revise the
+manuscript according to the editor's instructions.  In particular, we
+believe that the clarity of the paper has significantly improved. We
+hope that this will help to broaden the possible audience of the
+paper.
 
-All reviews asked for ...
+We have listed each individual comment together with the action taken below.
+However, in broad strokes, notable changes include:
 
-We revised the manuscript accordingly.
+- On the backend side, we have clarified the theory (in particular how
+  proof search is carried out for our language), and the status of our
+  implementation (working prototype and examples).
 
-Below our responses to the individual comments.
+- Additionally, we have clarified the table which proposes an evaluation
+  of our work. It is more comprehensive and self-contained.
+
 
 
 * COMMENT Editor remarks
@@ -71,7 +79,7 @@ as in Dixon et al. 2009? Is it some other system? Based on something
 available for TTR?) would be very much welcome.
 #+END_quote
 
-DONE: We have cited entry point papers about the theory of mixing
+ We have cited entry point papers about the theory of mixing
  intuitionistic/linear and dependent types. (We construct our new
  prototype system based on a new engine, this is clarified in the
  intro.)
@@ -82,14 +90,14 @@ their status are unclear. How are they formulated within a logical
 programming system?
 #+END_QUOTE
 
-DONE: They are fed as input to our engine (as presented). Clarified in
+ They are fed as input to our engine (as presented). Clarified in
 the intro (enumerated list.)
 
 #+BEGIN_QUOTE
 What are the body and the goal of the rules?
 #+END_QUOTE
 
-DONE: We have explained this in a footnote is: fn::If several arrows
+ We have explained this in a footnote is: fn::If several arrows
 are present in a rule (such as |A ⊸ B ⊸ C|) then both |A| and |B| are
 linear consumed and |C| is produced.
 
@@ -102,7 +110,7 @@ at describing how interaction takes place, but it remained quite
 obscure to me.)
 #+END_QUOTE
 
-DONE: Indeed, the rules match conditions on the information state and
+ Indeed, the rules match conditions on the information state and
 update it as explained in sec. 2.3. We have clarified this in that section.
 
 #+BEGIN_QUOTE
@@ -113,14 +121,14 @@ you sometimes use Q, sometimes Question, sometimes with 3 arguments
 p17, etc.)).
 #+END_QUOTE
 
-DONE: fixed (mostly occurred in domain-independent rules)
+ fixed (mostly occurred in domain-independent rules)
 
 #+BEGIN_QUOTE
 Font distinction as well, for instance to distinguish
 variables and one letter predicates), 
 #+END_QUOTE
 
-DONE: In fact, variables *always* start with a lower case
+ In fact, variables *always* start with a lower case
 letter. One-capital-letter symbols (Q, S, etc.) are constants like the
 others.  We make this clear in the paper: "we use the convention that metavariables are
 lowercase letters, and constants (including predicates) with upper case."
@@ -138,50 +146,50 @@ possibly an example program that could be run and tested, but is seems
 that "implementation" here means a set of rules.
 #+END_QUOTE
 
-DONE: we have clarified the status in the enumeration list in the introduction.
+ we have clarified the status in the enumeration list in the introduction.
 
 #+BEGIN_QUOTE
  Here are some minor remarks:
 + p5, fn1: here -> Here (and metavariables$¹$. -> metavariables.$¹$)
 #+END_QUOTE
 
-DONE
+Implemented as suggested
 
 #+BEGIN_QUOTE
 + p8: "Paris" has does not mean -> "Paris" does not mean
 #+END_QUOTE
 
-DONE
+Implemented as suggested
 
 #+BEGIN_QUOTE
 + p9: more details should be provided to comment Table 1
 #+END_QUOTE
 
-DONE: we have expanded the caption of the table to clarify which column contains what.
+ we have expanded the caption of the table to clarify which column contains what.
 
 #+BEGIN_QUOTE
 + p11: it is remains -> it remains
 #+END_QUOTE
 
-DONE
+Implemented as suggested
 
 #+BEGIN_QUOTE
 + p11: "in the same information state as above" is not clear enough. May be use an example environment for "above" and refer to it
 #+END_QUOTE
 
-DONE: clarified
+ clarified
 
 #+BEGIN_QUOTE
 + p11: unambguously -> unambiguously
 #+END_QUOTE
 
-DONE
+Implemented as suggested
 
 #+BEGIN_QUOTE
 + p12: the [ ] syntax is not introduced (do you really mean a list, here, or a linear conjunction?). Similarly, for the ’:: syntax
 #+END_QUOTE
 
-DONE: we have clarified that 
+ we have clarified that 
  1. we use lists in the late examples
  2. we explained briefly the record syntax at its first occurence.
 
@@ -190,13 +198,13 @@ DONE: we have clarified that
 #+END_QUOTE
 
   plan to list all the predicates that do not hold?)
-DONE: This is out of scope for us (clarified)
+ This is out of scope for us (clarified)
 
 #+BEGIN_QUOTE
 + p14: "Name y Paris" or "Name Paris y"?
 #+END_QUOTE
 
-DONE
+Implemented as suggested
 
 #+BEGIN_QUOTE
 + p16: I dont quite understand why you're using the ’:: constuctor
@@ -230,14 +238,14 @@ dialogue management and theoretical research is promising..." seems
 unrelated to what comes next.
 #+END_QUOTE
 
-DONE: we have clarified this sentence.
+ we have clarified this sentence.
 
 #+BEGIN_QUOTE
 Statements like "By using well-known techniques..." require in my
 view some references.
 #+END_QUOTE
 
-DONE: clarified and added references
+ clarified and added references
 
 #+BEGIN_QUOTE
 Finally, the description of the linguistic phenomena addressed is
@@ -247,7 +255,7 @@ sequences (also nicely summarized in Levinson 1983: Pragmatics,
 CUP).
 #+END_QUOTE
 
-DONE: clarified and added references. Unfortunately, there is not
+ clarified and added references. Unfortunately, there is not
 enough space to give full summary of CA literature on the subject.
 
 #+BEGIN_QUOTE
@@ -257,13 +265,13 @@ is meant as a topic sentence, then remove the paragraph break that is
 following. 
 #+END_QUOTE
 
-DONE: improved the text.
+ improved the text.
 
 #+BEGIN_QUOTE
 What is Cooper's formalism used for? (p.4)
 #+END_QUOTE
 
-DONE: clarified
+ clarified
 
 #+BEGIN_QUOTE
  Last paragraph on p.4: the first sentence is not related to the
@@ -277,7 +285,7 @@ Last paragraph of 2.1.3: what are the conclusions from what
 you are writing?
 #+END_QUOTE
 
-DONE: we have clarified the connection with the body of the paper.
+ we have clarified the connection with the body of the paper.
 
 #+BEGIN_QUOTE
  Section 2.2: Here you introduce the notion of metavariable, but you
@@ -285,21 +293,21 @@ don't define (ever) what a metavariable is and what is 'meta' about
 it.
 #+END_QUOTE
 
-DONE: metavariable can be fixed by unification in the proof
+ metavariable can be fixed by unification in the proof
 search. This is now clarified at this point rather than later.
 
 #+BEGIN_QUOTE
  p. 6, it remains unclear why the scenario would have to be suspended.
 #+END_QUOTE
 
-DONE: rephrased to clarify
+Rephrased to clarify
 
 #+BEGIN_QUOTE
  p.7: Transition rules are not defined nor explained sufficiently, and
 it is weird to start the section with 'In particular'.
 #+END_QUOTE
 
-DONE: clarified what we mean by transition rule and remove the useless
+ clarified what we mean by transition rule and remove the useless
 section title.
 
 #+BEGIN_QUOTE
@@ -317,7 +325,7 @@ does in the weekend", which is an instantiation of the AmbiguousNo
 category.
 #+END_QUOTE
 
-DONE: We are saing that "no" is AmbiguousNo, and "He does in the weekend".
+ We are saing that "no" is AmbiguousNo, and "He does in the weekend".
 Added a comma to clarify the split position.
 
 #+BEGIN_QUOTE
@@ -326,7 +334,7 @@ attitudinal, but a pre to a telling, i.e. a conventional means to a
 multi-unit turn (e.g. Schegloff 1982).
 #+END_QUOTE
 
-DONE: we removed the offending phrase.
+ we removed the offending phrase.
 
 #+BEGIN_QUOTE
  p. 10: The solution to represent encyclopedic information, such as
@@ -354,7 +362,7 @@ greetings, but in most other adjacency pairs, insertion sequences are
 possible.
 #+END_QUOTE
 
-DONE: Indeed, we show only a simple example for illustration. This is
+ Indeed, we show only a simple example for illustration. This is
 why we call the section "Basic adjacency". More complicated types of
 adjacency are modelled in the following sections.
 
@@ -362,7 +370,7 @@ adjacency are modelled in the following sections.
  p. 22: what do you mean by "keep metavariables in terms"?
 #+END_QUOTE
 
-DONE: clarified in the parenthetical remarks
+ clarified in the parenthetical remarks
 
 #+BEGIN_QUOTE
  p. 22: "The main current weakness of our approach" does not refer to
@@ -370,7 +378,7 @@ any of the topics you have discussed in the paper, but to the work
 your group does in general. I'm not sure that it is relevant here.
 #+END_QUOTE
 
-DONE: clarified the relevance of this aspect.
+ clarified the relevance of this aspect.
 
 #+BEGIN_QUOTE
  p. 23: Your system evaluation is actually a self-evaluation; that is,
@@ -385,7 +393,7 @@ In previous work these benchmarks were used to evaluate other systems.
  - inconsistent spelling of publicized - publicised
 #+END_QUOTE
 
-DONE
+Implemented as suggested
 
 #+BEGIN_QUOTE
  - The use of the verb 'to ground' is strange (p. 12) - ground in what?
@@ -402,19 +410,19 @@ term which does not contain any metavariable".
  - p. 13: "several places with this name" - you have not mentioned Paris yet.
 #+END_QUOTE
 
-DONE. Fixed as suggested
+Implemented as suggested.
 
 #+BEGIN_QUOTE
  - p. 18: U's second utterance is ungrammatical - intentionally?
 #+END_QUOTE
 
-DONE. Fixed
+Implemented as suggested.
 
 #+BEGIN_QUOTE
  - p. 18: What or who are 'they'?
 #+END_QUOTE
 
-DONE: Clarified
+ Clarified
 
 #+BEGIN_QUOTE
  - there are typos and grammatical issues as well as run-on sentences throughout the paper.
@@ -471,7 +479,7 @@ number of shortcomings to the presented approach:
    some form of probabilistic inference.
 #+END_QUOTE
 
-DONE: we have clarified in the intro that we can only deal with a kind
+ we have clarified in the intro that we can only deal with a kind
 of non-probabilistic ambiguity.
 
 #+BEGIN_QUOTE
@@ -553,7 +561,7 @@ here. So we could use this suggestion.
   paper.
 #+END_QUOTE
 
-DONE: Unfortunately there is not much space to describe the implementation
+ Unfortunately there is not much space to describe the implementation
 in full. We have clarified the status of the implementation in the
 introduction (enumeration), and added a link to it.
 
@@ -564,4 +572,4 @@ introduction (enumeration), and added a link to it.
   explanations, such that it is possible to understand it on its own.
 #+END_QUOTE
 
-DONE: clarified and provided examples.
+ clarified and provided examples.
