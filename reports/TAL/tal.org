@@ -274,7 +274,7 @@ database of facts. For example, the axiom |(Leave 55 Gotaplatsen
 Then, the user may define a query (or goal) as a logical formula. The
 system can then search for a proof of a goal as a way to query the
 database of facts. Often, goals contain
-/metavariables/,[fn::here, we use the convention that metavariables are
+/metavariables,/[fn::Here, we use the convention that metavariables are
 lowercase letters, and constants (including predicates) with upper case.] which play the role of unknowns for unification:
 their value can be fixed to any term for a goal to be reached. For example, the goal |(Leave x Gotaplatsen y)|
 corresponds to a request to list all the buses leaving from
@@ -303,7 +303,7 @@ both |A| and |B| are consumed and |C| is produced.]
 In general, the linear arrow corresponds to /destructive state
 updates/. Thus, the hypotheses available for proof search correspond
 to the /state/ of the system. In our application they will correspond
-to the /information state/ of the dialogue participant. [fn::We note
+to the /information state/ of the dialogue participant.[fn::We note
 that in linear logic, facts (or hypotheses) do not come in a
 hierarchy. Either we have a fact, or we don't. However, in second
 order variants of intuitionistic logic, like the one we use, one can
@@ -885,9 +885,9 @@ hearAndRemember  :
 where |(m x y)| is a semantic representation of the utterance. Here we produce a record, whose
 fields will all be added to the information state. The rule
 demands that participant |x| has the turn and, as a result, turn was
-taken by their partner |y|[fn::For now we have a very simple model of turn-taking, which can be
+taken by their partner |y|.[fn::For now we have a very simple model of turn-taking, which can be
 improved in many ways: certain moves may not induce turn-change, there
-can be more than two participants, etc.]. The |DP| type stands for /dialogue
+can be more than two participants, etc.] The |DP| type stands for /dialogue
 participant/. As a result we do several things: i) place the move in a move
 list for further references (|PushMove|), ii) record the
 turn-switching (which in a complete system may not apply to all cases
@@ -925,10 +925,10 @@ pushQUD :  (q : Question) -> (qs : List Question) -> (x y : DP) ->
 *** Integrating the answers
 If the user asserts something that relates to the top |QUD|, then
 the |QUD| can be resolved and therefore removed from the stack. The
-corresponding proposition |p| is saved as a |UserFact|[fn::For the
+corresponding proposition |p| is saved as a |UserFact|.[fn::For the
 current purposes we only remove the top QUD, but in a more general
 case we can implement the policy that can potentially resolve any QUD
-from the stack.]. This rule extends the abstract rule that were
+from the stack.] This rule extends the abstract rule that were
 introduced in section ref:sec:cr.
 #+BEGIN_code
 processAssert : (a : Type) -> (x : a) -> (p : Prop) -> 
@@ -1024,7 +1024,7 @@ because the move is |Ask|, the system sets its QUD to the question that
 the move contains with the |pushQUD| rule. 
 
 #+BEGIN_code
-QUD      [  Question U Time t0 (TT n0 t0 Gotaplatsen d0)  ]
+QUD      [  Q U Time t0 (TT n0 t0 Gotaplatsen d0)  ]
 HasTurn  S
 Moves    [  Ask (Q U Time t0 (TT n0 t0 Gotaplatsen d0)) U S,
             CounterGreet  S U, Greet         U S  ]
@@ -1071,15 +1071,15 @@ specificCR :
 As a result of applying it, the state becomes:
 #+BEGIN_code
 Agenda   (Ask (Q S Bus n0 (WantBus n0)) S U)
-QUD      [  Question S Bus n0 (WantBus n0),
-            Question U Time t0 (TT n0 t0 Gotaplatsen d0) ]
+QUD      [  Q S Bus n0 (WantBus n0),
+            Q U Time t0 (TT n0 t0 Gotaplatsen d0) ]
 HasTurn  S  
 Moves    […]  -- same as above
 #+END_code
 Then, the system can utter the clarification request (|utterAndRemember| rule): 
 #+BEGIN_code
-QUD  [  Question S Bus n0 (WantBus n0),
-        Question U Time t0 (TT n0 t0 Gotaplatsen d0) ]
+QUD  [  Q S Bus n0 (WantBus n0),
+        Q U Time t0 (TT n0 t0 Gotaplatsen d0) ]
 HasTurn S  
 Moves  [  Ask (Q S Bus n0 (WantBus n0)) S U
           Ask (Q U Time t0 (TT n0 t0 Gotaplatsen d0)) U S
@@ -1090,7 +1090,7 @@ an assertion |Assert (WantBus B55)|, which can be integrated
 using |processShort| or |processAssert| rule respectively. We
 show the state after processing the short answer:
 #+BEGIN_code
-QUD  [  Question U Time t0 (TT B55 t0 Gotaplatsen d0) ]
+QUD  [  Q U Time t0 (TT B55 t0 Gotaplatsen d0) ]
 UserFact (WantBus B55)
 HasTurn S
 Moves  [  ShortAnswer Bus B55 U S,

@@ -1,0 +1,25 @@
+* LDM: Linear dialogue manager
+
+This code corresponds to the paper: Vladislav Maraev, Jean-Philippe
+Bernardy, Jonathan Ginzburg "Dialogue management with linear logic:
+the role of metavariables in questions and clarifications" (2021), to
+appear in TAL (Traitement Automatique des Langues / Natural Language
+Processing).
+
+To try the implementation:
+1. Install Nix. Follow [[https://nixos.org/download.html][the instructions]] or just run:
+   #+begin_src sh
+   curl -L https://nixos.org/nix/install | sh 
+   #+end_src
+2. Install dependencies and enter the shell:
+   #+begin_src sh
+   nix-shell
+   #+end_src
+3. Build:
+   #+begin_src sh
+   cabal v2-build
+   #+end_src
+4. Test example:
+   #+begin_src sh
+   cabal v2-exec -- pli -p -f 20 OneInstancePerParticipant.pli 
+   #+end_src

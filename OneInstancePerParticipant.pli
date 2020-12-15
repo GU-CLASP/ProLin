@@ -63,6 +63,7 @@ processAssert : (a : Type) -> (x : a) ->  (p : Prop) ->
   [ _ :: UserFact p;
     _ :: QUD qs];
 
+-- JG2012: (4.30)
 pushQUD :
    (q : Question) -> (qs : List Question) ->
    (x y : DP) -> 
