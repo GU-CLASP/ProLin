@@ -1,4 +1,4 @@
-#+OPTIONS: toc:nil ':t ":t 
+#+OPTIONS: toc:nil ':t ":t author:nil
 #+LATEX_CLASS: article-hermes_french
 #+LATEX_HEADER: \usepackage[labelfont=bf,textfont=it,labelsep=period,justification=raggedright,singlelinecheck=false]{caption}
 
@@ -44,7 +44,6 @@
 #+TITLE: Linear logic, metavariables and Q/A
 
 #+SUBTITLE: \title[linear logic, metavariables and Q/A]{Dialogue management with linear logic: the role of metavariables in questions and clarifications}
-#+AUTHOR: Anonymous
 #+latex_header: \input{tal-preamble.tex}
 
 
@@ -130,7 +129,7 @@ exchanges.
 By using a solid logical basis cite:bratko2001prolog,girard1995linear which corresponds well with the
 intuition of information-state based dialogue management, we are able
 to provide a fully working prototype[fn::Source code and documentation
-are available at REDACTED.] of the components of our framework:
+are available at \url{https://github.com/GU-CLASP/ProLin}.] of the components of our framework:
 
 1. a new proof-search engine based on linear logic, modified to support
    inputs from external systems (representing inputs and outputs of
@@ -274,8 +273,8 @@ database of facts. For example, the axiom |(Leave 55 Gotaplatsen
 Then, the user may define a query (or goal) as a logical formula. The
 system can then search for a proof of a goal as a way to query the
 database of facts. Often, goals contain
-/metavariables,/[fn::Here, we use the convention that metavariables are
-lowercase letters, and constants (including predicates) with upper case.] which play the role of unknowns for unification:
+/metavariables,/[fn::Here, we use the convention that metavariables start with
+a lowercase letter, and constants (including predicates) with an upper case.] which play the role of unknowns for unification:
 their value can be fixed to any term for a goal to be reached. For example, the goal |(Leave x Gotaplatsen y)|
 corresponds to a request to list all the buses leaving from
 Götaplatsen (as |x|) together with their departure time (as |y|).
@@ -1256,9 +1255,8 @@ standard version of the current approach.
 
 #+begin_export latex
 \acknowledgements{
-% This research was supported by a grant from the Swedish Research Council for the establishment of the Centre for Linguistic Theory and Studies in Probability (CLASP) at the University of Gothenburg. We also acknowledge the support of the French Investissements d'Avenir-Labex EFL program (ANR-10-LABX-0083).
-% In addition, we would like to thank our anonymous reviewers for their useful comments.
-REDACTED: Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. }
+This research was supported by a grant from the Swedish Research Council for the establishment of the Centre for Linguistic Theory and Studies in Probability (CLASP) at the University of Gothenburg. We also acknowledge the support of the French Investissements d'Avenir-Labex EFL program (ANR-10-LABX-0083).
+In addition, we would like to thank our anonymous reviewers for their useful comments. }
 #+end_export
 \bibliography{tal}
 * COMMENT references
