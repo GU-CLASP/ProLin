@@ -114,7 +114,7 @@ answer. The insertion sequences are, in turn, conditioned on the
 preliminaries for the original question \citep[Chapter 6]{Levinson1983}. 
 In this paper, we deal with question-answering and clarification requests in a unified
 way, within a framework of dialogue
-management and a using linear logic formalisation.
+management and using linear logic formalisation.
 
 # How we plan to fill this gap?
 
@@ -136,9 +136,9 @@ are available at \url{https://github.com/GU-CLASP/ProLin}.] of the components of
    the agent).
 
 2. a set of rules which function as a core framework for dialogue
-   management (in the style of KoS cite:ginzburg2012interactive).  The
-   rules which we present below are provided to this engine, in the
-   same form (modulo typesetting).
+   management (in the style of KoS cite:ginzburg2012interactive
+   theoretical account).  The rules which we present below are
+   provided to this engine, in the same form (modulo typesetting).
 
 3. several examples which use the above to construct potential
    applications of the system. The engine is able to run
@@ -212,7 +212,7 @@ Let us now consider the /update/, another essential component of ISU. In
 this case, we rely on a set of rules that will govern the updates. For
 instance, citet:ginzburg2012interactive defines one of the most basic
 rules -- the rule of QUD-incrementation -- the procedure of updating
-the current set of questions under discussions (|QUD|) if the latest
+the current set of questions under discussion (|QUD|) if the latest
 utterance is a question. This operation is salient to a user and
 therefore it constitutes the update of the public part of the
 information state.
@@ -523,14 +523,14 @@ rule as follows:
 
 #+BEGIN_code
 (a : Type) -> (x : a) -> (p : Prop) -> 
-  QUD (Q a x p) -> p ⊸ (p ⊗ Answer x (Q x p))
+  QUD (Q a x p) -> p ⊸ (p ⊗ Answer x (Q a x p))
 #+END_code
 Note: taking a linear argument and producing it again is a common
 pattern, which can be spelled out |A ⊸ (A ⊗ P)|. It is so common that
 from here on we use the syntactic sugar |A -* P| for it, so the above rule will be written:
 #+BEGIN_code
 (a : Type) -> (x : a) -> (p : Prop) -> 
-  QUD (Q a x p) -> p -* Answer x (Q x p)
+  QUD (Q a x p) -> p -* Answer x (Q a x p)
 #+END_code
 The above states that if |x| makes the proposition |p| true (more
 precisely, provable --- we require that |p| is a fact in the last
@@ -585,7 +585,7 @@ information state.
 
 In this section we discuss an alternative kind of responding, which is
 to issue clarification requests.  To see how they can occur, consider
-again the question "what does john eat", in the information state |Eat
+again the question "what does John eat", in the information state |Eat
 John Mars| and |Eat John Twix|.  A proper answer could be "Mars and
 Twix" or even "Mars or Twix". However we consider here a third
 possibility: instead of answering, the agent can issue a clarification
@@ -824,8 +824,8 @@ manipulate data which is already integrated in the information state.
 Here, we assume that the information that comes from sources which are
 external to the dialogue manager is expressed in terms of semantic
 interpretations of moves, and contains information about the speaker
-and the addressee in a structured way. We provide 5 basic types
-of moves as an illustration:
+and the addressee in a structured way. We provide 5 basic types of
+moves, specified with a speaker and an addressee, as an illustration:
 #+BEGIN_code
 Greet         spkr  addr
 CounterGreet  spkr  addr
@@ -1015,12 +1015,12 @@ readability):
 HasTurn U
 Moves   [  CounterGreet  S U, Greet         U S ]
 #+END_code
-Now the system hears the question |(Ask (Q t (TT
-n t Gotaplatsen d)))|. It is domain specific, and basically requests
-the timetable information for the given departure station. Again, we
+Now the system hears the question |(Ask (Q U Time t0 (TT n0 t0
+Gotaplatsen d0)))|. It is domain specific, and basically requests the
+timetable information for the given departure station. Again, we
 use |hearAndRemember| rule to itegrate it into state, but also,
-because the move is |Ask|, the system sets its QUD to the question that
-the move contains with the |pushQUD| rule. 
+because the move is |Ask|, the system sets its QUD to the question
+that the move contains with the |pushQUD| rule.
 
 #+BEGIN_code
 QUD      [  Q U Time t0 (TT n0 t0 Gotaplatsen d0)  ]
@@ -1084,10 +1084,10 @@ Moves  [  Ask (Q S Bus n0 (WantBus n0)) S U
           Ask (Q U Time t0 (TT n0 t0 Gotaplatsen d0)) U S
           CounterGreet S U, Greet U S  ]
 #+END_code
-The user can reply to this with a short answer |ShortAnswer Bus B55| or
-an assertion |Assert (WantBus B55)|, which can be integrated
-using |processShort| or |processAssert| rule respectively. We
-show the state after processing the short answer:
+The user can reply to this with a short answer |ShortAnswer Bus B55 U
+S| or an assertion |Assert (WantBus B55) U S|, which can be integrated
+using |processShort| or |processAssert| rule respectively. We show the
+state after processing the short answer:
 #+BEGIN_code
 QUD  [  Q U Time t0 (TT B55 t0 Gotaplatsen d0) ]
 UserFact (WantBus B55)
