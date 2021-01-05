@@ -265,9 +265,9 @@ There is a long history of using proof search as a declarative
 programming paradigm, where the programmer
 specifies /axioms/ and /rules of inference/ which model their application
 domain. Typically such a system of axioms and rules represents a
-database of facts. For example, the axiom |(Leave 55 Gotaplatsen
-11.50)| can model the fact that bus 55 leaves from Götaplatsen at
-11:50. The rule |(Leave x Gotaplatsen y -> Arrive x CentralStationen
+database of facts. For example, the axiom |(Leave 55 Valand
+11.50)| can model the fact that bus 55 leaves from Valand at
+11:50. The rule |(Leave x Valand y -> Arrive x CentralStationen
 (y+45 minutes))| can represent travelling times on a certain line.
 
 Then, the user may define a query (or goal) as a logical formula. The
@@ -275,9 +275,9 @@ system can then search for a proof of a goal as a way to query the
 database of facts. Often, goals contain
 /metavariables,/[fn::Here, we use the convention that metavariables start with
 a lowercase letter, and constants (including predicates) with an upper case.] which play the role of unknowns for unification:
-their value can be fixed to any term for a goal to be reached. For example, the goal |(Leave x Gotaplatsen y)|
+their value can be fixed to any term for a goal to be reached. For example, the goal |(Leave x Valand y)|
 corresponds to a request to list all the buses leaving from
-Götaplatsen (as |x|) together with their departure time (as |y|).
+Valand (as |x|) together with their departure time (as |y|).
 
 Because statements are propositions, it is only natural to use
 proof-search as a means to represent possible moves in dialogue seen as
@@ -291,9 +291,9 @@ within the general framework of first order logic. However, several
 authors cite:dixon2009plans,martens2015programming have proposed to
 use linear logic cite:girard1995linear instead. For our purpose, the
 crucial feature of linear logic is that hypotheses may be used /only
-once/. For example, one could have a rule |IsAt x Gotaplatsen y ⊸ IsAt
+once/. For example, one could have a rule |IsAt x Valand y ⊸ IsAt
 x CentralStationen (y+45 minutes)|. Consequently, after firing the above
-rule, the premiss |(Is x Gotaplatsen y)| becomes unavailable for any
+rule, the premiss |(Is x Valand y)| becomes unavailable for any
 other rule.  Thereby the linear arrow |⊸| can be used to conveniently
 model that a bus cannot be at two places simultaneously.[fn::If
 several arrows are present in a rule (such as |A ⊸ B ⊸ C|) then
@@ -344,7 +344,7 @@ co-exist in our implementation, thus we can represent simultaneously
 transient facts, or states, (introduced by the linear arrow) and
 immutable facts (introduced by the unrestricted arrow).
 Besides, we have a /fixed/ set of rules (they remain available
-even after being used), such as (|IsAt x Gotaplatsen y ⊸ IsAt
+even after being used), such as (|IsAt x Valand y ⊸ IsAt
 x CentralStationen (y+45 minutes)|) above. Each such rule manipulates a part of the
 information state (captured by its premisses) and leaves everything
 else in the state unchanged.
@@ -930,17 +930,15 @@ case we can implement the policy that can potentially resolve any QUD
 from the stack.] This rule extends the abstract rule that were
 introduced in section ref:sec:cr.
 #+BEGIN_code
-processAssert : (a : Type) -> (x : a) -> (p : Prop) -> 
-  (qs : List Question) -> (dp dp1 : DP) ->
-  Pending (Assert p dp1 dp)          ⊸ 
+processAssert : (a : Type) -> (x : a) -> (p : Prop) -> (qs : List Question) ->
+  (dp dp1 : DP) ->  Pending (Assert p dp1 dp)          ⊸
   QUD (Cons (Q dp a x p) qs)  ⊸ [  _ :: UserFact p; _ :: QUD qs];
 #+END_code
 
 Short answers are processed in a very similar way to assertions:
 #+BEGIN_code
-processShort : (a : Type) -> (x : a) ->  (p : Prop) -> 
-  (qs : List Question) -> (dp dp1 : DP) ->
-  Pending (ShortAnswer a x dp1 dp)   ⊸ 
+processShort : (a : Type) -> (x : a) ->  (p : Prop) -> (qs : List Question) -> 
+  (dp dp1 : DP) ->  Pending (ShortAnswer a x dp1 dp)   ⊸
   QUD (Cons (Q dp a x p) qs)  ⊸ [  _ :: UserFact p; _ :: QUD qs];
 #+END_code
 
@@ -971,7 +969,7 @@ We now show how the generic system of rules above can handle the exchange:
 #+begin_quote
 U: Hello!\\
 S: Hello, U.\\
-U: When is there a bus from Gotaplatsen?\\
+U: When is there a bus from Valand?\\
 S: In 15 minutes.
 #+end_quote
 Let us further assume the following system context, which contains
@@ -1016,16 +1014,16 @@ HasTurn U
 Moves   [  CounterGreet  S U, Greet         U S ]
 #+END_code
 Now the system hears the question |(Ask (Q U Time t0 (TT n0 t0
-Gotaplatsen d0)))|. It is domain specific, and basically requests the
+Valand d0)))|. It is domain specific, and basically requests the
 timetable information for the given departure station. Again, we
 use |hearAndRemember| rule to itegrate it into state, but also,
 because the move is |Ask|, the system sets its QUD to the question
 that the move contains with the |pushQUD| rule.
 
 #+BEGIN_code
-QUD      [  Q U Time t0 (TT n0 t0 Gotaplatsen d0)  ]
+QUD      [  Q U Time t0 (TT n0 t0 Valand d0)  ]
 HasTurn  S
-Moves    [  Ask (Q U Time t0 (TT n0 t0 Gotaplatsen d0)) U S,
+Moves    [  Ask (Q U Time t0 (TT n0 t0 Valand d0)) U S,
             CounterGreet  S U, Greet         U S  ]
 #+END_code
 Now, depending on the state of the knowledge base, the system will
@@ -1036,24 +1034,23 @@ For this case we will consider a knowledge base that includes
 information just about the unique (w.r.t. the time) entry in the
 timetable:
 #+BEGIN_code
-TT B18 T15   Gotaplatsen     Johanneberg
+TT B18 T15   Valand     Johanneberg
 #+END_code
 Therefore the question can be resolved and the resolving short answer
 can be put on the |Agenda|.
 #+BEGIN_code
-Answered (Q  U Time T15
-                    (TT B18 T15 Gotaplatsen Johanneberg))
-QUD Nil
-HasTurn S
-Agenda (ShortAnswer Time T15 S U)
-Moves  […] -- same as above
+Answered  (Q  U Time T15 (TT B18 T15 Valand Johanneberg))
+QUD       Nil
+HasTurn   S
+Agenda    (ShortAnswer Time T15 S U)
+Moves     […] -- same as above
 #+END_code
 *** Clarifying side sequence
 In contrast, we can extend our minimal timetable example with another entry,
 therefore making it non-unique, w.r.t. time. 
 #+BEGIN_code
-TT B18 T15   Gotaplatsen     Johanneberg
-TT B55 T20   Gotaplatsen     SciencePark
+TT B18 T15   Valand     Johanneberg
+TT B55 T20   Valand     SciencePark
 #+END_code
 In order to make it unique we can either clarify the bus number or the
 destination. For the bus number the rule for clarification can be
@@ -1061,27 +1058,25 @@ formulated as follows:
 #+BEGIN_code
 specificCR :
   (t : Time) -> (n : Bus) -> (s d : Location) -> (qs : List Question) ->
-  CR ⊸
-  QUD (Cons (Q U Time t  (TT n t s d))  qs)   ⊸
-  [  _ :: QUD (Cons  (Q S Bus n (WantBus n)) 
-                     (Cons (Q U Time t (TT n t s d)) qs));
-     _ :: Agenda (Ask  (Q S Bus n (WantBus n)) S U) ];
+  CR  ⊸ QUD (Cons (Q U Time t  (TT n t s d))  qs)   ⊸
+      [  _ :: QUD (Cons  (Q S Bus n (WantBus n)) 
+                         (Cons (Q U Time t (TT n t s d)) qs));
+         _ :: Agenda (Ask  (Q S Bus n (WantBus n)) S U) ];
 #+END_code
 As a result of applying it, the state becomes:
 #+BEGIN_code
 Agenda   (Ask (Q S Bus n0 (WantBus n0)) S U)
 QUD      [  Q S Bus n0 (WantBus n0),
-            Q U Time t0 (TT n0 t0 Gotaplatsen d0) ]
+            Q U Time t0 (TT n0 t0 Valand d0) ]
 HasTurn  S  
 Moves    […]  -- same as above
 #+END_code
 Then, the system can utter the clarification request (|utterAndRemember| rule): 
 #+BEGIN_code
-QUD  [  Q S Bus n0 (WantBus n0),
-        Q U Time t0 (TT n0 t0 Gotaplatsen d0) ]
+QUD  [  Q S Bus n0 (WantBus n0),  Q U Time t0 (TT n0 t0 Valand d0) ]
 HasTurn S  
 Moves  [  Ask (Q S Bus n0 (WantBus n0)) S U
-          Ask (Q U Time t0 (TT n0 t0 Gotaplatsen d0)) U S
+          Ask (Q U Time t0 (TT n0 t0 Valand d0)) U S
           CounterGreet S U, Greet U S  ]
 #+END_code
 The user can reply to this with a short answer |ShortAnswer Bus B55 U
@@ -1089,7 +1084,7 @@ S| or an assertion |Assert (WantBus B55) U S|, which can be integrated
 using |processShort| or |processAssert| rule respectively. We show the
 state after processing the short answer:
 #+BEGIN_code
-QUD  [  Q U Time t0 (TT B55 t0 Gotaplatsen d0) ]
+QUD  [  Q U Time t0 (TT B55 t0 Valand d0) ]
 UserFact (WantBus B55)
 HasTurn S
 Moves  [  ShortAnswer Bus B55 U S,
@@ -1101,13 +1096,12 @@ therefore it now corresponds to one unique entry in the knowledge
 base. Hence, the answer can be issued, by the |produceAnswer| rule.
 
 #+BEGIN_code
-Answered (Q U Time T20
-                    (TT B55 T20 Gotaplatsen SciencePark))
-QUD Nil
-Agenda (ShortAnswer Time T20 S U)
-UserFact (WantBus B55)
-HasTurn S
-Moves […]  -- same as above
+Answered  (Q U Time T20 (TT B55 T20 Valand SciencePark))
+QUD       Nil
+Agenda    (ShortAnswer Time T20 S U)
+UserFact  (WantBus B55)
+HasTurn   S
+Moves     […]  -- same as above
 #+END_code
 * Related work
 label:sec:related
@@ -1255,9 +1249,10 @@ standard version of the current approach.
 
 #+begin_export latex
 \acknowledgements{
-This research was supported by a grant from the Swedish Research Council for the establishment of the Centre for Linguistic Theory and Studies in Probability (CLASP) at the University of Gothenburg. We also acknowledge the support of the French Investissements d'Avenir-Labex EFL program (ANR-10-LABX-0083).
+This research was supported by a grant from the Swedish Research Council for the establishment of the Centre for Linguistic Theory and Studies in Probability (CLASP) at the University of Gothenburg. We also acknowledge support by a public grant overseen by the French National Research Agency (ANR) as part of the program “Investissements d’Avenir” (reference: ANR-10-LABX-0083). It contributes to the IdEx Université de Paris - ANR-18-IDEX-0001. We also acknowledge a senior fellowship from the Institut Universitaire de France to Ginzburg. 
 In addition, we would like to thank our anonymous reviewers for their useful comments. }
 #+end_export
+
 \bibliography{tal}
 * COMMENT references
 bibliography:tal.bib
