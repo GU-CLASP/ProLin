@@ -43,7 +43,7 @@
 
 #+TITLE: Linear logic, metavariables and Q/A
 
-#+SUBTITLE: \title[linear logic, metavariables and Q/A]{Dialogue management with linear logic: the role of metavariables in questions and clarifications}
+#+SUBTITLE: \title[Linear logic, metavariables and Q/A]{Dialogue management with linear logic: the~role of metavariables in questions and~clarifications}
 #+latex_header: \input{tal-preamble.tex}
 
 
@@ -133,12 +133,12 @@ are available at \url{https://github.com/GU-CLASP/ProLin}.] of the components of
 
 1. a new proof-search engine based on linear logic, modified to support
    inputs from external systems (representing inputs and outputs of
-   the agent).
+   the agent);
 
 2. a set of rules which function as a core framework for dialogue
    management (in the style of KoS cite:ginzburg2012interactive
    theoretical account).  The rules which we present below are
-   provided to this engine, in the same form (modulo typesetting).
+   provided to this engine, in the same form (modulo typesetting);
 
 3. several examples which use the above to construct potential
    applications of the system. The engine is able to run
@@ -167,8 +167,8 @@ Semantics) cite:ginzburg2012interactive provides one of the most
 detailed theoretical treatments of domain-general conversational
 relevance, especially for query responses---see the work of
 citet:purver-rlc06 on Clarification Requests, and
-cite:lupkowski2017query for a general account---and this ties into the
-KoS treatment of non sentential utterances, again a domain crucial for
+citet:lupkowski2017query for a general account---and this ties into the
+KoS treatment of non-sentential utterances, again a domain crucial for
 naturalistic dialogue systems and where KoS has one of the most
 detailed analyses cite:fgl07,ginzburg2012interactive.
 
@@ -184,7 +184,7 @@ that represents information arising from publicised interactions. The
 DGB tracks, at the very least, shared assumptions/visual field, moves
 (= utterances, form and content), and questions under discussion.
 
-KoS is based on Cooper's formalism, Type Theory with Records (TTR),
+KoS is based on Cooper's formalism, Type Theory with Records (TTR)
 thus can leverage a wide range of work based on it, including the
 modelling of intentionality and mental attitudes cite:cooper-rlc,
 generalised quantifiers cite:cooper-gq13, co-predication and dot types
@@ -198,7 +198,7 @@ cite:fgl07,ginzburg2012interactive and iconic gesture cite:lucking16.
 Being based on types and record-like contexts, we hope that our
 framework can also benefit from all this literature.
 
-*** Information state update approach
+*** Information-state update approach
 In this work we are employing an information-state update (ISU)
 approach, following several authors, including citet:larsson2002issue
 and citet:ginzburg2012interactive. In this view we present the
@@ -256,7 +256,7 @@ our theory is symmetric with respect to users and systems roles, it can be usefu
 
 The prevailing tradition in formal semantics, including in most pieces
 of work cited above, is to represent (declarative) statements as
-propositions, formalized in an underlying logic (often first-order
+propositions, formalised in an underlying logic (often first-order
 logic).  In particular, in linguistic theories based on intuitionistic
 logic (such as TTR), true statements corresponds to propositions which
 admit a proof.
@@ -287,7 +287,7 @@ a game cite:larsson2002issue.
 ** Linear logic as a Dialogue Management Framework
 Typically, and in particular in the archetypal logic programming
 language prolog cite:bratko2001prolog, axioms and rules are expressed
-within the general framework of first order logic. However, several
+within the general framework of first-order logic. However, several
 authors cite:dixon2009plans,martens2015programming have proposed to
 use linear logic cite:girard1995linear instead. For our purpose, the
 crucial feature of linear logic is that hypotheses may be used /only
@@ -302,10 +302,8 @@ both |A| and |B| are consumed and |C| is produced.]
 In general, the linear arrow corresponds to /destructive state
 updates/. Thus, the hypotheses available for proof search correspond
 to the /state/ of the system. In our application they will correspond
-to the /information state/ of the dialogue participant.[fn::We note
-that in linear logic, facts (or hypotheses) do not come in a
-hierarchy. Either we have a fact, or we don't. However, in second
-order variants of intuitionistic logic, like the one we use, one can
+to the /information state/ of the dialogue participant.[fn::We note, that in linear logic, facts (or hypotheses) do not come in a
+hierarchy. Either we have a fact, or we don't. However, in second-order variants of intuitionistic logic, like the one we use, one can
 conveniently wrap propositions in constructors, to indicate that they
 come with a qualification. For example, we can write |Unsure P| to
 indicate that the proposition |P| may hold (for example if
@@ -341,7 +339,7 @@ discuss in detail in section ref:sec:dm.
 It is important to note that we will not forego the unrestricted
 (i.e. non-linear) implication (|->|). Rather, both implications will
 co-exist in our implementation, thus we can represent simultaneously
-transient facts, or states, (introduced by the linear arrow) and
+transient facts, or states (introduced by the linear arrow) and
 immutable facts (introduced by the unrestricted arrow).
 Besides, we have a /fixed/ set of rules (they remain available
 even after being used), such as (|IsAt x Valand y ⊸ IsAt
@@ -372,13 +370,13 @@ worth stressing that the type |A| can be large (for example asking for
 any location) or as small as a boolean (if one requires a simple
 yes/no answer).  We note in passing that, typically, polar questions
 can be answered not just by a boolean but by qualifing the predicate
-in question, for example "maybe", "on tuesdays", etc. (Table
+in question, for example "maybe", "on Tuesdays", etc. (Table
 ref:tbl:qa-ex, last two rows).  In this instance |A = Prop -> Prop|.
 
 # NEGATIVE QUESTIONS
 One complication are polar questions phrased in the negative
-cite:cooper2012negative; for example: "Doesn't John like Bananas?".
-In this instance, a simple a simple "no" answer can be ambiguous, and
+cite:cooper2012negative; for example: "Doesn't John like bananas?".
+In this instance, a simple "no" answer can be ambiguous, and
 a possible model would be a multi-valued kind of answer ("yes he does"
 represented as |DefiniteYes|; "no he doesn't", represented
 as |DefiniteNo|, "no" as |AmbiguousNo|, and "He does in the weekend"
@@ -409,19 +407,22 @@ We deem such complications out of the scope of the current paper.
 
 \begin{sidewaystable}[htbp]
 \begin{tabular}{lllll}
-{\bf question utterance} & {\bf A} & {\bf P} & \makecell[c]{{\bf answer utterance}} & {\bf x} \\
-\hline\rule{0pt}{4ex}
-Where does John live?    & |Location    | & |\x.Live John x                          | & in London & |ShortAnswer Location London| \\
-Does John live in Paris? & |Bool        | & \makecell[l]{|\x.if x then (Live John Paris)| \\ |else Not (Live John Paris)|} & yes & |ShortAnswer Bool True| \\
-What time is it?         & |Time        | & |\x.IsTime x                             | & It is 5am. & |Assert (IsTime 5.00)| \\\rule{0pt}{4ex}
-Does John live in Paris? & |Prop -> Prop| & |\m. m (Live John Paris)                 | & yes & |ShortAnswer  (Prop -> Prop) (\x. x)| \\
-Does John live in Paris? & |Prop -> Prop| & |\m. m (Live John Paris)                 | & from January & \makecell[l]{|ShortAnswer (Prop -> Prop)|\\|(\x. FromJanuary(x))|} \\
+{\bf question} & {\bf A} & {\bf P} & \makecell[c]{{\bf reply}} & {\bf x} \\
+\hline\rule{0pt}{5ex}
+\makecell[l]{Where does\\ John live?}    & |Location    | & |\x.Live John x                          | & in London & |ShortAnswer Location London| \\
+\rule{0pt}{5ex}
+\makecell[l]{Does John\\ live in Paris?} & |Bool        | & \makecell[l]{|\x.if x then (Live John Paris)| \\ |else Not (Live John Paris)|} & yes & |ShortAnswer Bool True| \\
+\rule{0pt}{5ex}
+What time is it?         & |Time        | & |\x.IsTime x                             | & It is 5am. & |Assert (IsTime 5.00)| \\\rule{0pt}{5ex}
+\makecell[l]{Does John\\ live in Paris?} & |Prop->Prop| & |\m. m (Live John Paris)                 | & yes & \makecell[l]{|ShortAnswer  (Prop -> Prop)|\\|(\x. x)|} \\
+\rule{0pt}{5ex}
+\makecell[l]{Does John\\ live in Paris?} & |Prop->Prop| & |\m. m (Live John Paris)                 | & from January & \makecell[l]{|ShortAnswer (Prop -> Prop)|\\|(\x. FromJanuary(x))|} \\
 \end{tabular}
 \caption{\label{tbl:qa-ex}
 Examples of questions and the possible corresponding answers.
 The type |A| is the type of possible short answers.
 The proposition |P x| is the interpretation of a short answer |x|.
-The |x| column shows the formal representation of a possible answer, either in short form or assertion form.
+The |x| column shows the formal representation of a possible answer, either~in~short~form or assertion form.
 }
 \end{sidewaystable}
 
@@ -445,7 +446,7 @@ denotes a question constructor) is a triple of a type, a
 metavariable |x|, and a proposition where |x| occurs. We stress
 that |P x| is /not/ part of the information state of the agent yet,
 rather the fact that the above question is /under discussion/ is a
-fact. For example, after asking "Where does John live", we have:
+fact. For example, after asking "Where does John live?", we have:
 
 #+BEGIN_code
 haveQud : QUD (Q Location x (Live John x))
@@ -469,7 +470,7 @@ binders can be thought as universal quantification (|∀ a, ∀ x|, etc.),
 the difference is that the type of the bound variable is
 specified. (The reader worried about any theoretical difficulty
 regarding mixing linear and dependent types is directed to
-citep:atkey_syntax_2018 and citep:abel_unified_2020.)
+citet:atkey_syntax_2018 and citet:abel_unified_2020.)
 
 We demand in particular that types in the answer and in the question
 match (|a| occurs in both places). Additionally, because |x| occurs
@@ -491,8 +492,8 @@ of a question under discussion, and (3) |p| can be unified with |q|
 in both roles in the above rule), then the assertion resolves the
 question. Additionally, the metavariable |x| is made ground to a value
 provided by |p|, by virtue of unification of |p| and |q|. For example,
-"John lives in Paris" answers both questions "Where does John live"
-and "Does John live in Paris" (there is unification), but, not, for
+"John lives in Paris" answers both questions "Where does John live?"
+and "Does John live in Paris?" (there is unification), but, not, for
 example "What time is it?" (there is no unification).
 Note that, in both cases (|processAssert| and |processShort|), the
 information state is updated with the proposition posed in the
@@ -502,7 +503,7 @@ question.
 
 However, one should consider the question resolved only if the answer
 is "unique". For example, the assertion "John lives somewhere"
-generally does not resolve the question "where does John live". That
+generally does not resolve the question "Where does John live?". That
 is, if "somewhere" is represented by a metavariable, then the answer
 is not resolving.
 
@@ -516,7 +517,7 @@ Assume now a system with the following state:
 #+BEGIN_code
 Eat John Mars
 #+END_code
-Then the question "What does John eat", represented as |(Q Food x
+Then the question "What does John eat?, represented as |(Q Food x
 (Eat John x))|, can be answered.  From the point of view of modelling
 with linear logic, we could attempt to model the answering by the
 rule as follows:
@@ -585,7 +586,7 @@ information state.
 
 In this section we discuss an alternative kind of responding, which is
 to issue clarification requests.  To see how they can occur, consider
-again the question "what does John eat", in the information state |Eat
+again the question "What does John eat?", in the information state |Eat
 John Mars| and |Eat John Twix|.  A proper answer could be "Mars and
 Twix" or even "Mars or Twix". However we consider here a third
 possibility: instead of answering, the agent can issue a clarification
@@ -639,7 +640,7 @@ Q Person z (z = y)
 That is, the question is asking about some aspect which was left
 implicit in the original question (what is being eaten). In our terms,
 it must refer to the metavariable (|y|) which the original
-question included.  After getting an answer, (say |Mary|), |z|
+question included.  After getting an answer (say |Mary|), |z|
 will be bound to a ground term, and, in turn, the fact |z=y| will
 ensure that |y| becomes ground. 
 
@@ -663,7 +664,7 @@ This means the original question will, by unification, become |Q Food
 x (Eat Mary x)|, and it can be unambiguously answered using
 the |produceAnswer| rule. We note that the logical form of the
 question (|z| such that |z=y|) is typically realised in a complicated
-way. In our example, it could be "By whom"; echoing part of the
+way. In our example, it could be "By whom?"; echoing part of the
 original question and assuming cooperative communication so that the
 questioner properly relates the clarification request to the implicits
 of the original questions.
@@ -752,7 +753,7 @@ Country France X
 Not (Country France Y)
 #+end_code
 Because John lives in |X| but not in |Y| the question is
-ambiguous. One way to lift the ambiguity is raise the clarification
+ambiguous. One way to lift the ambiguity is to raise the clarification
 request as above. Here it can be phrased as a polar question[fn::Here
 we use the simpler version of the treatment of polar questions.]
 again: 
@@ -793,7 +794,7 @@ then illustrate them with an example application.
     \node [block]                 (input)     {Knowledge Base};
     \node [block, above of=input]   (tc)      {Type Checker};
     \node [block] (appl) [right=2cm of tc]    {Rule application};
-    \node [block, below of=appl, align=center] (sub)    {Information state:\\ \emph{linear propositions}};
+    \node [block, below of=appl, align=center] (sub)    {Information-state:\\ \emph{linear propositions}};
     
     \node [block, fit={(appl) (sub)}, align=left,
            rounded corners, inner sep=8pt] (dm) {DM};
@@ -869,11 +870,11 @@ nothing has been said by either party.
 _ :: QUD Nil; _ :: Agenda Nil; _ :: Moves Nil;
 #+END_code
 (We often do not care about the proof object witnessing a propositions,
-in which case we denote it with an underscore).
+in which case we denote it with an underscore.)
 
 *** Hearing
 The capacity of "hearing" or, in other words, starting the processing
-of semantic representations of utterances from the NLU component, is
+of semantic representations of utterances from the NLU component is
 implemented with the following rule:
 #+BEGIN_code
 hearAndRemember  :
@@ -890,7 +891,7 @@ can be more than two participants, etc.] The |DP| type stands for /dialogue
 participant/. As a result we do several things: i) place the move in a move
 list for further references (|PushMove|), ii) record the
 turn-switching (which in a complete system may not apply to all cases
---- then additional hypotheses would be added.), and iii) prepare to
+--- then additional hypotheses would be added), and iii) prepare to
 process the move (|Pending|).
 
 *** Uttering
@@ -985,7 +986,7 @@ Agenda   Nil
 HasTurn  U
 Moves    Nil
 #+END_code
-When the systems hears the greeting it can be integrated into
+When the system hears the greeting it can be integrated into
 the state using |hearAndRemember| rule, therefore system updates its
 state accordingly:
 #+BEGIN_code
@@ -1014,7 +1015,7 @@ HasTurn U
 Moves   [  CounterGreet  S U, Greet         U S ]
 #+END_code
 Now the system hears the question |(Ask (Q U Time t0 (TT n0 t0
-Valand d0)))|. It is domain specific, and basically requests the
+Valand d0)))|. It is domain-specific, and basically requests the
 timetable information for the given departure station. Again, we
 use |hearAndRemember| rule to itegrate it into state, but also,
 because the move is |Ask|, the system sets its QUD to the question
@@ -1093,7 +1094,7 @@ Moves  [  ShortAnswer Bus B55 U S,
 The reader can see that the metavariable |n0| from the previous
 state is now unified with |B55| in the QUD,
 therefore it now corresponds to one unique entry in the knowledge
-base. Hence, the answer can be issued, by the |produceAnswer| rule.
+base. Hence, the answer can be issued by the |produceAnswer| rule.
 
 #+BEGIN_code
 Answered  (Q U Time T20 (TT B55 T20 Valand SciencePark))
@@ -1117,7 +1118,7 @@ One of our main sources of inspiration is Ginzburg's KoS
 cite:ginzburg2012interactive. However we recast it in the framework of
 proof search, and linear logic. We have argued that this has many
 advantages. First, it affords the use of metavariables to represent
-uncertaintly, which is absent from TTR.  Second, expressing updates
+uncertainty, which is absent from TTR.  Second, expressing updates
 using linear logic rules means that only the relevant parts of the
 information state must be dealt with in any given rule. Cooper's TTR
 has a special "asymmetric merge" operator for this purpose, but it is
@@ -1140,13 +1141,13 @@ citet:larsson2002issue proposed the use of Prolog (and hence, proof
 search), as a dialogue management framework. However, the lack of
 linear hypotheses means that destructive information-state updates are
 sometimes awkward to represent. Besides, he does not consider the use
-of metavariables to represent uncertainty --- even though Prolog is in
+of metavariables to represent uncertainty --- even though Prolog in
 principle has the capacity to do it.
 
 To our knowledge citet:dixon2009plans were the first to advocate the
 use of linear logic for dialogue management and planning. Compared to
 the present work, they focus primarily on the planning part of
-dialogue, rather than question-answering. In particular, they do not
+dialogue rather than question-answering. In particular, they do not
 discuss the role of metavariables and clarification requests. We
 additionally propose the extension of linear logic with
 special-purpose operators | X !-> Y | and | X ?-> Y | to distinguish
@@ -1197,11 +1198,11 @@ cite:goodman_probabilistic_2015,bernardy_compositional_2018.
 
 An important dimension of dialogue processing that the current work
 does not address is providing a detailed utterance processing of the
-user and word by word incremental processing. This means we cannot
+user and word-by-word incremental processing. This means we cannot
 deal with form-based parallelism needed for various types of
 acknowledgements, CRs, and self-repair. Nor, as things stand, do we
 engage in grounding interaction, modelled extensively in
-cite:larsson2002issue.
+citet:larsson2002issue.
 
 Table ref:table:ds originates from cite:ginzburg-nlphandbook, who
 proposed a series of benchmarks for comparing different approaches to
@@ -1249,7 +1250,7 @@ standard version of the current approach.
 
 #+begin_export latex
 \acknowledgements{
-This research was supported by a grant from the Swedish Research Council for the establishment of the Centre for Linguistic Theory and Studies in Probability (CLASP) at the University of Gothenburg. We also acknowledge support by a public grant overseen by the French National Research Agency (ANR) as part of the program “Investissements d’Avenir” (reference: ANR-10-LABX-0083). It contributes to the IdEx Université de Paris - ANR-18-IDEX-0001. We also acknowledge a senior fellowship from the Institut Universitaire de France to Ginzburg. 
+This research was supported by a grant from the Swedish Research Council for the establishment of the Centre for Linguistic Theory and Studies in Probability (CLASP) at the University of Gothenburg. We also acknowledge support by a public grant overseen by the French National Research Agency (ANR) as part of the program “Investissements d’Avenir” (reference: ANR-10-LABX-0083). It contributes to the IdEx Université de Paris --- ANR-18-IDEX-0001. We also acknowledge a senior fellowship from the Institut Universitaire de France to Ginzburg. 
 In addition, we would like to thank our anonymous reviewers for their useful comments. }
 #+end_export
 
