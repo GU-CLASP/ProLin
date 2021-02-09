@@ -120,7 +120,7 @@ management and using linear logic formalisation.
 
 To deal with unclarity of an initial question, we propose here the use of
 /metavariables/, thereby leveraging much research on unification and
-proof search in various logical frameworks.  That is, meta-variables
+proof search in various logical frameworks.  That is, metavariables
 will stand in for any piece of information which is left to further
 interpretation. In particular, in this paper we explore the potential
 of using metavariables in the representation of question/answer
@@ -880,12 +880,12 @@ implemented with the following rule:
 hearAndRemember  :
   (m : DP -> DP -> Move) -> (x y : DP) -> (ms : List Move) ->
   Heard (m x y)  ⊸ Moves ms ⊸ HasTurn x ⊸ 
-  [  _ :: Moves (Cons (m x y) ms); _ :: Pending (m x y) ; _ :: HasTurn y ];
+  [  _ :: Moves (Cons (m x y) ms); _ :: Pending (m x y) ; _ :: HasTurn y ]
 #+END_code
 where |(m x y)| is a semantic representation of the utterance. Here we produce a record, whose
 fields will all be added to the information state. The rule
 demands that participant |x| has the turn and, as a result, turn was
-taken by their partner |y|.[fn::For now we have a very simple model of turn-taking, which can be
+taken by his partner |y|.[fn::For now we have a very simple model of turn-taking, which can be
 improved in many ways: certain moves may not induce turn-change, there
 can be more than two participants, etc.] The |DP| type stands for /dialogue
 participant/. As a result we do several things: i) place the move in a move
@@ -902,7 +902,7 @@ by |Agenda| that contains a move that is just about to be uttered.
 utterAndRemember :
   (m : DP -> DP -> Move) -> (ms : List Move) -> (x y : DP) ->
   Agenda (m x y)  ⊸ Moves ms ⊸ HasTurn x ⊸ 
-  [  _ :: Utter (m x y); _ :: Moves (Cons (m x y) ms); _ :: HasTurn y];
+  [  _ :: Utter (m x y); _ :: Moves (Cons (m x y) ms); _ :: HasTurn y]
 #+END_code
 
 Here also we take care of turn-taking in the same rule. As a result,
@@ -913,7 +913,7 @@ We can show how basic move adjacency can be defined in the example of
 countergreeting preconditioned by a greeting from the other party:
 #+BEGIN_code
 counterGreeting :  (x y : DP) -> HasTurn x -* Pending (Greet y x)  ⊸
-                   Agenda (CounterGreet x y);
+                   Agenda (CounterGreet x y)
 #+END_code
 *** QUD incrementation
 Another important rule accounts for pushing the content of the last move, in the case if it is an |Ask| move, on top of the questions under discussion (|QUD|) stack.
@@ -933,14 +933,14 @@ introduced in section ref:sec:cr.
 #+BEGIN_code
 processAssert : (a : Type) -> (x : a) -> (p : Prop) -> (qs : List Question) ->
   (dp dp1 : DP) ->  Pending (Assert p dp1 dp)          ⊸
-  QUD (Cons (Q dp a x p) qs)  ⊸ [  _ :: UserFact p; _ :: QUD qs];
+  QUD (Cons (Q dp a x p) qs)  ⊸ [  _ :: UserFact p; _ :: QUD qs]
 #+END_code
 
 Short answers are processed in a very similar way to assertions:
 #+BEGIN_code
 processShort : (a : Type) -> (x : a) ->  (p : Prop) -> (qs : List Question) -> 
   (dp dp1 : DP) ->  Pending (ShortAnswer a x dp1 dp)   ⊸
-  QUD (Cons (Q dp a x p) qs)  ⊸ [  _ :: UserFact p; _ :: QUD qs];
+  QUD (Cons (Q dp a x p) qs)  ⊸ [  _ :: UserFact p; _ :: QUD qs]
 #+END_code
 
 *** Questions and clarifications
@@ -953,10 +953,10 @@ produceAnswer :
    (a : Type) ->   (x : a) !-> (p : Prop) -> (qs : List Question)  ->	
    QUD (Cons (Q USER a x p) qs)  ⊸ p  -*
    [  _ :: Agenda (ShortAnswer a x SYSTEM USER); _ :: QUD qs;
-      _ :: Answered (Q USER a x p)];
+      _ :: Answered (Q USER a x p)]
 produceCR :
    [  a : Type ; x : a ;  p : Prop ; qs : List Question ;
-      _  :: QUD (Cons (Q USER a x p) qs) ; _  :: p ] ?-> CR;
+      _  :: QUD (Cons (Q USER a x p) qs) ; _  :: p ] ?-> CR
 #+END_code
 
 The clarifying side sequence itself (|CR|) is meant to be specified by
@@ -1062,7 +1062,7 @@ specificCR :
   CR  ⊸ QUD (Cons (Q U Time t  (TT n t s d))  qs)   ⊸
       [  _ :: QUD (Cons  (Q S Bus n (WantBus n)) 
                          (Cons (Q U Time t (TT n t s d)) qs));
-         _ :: Agenda (Ask  (Q S Bus n (WantBus n)) S U) ];
+         _ :: Agenda (Ask  (Q S Bus n (WantBus n)) S U) ]
 #+END_code
 As a result of applying it, the state becomes:
 #+BEGIN_code
@@ -1201,10 +1201,10 @@ does not address is providing a detailed utterance processing of the
 user and word-by-word incremental processing. This means we cannot
 deal with form-based parallelism needed for various types of
 acknowledgements, CRs, and self-repair. Nor, as things stand, do we
-engage in grounding interaction, modelled extensively in
+engage in grounding interaction, modelled extensively by
 citet:larsson2002issue.
 
-Table ref:table:ds originates from cite:ginzburg-nlphandbook, who
+Table ref:table:ds originates from citet:ginzburg-nlphandbook, who
 proposed a series of benchmarks for comparing different approaches to
 developing dialogue systems (see section 2 of that paper). For each
 approach the symbol \checkmark indicates that the current approach
