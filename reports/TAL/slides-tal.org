@@ -1,0 +1,71 @@
+#+LANGUAGE: british
+#+OPTIONS: H:2 toc:t *:t ':t ’:t ":t
+#+LATEX_CLASS: beamer
+#+startup: beamer
+#+LATEX_HEADER: \usepackage{mathspec}
+#+LATEX_HEADER:\setallmainfonts[Path=fonts/,BoldFont={PT-Serif_Bold.ttf}, ItalicFont={PT-Serif_Italic.ttf}]{PT-Serif_Regular.ttf}
+#+LATEX_HEADER:\setsansfont[Path=fonts/]{Golos-Text_DemiBold.ttf}
+#+LATEX_HEADER: \setmonofont[Path=fonts/]{PT-Mono_Regular.ttf}
+#+LATEX_HEADER: %include polycode.fmt
+#+LATEX_HEADER: %format -* = "\rightarrowtriangle"
+# alternative:                 -{\kern -1.3ex}*
+#+LATEX_HEADER: %format !-> = "\rightarrow_{!}"
+#+LATEX_HEADER: %format ?-> = "\rightarrow_{?}"
+#+LATEX_HEADER: %format . = "."
+#+LATEX_HEADER: %format \_ = "\_"
+#+LATEX_HEADER: %let operator = "."
+#+LATEX_HEADER: \usepackage{soul}
+#+LATEX_HEADER: \usepackage{url}
+#+LATEX_HEADER: \usepackage{newunicodechar}
+#+LATEX_HEADER: \input{newunicodedefs}
+#+LATEX_HEADER: \usepackage{natbib}
+#+LATEX_HEADER: \usefonttheme{serif}
+#+LATEX_HEADER: \input{beamer-template}
+
+
+#+TITLE: Dialogue management with linear logic: the role of metavariables in questions and clarifications
+#+BEAMER_HEADER: \author[V. Maraev, J.-P. Bernardy and J. Ginzburg]{Vladislav Maraev, Jean-Philippe Bernardy and~Jonathan~Ginzburg}
+#+DATE: CLASP Seminar · Feb 24, 2021
+* Motivation
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+** Dialogue coherence
+Task-oriented dialogue (from citealt:gao2020robust):
+#+begin_example
+U: Should we meet 2pm or 5pm?
+S: Okay.
+U: 2pm or 5pm? Just to confirm.
+S: Okay.
+#+end_example
+** Dialogue manager
+*Dialogue manager (DM)* selects /appropriate/ system actions depending on
+the current state and the external context.
+*** 
+Types:
+- /hand-crafted/ citep:larsson2002issue,jokinen2009constructive
+- /statistical models/ citep:rieser2011reinforcement,young2010hidden
+- /end2end (no DM)/ citep:huang2020challenges,gao2020robust
+** Theoretical models of dialogue
+Only few DM approaches reflect advancements in dialogue theory. 
+
+Phenomena: 
+- non-sentential utterances
+  #+begin_example
+  A: Does John live in Paris?
+  B: from January. 
+  #+end_example
+- clarification requests
+
+
+** Linear logic
+#+BEGIN_code
+processShort :  (a : Type) -> (x : a) -> (p : Prop) -> 
+                ShortAnswer a x ⊸ QUD (Q a x p) ⊸ p
+#+END_code
+* References
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+bibliographystyle:apalike
+bibliography:tal.bib

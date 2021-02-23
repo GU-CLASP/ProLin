@@ -1,0 +1,72 @@
+\newfontface\condensedbold[Path=fonts/]{Golos-Text_DemiBold.ttf}
+\newfontface\condensed[Path=fonts/]{Golos-Text_Regular.ttf}
+
+\setbeamertemplate{itemize items}{•}
+\setbeamertemplate{enumerate items}[default]
+
+\tolerance=1000
+\usenavigationsymbolstemplate{}
+\usetheme{default}
+\usecolortheme{lily}
+\usefonttheme{structurebold}
+
+\definecolor{light-gray}{gray}{0.75}
+\definecolor{redred}{cmyk}{0.15,1,1,0}
+\definecolor{plan9red}{HTML}{b85c57}
+\definecolor{plan9black}{HTML}{424242}
+\definecolor{plan9blue}{HTML}{98ece8}
+\definecolor{plan9brown}{HTML}{E5E5D0}
+\definecolor{9yellow}{HTML}{FFFFE8}
+\definecolor{9yellow-hl}{HTML}{e8eb98}
+
+\definecolor{gublue}{cmyk}{0.98,0.73,0.13,0.02}
+
+\setbeamercolor{frametitle}{bg=white,fg=black}
+\setbeamercolor{author in head/foot}{bg=white,fg=black}
+\setbeamercolor{title in head/foot}{bg=white,fg=black}
+\setbeamercolor{date in head/foot}{bg=white,fg=black}
+\setbeamercolor{separation line}{bg=light-gray, fg=light-gray}
+\setbeamercolor{structure}{fg=black}
+\setbeamercolor{alerted text}{fg=black, bg=9yellow}
+\setbeamerfont{alerted text}{series=\bfseries}
+
+\setbeamercolor{title}{bg=white,fg=black}
+\setbeamercolor{frametitle}{bg=white,fg=redred}
+\setbeamerfont{title}{size=\huge, series=\condensedbold
+}
+\setbeamerfont{frametitle}{size=\huge, series=\condensedbold
+}
+\setbeamerfont{block title}{size=\large, series=\condensedbold
+}
+
+
+\setbeamerfont{author in head/foot}{series=\condensed}
+\setbeamerfont{title in head/foot}{series=\condensed}
+\setbeamerfont{date in head/foot}{series=\condensed}
+
+
+
+% \setbeamertemplate{footline}{
+% \begin{beamercolorbox}{page number in head/foot}
+% \end{beamercolorbox}
+%
+
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.36\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.48\paperwidth,ht=2.25ex,dp=1ex,left]{date in head/foot}%
+    \hspace*{1ex}
+    \usebeamerfont{title in head/foot}\insertshortdate{}
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.16\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    {\condensed
+      \insertframenumber{} / \inserttotalframenumber{}}\hspace*{2ex}
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+\setbeamertemplate{headline}{}
