@@ -1,5 +1,5 @@
 #+LANGUAGE: british
-#+OPTIONS: H:2 toc:t *:t ':t ’:t ":t
+#+OPTIONS: H:2 toc:nil *:t ':t ’:t ":t
 #+LATEX_CLASS: beamer
 #+startup: beamer
 #+LATEX_HEADER: \usepackage{mathspec}
@@ -21,6 +21,7 @@
 #+LATEX_HEADER: \usepackage{natbib}
 #+LATEX_HEADER: \usefonttheme{serif}
 #+LATEX_HEADER: \input{beamer-template}
+#+LATEX_HEADER: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Next...}\tableofcontents[currentsection]\end{frame}}
 
 
 #+TITLE: Dialogue management with linear logic: the role of metavariables in questions and clarifications
@@ -56,13 +57,71 @@ Phenomena:
   B: from January. 
   #+end_example
 - clarification requests
-
-
+  #+begin_example
+  U: When is there a bus from Valand? 
+  S: Which number?
+  U: 55.
+  S: It is in 15 minutes.
+  #+end_example
+** What we did
+1. Proof-search engine based on linear logic and use of metavariables.
+2. A set of rules for dialogue management (in the style of KoS).
+3. Several examples of potential applications, using dialogue-general
+   and domain-specific rules.
+* Background
+** KoS
+- Dialogue Game Board (DGB)
+- Moves
+- QUD
+** ISU
+UPDATE
+** Proof search
+- axioms: |Leave 55 Valand 11.50|
+- rules of inference: |Leave x Valand y -> Arrive x CentralStationen (y+45 min)|
+- metavariables (lowercase letters)
+- proof-search as means to represent possible dialogue moves
 ** Linear logic
+- one feature: hypotheses may be used only once: |IsAt x Valand y -o IsAt x CentralStationen (y+45 min)|
+- unrestricted implication (|->|) still remains, for immutable facts
+
 #+BEGIN_code
-processShort :  (a : Type) -> (x : a) -> (p : Prop) -> 
-                ShortAnswer a x ⊸ QUD (Q a x p) ⊸ p
+Hungry Vlad -> Eat Vlad IceCream -o Happy Vlad
 #+END_code
+
+** Linear logic as DM framework 
+- linear rule corresponds to an action of an agent
+- actions realised as actual interactions constitute an observable dialogue, e.g. 
+  - sending message to the outside world (speech, movement etc.)
+  - perceptory subsystem (events in the outside world lead to updates
+    in IS)
+- multiset of linear hypotheses represent the current
+  information-state of the agent
+
+Note: hypotheses have no hierarchy (unlike in TTR), but can be wrapped
+in constructors, e.g. |Unsure P| or |QUD Q|.
+
+* Questions
+** Question type
+\begin{tabular}{cccc}
+   & |A  : Type|   & \quad \quad\quad \quad \quad    &                    |P  : A  -> Prop|
+\end{tabular}
+
+The intent of the question is to find out about the value |x| of type |A| which makes |P x| true. 
+** Wh-questions
+** Polar questions
+** Polar questions: refined
+** Negative polar questions
+* Clarification requests and follow-up questions
+** Unique values
+'|Eat Mouse x|
+'|Eat Mouse Spaghetti|
+** Clarification requests
+** CRs via extra arguments
+** CRs via named contextual parameters
+** Summary
+* KoS-inspired dialogue management
+* Demo
+* Evaluation and summary
 * References
 :PROPERTIES:
 :UNNUMBERED: t
