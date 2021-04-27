@@ -653,6 +653,8 @@ icmINTPos:  (q : Question) -> (x y : DP) ->
    QUD (Cons q qs)
 #+END_code
 
+# JP: Above: Agenda disappears
+
 #+BEGIN_code
 icmINTNeg:  (q : Question) -> (x y : DP) ->
    (c : Confidence) -> 
@@ -706,7 +708,10 @@ w_2 \dots w_N$, perplexity is computed as follows:
 PP(W) = \sqrt[N]{\prod_{i=1}^{N}\frac{1}{P(w_i \mid w_1\dots w_{i-1})}}
 \end{equation}
 
+# JP where is this formula coming from? Usually perplexity is "inverse probability of an input, as judged by the model."
+
 Given a language model, we can employ a perplexity threshold, below
+# JP: above?
 which the system can act as being surprised, e.g. by saying "Ha-ha, I
 did not expect this!" 
 
@@ -725,7 +730,9 @@ here surprise is taken in isolation, as a measure on its own right.
 ** awkwardness and time-saving
 for example, in case of language tutoring (see Anki flashcard app,
   where users can evaluate their own responses as "hard"---because the
-  card was hard). We can think of a dialogue system scenario where
+  card was hard). 
+# JP: vaccuous statement?
+We can think of a dialogue system scenario where
   user produces laughter after her response.
   | S | What is the Swedish for donkey?         |
   | U | er em ... åsna?.. <laugh>               |
