@@ -54,12 +54,12 @@
 #+TITLE: Laughter, feedback, grounding
 
 #+begin_abstract
-In this paper we argue, how laughter, a ambiguous signal ubiquitous in
-everyday interactions can act as an important feature for
+In this paper we argue how laughter, an ambiguous signal ubiquitous in
+everyday interactions, can act as an important feature for
 task-oriented dialogue systems. We show which components of a dialogue
 system should be affected and modified, and more specifically how
-laughter can be accounted for in dialogue manager as an instances of
-short answer, feedbacks and vocalisations accompanying them.
+laughter can be accounted for in a dialogue manager as instances of
+short answers, feedbacks and vocalisations accompanying them.
 #+end_abstract
 * Introduction
 # flow sentence
