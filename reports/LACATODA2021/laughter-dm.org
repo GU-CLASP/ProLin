@@ -1,0 +1,679 @@
+#+OPTIONS: toc:nil ':t ":t author:nil
+#+LATEX_CLASS: article
+#+LATEX_HEADER: \usepackage[small]{caption}
+#+LATEX_HEADER: \pdfpagewidth=8.5in
+#+LATEX_HEADER: \pdfpageheight=11in
+#+LATEX_HEADER: \usepackage{ijcai21}
+#+LATEX_HEADER: %include polycode.fmt
+#+LATEX_HEADER: %format -* = "\rightarrowtriangle"
+# alternative:                 -{\kern -1.3ex}*
+#+LATEX_HEADER: %format !-> = "\rightarrow_{!}"
+#+LATEX_HEADER: %format ?-> = "\rightarrow_{?}"
+#+LATEX_HEADER: %format . = "."
+#+LATEX_HEADER: %format \_ = "\_"
+#+LATEX_HEADER: %let operator = "."
+#+LATEX_HEADER: \usepackage{soul}
+#+LATEX_HEADER: \usepackage{url}
+#+LATEX_HEADER: \usepackage{times}
+#+LATEX_HEADER: \renewcommand*\ttdefault{txtt}
+# TODO: #+LATEX_HEADER: \usepackage[hidelinks]{hyperref}
+#+LATEX_HEADER: \usepackage{graphicx}
+#+LATEX_HEADER: \urlstyle{same}
+
+#+LATEX_HEADER: \usepackage{newunicodechar}
+#+LATEX_HEADER: \input{newunicodedefs}
+#+LATEX_HEADER: \usepackage{natbib}
+#+LATEX_HEADER: \usepackage[utf8]{inputenc}
+#+LATEX_HEADER: \usepackage{amsmath}
+#+LATEX_HEADER: \usepackage{amsthm}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{xcolor}
+#+LATEX_HEADER: \urlstyle{same}
+#+LATEX_HEADER: \usepackage{makecell}
+#+LATEX_HEADER: \usepackage{multirow}
+#+LATEX_HEADER: \usepackage{rotating}
+#+LATEX_HEADER: \usepackage{tabulary}
+#+LATEX_HEADER: \usepackage{enumitem}
+#+LATEX_HEADER: \newlist{lingex}{enumerate}{3} % easy numbering of examples
+#+LATEX_HEADER: \setlist[lingex,1]{parsep=0pt,itemsep=1pt,label=(\arabic*),resume=lingexcount}
+#+LATEX_HEADER: \newcommand\onelingex[1]{\begin{lingex}\item #1 \end{lingex}}
+
+#+LATEX_HEADER: \usepackage{mathtools}
+#+LATEX_HEADER: \newcommand{\ttr}[1]{\left[\begin{array}{lcl}#1\end{array}\right]}
+#+LATEX_HEADER: \newcommand{\tf}[2]{\mathrm{#1} & : & \mathit{#2}\\}
+#+LATEX_HEADER: \newcommand{\rf}[2]{\mathrm{#1} & = & \mathit{#2}\\}
+#+LATEX_HEADER: \newcommand{\mf}[3]{\mathrm{#1=#2} & : & \mathit{#3}\\}
+#+LATEX_HEADER: \newcommand{\type}[1]{$\mathit{#1}$}
+#+LATEX_HEADER: \newcommand{\jg}[1]{\noindent \textcolor{blue}{\textbf{\emph{[jg:  #1]}}}}
+#+LATEX_HEADER: \usepackage{tikz}
+#+LATEX_HEADER: \usetikzlibrary{shapes,arrows,positioning,fit}
+#+LATEX_HEADER: \tikzstyle{block} = [draw, rectangle, minimum height=3em, minimum width=3em]
+#+LATEX_HEADER: \tikzstyle{virtual} = [coordinate]
+#+LATEX_HEADER: \usepackage{wasysym}
+
+#+TITLE: Laughter, feedback, grounding
+
+#+begin_abstract
+In this paper we argue, how laughter, a ambiguous signal ubiquitous in
+everyday interactions can act as an important feature for
+task-oriented dialogue systems. We show which components of a dialogue
+system should be affected and modified, and more specifically how
+laughter can be accounted for in dialogue manager as an instances of
+short answer, feedbacks and vocalisations accompanying them.
+#+end_abstract
+* Introduction
+# flow sentence
+- laughter is frequent
+- important for naturalness of conversations
+- related to different emotions, so it would be really appropriate for chitchat systems
+- however, it also has a functional role, so it can be useful in task-oriented systems 
+
+The example ref:ex:hear-poorly below is an excerpt from the
+role-played dialogue collected by citet:howes-etal-2019-good for their
+directory enquiries corpus. Dialogue participants were playing the
+roles of a caller and a operator, respectively asking for the phone
+numbers which are associated with a certain name of the business. Half
+of the dialogues happened in a noisy environment, with many
+mishearings and laughs induced. This paper addresses the following
+research question: How can these laughs be accounted for a dialogue
+system, which implements a similar scenario?
+
+#+BEGIN_lingex
+\item\label{ex:hear-poorly} (22_KL_loc2)\\
+#+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align lr>{\em}J
+| 56 | Caller   | er the next one is er tanfield chambers     |
+| 57 | Operator | santias?                                    |
+| 58 | Caller   | tanfield like t- T A N                      |
+| 59 | Operator | sorry i don't hear you again please?        |
+| 60 | Caller   | er T A N                                    |
+| 61 | Operator | C?                                          |
+| 62 | Caller   | tanfield                                    |
+| 63 | Operator | A                                           |
+| 64 | Operator | N                                           |
+| 65 | Caller   | yeah                                        |
+| 66 | Caller   | and then field                              |
+| 67 | Operator | and then seal?                              |
+| 68 | Caller   | chambers                                    |
+| 69 | Operator | <laugh> sorry i hear you quite poorly       |
+| 70 | Operator | let's try again                             |
+| 71 | Operator | C?                                          |
+| 72 | Caller   | yeah sorry the traffic is crazy around here |
+| 73 | Operator | I know <laugh> don't worry                  |
+| 74 | Operator | so C                                        |
+| 75 | Operator | A                                           |
+| 76 | Caller   | er                                          |
+| 77 | Caller   | tanfield T like thomas                      |
+#+END_lingex
+Let’s look at the first laughter (line 69). We can see that the
+operator’s question "and then seal?" (l.67) was not addressed and this
+piece of information was not grounded.  "C?" (l.71) refers to restart
+from the beginning (it was "Tanfield", but she has heard "C"). The
+negative feedback provided by the operator entails extra effort from
+the caller---she needs to restart her request from the
+beginning---this obligation is somewhat intrusive and may require
+extra smoothing citep:mazzocconi2019phd,raclaw2017laughter.  For
+current purposes we will treat this laughter as accompanying
+negative feedback.
+
+For a dialogue system designer this poses an empirical question,
+namely, would it be useful to soften negative feedback with laughter?
+For instance, feedback associated with a local failure (e.g. speech
+recognition failure), such as "Sorry, I didn’t understand" or "Sorry I
+didn’t hear you". It may be useful also where negative feedback is the
+result of an external query, for example when something is not found
+in the database, and can accompany asking the user to start over, as
+in example ref:ex:hear-poorly.
+
+The reaction to the apology also can be accompanied by laughter, as
+with the second laugh in ref:ex:hear-poorly (l.73). We do not think
+that these days users often apologise to a dialogue system, it is
+usually the dialogue system which is at fault, but this might be
+different for special cases of systems that aim at more naturalistic
+behaviour.
+
+In this paper we look at laughter not exclusively from a perspective
+of a taxonomy that can be used as a theoretical framework, but from
+the utilitarian perspective, looking at which kinds of laughs can be
+relevant for dialogue systems. Next we will look at laughter from the
+point of providing feedback, either positive or negative.
+
+# how are we going to do this
+* Background 
+** Dialogue gameboards
+In KoS (and other dynamic approaches to meaning), language is compared
+to a game, containing players (interlocutors), goals and rules. KoS
+represents language interaction by a dynamically changing context. The
+meaning of an utterance is then how it changes the context. Compared
+to most approaches, which represent a single context for both dialogue
+participants, KoS keeps separate representations for each participant,
+using the /Dialogue Game Board/ (DGB). Thus, the information states of
+the participants comprise a private part and the dialogue gameboard
+that represents information arising from publicised interactions. The
+DGB tracks, at the very least, shared assumptions/visual field, moves
+(= utterances, form and content), and questions under discussion.
+
+** Grounding
+
+- adjacency, dgb and qud
+- grounding and the ladder in IBIS
+- laughter
+  - standalone laughter (%) -- also % of NV DAs in SWDA
+  - laughable
+** Dialogue management 
+A key aspect of dialogue systems is the coherence of the system’s
+responses.  In this respect, a key component of a dialogue system is
+the dialogue manager, which selects appropriate system actions
+depending on the current state and the external context.
+
+Two families of approaches to dialogue management can be considered:
+hand-crafted dialogue strategies
+cite:allen1995trains,larsson2002issue,jokinen2009constructive and
+statistical modelling of dialogue
+cite:rieser2011reinforcement,young2010hidden,williams2017hybrid. Frameworks
+for hand-crafted strategies range from finite-state machines and
+form-filling to more complex dialogue planning and logical inference
+systems, such as Information State Update (ISU) cite:larsson2002issue
+that we employ here. Although there has been a lot of development in
+dialogue systems in recent years, only a few approaches reflect
+advancements in /dialogue theory/. Our aim is to closely integrate
+dialogue systems with work in theoretical semantics and pragmatics of
+dialogue.
+
+In Section ref:sec:ldm we will provide a brief description of dialogue
+management architecture that comes with certain ways to support
+grounding and adjacency and therefore allows to be further extended to
+support different kinds of laughter.
+* Types of laughter
+
+** Laughter as a component of grounding
+- TODO: Background on action levels. 
+
+According to (Clark, Allwood, Larsson)[fn::TODO ref] there are four action levels
+that are involved in dialogue.  With respect to laughter, here is what
+can happen at each level of action: contact, perception, understanding
+and reaction.
+
+*** Contact level
+Incongruities, which are relevant to establishing a stable
+  communication communication channel can lead to laughter which would
+  indicate such troubles. One such example would be delays in
+  communication (e.g., over the unreliable network), which lead to a
+  person still speaking at the moment when the communication is only
+  supposed to be established.
+
+*** Perception level
+Lack of perception basically indicates things that haven’t been
+  heard. 
+  (similar cases to ref:ex:hear-poorly). Also, it seems that
+  interruptions or events related to that can be quite surprising and
+  laughter can be a natural reaction to a surprise. But as a reaction
+  to a pure lack of perception standalone laughter does not seem to be
+  a sufficient signal.
+
+*** Understanding level
+The lack of pragmatic understanding relates to the kinds of
+incongruities that are caused by the violation of the principle of
+conversational relevance. This is very useful for dialogue systems,
+because they are prone to errors in this realm. It is often the case
+that incorrect NLU or ASR can lead to prioritising irrelevant results
+(for example, in cases of out-of-scope user queries), which can cause
+user’s confusion and, therefore, laughter. This type of laughter can be treated as negative feedback.
+
+This accounts for the examples ref:ex:money and ref:ex:x-or-y above,
+  Larsson (sec. 3.4.2)[fn::TODO proper ref] subdivides this level into
+  three categories[fn::TODO check] for the negative feedback
+  (context-dependent, context-independent and pragmatic). The examples
+  ref:ex:money and ref:ex:x-or-y above would relate to the pragmatic
+  level.
+
+#+BEGIN_lingex
+\item\label{ex:money} from the dialogue between a virtual assistant (Diana)
+and a person with ASD (Mark):
+
+#+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align l >{\em}J
+| Mark                   | Diana, what is money?                |
+| Diana                  | I am Diana, a  virtual interlocutor. |
+| Audience (except Mark) | (laugh)                              |
+
+\item\label{ex:x-or-y} constructed example
+
+#+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align l >{\em}J
+| Brian | Would you like tea or coffee? |
+| Katie | yes                           |
+| Brian | (laughs)                      |
+#+END_lingex
+
+**** Lack of commitment to understanding
+This can be useful for saying things that dialogue system is less
+committed to. For example, in case of the feedback regarding the user
+input, when the system repeats the input after the user, it can be
+useful to include laughter in verbatim repeats, which would mean: yes,
+I heard (understood) this, but I might be wrong. This is useful for
+low confidence score for system’s actions taken based on low
+confidence results.
+
+*** Reaction (consider for acceptance) level
+- Reaction :: (consider for acceptance) laughter as disagreement or,
+  in other words, rejection, like ref:ex:neuer.
+#+BEGIN_lingex
+\item\label{ex:neuer} From citep:ginzburg2020laughter, context: Bayern
+München goalkeeper Manuel Neuer faces the press after his team’s
+(Dreierkette) defense has proved highly problematic in the game just
+played (3-2 against Paderborn).
+
+#+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align l >{\em}J
+| Journalist: (smile) | Dreierkette auch ‘ne Option?               |
+|                     | (Is the three-in-the-back also an option?) |
+| Manuel Neuer:       | fuh fuh fuh                                |
+|                     | (brief laugh)                              |
+#+END_lingex
+
+
+- [ ] ideally, the ladder should be moved up, to account for both
+  positive and negative feedback
+
+**** Laughter as negative feedback and rejection label:sec:negative-and-rejection
+Let us start with the following examples of negative feedback.
+
+** Laughter and apology
+- apology DA is very frequent in relation to laughter. 
+- in IBIS it is not defined as a separate DA but often is used as the
+  part of ICM moves, i.e. "Sorry, I didn't understand that".
+[[./orbit-apology.pdf]]
+
+* Dialogue manager architecture 
+label:sec:ldm
+
+We believe that it is crucial to use formal tools which are most
+appropriate for the task: one should be able to express the rules of
+various genres of dialogue in a concise way, free, to any possible
+extent, of irrelevant technical details.  In the view of
+citet:dixon2009plans this is best done by representing the
+information-state of the agents as updatable sets of
+propositions. Subsets of propositions in the information state can be
+treated independently, and, therefore, a suitable and flexible way to
+represent updates is as propositions in linear logic.
+
+By using well-known techniques which correspond well with the
+intuition of information-state based dialogue management, we are able
+to provide a fully working prototype of the components of our
+framework:
+
+1. a proof-search engine based on linear logic, modified to support
+   inputs from external systems (representing inputs and outputs of
+   the agent)
+
+2. a set of rules which function as a core framework for dialogue
+   management (in the style of KoS cite:ginzburg2012interactive)
+
+3. several examples which use the above to construct potential
+   applications of the system.
+** Linear rules and proof search
+Typically, and in particular in the archetypal logic programming
+language prolog cite:bratko2001prolog, axioms and rules are expressed
+within the general framework of first order logic. However, several
+authors cite:dixon2009plans,martens2015programming have proposed to
+use linear logic cite:girard1995linear instead. For our purpose, the
+crucial feature of linear logic is that hypotheses may be used /only
+once/. 
+
+# For example, one could have a rule |IsAt x Gotaplatsen y ⊸ IsAt
+# x CentralStationen (y+0.75)|. Consequently, after firing the above
+# rule, the premiss |(Is x Gotaplatsen y)| becomes unavailable for any
+# other rule.  Thereby the linear arrow |⊸| can be used to conveniently
+# model that a bus cannot be at two places simultaneously.
+
+In general, the linear arrow corresponds to /destructive state
+updates/. Thus, the hypotheses available for proof search correspond
+to the /state/ of the system. In our application they will correspond
+to the /information state/ of the dialogue participant.
+
+This way, firing a linear rule corresponds to triggering an /action/ of an
+agent, and a complete proof corresponds to a /scenario/, i.e. a sequence
+of actions, possibly involving action from several agents.  However,
+the information state (typically in the literature and in this paper
+as well), corresponds to the state of a /single/ agent. Thus, a scenario
+is conceived as a sequence of actions and updates of the information
+state of a single agent $a$, even though such actions can be
+attributed to any other dialogue participant $b$. (That is, they are
+$a$'s representation of actions of $b$.)  Scenarios can be realised as
+a sequence of actual actions and updates. That is, an action can
+result in sending a message to the outside world (in the form of
+speech, movement, etc.). Conversely, events happening in the outside
+world can result in updates of the information state (through a model
+of the perceptory subsystem).
+
+In our implementation, we treat the information state as a multiset of
+/linear hypotheses/ that can be queried. Because they are linear, these
+hypotheses can also be removed from the state.  In particular, we have
+a fixed set of rules (they remain available even after being
+used). Each such rule manipulates a part of the information state
+(captured by its premisses) and leaves everything else in the state
+alone.
+
+# It is important to note that we will not forego the unrestricted
+# (i.e. non-linear) implication (|->|). Rather, both implications will
+# co-exist in our implementation, thus we can represent simultaneously
+# transient facts, or states, (introduced by the linear arrow) and
+# immutable facts (introduced by the unrestricted arrow).
+
+
+Our DM models the information-state of only one
+participant. Regardless, this participant can record its own beliefs
+about the state of other participants.In general, the core of DM is
+comprised of a set of linear-logic rules which depend on the domain of
+application. However, many rules will be domain-independent (such as
+generic processing of answers). We show these generic rules here, and
+the demo will illustrate them within an example application.
+** Questions and answers
+In this subsection we show how a metavariable can represent what is
+being asked, as the unknown in a proposition. A first use for
+metavariables is to represent the requested answer of a question.
+
+In this paper, we represent a question by a predicate |P| over a
+type |A|. That is, using a typed intuitionistic logic:
+
+\begin{tabular}{cccc}
+   & |A  : Type|   & \quad \quad\quad \quad \quad    &                    |P  : A  -> Prop|
+\end{tabular}
+
+The intent of the question is to find out about a value |x| of
+type |A| which makes |P x| true, or at least entertained by the other
+participant. We provide several examples in Table ref:tbl:qa-ex.  It is
+worth stressing that the type |A| can be large (for example asking for
+any location) or as small as a boolean (if one requires a simple
+yes/no answer).  We note in passing that, typically, polar questions
+can be answered not just by a boolean but by qualifing the predicate
+in question, for example "maybe", "on Tuesdays", etc. (Table
+ref:tbl:qa-ex, last two rows).  In this instance |A = Prop -> Prop|.
+
+\begin{table*}[htbp]
+\begin{tabular}{lllll}
+{\bf question} & {\bf A} & {\bf P} & \makecell[c]{{\bf reply}} & {\bf x} \\
+\hline\rule{0pt}{5ex}
+\makecell[l]{Where does\\ John live?}    & |Location    | & |\x.Live John x                          | & in London & |ShortAnswer Location London| \\
+\rule{0pt}{5ex}
+\makecell[l]{Does John\\ live in Paris?} & |Bool        | & \makecell[l]{|\x.if x then (Live John Paris)| \\ |else Not (Live John Paris)|} & yes & |ShortAnswer Bool True| \\
+\rule{0pt}{5ex}
+What time is it?         & |Time        | & |\x.IsTime x                             | & It is 5am. & |Assert (IsTime 5.00)| \\\rule{0pt}{5ex}
+\makecell[l]{Does John\\ live in Paris?} & |Prop->Prop| & |\m. m (Live John Paris)                 | & yes & \makecell[l]{|ShortAnswer  (Prop -> Prop)|\\|(\x. x)|} \\
+\rule{0pt}{5ex}
+\makecell[l]{Does John\\ live in Paris?} & |Prop->Prop| & |\m. m (Live John Paris)                 | & from January & \makecell[l]{|ShortAnswer (Prop -> Prop)|\\|(\x. FromJanuary(x))|} \\
+\end{tabular}
+\caption{\label{tbl:qa-ex}
+Examples of questions and the possible corresponding answers.
+The type |A| is the type of possible short answers.
+The proposition |P x| is the interpretation of a short answer |x|.
+The |x| column shows the formal representation of a possible answer, either~in~short~form or assertion form.
+}
+\end{table*}
+** Dialogue management
+label:sec:dm-rules
+In this section we integrate our question/answering framework within
+more complete dialog manager (DM).  We stress that this DM models the
+information-state of only one participant. Regardless, this
+participant can record its own beliefs about the state of other
+participants.  In general, the core of DM is comprised of a set of
+linear-logic rules which depend on the domain of application. However,
+many rules will be domain-independent (such as generic processing of
+answers). 
+
+To be useful, a DM must interact with the outside world, and this
+interaction cannot be represented using logical rules, which can only
+manipulate data which is already integrated in the information state.
+Here, we assume that the information that comes from sources which are
+external to the dialogue manager is expressed in terms of semantic
+interpretations of moves, and contains information about the speaker
+and the addressee in a structured way. We provide 5 basic types of
+moves, specified with a speaker and an addressee, as an illustration:
+#+BEGIN_code
+Greet         spkr  addr
+CounterGreet  spkr  addr
+Ask           question  spkr  addr
+ShortAnswer   vtype v spkr  addr
+Assert        p  spkr  addr
+#+END_code
+
+These moves can either be received as input or produced as outputs. If
+they are inputs, they come from the NLU component, and they enter the
+context with |Heard : Move -> Prop| predicate. For example, if one
+hears a greeting, the proposition |Heard (Greet S A)| is added to the
+information state/context, without any rule being fired --- this is
+what we mean by an external source.
+
+If they are outputs, to be further used by the NLG component, some
+rule will place them in |Agenda|. For example, to issue a
+countergreeting, a rule will place the proposition |(CounterGreet A
+S)| in the |Cons|-list |Agenda| part of the information state.
+
+Thereby each move is accompanied by the information
+about who has uttered it, and towards whom was it addressed. All the
+moves are recored in the |Moves| part of the participant’s dialogue
+gameboard, as a |Cons|-list (stack).
+
+Additionally, we record any move |m| which one has yet to actively
+react to, in an hypothesis of the form |Pending m|. We cannot use the |Moves|
+part of the state for this purpose, because it is meant to be static
+(not to be consumed). |Pending| thus allows one to make the difference
+between a move which is fully processed and a pending one.
+
+Here we will provide a few examples of the rules which are implemented
+in our system, and we refer our reader to citep:anon for more detailed
+description.
+
+*** Examples of the rules
+We can show how basic move adjacency can be defined in the example of
+countergreeting preconditioned by a greeting from the other party:
+#+BEGIN_code
+counterGreeting :  (x y : DP) -> HasTurn x -* 
+                   Agenda as ⊸
+                   Pending (Greet y x)  ⊸
+                   Agenda (Cons (CounterGreet x y) as)
+#+END_code
+
+Another important rule accounts for pushing the content of the last
+move, in the case if it is an |Ask| move, on top of the questions
+under discussion (|QUD|) stack.
+
+#+BEGIN_code
+pushQUD :  (q : Question) -> (qs : List Question) -> 
+           (x y : DP) -> Pending (Ask q x y) ⊸ 
+           QUD qs ⊸ QUD (Cons q qs)
+#+END_code
+
+If the user asserts something that relates to the top |QUD|, then
+the |QUD| can be resolved and therefore removed from the stack. The
+corresponding proposition |p| is saved as a |UserFact|.[fn::For the
+current purposes we only remove the top QUD, but in a more general
+case we can implement the policy that can potentially resolve any QUD
+from the stack.] 
+#+BEGIN_code
+processAssert : (a : Type) -> (x : a) -> (p : Prop) -> (qs : List Question) ->
+  (dp dp1 : DP) ->  Pending (Assert p dp1 dp)          ⊸
+  QUD (Cons (Q dp a x p) qs)  ⊸ [  _ :: UserFact p; _ :: QUD qs]
+#+END_code
+
+Short answers are processed in a very similar way to assertions:
+#+BEGIN_code
+processShort : (a : Type) -> (x : a) ->  (p : Prop) -> (qs : List Question) -> 
+  (dp dp1 : DP) ->  Pending (ShortAnswer a x dp1 dp)   ⊸
+  QUD (Cons (Q dp a x p) qs)  ⊸ [  _ :: UserFact p; _ :: QUD qs]
+#+END_code
+
+- TODO: produceAnswer
+- TODO: CR?
+** Extending dialogue manager with grounding strategies
+- this is a sketch! 
+- TODO: why grounding?
+
+Dialogue systems deal with confidence scores from ASR and NLU
+components, which brings the uncertainty in user queries that has to
+be supported by dialogue manager. For simplicity we will represent the
+confidence score $t$ in relation to two confidence threshold levels
+($T_1 < T_2$), whereas |RED| would correspond to $t < T_1$, |YELLOW|
+to $T_1 < t < T_2$, and |GREEN| to $T_2 < t$. Colour-coded confidence
+scores would accompany user moves, e.g. the |Ask| move such as "What time is it?" can be represented as follows:
+#+BEGIN_code
+Ask (Q U Time t0 (IsTime t0 )) U S YELLOW
+#+END_code
+
+
+Here we exemplify the possibility of extending the system with
+Interactive Communication Management (ICM) moves and grounding
+strategies, replicating citet:larsson2002issue account of grounding
+and feedback. ICM moves are used for coordination of the common ground
+in dialogue, which express, for instance, explicit signals for
+integrating the incoming information and updating the common ground
+(dialogue gameboard in our implementation). The basic type for the ICM
+move is the following:
+
+#+begin_code
+ICM level polarity ?content
+#+end_code
+where |level| corresponds to the level of grounding (contact,
+perception, understanding, acceptance), |polarity| is either positive
+or negative, and optional value |content| corresponds to a component
+of the common ground in question. For instance, the move |(ICM Per
+Neg)| would correspond to the utterance "I didn't understand what you
+said" or "Pardon", and the move |(ICM Und Pos q)| can be realised in
+the utterance "You are asking me what time is it" if the QUD |q|
+corresponds to the quesion from |Ask| move exemplified above.
+
+
+Next we modify our basic |pushQUD| rule defined in Section
+ref:sec:dm-rules to suppost diffenent system behaviours depending on
+the confidence score.
+
+#+BEGIN_code
+pushQUDGreen :  (q : Question) -> 
+   (qs : List Question) -> (x y : DP) -> 
+   Pending (Ask q x y GREEN) ⊸ Agenda as ⊸
+   QUD qs ⊸ 
+      [  _ :: QUD (Cons q qs);
+         _ :: Agenda (Cons  (ICM Und Pos q) as);]
+#+END_code
+
+#+BEGIN_code
+pushQUDYellow :  (q : Question) -> 
+   (qs : List Question) -> (x y : DP) -> 
+   Pending (Ask q x y YELLOW) ⊸ Agenda as ⊸
+   QUD qs ⊸ 
+      [  _ :: QUD (Cons q qs);
+         _ :: Agenda (Cons  (ICM Und Pos q)
+         (Cons (ICM Acc Pos) as));]
+#+END_code
+
+- [ ] TODO: explain what's going on here!  
+
+For |RED| confidence score system issues interrogative ICM query, such as "I understood you're asking me about the time, it that correct?". In this case a special type of |QUD| is introduced, namely a question about whether question |q| is correctly understood. 
+
+#+BEGIN_code
+icmINTConfirm: (q : Question) -> (x y : DP) -> 
+   Pending (Ask q x y RED) ⊸ Agenda as ⊸
+   QUD qs ⊸ 
+   [  _ :: QUD (Cons (UND q) qs);
+      _ :: Agenda (Cons  (ICM Und Int q) as)]
+#+END_code
+
+Such type of |QUD| requires a special type of processing to integrate
+answers, such as "yes" or "no" (here we treat them as booleans). In
+this sketch implementation we do not care about confidence scores for
+these answers, leaving it underspecified, but further, more specific
+dialogue rules are possible. In case of positive answer to such
+query, |UND q| QUD is replaced by |q| and can be further handled
+by |produceAnswer| rule. In the negative case, |UND q| is removed
+from |QUD| and ICM move about understanding of that the question was
+not |q| is issued.
+
+#+BEGIN_code
+icmINTPos:  (q : Question) -> (x y : DP) ->
+   (c : Confidence) ->
+   Pending (ShortAnswer Bool True x y c) ⊸ 
+   Agenda as ⊸
+   QUD (Cons (UND q) qs) ⊸ 
+   QUD (Cons q qs)
+#+END_code
+
+#+BEGIN_code
+icmINTNeg:  (q : Question) -> (x y : DP) ->
+   (c : Confidence) -> 
+   Pending (ShortAnswer Bool False x y c) ⊸ 
+   Agenda as ⊸
+   QUD (Cons (UND q) qs) ⊸ 
+   [ _ :: QUD qs; 
+     _ :: Agenda (Cons (ICM Und Pos (Not q)))]
+#+END_code
+
+It is a natural language generation (NLG) issue how ICM moves are
+converted in natural language utterances depending on |q|. For
+instance, |Not (Q U Time t0 (IsTime t0))| can become a (rather
+tedious) utterance "You are not asking me what time is it", whereas
+more sophisticated queries with more arguments can be resolved in
+shorter utterance depending on the arguments that are made
+ground. E.g. |Not (Q U (Prop -> Prop) m0 (m0 Live S Paris))| can
+become a simple "Okay, not Paris then".
+
+
+# names instead of metavariables?
+
+* Proposal for support of certain type of laughter
+** Laughter as rejection signal
+1. simple example of system asking whether it has understood something
+   awkwardly and then laughter is treated just as |ShortAnswer Bool
+   False|.
+2. Neuer example - more general treatment. 
+** Laughter which accompanies feedback
+1. Easy as part of NLG of |(ICM Und Pos (Not q))|: "Okay, not Paris
+   then, hehe".
+2. Apology. 
+* Further issues
+- laughter and dialogue acts (predictive feature)
+- laughter prediction in dialogue
+- laughter placement in dialogue
+- humour
+- topoi
+
+** surprise
+Intuitively, laughter is related to events that are unexpected,
+usually[fn::TODO ref] in a pleasant way. One of the ways to establish
+some degree of natural behaviour for a dialogue system would be to
+react sincerely to these kinds of events. A possible measure for a
+system’s surprisal is how it is confused with the user input. A
+natural measure for this from information theory is /perplexity/, a
+probability-based metric. For $N$ words in a evaluation set $W = w_1
+w_2 \dots w_N$, perplexity is computed as follows:
+
+\begin{equation}
+PP(W) = \sqrt[N]{\prod_{i=1}^{N}\frac{1}{P(w_i \mid w_1\dots w_{i-1})}}
+\end{equation}
+
+Given a language model, we can employ a perplexity threshold, below
+which the system can act as being surprised, e.g. by saying "Ha-ha, I
+did not expect this!" 
+
+Similarly, perplexity can be inferred from tracking a dialogue state
+[fn::TODO ref DST papers], which is a common task in statistical
+approaches to dialogue system. Or, following [fn::TODO ref
+Noble&Maraev], the RNN trained on a large dialogue corpus as a
+representation of dialogue context can be used to calculate
+perplexity.
+
+Laughter as a reaction of surprise can relate to the levels of
+feedback, for example, user surprised by pragmatically incoherent
+system’s reply can laugh (Section ref:sec:negative-and-rejection). But
+here surprise is taken in isolation, as a measure on its own right.
+
+** awkwardness and time-saving
+for example, in case of language tutoring (see Anki flashcard app,
+  where users can evaluate their own responses as "hard"---because the
+  card was hard). We can think of a dialogue system scenario where
+  user produces laughter after her response.
+  | S | What is the Swedish for donkey?         |
+  | U | er em ... åsna?.. <laugh>               |
+  | S | Yes, that was tough, but it is correct! |
+  |   | (system marks the card as "hard")       |
+
+
+bibliography:lacatoda.bib
+bibliographystyle:apalike
+
