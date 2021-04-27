@@ -281,6 +281,55 @@ Let us start with the following examples of negative feedback.
   part of ICM moves, i.e. "Sorry, I didn't understand that".
 [[./orbit-apology.pdf]]
 
+It is often the case that the dialogue act of apologising is
+accompanied by laughter in the same turn or one of the adjacent turns
+as we have discovered in our study of dialogue acts in Switchboard
+corpus[fn::TODO ref to my work with Bill when it is accepted :D].
+
+#+BEGIN_lingex
+\item\label{ex:apology} (16_HG_loc2)\\
+#+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align lr >{\em}J
+| 162 | Operator | still not finding it                                            |
+| 163 | Operator | having problems with this one                                   |
+| 164 | Caller   | okay                                                            |
+| 165 | Caller   | er maybe i can find                                             |
+| 166 | Caller   | er the place myself but thank you very much for the information |
+| 167 | Operator | no problem _sorry for not finding the the last one_             |
+| 168 | Caller   | <laugh>                                                         |
+| 169 | Caller   | no worries                                                      |
+| 170 | Caller   | thank you                                                       |
+#+END_lingex
+
+In ref:ex:apology above caller reacts with a compassionate[fn::TODO
+probably, elaborate on laughter and compassion?] laughter to the
+apology given by the operator. This similar instances of laughter can
+be seen in ref:ex:hear-poorly: the second laugh shows that the same
+reaction, as in ref:ex:apology can be expected from the operator.
+
+We also observe that laughter can clearly accompany the asking for a
+favour by the same speaker. In example ref:ex:from-beginning the
+operator asks the caller if they can start from the beginning, which
+can be treated as an intrusion of some sort, therefore asking for a
+favour and the apology is accompanied by laughter.
+
+#+BEGIN_lingex
+\item\label{ex:from-beginning} (24_LK_loc2)\\
+#+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align lr >{\em}J
+| 59 | Caller   | B as in bicycle                                                                           |
+| 60 | Operator | yeah                                                                                      |
+| 61 | Caller   | then you have R                                                                           |
+| 62 | Caller   | I                                                                                         |
+| 63 | Operator | R                                                                                         |
+| 64 | Caller   | G                                                                                         |
+| 65 | Operator | I                                                                                         |
+| 66 | Operator | okay sorry no- now i lost the track okay _can we it start from the beginning_ <laugh> sorry |
+| 67 | Caller   | okay                                                                                      |
+| 68 | Caller   | yes we can                                                                                |
+| 69 | Operator | maybe you can just say the uh say words                                                   |
+| 70 | Caller   | yeah no no problem                                                                        |
+#+END_lingex
+
+
 * Dialogue manager architecture 
 label:sec:ldm
 
@@ -461,14 +510,13 @@ Here we will provide a few examples of the rules which are implemented
 in our system, and we refer our reader to citep:anon for more detailed
 description.
 
-*** Examples of the rules
+*** Examples
 We can show how basic move adjacency can be defined in the example of
 countergreeting preconditioned by a greeting from the other party:
 #+BEGIN_code
 counterGreeting :  (x y : DP) -> HasTurn x -* 
-                   Agenda as ⊸
-                   Pending (Greet y x)  ⊸
-                   Agenda (Cons (CounterGreet x y) as)
+  Agenda as ⊸ Pending (Greet y x)  ⊸
+  Agenda (Cons (CounterGreet x y) as)
 #+END_code
 
 Another important rule accounts for pushing the content of the last
@@ -488,16 +536,20 @@ current purposes we only remove the top QUD, but in a more general
 case we can implement the policy that can potentially resolve any QUD
 from the stack.] 
 #+BEGIN_code
-processAssert : (a : Type) -> (x : a) -> (p : Prop) -> (qs : List Question) ->
-  (dp dp1 : DP) ->  Pending (Assert p dp1 dp)          ⊸
-  QUD (Cons (Q dp a x p) qs)  ⊸ [  _ :: UserFact p; _ :: QUD qs]
+processAssert : (a : Type) -> (x : a) -> (p : Prop) -> 
+  (qs : List Question) ->
+  (dp dp1 : DP) ->  Pending (Assert p dp1 dp)  ⊸
+  QUD (Cons (Q dp a x p) qs)  ⊸ 
+  [  _ :: UserFact p; _ :: QUD qs]
 #+END_code
 
 Short answers are processed in a very similar way to assertions:
 #+BEGIN_code
-processShort : (a : Type) -> (x : a) ->  (p : Prop) -> (qs : List Question) -> 
-  (dp dp1 : DP) ->  Pending (ShortAnswer a x dp1 dp)   ⊸
-  QUD (Cons (Q dp a x p) qs)  ⊸ [  _ :: UserFact p; _ :: QUD qs]
+processShort : (a : Type) -> (x : a) ->  (p : Prop) -> 
+  (qs : List Question) -> (dp dp1 : DP) ->  
+  Pending (ShortAnswer a x dp1 dp)   ⊸
+  QUD (Cons (Q dp a x p) qs)  ⊸ 
+  [  _ :: UserFact p; _ :: QUD qs]
 #+END_code
 
 - TODO: produceAnswer
