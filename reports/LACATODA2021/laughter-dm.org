@@ -555,6 +555,7 @@ processShort : (a : Type) -> (x : a) ->  (p : Prop) ->
 - TODO: produceAnswer
 - TODO: CR?
 ** Extending dialogue manager with grounding strategies
+label:sec:dm-ground
 - this is a sketch! 
 - TODO: why grounding?
 
