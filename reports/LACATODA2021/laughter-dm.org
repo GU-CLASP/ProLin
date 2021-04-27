@@ -560,10 +560,10 @@ label:sec:dm-ground
 - TODO: why grounding?
 
 Dialogue systems deal with confidence scores from ASR and NLU
-components, which brings the uncertainty in user queries that has to
+components, which reflects the uncertainty in user queries that has to
 be supported by dialogue manager. For simplicity we will represent the
-confidence score $t$ in relation to two confidence threshold levels
-($T_1 < T_2$), whereas |RED| would correspond to $t < T_1$, |YELLOW|
+confidence score $t$ in on the basis of two confidence threshold levels
+($T_1 < T_2$), where |RED| would correspond to $t < T_1$, |YELLOW|
 to $T_1 < t < T_2$, and |GREEN| to $T_2 < t$. Colour-coded confidence
 scores would accompany user moves, e.g. the |Ask| move such as "What time is it?" can be represented as follows:
 #+BEGIN_code
@@ -575,7 +575,7 @@ Here we exemplify the possibility of extending the system with
 Interactive Communication Management (ICM) moves and grounding
 strategies, replicating citet:larsson2002issue account of grounding
 and feedback. ICM moves are used for coordination of the common ground
-in dialogue, which express, for instance, explicit signals for
+in dialogue, which expresses, for instance, explicit signals for
 integrating the incoming information and updating the common ground
 (dialogue gameboard in our implementation). The basic type for the ICM
 move is the following:
@@ -585,8 +585,10 @@ ICM level polarity ?content
 #+end_code
 where |level| corresponds to the level of grounding (contact,
 perception, understanding, acceptance), |polarity| is either positive
-or negative, and optional value |content| corresponds to a component
-of the common ground in question. For instance, the move |(ICM Per
+or negative, and the optional value |content| corresponds to a component
+of the common ground in question. 
+# JP: In reality our framework does not support optional values. There needs to be a special value to represent absence of content.
+For instance, the move |(ICM Per
 Neg)| would correspond to the utterance "I didn't understand what you
 said" or "Pardon", and the move |(ICM Und Pos q)| can be realised in
 the utterance "You are asking me what time is it" if the QUD |q|
@@ -595,6 +597,7 @@ corresponds to the quesion from |Ask| move exemplified above.
 
 Next we modify our basic |pushQUD| rule defined in Section
 ref:sec:dm-rules to suppost diffenent system behaviours depending on
+# JP: typos make the sentence inscrutable.
 the confidence score.
 
 #+BEGIN_code
@@ -618,7 +621,10 @@ pushQUDYellow :  (q : Question) ->
 
 - [ ] TODO: explain what's going on here!  
 
-For |RED| confidence score system issues interrogative ICM query, such as "I understood you're asking me about the time, it that correct?". In this case a special type of |QUD| is introduced, namely a question about whether question |q| is correctly understood. 
+For |RED| confidence score, the system issues an interrogative ICM query, such
+as "I understood you're asking me about the time, it that
+correct?". In this case a special type of |QUD| is introduced, namely
+a question about whether question |q| is correctly understood.
 
 #+BEGIN_code
 icmINTConfirm: (q : Question) -> (x y : DP) -> 
@@ -628,14 +634,14 @@ icmINTConfirm: (q : Question) -> (x y : DP) ->
       _ :: Agenda (Cons  (ICM Und Int q) as)]
 #+END_code
 
-Such type of |QUD| requires a special type of processing to integrate
+Such a type of |QUD| requires a special type of processing to integrate
 answers, such as "yes" or "no" (here we treat them as booleans). In
 this sketch implementation we do not care about confidence scores for
 these answers, leaving it underspecified, but further, more specific
-dialogue rules are possible. In case of positive answer to such
-query, |UND q| QUD is replaced by |q| and can be further handled
-by |produceAnswer| rule. In the negative case, |UND q| is removed
-from |QUD| and ICM move about understanding of that the question was
+dialogue rules are possible. In the case of a positive answer to such
+a query, the |UND q| QUD is replaced by |q| and can be further handled
+by the |produceAnswer| rule. In the negative case, |UND q| is removed
+from |QUD| and the ICM move about understanding of that the question was
 not |q| is issued.
 
 #+BEGIN_code
