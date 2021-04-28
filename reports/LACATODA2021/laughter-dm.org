@@ -66,7 +66,8 @@ short answers, feedbacks and vocalisations accompanying them.
 - laughter is frequent
 - important for naturalness of conversations
 - related to different emotions, so it would be really appropriate for chitchat systems
-- however, it also has a functional role, so it can be useful in task-oriented systems 
+- however, it also has a functional role, so it can be useful in task-oriented systems
+- different type of laughter as compared with previous attempts such as HILAIRE
 
 The example ref:ex:hear-poorly below is an excerpt from the
 role-played dialogue collected by citet:howes-etal-2019-good for their
@@ -818,3 +819,14 @@ We can think of a dialogue system scenario where
 bibliography:lacatoda.bib
 bibliographystyle:apalike
 
+* COMMENT NOTES
+** J <2021-04-28 Wed>
+- corpus study?
+- non-adjacency -- 
+  - 2005 multi-party paper
+  - when do we need QUD?
+- lexical entry?
+- social incongruity and rapport -- see cassell
+- visser & traum 2015 for sophisticated feedback generation 
+- more clear point about data-driven stuff (contrast with hilaire) - we care about low-arousal laughs -  
+- safe to add "sorry", might be as safe to add laughter
