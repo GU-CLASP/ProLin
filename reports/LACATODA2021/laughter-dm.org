@@ -80,7 +80,7 @@ system, which implements a similar scenario?
 
 #+BEGIN_lingex
 \item\label{ex:hear-poorly} (22_KL_loc2)\\
-#+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align lr>{\em}J
+#+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align lr>{\em}L
 | 56 | Caller   | er the next one is er tanfield chambers     |
 | 57 | Operator | santias?                                    |
 | 58 | Caller   | tanfield like t- T A N                      |
@@ -230,14 +230,14 @@ This accounts for the examples ref:ex:money and ref:ex:x-or-y above,
 \item\label{ex:money} from the dialogue between a virtual assistant (Diana)
 and a person with ASD (Mark):
 
-#+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align l >{\em}J
-| Mark                   | Diana, what is money?                |
-| Diana                  | I am Diana, a  virtual interlocutor. |
-| Audience (except Mark) | (laugh)                              |
+#+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align l >{\em}L
+| Mark     | Diana, what is money?                |
+| Diana    | I am Diana, a  virtual interlocutor. |
+| Audience | (laugh)                              |
 
 \item\label{ex:x-or-y} constructed example
 
-#+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align l >{\em}J
+#+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align l >{\em}L
 | Brian | Would you like tea or coffee? |
 | Katie | yes                           |
 | Brian | (laughs)                      |
@@ -261,7 +261,7 @@ München goalkeeper Manuel Neuer faces the press after his team’s
 (Dreierkette) defense has proved highly problematic in the game just
 played (3-2 against Paderborn).
 
-#+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align l >{\em}J
+#+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align l >{\em}L
 | Journalist: (smile) | Dreierkette auch ‘ne Option?               |
 |                     | (Is the three-in-the-back also an option?) |
 | Manuel Neuer:       | fuh fuh fuh                                |
@@ -288,7 +288,7 @@ corpus[fn::TODO ref to my work with Bill when it is accepted :D].
 
 #+BEGIN_lingex
 \item\label{ex:apology} (16_HG_loc2)\\
-#+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align lr >{\em}J
+#+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align lr >{\em}L
 | 162 | Operator | still not finding it                                            |
 | 163 | Operator | having problems with this one                                   |
 | 164 | Caller   | okay                                                            |
@@ -314,7 +314,7 @@ favour and the apology is accompanied by laughter.
 
 #+BEGIN_lingex
 \item\label{ex:from-beginning} (24_LK_loc2)\\
-#+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align lr >{\em}J
+#+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align lr >{\em}L
 | 59 | Caller   | B as in bicycle                                                                           |
 | 60 | Operator | yeah                                                                                      |
 | 61 | Caller   | then you have R                                                                           |
@@ -552,6 +552,24 @@ processShort : (a : Type) -> (x : a) ->  (p : Prop) ->
   [  _ :: UserFact p; _ :: QUD qs]
 #+END_code
 
+If the system has a fact |p| in its database it can produce an answer
+or a domain-specific clarification request depending on whether the
+fact is unique and concrete or not (defined by operators |!->|
+and |?->| respectively, see citealp:anon for further details).
+#+BEGIN_code
+produceAnswer :
+   (a : Type) ->   (x : a) !-> (p : Prop) -> 
+   (qs : List Question)  ->	
+   QUD (Cons (Q USER a x p) qs)  ⊸ p  -*
+   [  _ :: Agenda (ShortAnswer a x SYSTEM USER); 
+      _ :: QUD qs;
+      _ :: Answered (Q USER a x p)]
+produceCR :
+   [  a : Type ; x : a ;  p : Prop ; qs : List Question ;
+      _  :: QUD (Cons (Q USER a x p) qs) ; 
+      _  :: p ] ?-> CR
+#+END_code
+
 - TODO: produceAnswer
 - TODO: CR?
 ** Extending dialogue manager with grounding strategies
@@ -581,18 +599,17 @@ integrating the incoming information and updating the common ground
 move is the following:
 
 #+begin_code
-ICM level polarity ?content
+ICM level polarity content
 #+end_code
 where |level| corresponds to the level of grounding (contact,
 perception, understanding, acceptance), |polarity| is either positive
-or negative, and the optional value |content| corresponds to a component
-of the common ground in question. 
-# JP: In reality our framework does not support optional values. There needs to be a special value to represent absence of content.
-For instance, the move |(ICM Per
-Neg)| would correspond to the utterance "I didn't understand what you
-said" or "Pardon", and the move |(ICM Und Pos q)| can be realised in
-the utterance "You are asking me what time is it" if the QUD |q|
-corresponds to the quesion from |Ask| move exemplified above.
+or negative, and the optional value |content| corresponds to a
+component of the common ground in question.  For instance, the
+move |(ICM Per Neg None)| would correspond to the utterance "I didn't
+understand what you said" or "Pardon", and the move |(ICM Und Pos q)|
+can be realised in the utterance "You are asking me what time is it"
+if the QUD |q| corresponds to the quesion from |Ask| move exemplified
+above.
 
 
 Next we modify our basic |pushQUD| rule defined in Section
@@ -616,7 +633,7 @@ pushQUDYellow :  (q : Question) ->
    QUD qs ⊸ 
       [  _ :: QUD (Cons q qs);
          _ :: Agenda (Cons  (ICM Und Pos q)
-         (Cons (ICM Acc Pos) as));]
+         (Cons (ICM Acc Pos None) as));]
 #+END_code
 
 - [ ] TODO: explain what's going on here!  
@@ -645,21 +662,17 @@ from |QUD| and the ICM move about understanding of that the question was
 not |q| is issued.
 
 #+BEGIN_code
-icmINTPos:  (q : Question) -> (x y : DP) ->
+icmINTpos:  (q : Question) -> (x y : DP) ->
    (c : Confidence) ->
    Pending (ShortAnswer Bool True x y c) ⊸ 
-   Agenda as ⊸
    QUD (Cons (UND q) qs) ⊸ 
    QUD (Cons q qs)
 #+END_code
 
-# JP: Above: Agenda disappears
-
 #+BEGIN_code
-icmINTNeg:  (q : Question) -> (x y : DP) ->
+icmINTneg:  (q : Question) -> (x y : DP) ->
    (c : Confidence) -> 
    Pending (ShortAnswer Bool False x y c) ⊸ 
-   Agenda as ⊸
    QUD (Cons (UND q) qs) ⊸ 
    [ _ :: QUD qs; 
      _ :: Agenda (Cons (ICM Und Pos (Not q)))]
@@ -679,10 +692,66 @@ become a simple "Okay, not Paris then".
 
 * Proposal for support of certain type of laughter
 ** Laughter as rejection signal
-1. simple example of system asking whether it has understood something
-   awkwardly and then laughter is treated just as |ShortAnswer Bool
-   False|.
-2. Neuer example - more general treatment. 
+Laughter as a reaction to interrogative feedback in the case of low
+confidence ASR/NLU result can be exemplified by the following
+dialogue.
+
+#+BEGIN_lingex
+\item\label{ex:meal}
+#+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align l >{\em}L l
+| U: | I would like to order a happy meal.                             | Ask q                  |
+| S: | I understood you'd like to order a happy mead. Is that correct? | ICM Und Int q          |
+| U: | HAHAHA                                                          | ShortAnswer Bool False |
+#+END_lingex
+
+Here we can treat laughter as a short negative answer, similar to
+"No". In the case of interrogative ICM move, such answer can be
+processed using |icmINTneg| rule defined above. We are aware of that
+in this constructed example we are ignoring the fact that such bizarre
+answers could be avoided by domain-specific tuning of ASR and NLU
+components, but in general this could be treated as a recovery
+strategy for different system outputs not desired by dialogue system
+designers. This approach can be extended to other cases of user
+feedback, for instance, to cover the cases with higher confidence
+score where system produces |ICM Und Pos q| move, but this is out of
+scope for current study.
+
+Returning to a more sophisticated ref:ex:neuer, it can be handled by
+our generic rules for integrating QUDs (|pushQUD|). For that we need
+to consider polar questions as expecting an answer
+of |Prop->Prop| type (see Table ref:tbl:qa-ex). Recalling the example:
+#+BEGIN_lingex
+\item 
+#+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align l >{\em}L
+| Journalist: (smile) | Dreierkette auch ‘ne Option?               |
+|                     | (Is the three-in-the-back also an option?) |
+| Manuel Neuer:       | fuh fuh fuh                                |
+|                     | (brief laugh)                              |
+#+END_lingex
+and a type for question:
+ 
+\begin{tabular}{cccc}
+   & |A  : Type|   & \quad \quad\quad \quad \quad    &                    |P  : A  -> Prop|
+\end{tabular}
+
+In this case, 
+#+begin_code
+A = Prop -> Prop
+P = \m . m IsOptionDreierkette
+#+end_code
+
+The brief laughter by Manuel Neuer can be represented as:
+#+begin_code
+⟦fuhfuhfuh⟧ = ShortAnswer 
+    (Prop->Prop) (\x.Laughable x)
+#+end_code
+where the modification of the proposition, resulting in |(Laughable
+IsOptionDreierkette)| has a very basic meaning: this proposition is
+the /laughable/, without being more specific about the laughter
+function. One can also consider being more specific, simply treating
+laughter as a negation (|ShortAnswer (Prop->Prop) (\x.Not x)|), but in
+general laughter can have a more nuanced meaning.
+
 ** Laughter which accompanies feedback
 1. Easy as part of NLG of |(ICM Und Pos (Not q))|: "Okay, not Paris
    then, hehe".
@@ -693,8 +762,10 @@ become a simple "Okay, not Paris then".
 - laughter placement in dialogue
 - humour
 - topoi
+** Humour
 
-** surprise
+
+** Surprise
 Intuitively, laughter is related to events that are unexpected,
 usually[fn::TODO ref] in a pleasant way. One of the ways to establish
 some degree of natural behaviour for a dialogue system would be to
@@ -709,25 +780,29 @@ PP(W) = \sqrt[N]{\prod_{i=1}^{N}\frac{1}{P(w_i \mid w_1\dots w_{i-1})}}
 \end{equation}
 
 # JP where is this formula coming from? Usually perplexity is "inverse probability of an input, as judged by the model."
+# VM: Jurafsky & Martin as far as I remember. 
 
-Given a language model, we can employ a perplexity threshold, below
-# JP: above?
-which the system can act as being surprised, e.g. by saying "Ha-ha, I
-did not expect this!" 
+Given a language model, we can employ a threshold defined by
+perplexity which the system can use to act as being surprised, e.g. by
+saying "Ha-ha, I did not expect this!"
 
 Similarly, perplexity can be inferred from tracking a dialogue state
-[fn::TODO ref DST papers], which is a common task in statistical
-approaches to dialogue system. Or, following [fn::TODO ref
-Noble&Maraev], the RNN trained on a large dialogue corpus as a
-representation of dialogue context can be used to calculate
+in a Dialogue State Tracking task citep:mrkvsic2017neural, which is a
+common task in statistical approaches to dialogue system. Or,
+following citet:noble2021, the RNN trained on a large dialogue corpus
+as a representation of dialogue context can be used to calculate
 perplexity.
+# Surprise can be also associalted with dialogue breakdowns,
+# where system provides incoherent responses, therefore a system for
+# detecting breakdowns, designed for Dialogue Breakdown Detection
+# Challenge citep:higashinaka2021overview can be used to 
 
 Laughter as a reaction of surprise can relate to the levels of
 feedback, for example, user surprised by pragmatically incoherent
 system’s reply can laugh (Section ref:sec:negative-and-rejection). But
 here surprise is taken in isolation, as a measure on its own right.
 
-** awkwardness and time-saving
+** Awkwardness and time-saving
 for example, in case of language tutoring (see Anki flashcard app,
   where users can evaluate their own responses as "hard"---because the
   card was hard). 
