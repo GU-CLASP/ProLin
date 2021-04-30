@@ -701,7 +701,7 @@ dialogue.
 \item\label{ex:meal}
 #+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align l >{\em}L l
 | U: | I would like to order a happy meal.                             | Ask q                  |
-| S: | I understood you'd like to order a happy mead. Is that correct? | ICM Und Int q          |
+| S: | I understood you'd like to order a happy meat. Is that correct? | ICM Und Int q          |
 | U: | HAHAHA                                                          | ShortAnswer Bool False |
 #+END_lingex
 
