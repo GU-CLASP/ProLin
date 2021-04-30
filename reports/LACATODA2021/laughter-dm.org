@@ -534,7 +534,7 @@ pushQUD :  (q : Question) -> (qs : List Question) ->
 
 If the user asserts something that relates to the top |QUD|, then
 the |QUD| can be resolved and therefore removed from the stack. The
-corresponding proposition |p| is saved as a |UserFact|.[fn::For the
+corresponding proposition |p| is saved as a |PendingUserFact|.[fn::For the
 current purposes we only remove the top QUD, but in a more general
 case we can implement the policy that can potentially resolve any QUD
 from the stack.] 
@@ -543,8 +543,13 @@ processAssert : (a : Type) -> (x : a) -> (p : Prop) ->
   (qs : List Question) ->
   (dp dp1 : DP) ->  Pending (Assert p dp1 dp)  ⊸
   QUD (Cons (Q dp a x p) qs)  ⊸ 
-  [  _ :: UserFact p; _ :: QUD qs]
+  [  _ :: PendingUserFact p; _ :: QUD qs]
 #+END_code
+
+Then, other rules will take into account the |PendingUserFact p| in a
+system-specifc way. In the simplest case, the system may treat |p| as
+a true proposition. (In this paper we will consider meta-level pending
+user facts instead.)
 
 Short answers are processed in a very similar way to assertions:
 #+BEGIN_code
@@ -552,7 +557,7 @@ processShort : (a : Type) -> (x : a) ->  (p : Prop) ->
   (qs : List Question) -> (dp dp1 : DP) ->  
   Pending (ShortAnswer a x dp1 dp)   ⊸
   QUD (Cons (Q dp a x p) qs)  ⊸ 
-  [  _ :: UserFact p; _ :: QUD qs]
+  [  _ :: PendingUserFact p; _ :: QUD qs]
 #+END_code
 
 If the system has a fact |p| in its database it can produce an answer
@@ -648,36 +653,44 @@ a question about whether question |q| is correctly understood.
 icmINTConfirm: (q : Question) -> (x y : DP) -> 
    Pending (Ask q x y RED) ⊸ Agenda as ⊸
    QUD qs ⊸ 
-   [  _ :: QUD (Cons (UND q) qs);
+   [  _ :: QUD (Cons (Q Bool x (if x then UND q else UNDN q)) qs);
       _ :: Agenda (Cons  (ICM Und Int q) as)]
 #+END_code
 
-Such a type of |QUD| requires a special type of processing to integrate
-answers, such as "yes" or "no" (here we treat them as booleans). In
-this sketch implementation we do not care about confidence scores for
-these answers, leaving it underspecified, but further, more specific
-dialogue rules are possible. In the case of a positive answer to such
-a query, the |UND q| QUD is replaced by |q| and can be further handled
-by the |produceAnswer| rule. In the negative case, |UND q| is removed
-from |QUD| and the ICM move about understanding of that the question was
-not |q| is issued.
+Processing answers related to such a type of |QUD| will be done as
+usual. For instance, a short "yes" or "no" will be we treated here as
+booleans, and depending on the answer the context will contain
+either |PendingUserFact (UND q)| or |PendingUserFact (UNDN q)|.
 
-#+BEGIN_code
-icmINTpos:  (q : Question) -> (x y : DP) ->
-   (c : Confidence) ->
-   Pending (ShortAnswer Bool True x y c) ⊸ 
-   QUD (Cons (UND q) qs) ⊸ 
-   QUD (Cons q qs)
-#+END_code
+In this sketch implementation we do not care about confidence scores
+for these answers, leaving it underspecified, but further, more
+specific dialogue rules are possible.
+
+Regardless of the particular answer, once the ICM question is
+answered, it is removed from |QUD|.
+
+In the case of a positive answer to such a query, Nothing particular
+to do. The the generic handling of ShortAnswer makes it so that QUD is
+restored to the originally asked question.
+
+# #+BEGIN_code
+# icmINTpos:  (q : Question) -> (x y : DP) ->
+#    (c : Confidence) ->
+#    PendingUserFact (UND q) ⊸ ()
+# #+END_code
+
+In the negative case, the ICM move about understanding of that the
+question was not |q| is issued.
+
+# Act on the misunderstanding; example on handing a PendingUserFact
+# concerning the interaction itself.
 
 #+BEGIN_code
 icmINTneg:  (q : Question) -> (x y : DP) ->
    (c : Confidence) -> 
-   Pending (ShortAnswer Bool False x y c) ⊸ 
+   PendingUserFact (UNDN q) ⊸
    Agenda as ⊸
-   QUD (Cons (UND q) qs) ⊸ 
-   [ _ :: QUD qs; 
-     _ :: Agenda (Cons (ICM Und Pos (Not q)) as)]
+   Agenda (Cons (ICM Und Neg (QuestionIsNot q)) as)
 #+END_code
 
 It is a natural language generation (NLG) issue how ICM moves are
