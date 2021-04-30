@@ -61,13 +61,28 @@ system should be affected and modified, and more specifically how
 laughter can be accounted for in a dialogue manager as instances of
 short answers, feedbacks and vocalisations accompanying them.
 #+end_abstract
+
 * Introduction
-# flow sentence
-- laughter is frequent
-- important for naturalness of conversations
-- related to different emotions, so it would be really appropriate for chitchat systems
-- however, it also has a functional role, so it can be useful in task-oriented systems
-- different type of laughter as compared with previous attempts such as HILAIRE
+Laughter is a very frequent in everyday interactions, for instance, in
+Switchboard corpus laughter comes about every 100 words. Laughter is
+an ambiguous social signal, and in addition to communicating joy and
+pleasure intuitively associated with humour it also can communicate
+embarrassment, can used to smooth and soften everyday interactions and
+also bear pragmatic functions such as marking an irony or a usage of a
+word in a specific sense.
+
+For a spoken dialogue system it is an important signal to account for
+due to its contribution to naturalness of automated dialogue. Laughter
+can be used in chit-chat dialogue due to potential to build rapport
+and establish a social bonding between the user and artificial agent. 
+
+There have been attempts to produce laughs as a way to mimic human
+behaviour and align with it, as well as laughing avatars mainly
+focussed on laughter as a reaction to jokes. In this paper we are
+taking rather different approach. We start from examples of usage of
+laughter in real task-oriented dialogue and then propose ways how
+these behaviour can be reproduced in a dialogue system, and, more
+specifically, in its dialogue management component.
 
 The example ref:ex:hear-poorly below is an excerpt from the
 role-played dialogue collected by citet:howes-etal-2019-good for their
