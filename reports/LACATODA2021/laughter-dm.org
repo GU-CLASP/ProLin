@@ -51,7 +51,7 @@
 #+LATEX_HEADER: \tikzstyle{virtual} = [coordinate]
 #+LATEX_HEADER: \usepackage{wasysym}
 
-#+TITLE: Laughter, feedback, grounding
+#+TITLE: Non-humorous use of laughter in spoken dialogue systems
 
 #+begin_abstract
 In this paper we argue how laughter, an ambiguous signal ubiquitous in
@@ -185,7 +185,9 @@ management architecture that comes with certain ways to support
 grounding and adjacency and therefore allows to be further extended to
 support different kinds of laughter.
 * Types of laughter
-
+In this section we would like to outline types of laughter that can be
+of a special interest for task-oriented dialogue systems and could be
+accounted for, at least rudimentary, within a proposed framework.
 ** Laughter as a component of grounding
 - TODO: Background on action levels. 
 
@@ -330,7 +332,7 @@ favour and the apology is accompanied by laughter.
 | 70 | Caller   | yeah no no problem                                                                        |
 #+END_lingex
 
-
+** Laughter and humorous incongruity
 * Dialogue manager architecture 
 label:sec:ldm
 
@@ -571,8 +573,6 @@ produceCR :
       _  :: p ] ?-> CR
 #+END_code
 
-- TODO: produceAnswer
-- TODO: CR?
 ** Extending dialogue manager with grounding strategies
 label:sec:dm-ground
 - this is a sketch! 
@@ -830,3 +830,6 @@ bibliographystyle:apalike
 - visser & traum 2015 for sophisticated feedback generation 
 - more clear point about data-driven stuff (contrast with hilaire) - we care about low-arousal laughs -  
 - safe to add "sorry", might be as safe to add laughter
+** C <2021-04-29 Thu>
+- bean and beef
+- procedure - established
