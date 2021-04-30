@@ -674,9 +674,10 @@ icmINTpos:  (q : Question) -> (x y : DP) ->
 icmINTneg:  (q : Question) -> (x y : DP) ->
    (c : Confidence) -> 
    Pending (ShortAnswer Bool False x y c) ⊸ 
+   Agenda as ⊸
    QUD (Cons (UND q) qs) ⊸ 
    [ _ :: QUD qs; 
-     _ :: Agenda (Cons (ICM Und Pos (Not q)))]
+     _ :: Agenda (Cons (ICM Und Pos (Not q)) as)]
 #+END_code
 
 It is a natural language generation (NLG) issue how ICM moves are
