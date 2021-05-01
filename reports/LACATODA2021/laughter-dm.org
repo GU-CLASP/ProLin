@@ -124,7 +124,7 @@ Let’s look at the first laughter (line 69). We can see that the
 operator’s question "and then seal?" (l.67) was not addressed and this
 piece of information was not grounded.  "C?" (l.71) refers to restart
 from the beginning (it was "Tanfield", but she has heard "C"). The
-negative feedback provided by the operator entails extra effort from
+negative feedback provided by the operator (l.69) entails extra effort from
 the caller---she needs to restart her request from the
 beginning---this obligation is somewhat intrusive and may require
 extra smoothing citep:mazzocconi2019phd,raclaw2017laughter.  For
@@ -147,35 +147,24 @@ usually the dialogue system which is at fault, but this might be
 different for special cases of systems that aim at more naturalistic
 behaviour.
 
-In this paper we look at laughter not exclusively from a perspective
-of a taxonomy that can be used as a theoretical framework, but from
-the utilitarian perspective, looking at which kinds of laughs can be
-relevant for dialogue systems. Next we will look at laughter from the
-point of providing feedback, either positive or negative.
+In this paper we look at laughter from the utilitarian perspective,
+looking at which kinds of laughs can be relevant for dialogue
+systems. Next we will look at laughter from the point of providing
+feedback, either positive or negative.
 
+In Section ref:sec:background will start with a background on our
+approach to dialogue, dialogue management and laughter. Next, in
+Section ref:sec:types presents a small typology of laughter types
+which we think should be accounted for in task-oriented dialogue
+system. In Section ref:sec:ldm we describe our own dialogue management
+framework and in Section ref:sec:proposal we show a formal account for
+the aforementioned types of laughter. We conclude with a brief
+discussion of our findings and further laughter-related issues in
+Section ref:sec:discussion.
 # how are we going to do this
 * Background 
-** Dialogue gameboards
-In KoS (and other dynamic approaches to meaning), language is compared
-to a game, containing players (interlocutors), goals and rules. KoS
-represents language interaction by a dynamically changing context. The
-meaning of an utterance is then how it changes the context. Compared
-to most approaches, which represent a single context for both dialogue
-participants, KoS keeps separate representations for each participant,
-using the /Dialogue Game Board/ (DGB). Thus, the information states of
-the participants comprise a private part and the dialogue gameboard
-that represents information arising from publicised interactions. The
-DGB tracks, at the very least, shared assumptions/visual field, moves
-(= utterances, form and content), and questions under discussion.
-
-** Grounding
-
-- adjacency, dgb and qud
-- grounding and the ladder in IBIS
-- laughter
-  - standalone laughter (%) -- also % of NV DAs in SWDA
-  - laughable
-** Dialogue management 
+label:sec:background
+** Dialogue
 A key aspect of dialogue systems is the coherence of the system’s
 responses.  In this respect, a key component of a dialogue system is
 the dialogue manager, which selects appropriate system actions
@@ -193,13 +182,59 @@ that we employ here. Although there has been a lot of development in
 dialogue systems in recent years, only a few approaches reflect
 advancements in /dialogue theory/. Our aim is to closely integrate
 dialogue systems with work in theoretical semantics and pragmatics of
-dialogue.
+dialogue. In this work we do so by employing our own implementation of
+KoS theoretical dialogue framework citep:ginzburg2012interactive which
+we discussed in citep:anon. In this work we are extending our
+implementation with a rudimentary support of grounding and therefore
+allows to be further extended to support certain types of laughter.
 
-In Section ref:sec:ldm we will provide a brief description of dialogue
-management architecture that comes with certain ways to support
-grounding and adjacency and therefore allows to be further extended to
-support different kinds of laughter.
+In KoS (and other dynamic approaches to meaning), language is compared
+to a game, containing players (interlocutors), goals and rules. KoS
+represents language interaction by a dynamically changing context. The
+meaning of an utterance is then how it changes the context. Compared
+to most approaches, which represent a single context for both dialogue
+participants, KoS keeps separate representations for each participant,
+using the /Dialogue Game Board/ (DGB). Thus, the information states of
+the participants comprise a private part and the dialogue gameboard
+that represents information arising from publicised interactions. The
+DGB tracks, at the very least, shared assumptions/visual field, moves
+(= utterances, form and content), and questions under discussion.
+
+
+In dialogue, especially in a dialogue with machine which involves an
+uncertainty of speech recognition (ASR) and language understanding
+(NLU), we can not assume a perfect communication. While communicating,
+especially over unreliable communication channel, humans give each
+other evidence that their contributions are understood to a certain
+extent, sufficient for current purposes. Citet:clark1996using and
+citet:allwood1995activity distinguish four /levels of action/ related to different degree of grounding. Here we enlist them according to the /action ladder/ citep:clark1996using, from the hearer's perspective.  
+1. *Acceptance* level determines whether the content of utterance was
+   accepted or rejected by the hearer.  
+2. *Understanding* level specifies whether utterance was understood by the hearer 
+3. *Perception* level determines whether utterance was perceived by the
+   hearer.
+4. *Contact* level determines whether interlocutors have established a channel of communication.
+
+The action ladder assumes that if the level above is complete, then
+all levels below is complete. For instance, if Bob asks "Do like
+Paris" and Mary replies "Yes", then Bob's utterance is accepted (and
+also understood, perceived, and their contact has been
+established). If she asks "Paris?" then it might signal that Bob's
+utterance was perceived but not understood (and not accepted).
+
+Citet:larsson2002issue accounts for different levels of action within
+IBiS2 dialogue management framework using a set of rules are used to
+update the common ground represented in the information state of the
+system. He uses "Information Communication Management" (ICM) moves
+citep:allwood1995activity as explicit signals concerned with
+communicating the updates to the common ground.
+
+** Laughter
+- laughter
+  - standalone laughter (%) -- also % of NV DAs in SWDA
+  - laughable
 * Types of laughter
+label:sec:types
 In this section we would like to outline types of laughter that can be
 of a special interest for task-oriented dialogue systems and could be
 accounted for, at least rudimentary, within a proposed framework.
@@ -347,7 +382,6 @@ favour and the apology is accompanied by laughter.
 | 70 | Caller   | yeah no no problem                                                                        |
 #+END_lingex
 
-** Laughter and humorous incongruity
 * Dialogue manager architecture 
 label:sec:ldm
 
@@ -667,8 +701,10 @@ a question about whether question |q| is correctly understood.
 icmINTConfirm: (q : Question) -> (x y : DP) -> 
    Pending (Ask q x y RED) ⊸ Agenda as ⊸
    QUD qs ⊸ 
-   [  _ :: QUD (Cons (Q Bool x (if x then UND q else UNDN q)) qs);
-      _ :: Agenda (Cons  (ICM Und Int q) as)]
+   [  _ :: QUD (Cons (Q  Bool x  
+                         (  if x then UND q 
+                            else UNDN q)) qs);
+      _ :: Agenda (Cons (ICM Und Int q) as)]
 #+END_code
 
 Processing answers related to such a type of |QUD| will be done as
@@ -704,7 +740,8 @@ icmINTneg:  (q : Question) -> (x y : DP) ->
    (c : Confidence) -> 
    PendingUserFact (UNDN q) ⊸
    Agenda as ⊸
-   Agenda (Cons (ICM Und Neg (QuestionIsNot q)) as)
+   Agenda (Cons 
+               (ICM Und Neg (QuestionIsNot q)) as)
 #+END_code
 
 It is a natural language generation (NLG) issue how ICM moves are
@@ -720,6 +757,7 @@ become a simple "Okay, not Paris then".
 # names instead of metavariables?
 
 * Proposal for support of certain type of laughter
+label:sec:proposal
 ** Laughter as rejection signal
 Laughter as a reaction to interrogative feedback in the case of low
 confidence ASR/NLU result can be exemplified by the following
@@ -785,13 +823,59 @@ general laughter can have a more nuanced meaning.
 1. Easy as part of NLG of |(ICM Und Pos (Not q))|: "Okay, not Paris
    then, hehe".
 2. Apology. 
-* Further issues
+* Discussion
+label:sec:discussion
 - laughter and dialogue acts (predictive feature)
 - laughter prediction in dialogue
 - laughter placement in dialogue
 - humour
 - topoi
 ** Humour
+
+#+BEGIN_lingex
+\item\label{ex:as-in-er} (28_NM_loc2) \\
+#+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align lr >{\em}J
+|  17 | Caller   | okay so it starts with a     |
+|  18 | Caller   | L                            |
+|  19 | Operator | L?                           |
+|  20 | Caller   | as in london                 |
+|  21 | Operator | yes                          |
+|  22 | Caller   | A as in america              |
+|  23 | Operator | america                      |
+|  24 | Caller   | er U                         |
+|  25 | Caller   | as in er ((pause: 1.2s))     |
+|  26 | Caller   | er under                     |
+|  27 | Caller   | <laugh>                      |
+|  28 | Operator | under yes                    |
+| ... |          |                              |
+| 134 | Caller   | O for oslo                   |
+| 135 | Operator | O for oslo                   |
+| 136 | Caller   | again O for oslo             |
+| 137 | Operator | O for oslo                   |
+| 138 | Caller   | and K for er ((pause: 1.6s)) |
+| 139 | Caller   | <laugh>                      |
+| 140 | Operator | as in king?                  |
+| 141 | Caller   | k- king <laugh> yeah         |
+| 142 | Operator | yes                          |
+| 143 | Caller   | thank you                    |
+| 144 | Operator | that's it?                   |
+| 145 | Caller   | that's it                    |
+#+END_lingex
+In ref:ex:as-in-er the caller experiences issues with coming up with
+phonetic transcriptions for certain words. The first laugh (line 27)
+deserves attention, as it seems that it reflects on both pleasant
+incongruity and social one (smoothing), according to the taxonomy of
+citep:mazzocconi2019phd. The pleasant incongruity is due the fact that
+phonetic transcription of "U" as in "under" is incongruous with the
+preceding ones: a preposition vs. proper nouns (London, America; and
+proper nouns seems to be the most common way of transcribing?). 
+
+- TODO: topos (and also borrowed topos) of how things are transcribed.
+
+Also, "under" is produced after a long pause (l.25) and therefore
+indicates awkwardness in producing the transcription---which made the
+operator wait---therefore making the situation uncomfortable to the
+caller, so laughter was used for smoothing it.  empirical study.
 
 
 ** Surprise
