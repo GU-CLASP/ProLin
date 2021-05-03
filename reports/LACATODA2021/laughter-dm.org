@@ -322,12 +322,6 @@ played (3-2 against Paderborn).
 #+END_lingex
 
 
-- [ ] ideally, the ladder should be moved up, to account for both
-  positive and negative feedback
-
-**** Laughter as negative feedback and rejection label:sec:negative-and-rejection
-Let us start with the following examples of negative feedback.
-
 ** Laughter and apology
 - apology DA is very frequent in relation to laughter. 
 - in IBIS it is not defined as a separate DA but often is used as the
@@ -337,7 +331,7 @@ Let us start with the following examples of negative feedback.
 It is often the case that the dialogue act of apologising is
 accompanied by laughter in the same turn or one of the adjacent turns
 as we have discovered in our study of dialogue acts in Switchboard
-corpus[fn::TODO ref to my work with Bill when it is accepted :D].
+corpus[fn::TODO ref]
 
 #+BEGIN_lingex
 \item\label{ex:apology} (16_HG_loc2)\\
