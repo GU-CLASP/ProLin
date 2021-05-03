@@ -54,7 +54,7 @@
 #+TITLE: Non-humorous use of laughter in spoken dialogue systems
 
 #+begin_abstract
-In this paper we argue how laughter, an ambiguous signal ubiquitous in
+In this paper we argue how laughter, an ambiguous yet ubiquitous signal in
 everyday interactions, can act as an important feature for
 task-oriented dialogue systems. We show which components of a dialogue
 system should be affected and modified, and more specifically how
@@ -91,7 +91,7 @@ roles of a caller and a operator, respectively asking for the phone
 numbers which are associated with a certain name of the business. Half
 of the dialogues happened in a noisy environment, with many
 mishearings and laughs induced. This paper addresses the following
-research question: How can these laughs be accounted for a dialogue
+research question: how can these laughs be accounted for a dialogue
 system, which implements a similar scenario?
 
 #+BEGIN_lingex
@@ -460,13 +460,11 @@ comprised of a set of linear-logic rules which depend on the domain of
 application. However, many rules will be domain-independent (such as
 generic processing of answers). We show these generic rules here, and
 the demo will illustrate them within an example application.
-** Questions and answers
-In this subsection we show how a metavariable can represent what is
-being asked, as the unknown in a proposition. A first use for
-metavariables is to represent the requested answer of a question.
 
-In this paper, we represent a question by a predicate |P| over a
-type |A|. That is, using a typed intuitionistic logic:
+** Questions and answers
+
+In this paper, we essentially represent a question by a predicate |P|
+over a type |A|. That is, using a typed intuitionistic logic:
 
 \begin{tabular}{cccc}
    & |A  : Type|   & \quad \quad\quad \quad \quad    &                    |P  : A  -> Prop|
@@ -502,6 +500,12 @@ The proposition |P x| is the interpretation of a short answer |x|.
 The |x| column shows the formal representation of a possible answer, either~in~short~form or assertion form.
 }
 \end{table*}
+** TODO Representation of questions with metavariables
+In this subsection we show how a metavariable can represent what is
+being asked, as the unknown in a proposition. A first use for
+metavariables is to represent the requested answer of a question.
+
+
 ** Dialogue management
 label:sec:dm-rules
 In this section we integrate our question/answering framework within
@@ -738,14 +742,25 @@ icmINTneg:  (q : Question) -> (x y : DP) ->
                (ICM Und Neg (QuestionIsNot q)) as)
 #+END_code
 
-It is a natural language generation (NLG) issue how ICM moves are
-converted in natural language utterances depending on |q|. For
-instance, |Not (Q U Time t0 (IsTime t0))| can become a (rather
-tedious) utterance "You are not asking me what time is it", whereas
-more sophisticated queries with more arguments can be resolved in
-shorter utterance depending on the arguments that are made
-ground. E.g. |Not (Q U (Prop -> Prop) m0 (m0 Live S Paris))| can
-become a simple "Okay, not Paris then".
+How ICM moves are converted in natural language utterances, depending
+on |q|, is a natural language generation (NLG) issue. For
+instance, |QuestionIsNot (Q U Time t0 (IsTime t0))| can become the
+(rather tedious) utterance "So, you are not asking me what time it
+is", whereas more sophisticated queries with more arguments can be
+resolved in shorter utterance depending on the arguments that are made
+ground. 
+
+# So, you are not asking me if I live in Paris.
+# For instance |QuestionIsNot (Q U (Prop -> Prop) m0 (m0 (Live S Paris)))| can become a simple "Okay, not Paris then".
+
+For instance, in a context of interaction at a food kisok, |QuestionIsNot (Q U (Prop
+-> Prop) m0 (m0 WantOlives))| could become a simple "Sorry, let's forget olives.".
+
+
+# TODO: consider adding the following:
+# Note that the position of the metavariable influences the meaning of
+# the question. This is why we record this metavariable in the
+# question, (as the 3rd argument to Q)
 
 
 # names instead of metavariables?
