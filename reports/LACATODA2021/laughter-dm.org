@@ -63,8 +63,8 @@ short answers, feedbacks and vocalisations accompanying them.
 #+end_abstract
 
 * Introduction
-Laughter is a very frequent in everyday interactions, for instance, in
-Switchboard corpus laughter comes about every 100 words. Laughter is
+Laughter is very frequent in everyday interactions, for instance, in
+Switchboard corpus laughter comes about every 200 words. Laughter is
 an ambiguous social signal, and in addition to communicating joy and
 pleasure intuitively associated with humour it also can communicate
 embarrassment, can used to smooth and soften everyday interactions and
@@ -230,38 +230,65 @@ citep:allwood1995activity as explicit signals concerned with
 communicating the updates to the common ground.
 
 ** Laughter
-- laughter
-  - standalone laughter (%) -- also % of NV DAs in SWDA
-  - laughable
+Our focus of attention towards laughter is motivated by it is ubiquity
+in natural dialogue. In the British National Corpus laughter is a
+quite frequent signal regardless of gender and age---the spoken
+dialogue part of the British National Corpus (UK English, unscripted
+interactions that were recorded by volunteers in various social
+settings, balanced for age, region and social class) contains
+approximately one laughter every 14 utterances. In the Switchboard
+Dialogue Act corpus citep:jurafsky1997switchboard (US English,
+one-on-one interactions over a phone where participants that are not
+familiar with each other discuss a potentially controversial subject,
+such as gun control or school system) non-verbally vocalised dialogue
+acts (whole utterances that are marked as non-verbal) constitute 1.7%
+of all dialogue acts and 65% of them contain laughter. Laughter tokens
+make up 0.5% of all the tokens that occur in Switchboard Dialogue Act
+corpus.
+
+Laughter production in conversation is not exclusively related to
+humour. But, perhaps unsurprisingly, the study of laughter has often
+been linked to the study of humour and the two terms are frequently
+used interchangeably. However, laughter does not occur only in
+response to humour or in order to frame it.  Many studies,
+particularly in conversation analysis, have shown its crucial role in
+managing conversations at several levels: dynamics (turn-taking and
+topic-change), lexical (signalling problems of lexical retrieval or
+imprecision in the lexical choice), pragmatic (marking irony,
+disambiguating meaning, managing self-correction) and social
+(smoothing and softening difficult situations or showing
+(dis)affiliation)
+citep:glenn2003laughter,jefferson1984organization,mazzocconi2019phd,petitjean2015laughing
+
+- laughter in dialogue agents (ILHAIRE, etc.)
+
+
 * Types of laughter
 label:sec:types
 In this section we would like to outline types of laughter that can be
 of a special interest for task-oriented dialogue systems and could be
 accounted for, at least rudimentary, within a proposed framework.
 ** Laughter as a component of grounding
-- TODO: Background on action levels. 
-
-According to (Clark, Allwood, Larsson)[fn::TODO ref] there are four action levels
-that are involved in dialogue.  With respect to laughter, here is what
-can happen at each level of action: contact, perception, understanding
-and reaction.
+As we have mentioned in Section ref:sec:background, and in accord with
+citet:allwood1995activity,clark1996using,larsson2002issue we consider
+four action levels that are involved in dialogue. Here we discuss what
+can happen at each level of action --- contact, perception,
+understanding and reaction --- with respect to laughter.
 
 *** Contact level
 Incongruities, which are relevant to establishing a stable
-  communication communication channel can lead to laughter which would
-  indicate such troubles. One such example would be delays in
-  communication (e.g., over the unreliable network), which lead to a
-  person still speaking at the moment when the communication is only
-  supposed to be established.
+communication channel can lead to laughter which would indicate such
+troubles. One such example would be delays in communication, for
+instance over an unreliable network, which might lead to a person
+still speaking at the moment when the communication is only supposed
+to be established.
 
 *** Perception level
-Lack of perception basically indicates things that haven’t been
-  heard. 
-  (similar cases to ref:ex:hear-poorly). Also, it seems that
-  interruptions or events related to that can be quite surprising and
-  laughter can be a natural reaction to a surprise. But as a reaction
-  to a pure lack of perception standalone laughter does not seem to be
-  a sufficient signal.
+Lack of perception basically indicates things that haven’t been heard.
+(cases similar to ref:ex:hear-poorly). Also, it seems that
+interruptions or events related to that can be quite surprising and
+laughter can be a natural reaction to a surprise (see Section
+ref:sec:discussion). 
 
 *** Understanding level
 The lack of pragmatic understanding relates to the kinds of
@@ -272,12 +299,12 @@ that incorrect NLU or ASR can lead to prioritising irrelevant results
 (for example, in cases of out-of-scope user queries), which can cause
 user’s confusion and, therefore, laughter. This type of laughter can be treated as negative feedback.
 
-This accounts for the examples ref:ex:money and ref:ex:x-or-y above,
-  Larsson (sec. 3.4.2)[fn::TODO proper ref] subdivides this level into
-  three categories[fn::TODO check] for the negative feedback
-  (context-dependent, context-independent and pragmatic). The examples
-  ref:ex:money and ref:ex:x-or-y above would relate to the pragmatic
-  level.
+This accounts for the examples ref:ex:money and ref:ex:x-or-y
+below. Citep:larsson2002issue subdivides this level into three
+categories for the negative feedback (context-dependent,
+context-independent and pragmatic). The examples ref:ex:money and
+ref:ex:x-or-y above would relate to the pragmatic level of
+misunderstanding.
 
 #+BEGIN_lingex
 \item\label{ex:money} from the dialogue between a virtual assistant (Diana)
@@ -296,16 +323,18 @@ and a person with ASD (Mark):
 | Brian | (laughs)                      |
 #+END_lingex
 
-**** Lack of commitment to understanding
-This can be useful for saying things that dialogue system is less
-committed to. For example, in case of the feedback regarding the user
+Dialogue system can also be not quite sure about what has been
+understood, in other words, system should demonstrate a lower degree
+of commitment to what has been said as a part of understanding
+display.  For example, in case of the feedback regarding the user
 input, when the system repeats the input after the user, it can be
 useful to include laughter in verbatim repeats, which would mean: yes,
-I heard (understood) this, but I might be wrong. This is useful for
-low confidence score for system’s actions taken based on low
-confidence results.
+I heard (understood) this, but I might be wrong. This can also be
+useful for system’s actions taken based on low confidence results.
 
 *** Reaction (consider for acceptance) level
+
+
 - Reaction :: (consider for acceptance) laughter as disagreement or,
   in other words, rejection, like ref:ex:neuer.
 #+BEGIN_lingex
@@ -768,6 +797,7 @@ For instance, in a context of interaction at a food kisok, |QuestionIsNot (Q U (
 * Proposal for support of certain type of laughter
 label:sec:proposal
 ** Laughter as rejection signal
+label:sec:negative-and-rejection
 Laughter as a reaction to interrogative feedback in the case of low
 confidence ASR/NLU result can be exemplified by the following
 dialogue.
@@ -936,7 +966,7 @@ We can think of a dialogue system scenario where
 
 
 bibliography:lacatoda.bib
-bibliographystyle:apalike
+bibliographystyle:named
 
 * COMMENT NOTES
 ** J <2021-04-28 Wed>
