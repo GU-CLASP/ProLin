@@ -267,7 +267,8 @@ citep:glenn2003laughter,jefferson1984organization,mazzocconi2019phd,petitjean201
 label:sec:types
 In this section we would like to outline types of laughter that can be
 of a special interest for task-oriented dialogue systems and could be
-accounted for, at least rudimentary, within a proposed framework.
+accounted for, at least rudimentarily, within a proposed framework.
+
 ** Laughter as a component of grounding
 As we have mentioned in Section ref:sec:background, and in accord with
 citet:allwood1995activity,clark1996using,larsson2002issue we consider
@@ -333,15 +334,14 @@ I heard (understood) this, but I might be wrong. This can also be
 useful for system’s actions taken based on low confidence results.
 
 *** Reaction (consider for acceptance) level
+On this level what has being understood can be either accepted or rejected for the current purpose. Acceptance laughter can be typically related to reaction to humour, which is out of scope of the current study, or apology (see next section). 
 
-
-- Reaction :: (consider for acceptance) laughter as disagreement or,
-  in other words, rejection, like ref:ex:neuer.
+Citet:ginzburg2020laughter consider some uses of standalone laughter as cases of negative response to a polar question or a signal of disbelief in previously uttered assertion. In this study we reflect on negative responses like ref:ex:neuer.
 #+BEGIN_lingex
-\item\label{ex:neuer} From citep:ginzburg2020laughter, context: Bayern
+\item\label{ex:neuer} From citet:ginzburg2020laughter, context: Bayern
 München goalkeeper Manuel Neuer faces the press after his team’s
-(Dreierkette) defense has proved highly problematic in the game just
-played (3-2 against Paderborn).
+(\emph{Dreierkette} --- three-in-the-back) defence has proved highly
+problematic in the game just played (3-2 against Paderborn).
 
 #+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align l >{\em}L
 | Journalist: (smile) | Dreierkette auch ‘ne Option?               |
@@ -350,6 +350,8 @@ played (3-2 against Paderborn).
 |                     | (brief laugh)                              |
 #+END_lingex
 
+In Section ref:sec:proposal we show how this kind of laughter as
+negative response can be handled by the dialogue manager.
 
 ** Laughter and apology
 - apology DA is very frequent in relation to laughter. 
@@ -529,10 +531,71 @@ The proposition |P x| is the interpretation of a short answer |x|.
 The |x| column shows the formal representation of a possible answer, either~in~short~form or assertion form.
 }
 \end{table*}
-** TODO Representation of questions with metavariables
+** Representation of questions with metavariables
+label:sec:meta
 In this subsection we show how a metavariable can represent what is
 being asked, as the unknown in a proposition. A first use for
 metavariables is to represent the requested answer of a question.
+
+Within the state of the agent, if the value of the requested answer is
+represented as a metavariable |x|, then the question can be
+represented as: |Q A x (P x)|.  That is, the pending question (|Q|
+denotes a question constructor) is a triple of a type, a
+metavariable |x|, and a proposition where |x| occurs. We stress
+that |P x| is /not/ part of the information state of the agent yet,
+rather the fact that the above question is /under discussion/ is a
+fact. For example, after asking "Where does John live?", we have:
+
+#+BEGIN_code
+haveQud : QUD (Q Location x (Live John x))
+#+END_code
+
+Resolving a question can be done by communicating an answer. An answer
+to a question |(A : Type; P : A -> Prop)| can be of either of the two
+following forms: i) A *ShortAnswer* is a pair of an element |X:A| and
+its type |A|, represented as |ShortAnswer A X| or ii) An *Assertion* is
+a proposition |R : Prop|, represented as |Assert R|.
+Therefore, one way to process a short answer is by the |processShort| rule:
+
+#+BEGIN_code
+processShort :  (a : Type) -> (x : a) -> (p : Prop) -> 
+    ShortAnswer a x ⊸ QUD (Q a x p) ⊸ p
+#+END_code
+Above we use Π type binders to declare (meta)variables (written
+here |(a : Type) ->|, |(x : a) ->|, etc.). This terminology will make
+sense to readers familiar with dependent types. For the others, such
+binders can be thought as universal quantification (|∀ a, ∀ x|, etc.),
+the difference is that the type of the bound variable is
+specified. (The reader worried about any theoretical difficulty
+regarding mixing linear and dependent types is directed to
+citet:atkey_syntax_2018 and citet:abel_unified_2020.)
+
+We demand in particular that types in the answer and in the question
+match (|a| occurs in both places). Additionally, because |x| occurs
+in |p|, the information state will mention the concrete |x| which was
+provided in the answer.  For example, if the QUD was |(Q Location x
+(Live John x))| and the system processes the answer |ShortAnswer
+Location Paris|, then |x| unifies with |Paris|, and the new state will
+include |Live John Paris|.
+
+To process assertions, we can use the following rule:
+
+#+BEGIN_code
+processAssert :  (a : Type) -> (x : a) -> (p : Prop) ->
+   Assert p ⊸ QUD (Q a x p) ⊸ p
+#+END_code
+That is, if (1) |p| was asserted, and (2) the proposition |q| is part
+of a question under discussion, and (3) |p| can be unified with |q|
+(we ensure this unification by simply using the same metavariable |p|
+in both roles in the above rule), then the assertion resolves the
+question. Additionally, the metavariable |x| is made ground to a value
+provided by |p|, by virtue of unification of |p| and |q|. For example,
+"John lives in Paris" answers both questions "Where does John live?"
+and "Does John live in Paris?" (there is unification), but, not, for
+example "What time is it?" (there is no unification).
+Note that, in both cases (|processAssert| and |processShort|), the
+information state is updated with the proposition posed in the
+question. 
 
 
 ** Dialogue management
@@ -610,10 +673,11 @@ pushQUD :  (q : Question) -> (qs : List Question) ->
 
 If the user asserts something that relates to the top |QUD|, then
 the |QUD| can be resolved and therefore removed from the stack. The
-corresponding proposition |p| is saved as a |PendingUserFact|.[fn::For the
-current purposes we only remove the top QUD, but in a more general
+corresponding proposition |p| is saved as a |PendingUserFact|.[fn::For
+the current purposes we only remove the top QUD, but in a more general
 case we can implement the policy that can potentially resolve any QUD
-from the stack.] 
+from the stack.] The following rule is an extended, dialogue management
+version of the rule previously introduced in Section ref:sec:meta.
 #+BEGIN_code
 processAssert : (a : Type) -> (x : a) -> (p : Prop) -> 
   (qs : List Question) ->
@@ -655,9 +719,9 @@ produceCR :
 #+END_code
 
 ** Extending dialogue manager with grounding strategies
-label:sec:dm-ground
-- this is a sketch! 
-- TODO: why grounding?
+label:sec:dm-ground In this subsection we provide a sketch of basic
+grounding strategies and moves related to them, which will be further
+used to interact with laughter.
 
 Dialogue systems deal with confidence scores from ASR and NLU
 components, which reflects the uncertainty in user queries that has to
@@ -827,7 +891,7 @@ our generic rules for integrating QUDs (|pushQUD|). For that we need
 to consider polar questions as expecting an answer
 of |Prop->Prop| type (see Table ref:tbl:qa-ex). Recalling the example:
 #+BEGIN_lingex
-\item 
+\item [\ref{ex:neuer}]
 #+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align l >{\em}L
 | Journalist: (smile) | Dreierkette auch ‘ne Option?               |
 |                     | (Is the three-in-the-back also an option?) |
@@ -856,19 +920,18 @@ IsOptionDreierkette)| has a very basic meaning: this proposition is
 the /laughable/, without being more specific about the laughter
 function. One can also consider being more specific, simply treating
 laughter as a negation (|ShortAnswer (Prop->Prop) (\x.Not x)|), but in
-general laughter can have a more nuanced meaning.
+general laughter has a more nuanced meaning.
 
 ** Laughter which accompanies feedback
-1. Easy as part of NLG of |(ICM Und Pos (Not q))|: "Okay, not Paris
-   then, hehe".
+1. Easy as part of NLG of |(ICM Und Pos (QuestionIsNot q))|: "Okay,
+   not Paris then, hehe".
 2. Apology. 
 * Discussion
 label:sec:discussion
 - laughter and dialogue acts (predictive feature)
 - laughter prediction in dialogue
 - laughter placement in dialogue
-- humour
-- topoi
+
 ** Humour
 
 #+BEGIN_lingex
