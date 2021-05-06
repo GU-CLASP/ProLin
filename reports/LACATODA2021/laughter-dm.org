@@ -187,15 +187,17 @@ form-filling to more complex dialogue planning and logical inference
 systems, such as Information State Update (ISU) cite:larsson2002issue
 that we employ here. Although there has been a lot of development in
 dialogue systems in recent years, only a few approaches reflect
+# JP citations
 advancements in /dialogue theory/. Our aim is to closely integrate
 dialogue systems with work in theoretical semantics and pragmatics of
-dialogue. In this work we do so by employing our own implementation of
-KoS theoretical dialogue framework citep:ginzburg2012interactive which
+dialogue. In this paper we do so by employing our own implementation of
+the KoS theoretical dialogue framework citep:ginzburg2012interactive which
 we discussed in citep:anon. In this work we are extending our
-implementation with a rudimentary support of grounding and therefore
-allows to be further extended to support certain types of laughter.
+implementation with a rudimentary support of grounding,
+allowing it to be further extended to support certain types of laughter.
 
 In KoS (and other dynamic approaches to meaning), language is compared
+# JP: treated as
 to a game, containing players (interlocutors), goals and rules. KoS
 represents language interaction by a dynamically changing context. The
 meaning of an utterance is then how it changes the context. Compared
@@ -203,18 +205,21 @@ to most approaches, which represent a single context for both dialogue
 participants, KoS keeps separate representations for each participant,
 using the /Dialogue Game Board/ (DGB). Thus, the information states of
 the participants comprise a private part and the dialogue gameboard
+# JP: "comprise" is probably not the right word here
 that represents information arising from publicised interactions. The
-DGB tracks, at the very least, shared assumptions/visual field, moves
+DGB tracks, at least, shared assumptions/visual field, moves
 (= utterances, form and content), and questions under discussion.
 
 
-In dialogue, especially in a dialogue with machine which involves an
+In dialogue, especially in a dialogue with a machine which involves an
 uncertainty of speech recognition (ASR) and language understanding
+# JP: "ASR": what does the A stand for?
 (NLU), we can not assume a perfect communication. While communicating,
 especially over unreliable communication channel, humans give each
 other evidence that their contributions are understood to a certain
 extent, sufficient for current purposes. Citet:clark1996using and
-citet:allwood1995activity distinguish four /levels of action/ related to different degree of grounding. Here we enlist them according to the /action ladder/ citep:clark1996using, from the hearer's perspective.  
+citet:allwood1995activity distinguish four /levels of action/ related to different degrees of grounding. 
+Here we list them according to the /action ladder/ citep:clark1996using, from the hearer's perspective.  
 1. *Acceptance* level determines whether the content of utterance was
    accepted or rejected by the hearer.  
 2. *Understanding* level specifies whether utterance was understood by the hearer 
@@ -223,14 +228,14 @@ citet:allwood1995activity distinguish four /levels of action/ related to differe
 4. *Contact* level determines whether interlocutors have established a channel of communication.
 
 The action ladder assumes that if the level above is complete, then
-all levels below is complete. For instance, if Bob asks "Do like
+all levels below is complete. For instance, if Bob asks "Do you like
 Paris" and Mary replies "Yes", then Bob's utterance is accepted (and
 also understood, perceived, and their contact has been
 established). If she asks "Paris?" then it might signal that Bob's
-utterance was perceived but not understood (and not accepted).
+utterance was perceived but not understood (and thus not accepted).
 
 Citet:larsson2002issue accounts for different levels of action within
-IBiS2 dialogue management framework using a set of rules are used to
+IBiS2 dialogue management framework using a set of rules used to
 update the common ground represented in the information state of the
 system. He uses "Information Communication Management" (ICM) moves
 citep:allwood1995activity as explicit signals concerned with
