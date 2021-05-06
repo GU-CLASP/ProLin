@@ -63,22 +63,30 @@ short answers, feedbacks and vocalisations accompanying them.
 
 * Introduction
 Laughter is very frequent in everyday interactions, for instance, in
-Switchboard corpus laughter comes about every 200 words. Laughter is
+the Switchboard
+# JP: citation needed
+corpus laughter comes about every 200 words. Laughter is
 an ambiguous social signal, and in addition to communicating joy and
 pleasure intuitively associated with humour it also can communicate
-embarrassment, can used to smooth and soften everyday interactions and
-also bear pragmatic functions such as marking an irony or a usage of a
+embarrassment, can be used to smooth and soften everyday interactions and
+also bear pragmatic functions such as marking irony or usage of a
 word in a specific sense.
+# JP: citations for this general remarks?
 
-For a spoken dialogue system it is an important signal to account for
+For a spoken dialogue system, laughter is an important signal to account for
 due to its contribution to naturalness of automated dialogue. Laughter
 can be used in chit-chat dialogue due to potential to build rapport
-and establish a social bonding between the user and artificial agent. 
+and establish a social bonding between the user and artificial agent.
+# JP: para-social?
 
 There have been attempts to produce laughs as a way to mimic human
 behaviour and align with it, as well as laughing avatars mainly
-focussed on laughter as a reaction to jokes. In this paper we are
-taking rather different approach. We start from examples of usage of
+focussed on laughter as a reaction to jokes. 
+# JP: citations needed
+In this paper we are
+taking rather different approach. 
+# JP: is it novel to your knowledge? How do you push state of the art?
+We start from examples of usage of
 laughter in real task-oriented dialogue and then propose ways how
 these behaviour can be reproduced in a dialogue system, and, more
 specifically, in its dialogue management component.
@@ -127,7 +135,7 @@ negative feedback provided by the operator (l.69) entails extra effort from
 the caller---she needs to restart her request from the
 beginning---this obligation is somewhat intrusive and may require
 extra smoothing citep:mazzocconi2019phd,raclaw2017laughter.  For
-current purposes we will treat this laughter as accompanying
+our purposes we will treat this laughter as accompanying
 negative feedback.
 
 For a dialogue system designer this poses an empirical question,
@@ -136,22 +144,22 @@ For instance, feedback associated with a local failure (e.g. speech
 recognition failure), such as "Sorry, I didn’t understand" or "Sorry I
 didn’t hear you". It may be useful also where negative feedback is the
 result of an external query, for example when something is not found
-in the database, and can accompany asking the user to start over, as
+in the database, and can accompany a system request to start over, as
 in example ref:ex:hear-poorly.
 
 The reaction to the apology also can be accompanied by laughter, as
 with the second laugh in ref:ex:hear-poorly (l.73). We do not think
-that these days users often apologise to a dialogue system, it is
-usually the dialogue system which is at fault, but this might be
+that these days users often apologise to a dialogue system (it is
+usually the dialogue system which is at fault) but this might be
 different for special cases of systems that aim at more naturalistic
 behaviour.
 
-In this paper we look at laughter from the utilitarian perspective,
-looking at which kinds of laughs can be relevant for dialogue
-systems. Next we will look at laughter from the point of providing
+In this paper we consider laughter from the utilitarian perspective,
+and attempt to determine which kinds of laughs can be relevant for dialogue
+systems. Next we will look at laughter from the point of view of providing
 feedback, either positive or negative.
 
-In Section ref:sec:background will start with a background on our
+In Section ref:sec:background will start with background on our
 approach to dialogue, dialogue management and laughter. Next, in
 Section ref:sec:types presents a small typology of laughter types
 which we think should be accounted for in task-oriented dialogue
