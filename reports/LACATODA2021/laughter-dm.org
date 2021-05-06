@@ -1,4 +1,4 @@
-#+OPTIONS: toc:nil ':t ":t author:nil
+#+OPTIONS: toc:nil ':t ":t author:nil ^:nil
 #+LATEX_CLASS: article
 #+LATEX_HEADER: \usepackage[small]{caption}
 #+LATEX_HEADER: \pdfpagewidth=8.5in
@@ -53,56 +53,56 @@
 #+TITLE: Non-humorous use of laughter in spoken dialogue systems
 
 #+begin_abstract
-In this paper we argue how laughter, an ambiguous yet ubiquitous signal in
-everyday interactions, can act as an important feature for
+In this paper we argue that laughter, an ambiguous yet ubiquitous
+signal in everyday interactions, can act as an important feature for
 task-oriented dialogue systems. We show which components of a dialogue
 system should be affected and modified, and more specifically how
-laughter can be accounted for in a dialogue manager as instances of
-short answers, feedbacks and vocalisations accompanying them.
+particular types of laughter can be accounted for in a dialogue
+manager as instances of short answers, feedbacks and vocalisations
+accompanying them.
 #+end_abstract
 
 * Introduction
 Laughter is very frequent in everyday interactions, for instance, in
-the Switchboard
-# JP: citation needed
+the Switchboard Dialogue Act Corpus citep:jurafsky1997switchboard
 corpus laughter comes about every 200 words. Laughter is
 an ambiguous social signal, and in addition to communicating joy and
 pleasure intuitively associated with humour it also can communicate
-embarrassment, can be used to smooth and soften everyday interactions and
+embarrassment, be used to smooth and soften everyday interactions and
 also bear pragmatic functions such as marking irony or usage of a
 word in a specific sense.
 # JP: citations for this general remarks?
 
-For a spoken dialogue system, laughter is an important signal to account for
-due to its contribution to naturalness of automated dialogue. Laughter
-can be used in chit-chat dialogue due to potential to build rapport
-and establish a social bonding between the user and artificial agent.
-# JP: para-social?
+For a spoken dialogue system, laughter is an important signal to
+account for due to its contribution to the naturalness of automated
+dialogue. Laughter can be used in chit-chat dialogue due to its
+potential to build rapport and establish a para-social bond between
+the user and artificial agent.
 
 There have been attempts to produce laughs as a way to mimic human
 behaviour and align with it, as well as laughing avatars mainly
 focussed on laughter as a reaction to jokes. 
 # JP: citations needed
-In this paper we are
-taking rather different approach. 
+In this paper we
+take a rather different approach. 
 # JP: is it novel to your knowledge? How do you push state of the art?
 We start from examples of usage of
 laughter in real task-oriented dialogue and then propose ways how
-these behaviour can be reproduced in a dialogue system, and, more
+these behaviours can be reproduced in a dialogue system, and, more
 specifically, in its dialogue management component.
 
-The example ref:ex:hear-poorly below is an excerpt from the
-role-played dialogue collected by citet:howes-etal-2019-good for their
-directory enquiries corpus. Dialogue participants were playing the
-roles of a caller and a operator, respectively asking for the phone
-numbers which are associated with a certain name of the business. Half
-of the dialogues happened in a noisy environment, with many
+The example ref:ex:hear-poorly below is an excerpt from a role-play
+dialogue collected by citet:howes-etal-2019-good for their Directory
+Enquiries Corpus (DEC) citep:Bondarenko_Howes_Larsson_2020. Dialogue
+participants were playing the roles of a caller and a operator,
+respectively asking for the phone numbers of certain named businesses.
+Half of the dialogues happened in a noisy environment, with many
 mishearings and laughs induced. This paper addresses the following
 research question: how can these laughs be accounted for a dialogue
 system, which implements a similar scenario?
 
 #+BEGIN_lingex
-\item\label{ex:hear-poorly} (22_KL_loc2)\\
+\item\label{ex:hear-poorly} DEC:22_KL_loc2\\
 #+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align lr>{\em}L
 | 56 | Caller   | er the next one is er tanfield chambers     |
 | 57 | Operator | santias?                                    |
@@ -129,45 +129,45 @@ system, which implements a similar scenario?
 #+END_lingex
 Let’s look at the first laughter (line 69). We can see that the
 operator’s question "and then seal?" (l.67) was not addressed and this
-piece of information was not grounded.  "C?" (l.71) refers to restart
-from the beginning (it was "Tanfield", but she has heard "C"). The
-negative feedback provided by the operator (l.69) entails extra effort from
-the caller---she needs to restart her request from the
-beginning---this obligation is somewhat intrusive and may require
-extra smoothing citep:mazzocconi2019phd,raclaw2017laughter.  For
-our purposes we will treat this laughter as accompanying
-negative feedback.
+piece of information was not grounded.  "C?" (l.71) refers to the
+restart from the beginning (it was "Tanfield", but she has heard
+"C"). The negative feedback provided by the operator (l.69) entails
+extra effort from the caller---she needs to restart her request from
+the beginning---this obligation is somewhat intrusive and may require
+extra smoothing citep:mazzocconi2019phd,raclaw2017laughter.  For our
+purposes we will treat this laughter as accompanying negative
+feedback.
 
 For a dialogue system designer this poses an empirical question,
 namely, would it be useful to soften negative feedback with laughter?
 For instance, feedback associated with a local failure (e.g. speech
 recognition failure), such as "Sorry, I didn’t understand" or "Sorry I
-didn’t hear you". It may be useful also where negative feedback is the
+didn’t hear you". It may also be useful where negative feedback is the
 result of an external query, for example when something is not found
 in the database, and can accompany a system request to start over, as
 in example ref:ex:hear-poorly.
 
 The reaction to the apology also can be accompanied by laughter, as
 with the second laugh in ref:ex:hear-poorly (l.73). We do not think
-that these days users often apologise to a dialogue system (it is
-usually the dialogue system which is at fault) but this might be
+that these days users often apologise to a dialogue system, as it is
+usually the dialogue system which is at fault, but this might be
 different for special cases of systems that aim at more naturalistic
 behaviour.
 
 In this paper we consider laughter from the utilitarian perspective,
-and attempt to determine which kinds of laughs can be relevant for dialogue
-systems. Next we will look at laughter from the point of view of providing
-feedback, either positive or negative.
+and attempt to determine which kinds of laughs can be relevant for
+dialogue systems. Next we will look at laughter from the point of view
+of providing feedback, either positive or negative.
 
 In Section ref:sec:background will start with background on our
-approach to dialogue, dialogue management and laughter. Next, in
-Section ref:sec:types presents a small typology of laughter types
-which we think should be accounted for in task-oriented dialogue
-system. In Section ref:sec:ldm we describe our own dialogue management
-framework and in Section ref:sec:proposal we show a formal account for
-the aforementioned types of laughter. We conclude with a brief
-discussion of our findings and further laughter-related issues in
-Section ref:sec:discussion.
+approach to dialogue, dialogue management and laughter. Next, Section
+ref:sec:types presents a small typology of laughter types which we
+think should be accounted for in task-oriented dialogue system. In
+Section ref:sec:ldm we describe our own dialogue management framework
+and in Section ref:sec:proposal we show a formal account for the
+aforementioned types of laughter. We conclude with a brief discussion
+of our findings and further laughter-related issues in Section
+ref:sec:discussion.
 # how are we going to do this
 * Background 
 label:sec:background
@@ -179,26 +179,26 @@ depending on the current state and the external context.
 
 Two families of approaches to dialogue management can be considered:
 hand-crafted dialogue strategies
-cite:allen1995trains,larsson2002issue,jokinen2009constructive and
+citep:allen1995trains,larsson2002issue,jokinen2009constructive and
 statistical modelling of dialogue
-cite:rieser2011reinforcement,young2010hidden,williams2017hybrid. Frameworks
+citep:rieser2011reinforcement,young2010hidden,williams2017hybrid. Frameworks
 for hand-crafted strategies range from finite-state machines and
 form-filling to more complex dialogue planning and logical inference
-systems, such as Information State Update (ISU) cite:larsson2002issue
+systems, such as Information State Update (ISU) citep:larsson2002issue
 that we employ here. Although there has been a lot of development in
 dialogue systems in recent years, only a few approaches reflect
 # JP citations
 advancements in /dialogue theory/. Our aim is to closely integrate
 dialogue systems with work in theoretical semantics and pragmatics of
-dialogue. In this paper we do so by employing our own implementation of
-the KoS theoretical dialogue framework citep:ginzburg2012interactive which
-we discussed in citep:anon. In this work we are extending our
-implementation with a rudimentary support of grounding,
-allowing it to be further extended to support certain types of laughter.
+dialogue. In this paper we do so by employing our own implementation
+of the KoS theoretical dialogue framework
+citep:ginzburg2012interactive which we discussed in citep:anon. In
+this work we extend our implementation with a rudimentary support of
+grounding, therefore allowing the implementation to be further
+extended to support certain types of laughter.
 
-In KoS (and other dynamic approaches to meaning), language is compared
-# JP: treated as
-to a game, containing players (interlocutors), goals and rules. KoS
+In KoS (and other dynamic approaches to meaning), language is treated
+as to a game, containing players (interlocutors), goals and rules. KoS
 represents language interaction by a dynamically changing context. The
 meaning of an utterance is then how it changes the context. Compared
 to most approaches, which represent a single context for both dialogue
@@ -211,15 +211,16 @@ DGB tracks, at least, shared assumptions/visual field, moves
 (= utterances, form and content), and questions under discussion.
 
 
-In dialogue, especially in a dialogue with a machine which involves an
-uncertainty of speech recognition (ASR) and language understanding
-# JP: "ASR": what does the A stand for?
-(NLU), we can not assume a perfect communication. While communicating,
-especially over unreliable communication channel, humans give each
-other evidence that their contributions are understood to a certain
-extent, sufficient for current purposes. Citet:clark1996using and
-citet:allwood1995activity distinguish four /levels of action/ related to different degrees of grounding. 
-Here we list them according to the /action ladder/ citep:clark1996using, from the hearer's perspective.  
+In dialogue, especially in a dialogue with a machine which involves
+uncertainty of automatic speech recognition (ASR) and natural language
+understanding components (NLU), we can not assume perfect
+communication. While communicating, especially over an unreliable
+communication channel, humans give each other evidence that their
+contributions are understood to a certain extent, sufficient for
+current purposes. Citet:clark1996using and citet:allwood1995activity
+distinguish four /levels of action/ related to different degrees of
+grounding.  Here we list them according to the /action ladder/
+citep:clark1996using, from the hearer's perspective.
 1. *Acceptance* level determines whether the content of utterance was
    accepted or rejected by the hearer.  
 2. *Understanding* level specifies whether utterance was understood by the hearer 
@@ -228,15 +229,15 @@ Here we list them according to the /action ladder/ citep:clark1996using, from th
 4. *Contact* level determines whether interlocutors have established a channel of communication.
 
 The action ladder assumes that if the level above is complete, then
-all levels below is complete. For instance, if Bob asks "Do you like
+all levels below are complete. For instance, if Bob asks "Do you like
 Paris" and Mary replies "Yes", then Bob's utterance is accepted (and
 also understood, perceived, and their contact has been
 established). If she asks "Paris?" then it might signal that Bob's
 utterance was perceived but not understood (and thus not accepted).
 
 Citet:larsson2002issue accounts for different levels of action within
-IBiS2 dialogue management framework using a set of rules used to
-update the common ground represented in the information state of the
+the IBiS2 dialogue management framework using a set of rules to update
+the common ground represented in the information state of the
 system. He uses "Information Communication Management" (ICM) moves
 citep:allwood1995activity as explicit signals concerned with
 communicating the updates to the common ground.
@@ -279,9 +280,9 @@ citep:glenn2003laughter,jefferson1984organization,mazzocconi2019phd,petitjean201
 
 * Types of laughter
 label:sec:types
-In this section we outline types of laughter that can be
-of special interest to task-oriented dialogue systems and could be
-accounted for, at least rudimentarily, within the proposed framework.
+In this section we outline  some types of laughter that can be
+of special interest to task-oriented dialogue systems and can be
+accounted for within our proposed framework.
 
 ** Laughter as a component of grounding
 As we have mentioned in Section ref:sec:background, and in accord with
@@ -295,11 +296,12 @@ Incongruities, which are relevant to establishing a stable
 communication channel can lead to laughter which would indicate such
 troubles. One such example would be delays in communication, for
 instance over an unreliable network, which might lead to a person
-still speaking at the moment when the communication is only supposed
-# JP: still --> already?
+already speaking at the moment when the communication is only supposed
 to be established.
 
 *** Perception level
+- TODO: rewrite / explain
+
 Lack of perception basically indicates things that haven’t been heard.
 # JP: ???
 (cases similar to ref:ex:hear-poorly). Also, it seems that
@@ -341,34 +343,33 @@ and a person with ASD (Mark):
 #+END_lingex
 
 A dialogue system can also be unsure about what has been
-understood. In other words, a system should demonstrate a lower degree
-of commitment to what has been said as a part of understanding
-display.  For example, in case of the feedback regarding the user
-input, when the system repeats the input after the user, it can be
-useful to include laughter in verbatim repeats, which would mean: yes,
-I heard (understood) this, but I might be wrong. This can also be
-useful for system’s actions taken based on low confidence results.
+understood. In other words, the system should demonstrate a lower
+degree of commitment to what has been said as a part of a display of
+understanding.  For example, in case of the feedback regarding the
+user input, when the system repeats the input after the user, it can
+be useful to include laughter in verbatim repeats, which would mean:
+yes, I heard (understood) this, but I might be wrong. This can also be
+useful for a system’s actions taken based on low confidence results.
 
 *** Reaction (consider for acceptance) level
 On this level what has being understood can be either accepted or
 rejected for the current purpose. Acceptance laughter can typically be
-related to a reaction to humour, which is out of scope of the current
-study, or apology (see next section).
+related to a reaction to humour, which is out of the scope of current
+paper, or apology (see next section).
 
 Citet:ginzburg2020laughter consider some uses of standalone laughter
 as cases of negative response to a polar question or a signal of
-disbelief in a previously uttered assertion. In this study we reflect on
-# JP: I don't think that the present paper is a study?
-negative responses like ref:ex:neuer.
+disbelief in a previously uttered assertion. In this paper we reflect
+on negative responses like ref:ex:neuer.
 #+BEGIN_lingex
 \item\label{ex:neuer} From citet:ginzburg2020laughter, context: Bayern
 München goalkeeper Manuel Neuer faces the press after his team’s
 (\emph{Dreierkette} --- three-in-the-back) defence has proved highly
-problematic in the game just played (3-2 against Paderborn).
+problematic in the game just played (which they won 3-2 against Paderborn).
 
 #+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align l >{\em}L
 | Journalist: (smile) | Dreierkette auch ‘ne Option?               |
-|                     | (Is the three-in-the-back also an option?) |
+|                     | (Is the three-at-the-back also an option?) |
 | Manuel Neuer:       | fuh fuh fuh                                |
 |                     | (brief laugh)                              |
 #+END_lingex
@@ -379,26 +380,29 @@ negative response can be handled by the dialogue manager.
 ** Laughter and intrusion
 label:sec:apology
 
-In natural dialogue intrusion is frequently associated with laughter. In
-Switchboard Dialogue Act corpus (SWDA) citep:jurafsky1997switchboard a
-dialogue act of apologising is more related to laughter, as compared
-with other dialogue acts. In Figure ref:fig:orbit we show how many
-dialogue acts are associated with utterances containing laughter, for
-current dialogue act, and for preceding and following utterances,
-depending on the speaker. In addition to apology, we show its
-adjacency counterpart --- Downplayer --- realised, for instance, by
-utterances like "Don't worry" or "It's alright".
+In natural dialogue intrusion is frequently associated with
+laughter. In the Switchboard Dialogue Act corpus (SWDA)
+citep:jurafsky1997switchboard an Apology dialogue act  is more
+related to laughter, as compared to other dialogue acts. In Figure
+ref:fig:orbit we show how many dialogue acts are associated with
+utterances containing laughter, for the current dialogue act, and for
+preceding and following utterances, depending on the speaker. In
+addition to apology, we show its adjacency counterpart --- Downplayer
+--- realised, for instance, by utterances like "Don't worry" or "It's
+alright".
+
+# TODO: clear the bit about downplayer
 
 #+CAPTION: Comarison of the most common dialogue act in SWDA --- "Statement-Non-Opinion" (33.27% of all utterances) with the dialogue acts "Apology" (0.04%) and "Downplayer" (0.05%). Proportion of utterances which contain laughter are shown in association with each dialogue act. label:fig:orbit
 [[./orbit-apology.pdf]]
 
 In ref:ex:apology, the caller reacts with a compassionate laughter to
-the apology given by the operator. Similar instances of laughter
-can be seen in ref:ex:hear-poorly: the second laugh shows that the
+the apology given by the operator. This is a similar instance of laughter
+to one seen in ref:ex:hear-poorly: the second laugh shows that the
 same reaction, as in ref:ex:apology can be expected from the operator.
 
 #+BEGIN_lingex
-\item\label{ex:apology} (16_HG_loc2)\\
+\item\label{ex:apology} DEC:16_HG_loc2\\
 #+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align lr >{\em}L
 | 162 | Operator | still not finding it                                            |
 | 163 | Operator | having problems with this one                                   |
@@ -415,10 +419,10 @@ We also observe that laughter can clearly accompany the asking for a
 favour by the same speaker. In example ref:ex:from-beginning the
 operator asks the caller if they can start from the beginning, which
 can be treated as an intrusion of some sort, therefore asking for a
-favour and the apology is accompanied by laughter.
+favour, and the apology is accompanied by laughter.
 
 #+BEGIN_lingex
-\item\label{ex:from-beginning} (24_LK_loc2)\\
+\item\label{ex:from-beginning} DEC:24_LK_loc2\\
 #+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align lr >{\em}L
 | 59 | Caller   | B as in bicycle                                                                           |
 | 60 | Operator | yeah                                                                                      |
@@ -466,10 +470,9 @@ framework:
    applications of the system.
 ** Linear rules and proof search
 Typically, and in particular in the archetypal logic programming
-language prolog cite:bratko2001prolog, axioms and rules are expressed
+language prolog citep:bratko2001prolog, axioms and rules are expressed
 within the general framework of first order logic. However, several
-authors cite:dixon2009plans,martens2015programming have proposed to
-use linear logic cite:girard1995linear instead. For our purpose, the
+authors citep:dixon2009plans,martens2015programming have proposed using linear logic citep:girard1995linear instead. For our purpose, the
 crucial feature of linear logic is that hypotheses may be used /only
 once/. 
 
@@ -514,15 +517,13 @@ alone.
 # immutable facts (introduced by the unrestricted arrow).
 
 
-Our DM models the information-state of only one
+Our dialogue manager (DM) models the information-state of only one
 participant. Regardless, this participant can record its own beliefs
-about the state of other participants. In general, the core of DM is
-comprised of a set of linear-logic rules which depend on the domain of
-application. However, many rules will be domain-independent (such as
-generic processing of answers). We show these generic rules here, and
-the demo will illustrate them within an example application.
-
-# JP the demo? This is coming unexepected. What is this demo?
+about the state of other participants. In general, the core of the DM
+is comprised of a set of linear-logic rules which depend on the domain
+of application. However, many rules will be domain-independent (such
+as generic processing of answers). We show examples of such rules in
+Section ref:sec:dm-rules.
 
 ** Questions and answers
 
@@ -596,12 +597,12 @@ processShort :  (a : Type) -> (x : a) -> (p : Prop) ->
 #+END_code
 Above we use Π type binders to declare (meta)variables (written
 here |(a : Type) ->|, |(x : a) ->|, etc.). This terminology will make
-sense to readers familiar with dependent types. For the others, such
+sense to readers familiar with dependent types. For others, such
 binders can be thought as universal quantification (|∀ a, ∀ x|, etc.),
 the difference is that the type of the bound variable is
-specified. (The reader worried about any theoretical difficulty
+specified.[fn::The reader worried about any theoretical difficulty
 regarding mixing linear and dependent types is directed to
-citet:atkey_syntax_2018 and citet:abel_unified_2020.)
+citet:atkey_syntax_2018 and citet:abel_unified_2020.]
 
 We demand in particular that types in the answer and in the question
 match (|a| occurs in both places). Additionally, because |x| occurs
@@ -747,21 +748,12 @@ produceAnswer :
    [  _ :: Agenda (ShortAnswer a x SYSTEM USER); 
       _ :: QUD qs;
       _ :: Answered (Q USER a x p)]
-produceCR :
-   [  a : Type ; x : a ;  p : Prop ; qs : List Question ;
-      _  :: QUD (Cons (Q USER a x p) qs) ; 
-      _  :: p ] ?-> CR
 #+END_code
 
-
-# JP: Perhaps delete this bit about CRs?
-
-** Extending dialogue manager with grounding strategies
+** Extending the dialogue manager with grounding strategies
 label:sec:dm-ground In this subsection we provide a sketch of basic
 grounding strategies and moves related to them, which will be further
-used to interact with laughter.
-
-# JP "interact with" --> "model" ?
+used to model laughter.
 
 Dialogue systems deal with confidence scores from ASR and NLU
 components, which reflects the uncertainty in user queries.
@@ -778,12 +770,12 @@ Ask (Q U Time t0 (IsTime t0 )) U S YELLOW
 
 Here we illustrate the possibility of extending the system with
 Interactive Communication Management (ICM) moves and grounding
-strategies, replicating the account of citet:larsson2002issue for grounding
-and feedback. ICM moves are used for coordination of the common ground
-in dialogue, which expresses, for instance, explicit signals for
-integrating the incoming information and updating the common ground
-(dialogue gameboard in our implementation). The basic type for the ICM
-move is the following:
+strategies, replicating Larsson's citeyearpar:larsson2002issue account
+for grounding and feedback. ICM moves are used for coordination of the
+common ground in dialogue, which expresses, for instance, explicit
+signals for integrating the incoming information and updating the
+common ground (dialogue gameboard in our implementation). The basic
+type for the ICM move is the following:
 
 #+begin_code
 ICM level polarity content
@@ -840,8 +832,8 @@ icmINTConfirm: (q : Question) -> (x y : DP) ->
 #+END_code
 
 Processing answers related to such a type of |QUD| will be done as
-usual. For instance, a short "yes" or "no" will be we treated here as
-a boolean, and depending on the answer the context will contain
+usual. For instance, a short "yes" or "no" will be treated here as a
+boolean, and depending on the answer the context will contain
 either |PendingUserFact (UND q)| or |PendingUserFact (UNDN q)|.
 
 In this sketch implementation we do not care about confidence scores
@@ -922,26 +914,24 @@ dialogue.
 #+BEGIN_lingex
 \item\label{ex:meal}
 #+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align l >{\em}L l
-| U: | I would like to order a happy meal.                             | Ask q                  |
-| S: | I understood you'd like to order a happy meat. Is that correct? | ICM Und Int q          |
+| U: | I would like to order a vegan bean burger.                 | Ask q                  |
+| S: | I understood you'd like to order a beef burger. Is that correct?       | ICM Und Int q          |
 | U: | HAHAHA                                                          | ShortAnswer Bool False |
 #+END_lingex
 
 Here we can treat laughter as a short negative answer, similar to
 "No". In the case of interrogative ICM move, such answer can be
 processed using the |icmINTneg| rule defined above. 
-In this constructed example, we are ignoring the fact that such bizarre
-answers could be avoided by domain-specific tuning of ASR and NLU
-components, but in general this could be treated as a recovery
-strategy for different system outputs not desired by dialogue system
-designers. This approach can be extended to other cases of user
-feedback, for instance, to cover the cases with higher confidence
-score where the system produces |ICM Und Pos q| move, but this is out of
-scope for current study.
+# In this constructed example, we are ignoring the fact that such
+# bizarre answers could be avoided by domain-specific tuning of ASR
+# and NLU components, but in general
+This can be treated as a recovery strategy for different system
+outputs not desired by dialogue system designers. This approach can be
+extended to other cases of user feedback, for instance, to cover the
+cases with higher confidence score where the system produces |ICM Und
+Pos q| move, but this is out of scope of the current paper.
 
-# JP: study vs. ...
-
-Returning to a more sophisticated ref:ex:neuer, it can be handled by
+Returning to the more sophisticated ref:ex:neuer, it can be handled by
 
 # JP: reference is wrong? and why is it repeated? Also I can't figure out the meaning of the sentence 
 
@@ -988,16 +978,18 @@ instance, ICM move of the form |(ICM Und Pos (QuestionIsNot (Q U (Prop
 -> Prop) m0 (m0 WantOlives)))| can be realised as natural language
 utterance like "Okay, let's forget olives, hehe", whereas laughter is
 used as a smoothing device to mitigate the awkwardness of system
-failure. Citep:larsson2002issue often included an apology "Sorry" in
+failure. Citet:larsson2002issue often included an apology "Sorry" in
 some of the ICM moves, e.g. "Sorry, I didn't understand that". With
 some possible caveats, we can sometimes include a slight laughter in
 such moves, especially if system is getting a bit repetitive and
 produces |(ICM Und Neg)| too often. Considering the evidence for
 laughter often accompanying apology (as a separate dialogue act)
-presented in Section ref:sec:apology, this can mimic a natural
+presented in Section ref:sec:apology, this can mimic natural
 behaviour in dialogue.
 
 * Discussion
+# TODO: ...and future work
+
 label:sec:discussion
 # - laughter and dialogue acts (predictive feature)
 # - laughter prediction in dialogue
@@ -1014,7 +1006,7 @@ We start with humour, which is usually considered in relation to jokes
 generated by dialogue system, but here we present more subtle
 incongruities related to humour in task-oriented dialogue.
 #+BEGIN_lingex
-\item\label{ex:under} (28_NM_loc2) \\
+\item\label{ex:under} DEC:28_NM_loc2 \\
 #+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align lr >{\em}J
 |  17 | Caller   | okay so it starts with a     |
 |  18 | Caller   | L                            |
@@ -1030,16 +1022,16 @@ incongruities related to humour in task-oriented dialogue.
 |  28 | Operator | under yes                    |
 #+END_lingex
 In ref:ex:under the caller experiences issues with coming up with
-phonetic transcriptions for certain words. The first laugh (line 27)
+phonetic spellings for certain words. The first laugh (line 27)
 deserves attention, as it seems that it reflects on both pleasant
 incongruity and social one (smoothing), according to the taxonomy of
 citep:mazzocconi2019phd. The pleasant incongruity is due the fact that
-phonetic transcription of "U" as in "under" is incongruous with the
-preceding ones: a preposition vs. proper nouns. The way to transcribe
-things is typically culturally specific, with the most typical cases
-of cities or countries. 
+phonetic spelling of "U" as in "under" is incongruous with the
+preceding ones: a preposition vs. proper nouns. The way to spell
+things phonetically is typically culturally specific, with the most
+typical cases of cities or countries.
 
-- TODO: topos (and also borrowed topos) of how things are transcribed.
+- TODO: topos (and also borrowed topos) of how things are spelled.
 
 
 ** Surprise
@@ -1047,8 +1039,8 @@ Intuitively, laughter is related to events that are unexpected,
 usually[fn::TODO ref] in a pleasant way. One of the ways to establish
 some degree of natural behaviour for a dialogue system would be to
 react sincerely to these kinds of events. A possible measure for a
-system’s surprisal is how it is confused with the user input. A
-natural measure for this from information theory is /perplexity/, a
+system’s surprisal is how confused it is by the user input. A natural
+measure for this from information theory is /perplexity/, a
 probability-based metric. For $N$ words in an evaluation set $W = w_1
 w_2 \dots w_N$, the average perplexity per word is computed as
 follows:
@@ -1079,7 +1071,7 @@ here surprise is taken in isolation, as a measure on its own right.
 
 ** Awkwardness and time-saving
 In ref:ex:under, "under" is produced after a long pause (l.25) and therefore
-indicates awkwardness in producing the transcription---which made the
+indicates awkwardness in producing the phonetic spelling made the
 operator wait---therefore making the situation uncomfortable to the
 caller, so laughter was used for smoothing it. 
 
@@ -1087,7 +1079,7 @@ caller, so laughter was used for smoothing it.
 - TODO: empirical study? 
 
 #+BEGIN_lingex
-\item\label{ex:king} (28_NM_loc2) \\
+\item\label{ex:king} DEC:28_NM_loc2 \\
 #+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align lr >{\em}J
 | 134 | Caller   | O for oslo                   |
 | 135 | Operator | O for oslo                   |
@@ -1108,16 +1100,15 @@ Issues related to difficulties in retrieval of by the user and
 # JP: fu fu fu (very high perplexity per word in this sentence)
 laughter related to smoothing theses difficulties can be
 indicative. Consider the case of language tutoring. In the Anki
-"flashcard" app, the system provides users with a word in one language on
-the front side of the card and the user should provide a translation. Then
-the user gets the correct response from the back side of the card and then
-evaluates her own response (Hard, Good or Easy).
-# JP level of difficulty of the question? I don't get it.
- If we consider making
-a similar conversational app, indications of retrieval issues ---
-filled pauses "er em..." and follow-up smoothing by laughter --- can
-lead to the decision to flag this card as "Hard" and provide a
-corresponding feedback ref:ex:anki.
+"flashcard" app, the system provides users with a word in one language
+on the front side of the card and the user should provide a
+translation. The user then gets the correct response from the back
+of the card and evaluates her own response (was this card
+Hard, Good or Easy to recall).  If we consider making a similar
+conversational app, indications of retrieval issues --- filled pauses
+("er em...") and follow-up smoothing by laughter --- can lead to the
+decision to flag this card as "Hard" and provide corresponding
+feedback ref:ex:anki.
 #+BEGIN_lingex
 \item\label{ex:anki} 
   | S | What is the Swedish for donkey?         |
