@@ -16,7 +16,6 @@
 #+LATEX_HEADER: \usepackage{url}
 #+LATEX_HEADER: \usepackage{times}
 #+LATEX_HEADER: \renewcommand*\ttdefault{txtt}
-# TODO: #+LATEX_HEADER: \usepackage[hidelinks]{hyperref}
 #+LATEX_HEADER: \usepackage{graphicx}
 #+LATEX_HEADER: \urlstyle{same}
 #+LATEX_HEADER: \usepackage{newunicodechar}
@@ -391,7 +390,7 @@ addition to apology, we show its adjacency counterpart --- Downplayer
 --- realised, for instance, by utterances like "Don't worry" or "It's
 alright".
 
-# TODO: clear the bit about downplayer
+- TODO: clear the bit about downplayer
 
 #+CAPTION: Comarison of the most common dialogue act in SWDA --- "Statement-Non-Opinion" (33.27% of all utterances) with the dialogue acts "Apology" (0.04%) and "Downplayer" (0.05%). Proportion of utterances which contain laughter are shown in association with each dialogue act. label:fig:orbit
 [[./orbit-apology.pdf]]
@@ -987,13 +986,15 @@ laughter often accompanying apology (as a separate dialogue act)
 presented in Section ref:sec:apology, this can mimic natural
 behaviour in dialogue.
 
-* Discussion
+* Discussion and future work
 # TODO: ...and future work
 
 label:sec:discussion
 # - laughter and dialogue acts (predictive feature)
 # - laughter prediction in dialogue
 # - laughter placement in dialogue
+
+- TODO: summarise the findings
 
 In this section we discuss several issues related to laughter in
 spoken dialogue systems, but only merely touching the main subject of
