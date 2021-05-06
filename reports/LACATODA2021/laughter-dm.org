@@ -443,9 +443,12 @@ various genres of dialogue in a concise way, free, to any possible
 extent, of irrelevant technical details.  In the view of
 citet:dixon2009plans this is best done by representing the
 information-state of the agents as updatable sets of
-propositions. Subsets of propositions in the information state can be
-treated independently, and, therefore, a suitable and flexible way to
-represent updates is as propositions in linear logic.
+propositions. Very often, dialogue-managument rules update subsets
+(propositions) of the information state independently from the rest. A
+suitable and flexible way to represent such updates are as function
+types in linear logic. The domain of the function is the subset of
+propositions to update, and the co-domain is the (new) set of
+propositions which it replaces.
 
 By using well-known techniques which correspond well with the
 intuition of information-state based dialogue management, we are able
@@ -493,7 +496,7 @@ $a$'s representation of actions of $b$.)  Scenarios can be realised as
 a sequence of actual actions and updates. That is, an action can
 result in sending a message to the outside world (in the form of
 speech, movement, etc.). Conversely, events happening in the outside
-world can result in updates of the information state (through a model
+world can result in extra-logical updates of the information state (through a model
 of the perceptory subsystem).
 
 In our implementation, we treat the information state as a multiset of
@@ -513,16 +516,19 @@ alone.
 
 Our DM models the information-state of only one
 participant. Regardless, this participant can record its own beliefs
-about the state of other participants.In general, the core of DM is
+about the state of other participants. In general, the core of DM is
 comprised of a set of linear-logic rules which depend on the domain of
 application. However, many rules will be domain-independent (such as
 generic processing of answers). We show these generic rules here, and
 the demo will illustrate them within an example application.
 
+# JP the demo? This is coming unexepected. What is this demo?
+
 ** Questions and answers
 
-In this paper, we essentially represent a question by a predicate |P|
-over a type |A|. That is, using a typed intuitionistic logic:
+In this paper, the essential components of the representation of a
+question are a type |A|, and a predicate |P| over |A|. Using
+a typed intuitionistic logic, we write:
 
 \begin{tabular}{cccc}
    & |A  : Type|   & \quad \quad\quad \quad \quad    &                    |P  : A  -> Prop|
@@ -536,7 +542,7 @@ any location) or as small as a boolean (if one requires a simple
 yes/no answer).  We note in passing that, typically, polar questions
 can be answered not just by a boolean but by qualifing the predicate
 in question, for example "maybe", "on Tuesdays", etc. (Table
-ref:tbl:qa-ex, last two rows).  In this instance |A = Prop -> Prop|.
+ref:tbl:qa-ex, last two rows).  This is formalised by letting |A = Prop -> Prop|.
 
 \begin{table*}[htbp]
 \begin{tabular}{lllll}
@@ -579,8 +585,8 @@ haveQud : QUD (Q Location x (Live John x))
 
 Resolving a question can be done by communicating an answer. An answer
 to a question |(A : Type; P : A -> Prop)| can be of either of the two
-following forms: i) A *ShortAnswer* is a pair of an element |X:A| and
-its type |A|, represented as |ShortAnswer A X| or ii) An *Assertion* is
+following forms: i) A *ShortAnswer*, which is a pair of an element |X:A| and
+its type |A|, represented as |ShortAnswer A X| or ii) An *Assertion* which is
 a proposition |R : Prop|, represented as |Assert R|.
 Therefore, one way to process a short answer is by the |processShort| rule:
 
@@ -617,7 +623,7 @@ of a question under discussion, and (3) |p| can be unified with |q|
 in both roles in the above rule), then the assertion resolves the
 question. Additionally, the metavariable |x| is made ground to a value
 provided by |p|, by virtue of unification of |p| and |q|. For example,
-"John lives in Paris" answers both questions "Where does John live?"
+"John lives in Paris" answers both of the questions "Where does John live?"
 and "Does John live in Paris?" (there is unification), but, not, for
 example "What time is it?" (there is no unification).
 Note that, in both cases (|processAssert| and |processShort|), the
@@ -631,9 +637,9 @@ In this section we integrate our question/answering framework within
 more complete dialog manager (DM).  We stress that this DM models the
 information-state of only one participant. Regardless, this
 participant can record its own beliefs about the state of other
-participants.  In general, the core of DM is comprised of a set of
+participants.  In general, the core of the DM is comprised of a set of
 linear-logic rules which depend on the domain of application. However,
-many rules will be domain-independent (such as generic processing of
+many rules will be domain-independent (such as the generic processing of
 answers). 
 
 To be useful, a DM must interact with the outside world, and this
@@ -680,7 +686,7 @@ in our system, and we refer our reader to citep:anon for more detailed
 description.
 
 *** Examples
-We can show how basic move adjacency can be defined in the example of
+We can show how basic move-adjacency can be defined in the example of a
 countergreeting preconditioned by a greeting from the other party:
 #+BEGIN_code
 counterGreeting :  (x y : DP) -> HasTurn x -* 
@@ -688,9 +694,9 @@ counterGreeting :  (x y : DP) -> HasTurn x -*
   Agenda (Cons (CounterGreet x y) as)
 #+END_code
 
-Another important rule accounts for pushing the content of the last
-move, in the case if it is an |Ask| move, on top of the questions
-under discussion (|QUD|) stack.
+Another important rule accounts for pushing the content of any
+received |Ask| move on top of the stack of questions under discussion
+(|QUD|).
 
 #+BEGIN_code
 pushQUD :  (q : Question) -> (qs : List Question) -> 
@@ -703,7 +709,7 @@ the |QUD| can be resolved and therefore removed from the stack. The
 corresponding proposition |p| is saved as a |PendingUserFact|.[fn::For
 the current purposes we only remove the top QUD, but in a more general
 case we can implement the policy that can potentially resolve any QUD
-from the stack.] The following rule is an extended, dialogue management
+from the stack.] The following rule is an extended dialogue management
 version of the rule previously introduced in Section ref:sec:meta.
 #+BEGIN_code
 processAssert : (a : Type) -> (x : a) -> (p : Prop) -> 
@@ -717,6 +723,8 @@ Then, other rules will take into account the |PendingUserFact p| in a
 system-specifc way. In the simplest case, the system may treat |p| as
 a true proposition. (In this paper we will consider meta-level pending
 user facts instead.)
+
+# JP: Maybe this generalises to User performative acts?
 
 Short answers are processed in a very similar way to assertions:
 #+BEGIN_code
@@ -745,15 +753,21 @@ produceCR :
       _  :: p ] ?-> CR
 #+END_code
 
+
+# JP: Perhaps delete this bit about CRs?
+
 ** Extending dialogue manager with grounding strategies
 label:sec:dm-ground In this subsection we provide a sketch of basic
 grounding strategies and moves related to them, which will be further
 used to interact with laughter.
 
+# JP "interact with" --> "model" ?
+
 Dialogue systems deal with confidence scores from ASR and NLU
-components, which reflects the uncertainty in user queries that has to
-be supported by dialogue manager. For simplicity we will represent the
-confidence score $t$ in on the basis of two confidence threshold levels
+components, which reflects the uncertainty in user queries.
+# that has to be supported by dialogue manager. 
+For simplicity we will represent the
+confidence score $t$ in on the basis of three confidence threshold levels
 ($T_1 < T_2$), where |RED| would correspond to $t < T_1$, |YELLOW|
 to $T_1 < t < T_2$, and |GREEN| to $T_2 < t$. Colour-coded confidence
 scores would accompany user moves, e.g. the |Ask| move such as "What time is it?" can be represented as follows:
@@ -762,9 +776,9 @@ Ask (Q U Time t0 (IsTime t0 )) U S YELLOW
 #+END_code
 
 
-Here we exemplify the possibility of extending the system with
+Here we illustrate the possibility of extending the system with
 Interactive Communication Management (ICM) moves and grounding
-strategies, replicating citet:larsson2002issue account of grounding
+strategies, replicating the account of citet:larsson2002issue for grounding
 and feedback. ICM moves are used for coordination of the common ground
 in dialogue, which expresses, for instance, explicit signals for
 integrating the incoming information and updating the common ground
@@ -780,7 +794,7 @@ or negative, and the optional value |content| corresponds to a
 component of the common ground in question.  For instance, the
 move |(ICM Per Neg None)| would correspond to the utterance "I didn't
 understand what you said" or "Pardon", and the move |(ICM Und Pos q)|
-can be realised in the utterance "You are asking me what time is it"
+can be realised as the utterance "You are asking me what time is it"
 if the QUD |q| corresponds to the quesion from |Ask| move exemplified
 above.
 
@@ -827,7 +841,7 @@ icmINTConfirm: (q : Question) -> (x y : DP) ->
 
 Processing answers related to such a type of |QUD| will be done as
 usual. For instance, a short "yes" or "no" will be we treated here as
-booleans, and depending on the answer the context will contain
+a boolean, and depending on the answer the context will contain
 either |PendingUserFact (UND q)| or |PendingUserFact (UNDN q)|.
 
 In this sketch implementation we do not care about confidence scores
@@ -835,10 +849,14 @@ for these answers, leaving it underspecified, but further, more
 specific dialogue rules are possible.
 
 Regardless of the particular answer, once the ICM question is
-answered, it is removed from |QUD|. In the case of a positive answer
-to such a query, there is nothing particular to do. The generic
-handling of ShortAnswer makes it so that QUD is restored to the
-originally asked question.
+answered, it is removed from the |QUD| stack, so that to of the |QUD|
+stack is restored to the originally asked question. In our system,
+this is taken care of by the generic handling of |ShortAnswer|s. Thus,
+the case of a positive answer to such a query, there is nothing
+particular to do. 
+
+# JP: if we were to record confidence levels in the QUD stack, this
+# would have to be updated. But it is not.
 
 # #+BEGIN_code
 # icmINTpos:  (q : Question) -> (x y : DP) ->
@@ -861,7 +879,7 @@ icmINTneg:  (q : Question) -> (x y : DP) ->
                (ICM Und Pos (QuestionIsNot q)) as)
 #+END_code
 
-How ICM moves are converted in natural language utterances, depending
+How ICM moves are converted to natural language utterances, depending
 on |q|, is a natural language generation (NLG) issue. For
 instance, 
 #+BEGIN_code
@@ -898,7 +916,7 @@ label:sec:proposal
 ** Laughter as rejection signal
 label:sec:negative-and-rejection
 Laughter as a reaction to interrogative feedback in the case of low
-confidence ASR/NLU result can be exemplified by the following
+confidence ASR/NLU result can be illustrated by the following
 dialogue.
 
 #+BEGIN_lingex
@@ -911,17 +929,22 @@ dialogue.
 
 Here we can treat laughter as a short negative answer, similar to
 "No". In the case of interrogative ICM move, such answer can be
-processed using |icmINTneg| rule defined above. We are aware of that
-in this constructed example we are ignoring the fact that such bizarre
+processed using the |icmINTneg| rule defined above. 
+In this constructed example, we are ignoring the fact that such bizarre
 answers could be avoided by domain-specific tuning of ASR and NLU
 components, but in general this could be treated as a recovery
 strategy for different system outputs not desired by dialogue system
 designers. This approach can be extended to other cases of user
 feedback, for instance, to cover the cases with higher confidence
-score where system produces |ICM Und Pos q| move, but this is out of
+score where the system produces |ICM Und Pos q| move, but this is out of
 scope for current study.
 
+# JP: study vs. ...
+
 Returning to a more sophisticated ref:ex:neuer, it can be handled by
+
+# JP: reference is wrong? and why is it repeated? Also I can't figure out the meaning of the sentence 
+
 our generic rules for integrating QUDs (|pushQUD|). For that we need
 to consider polar questions as expecting an answer
 of |Prop->Prop| type (see Table ref:tbl:qa-ex). Recalling the example:
