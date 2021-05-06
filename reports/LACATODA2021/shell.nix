@@ -5,6 +5,8 @@ let
      myEmacsConfig = writeText "default.el" ''
        (add-to-list 'load-path "${emacsPackages.org-ref}")
        (require 'org-ref) ; broken?
+       (setq org-latex-with-hyperref nil)    
+(add-to-list 'org-latex-default-packages-alist "\\PassOptionsToPackage{hidelinks}{hyperref}")  
        ;(message "Load path=%s" load-path)
        (org-babel-do-load-languages
         'org-babel-load-languages

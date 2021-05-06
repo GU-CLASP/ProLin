@@ -19,7 +19,6 @@
 # TODO: #+LATEX_HEADER: \usepackage[hidelinks]{hyperref}
 #+LATEX_HEADER: \usepackage{graphicx}
 #+LATEX_HEADER: \urlstyle{same}
-
 #+LATEX_HEADER: \usepackage{newunicodechar}
 #+LATEX_HEADER: \input{newunicodedefs}
 #+LATEX_HEADER: \usepackage{natbib}
@@ -354,16 +353,26 @@ problematic in the game just played (3-2 against Paderborn).
 In Section ref:sec:proposal we show how this kind of laughter as
 negative response can be handled by the dialogue manager.
 
-** Laughter and apology
-- apology DA is very frequent in relation to laughter. 
-- in IBIS it is not defined as a separate DA but often is used as the
-  part of ICM moves, i.e. "Sorry, I didn't understand that".
+** Laughter and intrusion
+label:sec:apology
+
+In natural dialogue intrusion is frequently associated with laughter. In
+Switchboard Dialogue Act corpus (SWDA) citep:jurafsky1997switchboard a
+dialogue act of apologising is more related to laughter, as compared
+with other dialogue acts. On the Figure ref:fig:orbit we show how many
+dialogue acts are associated with utterances containing laughter, for
+current dialogue act, and for preceding and following utterances,
+depending on the speaker. In addition to apology, we show it's
+adjacency counterpart --- Downplayer --- realised, for instance, by
+utterances like "Don't worry" or "It's alright".
+
+#+CAPTION: Comarison of the most common dialogue act in SWDA --- "Statement-Non-Opinion" (33.27% of all utterances) with the dialogue acts "Apology" (0.04%) and "Downplayer" (0.05%). Proportion of utterances which contain laughter are shown in association with each dialogue act. label:fig:orbit
 [[./orbit-apology.pdf]]
 
-It is often the case that the dialogue act of apologising is
-accompanied by laughter in the same turn or one of the adjacent turns
-as we have discovered in our study of dialogue acts in Switchboard
-corpus[fn::TODO ref]
+In ref:ex:apology  caller reacts with a compassionate laughter to
+the apology given by the operator. This similar instances of laughter
+can be seen in ref:ex:hear-poorly: the second laugh shows that the
+same reaction, as in ref:ex:apology can be expected from the operator.
 
 #+BEGIN_lingex
 \item\label{ex:apology} (16_HG_loc2)\\
@@ -378,12 +387,6 @@ corpus[fn::TODO ref]
 | 169 | Caller   | no worries                                                      |
 | 170 | Caller   | thank you                                                       |
 #+END_lingex
-
-In ref:ex:apology above caller reacts with a compassionate[fn::TODO
-probably, elaborate on laughter and compassion?] laughter to the
-apology given by the operator. This similar instances of laughter can
-be seen in ref:ex:hear-poorly: the second laugh shows that the same
-reaction, as in ref:ex:apology can be expected from the operator.
 
 We also observe that laughter can clearly accompany the asking for a
 favour by the same speaker. In example ref:ex:from-beginning the
@@ -408,7 +411,6 @@ favour and the apology is accompanied by laughter.
 | 70 | Caller   | yeah no no problem                                                                        |
 #+END_lingex
 
-label:sec:apology
 * Dialogue manager architecture 
 label:sec:ldm
 
@@ -838,15 +840,21 @@ icmINTneg:  (q : Question) -> (x y : DP) ->
 
 How ICM moves are converted in natural language utterances, depending
 on |q|, is a natural language generation (NLG) issue. For
-instance, |QuestionIsNot (Q U Time t0 (IsTime t0))| can become the
+instance, 
+#+BEGIN_code
+ICM Und Pos 
+  (QuestionIsNot 
+    (Q U Time t0 (IsTime t0)))
+#+END_code
+ can become the
 (rather tedious) utterance "So, you are not asking me what time it
 is", whereas more sophisticated queries with more arguments can be
 resolved in shorter utterance depending on the arguments that are made
 ground. For instance, in a context of interaction at a food kiosk:
 #+BEGIN_code
-(ICM Und Pos 
+ICM Und Pos 
   (QuestionIsNot 
-    (Q U (Prop -> Prop) m0 (m0 WantOlives)))
+    (Q U (Prop -> Prop) m0 (m0 WantOlives))
 #+END_code
 could become a simple "Sorry, let's forget olives.".
 
@@ -862,7 +870,7 @@ could become a simple "Sorry, let's forget olives.".
 
 # names instead of metavariables?
 
-* Proposal for support of certain type of laughter
+* Formal treatment of certain types of laughter
 label:sec:proposal
 ** Laughter as rejection signal
 label:sec:negative-and-rejection
@@ -935,11 +943,13 @@ instance, ICM move of the form |(ICM Und Pos (QuestionIsNot (Q U (Prop
 utterance like "Okay, let's forget olives, hehe", whereas laughter is
 used as a smoothing device to mitigate the awkwardness of system
 failure. Citep:larsson2002issue often included an apology "Sorry" in
-some of the ICM moves, and, with some possible caveats, we can
-sometimes include a slight laughter in such moves. Considering the
-evidence for laughter often accompanying apology (as a separate
-dialogue act) presented in Section ref:sec:apology, this can mimic a
-natural behaviour in dialogue.
+some of the ICM moves, e.g. "Sorry, I didn't understand that". With
+some possible caveats, we can sometimes include a slight laughter in
+such moves, especially if system is getting a bit repetitive and
+produces |(ICM Und Neg)| too often. Considering the evidence for
+laughter often accompanying apology (as a separate dialogue act)
+presented in Section ref:sec:apology, this can mimic a natural
+behaviour in dialogue.
 
 * Discussion
 label:sec:discussion
@@ -970,19 +980,6 @@ incongruities related to humour in task-oriented dialogue.
 |  26 | Caller   | er under                     |
 |  27 | Caller   | <laugh>                      |
 |  28 | Operator | under yes                    |
-| ... |          |                              |
-| 134 | Caller   | O for oslo                   |
-| 135 | Operator | O for oslo                   |
-| 136 | Caller   | again O for oslo             |
-| 137 | Operator | O for oslo                   |
-| 138 | Caller   | and K for er ((pause: 1.6s)) |
-| 139 | Caller   | <laugh>                      |
-| 140 | Operator | as in king?                  |
-| 141 | Caller   | k- king <laugh> yeah         |
-| 142 | Operator | yes                          |
-| 143 | Caller   | thank you                    |
-| 144 | Operator | that's it?                   |
-| 145 | Caller   | that's it                    |
 #+END_lingex
 In ref:ex:under the caller experiences issues with coming up with
 phonetic transcriptions for certain words. The first laugh (line 27)
