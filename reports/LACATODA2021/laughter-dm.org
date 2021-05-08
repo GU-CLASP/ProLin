@@ -64,13 +64,13 @@ accompanying them.
 * Introduction
 Laughter is very frequent in everyday interactions, for instance, in
 the Switchboard Dialogue Act Corpus citep:jurafsky1997switchboard
-corpus laughter comes about every 200 words. Laughter is
-an ambiguous social signal, and in addition to communicating joy and
-pleasure intuitively associated with humour it also can communicate
+corpus laughter comes about every 200 words. Laughter is an ambiguous
+social signal, and in addition to communicating joy and pleasure
+intuitively associated with humour it also can communicate
 embarrassment, be used to smooth and soften everyday interactions and
-also bear pragmatic functions such as marking irony or usage of a
-word in a specific sense.
-# JP: citations for this general remarks?
+also bear pragmatic functions such as marking irony or usage of a word
+in a specific sense
+citep:poyatos1993paralanguage,mazzocconi2019phd,ginzburg2020laughter.
 
 For a spoken dialogue system, laughter is an important signal to
 account for due to its contribution to the naturalness of automated
@@ -80,10 +80,9 @@ the user and artificial agent.
 
 There have been attempts to produce laughs as a way to mimic human
 behaviour and align with it, as well as laughing avatars mainly
-focussed on laughter as a reaction to jokes. 
-# JP: citations needed
-In this paper we
-take a rather different approach. 
+focussed on laughter as a reaction to jokes
+citep:Ochs_2013,ding2014laughter. In this paper we take a rather
+different approach.
 # JP: is it novel to your knowledge? How do you push state of the art?
 We start from examples of usage of
 laughter in real task-oriented dialogue and then propose ways how
@@ -196,15 +195,14 @@ this work we extend our implementation with a rudimentary support of
 grounding, therefore allowing the implementation to be further
 extended to support certain types of laughter.
 
-In KoS (and other dynamic approaches to meaning), language is treated
-as to a game, containing players (interlocutors), goals and rules. KoS
+In KoS (and many other dynamic approaches to meaning), language is treated
+as a game, containing players (interlocutors), goals and rules. KoS
 represents language interaction by a dynamically changing context. The
 meaning of an utterance is then how it changes the context. Compared
 to most approaches, which represent a single context for both dialogue
 participants, KoS keeps separate representations for each participant,
 using the /Dialogue Game Board/ (DGB). Thus, the information states of
 the participants comprise a private part and the dialogue gameboard
-# JP: "comprise" is probably not the right word here
 that represents information arising from publicised interactions. The
 DGB tracks, at least, shared assumptions/visual field, moves
 (= utterances, form and content), and questions under discussion.
@@ -237,9 +235,10 @@ utterance was perceived but not understood (and thus not accepted).
 Citet:larsson2002issue accounts for different levels of action within
 the IBiS2 dialogue management framework using a set of rules to update
 the common ground represented in the information state of the
-system. He uses "Information Communication Management" (ICM) moves
+system. He uses "Interactive Communication Management" (ICM) moves
 citep:allwood1995activity as explicit signals concerned with
-communicating the updates to the common ground.
+communicating the updates to the common ground, and sequencing moves,
+e.g. restarting a dialogue.
 
 ** Laughter
 Our focus of attention towards laughter is motivated by its ubiquity
@@ -290,23 +289,20 @@ four action levels that are involved in dialogue. Here we discuss what
 can happen at each level of action --- contact, perception,
 understanding and reaction --- with respect to laughter.
 
-*** Contact level
-Incongruities, which are relevant to establishing a stable
-communication channel can lead to laughter which would indicate such
-troubles. One such example would be delays in communication, for
-instance over an unreliable network, which might lead to a person
-already speaking at the moment when the communication is only supposed
-to be established.
+*** Contact and perception levels
+Troubles related to establishing and maintaining a stable
+communication channel can lead to laughter. One such example would be
+delays in communication, for instance over an unreliable network,
+which might lead to a person already speaking at the moment when the
+communication is only supposed to be established. Obvious examples of
+such cases are caused by signal jitter over video conference platforms
+like Zoom.
 
-*** Perception level
-- TODO: rewrite / explain
-
-Lack of perception basically indicates things that haven’t been heard.
-# JP: ???
-(cases similar to ref:ex:hear-poorly). Also, it seems that
+Lack of perception basically indicates things that haven’t been heard
+correctly (cases similar to ref:ex:hear-poorly). Also, it seems that
 interruptions or events related to that can be quite surprising and
 laughter can be a natural reaction to a surprise (see Section
-ref:sec:discussion). 
+ref:sec:discussion).
 
 *** Understanding level
 The lack of pragmatic understanding relates to the kinds of
@@ -342,7 +338,7 @@ and a person with ASD (Mark):
 #+END_lingex
 
 A dialogue system can also be unsure about what has been
-understood. In other words, the system should demonstrate a lower
+understood. In such cases, the system should demonstrate a lower
 degree of commitment to what has been said as a part of a display of
 understanding.  For example, in case of the feedback regarding the
 user input, when the system repeats the input after the user, it can
@@ -357,9 +353,8 @@ related to a reaction to humour, which is out of the scope of current
 paper, or apology (see next section).
 
 Citet:ginzburg2020laughter consider some uses of standalone laughter
-as cases of negative response to a polar question or a signal of
-disbelief in a previously uttered assertion. In this paper we reflect
-on negative responses like ref:ex:neuer.
+as cases of negative response to a polar question ref:ex:neuer or a signal of
+disbelief in a previously uttered assertion ref:ex:god. 
 #+BEGIN_lingex
 \item\label{ex:neuer} From citet:ginzburg2020laughter, context: Bayern
 München goalkeeper Manuel Neuer faces the press after his team’s
@@ -371,28 +366,37 @@ problematic in the game just played (which they won 3-2 against Paderborn).
 |                     | (Is the three-at-the-back also an option?) |
 | Manuel Neuer:       | fuh fuh fuh                                |
 |                     | (brief laugh)                              |
+
+\item\label{ex:god} From citet:ginzburg2020laughter (biblical example
+rephrased as a dialogue) \\
+#+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align l >{\em}L
+| God:     | You will at age 99 with your aged wife Sarah have a son.    |
+| Abraham: | (laughs)                                                    |
+\rightarrow I don't think I will at age 99 have a son
 #+END_lingex
 
 In Section ref:sec:proposal we show how this kind of laughter as
-negative response can be handled by the dialogue manager.
+negative response like ref:ex:neuer can be handled by the dialogue manager.
 
 ** Laughter and intrusion
 label:sec:apology
 
-In natural dialogue intrusion is frequently associated with
+In natural dialogue, intrusion is frequently associated with
 laughter. In the Switchboard Dialogue Act corpus (SWDA)
-citep:jurafsky1997switchboard an Apology dialogue act  is more
-related to laughter, as compared to other dialogue acts. In Figure
+citep:jurafsky1997switchboard an Apology dialogue act is more related
+to laughter, as compared to other dialogue acts. In Figure
 ref:fig:orbit we show how many dialogue acts are associated with
-utterances containing laughter, for the current dialogue act, and for
-preceding and following utterances, depending on the speaker. In
-addition to apology, we show its adjacency counterpart --- Downplayer
---- realised, for instance, by utterances like "Don't worry" or "It's
-alright".
+utterances[fn::In SWDA each utterance is typically mapped to a single
+dialogue act.] containing laughter, for the current dialogue act and
+for preceding and following utterances, depending on the speaker. In
+addition to apology, we show its adjacency counterpart (second element
+of the utterance pair produced by the other speaker
+citep:schegloff1973opening) --- Downplayer --- realised, for instance,
+by utterances like "Don't worry" or "It's alright".
 
 - TODO: clear the bit about downplayer
 
-#+CAPTION: Comarison of the most common dialogue act in SWDA --- "Statement-Non-Opinion" (33.27% of all utterances) with the dialogue acts "Apology" (0.04%) and "Downplayer" (0.05%). Proportion of utterances which contain laughter are shown in association with each dialogue act. label:fig:orbit
+#+CAPTION: Comparison of the most common dialogue act in SWDA --- "Statement-Non-Opinion" (33.27% of all utterances) with the dialogue acts "Apology" (0.04%) and "Downplayer" (0.05%). Proportion of utterances which contain laughter are shown in association with each dialogue act. label:fig:orbit
 [[./orbit-apology.pdf]]
 
 In ref:ex:apology, the caller reacts with a compassionate laughter to
@@ -486,7 +490,7 @@ updates/. Thus, the hypotheses available for proof search correspond
 to the /state/ of the system. In our application they will correspond
 to the /information state/ of the dialogue participant.
 
-This way, firing a linear rule corresponds to triggering an /action/ of an
+In linear logic, normally firing a linear rule corresponds to triggering an /action/ of an
 agent, and a complete proof corresponds to a /scenario/, i.e. a sequence
 of actions, possibly involving action from several agents.  However,
 the information state (typically in the literature and in this paper
@@ -709,8 +713,11 @@ the |QUD| can be resolved and therefore removed from the stack. The
 corresponding proposition |p| is saved as a |PendingUserFact|.[fn::For
 the current purposes we only remove the top QUD, but in a more general
 case we can implement the policy that can potentially resolve any QUD
-from the stack.] The following rule is an extended dialogue management
-version of the rule previously introduced in Section ref:sec:meta.
+from the stack.] The following rule[fn::Note the use of the single
+colon (|:|) for metavariables and the double colon for
+information-state hypotheses (|::|).] is an extended dialogue
+management version of the rule previously introduced in Section
+ref:sec:meta.
 #+BEGIN_code
 processAssert : (a : Type) -> (x : a) -> (p : Prop) -> 
   (qs : List Question) ->
