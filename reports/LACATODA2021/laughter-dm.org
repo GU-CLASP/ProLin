@@ -272,8 +272,30 @@ disambiguating meaning, managing self-correction) and social
 (dis)affiliation)
 citep:glenn2003laughter,jefferson1984organization,mazzocconi2019phd,petitjean2015laughing
 
-- TODO: Chiara's taxonomy 
+There have been several approaches to classify types of laughter
+[[citep:poyatos1993paralanguage,vettin2004laughter,mazzocconi2019phd][e.g.,::]]. citet:mazzocconi2019phd
+claims that the most problematic issue with existing taxonomies it
+that they mix types of laughter functions with types of laughter
+triggers, so her proposal is based on the function of laughter and the
+propositional content of /laughable/---the argument the laughter
+predicates about, an event or state referred to by an utterance or
+exophorically citep:glenn2003laughter.  In this paper we look at
+laughter not exclusively from a perspective of a taxonomy that can be
+used as a theoretical framework, but from the utilitarian perspective,
+looking at which kinds of laughs can be relevant for dialogue systems.
+
+
 - TODO: laughter in dialogue agents (ILHAIRE, etc.)
+  - joining in partner's laugh
+  - synthesis -- difficult, typically we select from range of laugh recordings
+  - recognition
+  - 2, 7, 19
+  - basically, three approaches
+    - affective computing: evaluate the role of laughter -- and proven the role of linguistic content
+    - with humour (appraisal of humour and displaying appreciation)
+    - joining
+  - TODO: we believe.... 
+
 
 
 * Types of laughter
@@ -286,8 +308,8 @@ accounted for within our proposed framework.
 As we have mentioned in Section ref:sec:background, and in accord with
 citet:allwood1995activity,clark1996using,larsson2002issue we consider
 four action levels that are involved in dialogue. Here we discuss what
-can happen at each level of action --- contact, perception,
-understanding and reaction --- with respect to laughter.
+can happen at each level of action---contact, perception,
+understanding and reaction---with respect to laughter.
 
 *** Contact and perception levels
 Troubles related to establishing and maintaining a stable
@@ -358,7 +380,7 @@ disbelief in a previously uttered assertion ref:ex:god.
 #+BEGIN_lingex
 \item\label{ex:neuer} From citet:ginzburg2020laughter, context: Bayern
 München goalkeeper Manuel Neuer faces the press after his team’s
-(\emph{Dreierkette} --- three-in-the-back) defence has proved highly
+(\emph{Dreierkette}---three-in-the-back) defence has proved highly
 problematic in the game just played (which they won 3-2 against Paderborn).
 
 #+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align l >{\em}L
@@ -391,12 +413,10 @@ dialogue act.] containing laughter, for the current dialogue act and
 for preceding and following utterances, depending on the speaker. In
 addition to apology, we show its adjacency counterpart (second element
 of the utterance pair produced by the other speaker
-citep:schegloff1973opening) --- Downplayer --- realised, for instance,
+citep:schegloff1973opening)---Downplayer---realised, for instance,
 by utterances like "Don't worry" or "It's alright".
 
-- TODO: clear the bit about downplayer
-
-#+CAPTION: Comparison of the most common dialogue act in SWDA --- "Statement-Non-Opinion" (33.27% of all utterances) with the dialogue acts "Apology" (0.04%) and "Downplayer" (0.05%). Proportion of utterances which contain laughter are shown in association with each dialogue act. label:fig:orbit
+#+CAPTION: Comparison of the most common dialogue act in SWDA---"Statement-Non-Opinion" (33.27% of all utterances) with the dialogue acts "Apology" (0.04%) and "Downplayer" (0.05%). Proportion of utterances which contain laughter are shown in association with each dialogue act. label:fig:orbit
 [[./orbit-apology.pdf]]
 
 In ref:ex:apology, the caller reacts with a compassionate laughter to
@@ -666,7 +686,7 @@ These moves can either be received as input or produced as outputs. If
 they are inputs, they come from the NLU component, and they enter the
 context with |Heard : Move -> Prop| predicate. For example, if one
 hears a greeting, the proposition |Heard (Greet S A)| is added to the
-information state/context, without any rule being fired --- this is
+information state/context, without any rule being fired---this is
 what we mean by an external source.
 
 If they are outputs, to be further used by the NLG component, some
@@ -799,9 +819,13 @@ above.
 
 Next we modify our basic |pushQUD| rule defined in Section
 ref:sec:dm-rules to support different system behaviours depending on
-the confidence score. 
-
-- TODO: in the green case ...
+the confidence score. In the |GREEN| case, question from the
+user |Ask| move is being integrated into |QUD|, and ICM move
+displaying positive acceptance feedback, i.e. "okay", |(ICM Acc Pos
+None)| is being put on the |Agenda|. In the |YELLOW| case, system should
+additionally report about positive understanding, e.g. "You want to
+know about time", so it adds |(ICM Und Pos q)|
+move on the |Agenda|.
 
 #+BEGIN_code
 pushQUDGreen :  (q : Question) -> 
@@ -809,7 +833,7 @@ pushQUDGreen :  (q : Question) ->
    Pending (Ask q x y GREEN) ⊸ Agenda as ⊸
    QUD qs ⊸ 
       [  _ :: QUD (Cons q qs);
-         _ :: Agenda (Cons  (ICM Und Pos q) as);]
+         _ :: Agenda (Cons  (ICM Acc Pos None) as);]
 #+END_code
 
 #+BEGIN_code
@@ -818,8 +842,8 @@ pushQUDYellow :  (q : Question) ->
    Pending (Ask q x y YELLOW) ⊸ Agenda as ⊸
    QUD qs ⊸ 
       [  _ :: QUD (Cons q qs);
-         _ :: Agenda (Cons  (ICM Und Pos q)
-         (Cons (ICM Acc Pos None) as));]
+         _ :: Agenda (Cons (ICM Acc Pos None)
+         (Cons (ICM Und Pos q) as));]
 #+END_code
 
 For |RED| confidence score, the system issues an interrogative ICM query, such
@@ -994,18 +1018,23 @@ presented in Section ref:sec:apology, this can mimic natural
 behaviour in dialogue.
 
 * Discussion and future work
-# TODO: ...and future work
-
 label:sec:discussion
 # - laughter and dialogue acts (predictive feature)
 # - laughter prediction in dialogue
 # - laughter placement in dialogue
 
-- TODO: summarise the findings
+In this paper we have shown how some types of laughter can be
+accounted for in task-oriented spoken dialogue system. We proposed our
+own proof-theoretic architecture of a dialogue manager based on KoS
+framework and extended it with some grounding strategies. Based on
+this, we have shown how certain types of laughter, can be processed
+within the dialogue manager and natural language generator, namely:
+laughter as negative feedback, laughter as negative answer to a polar
+question and laughter as a signal accompanying system feedback.
 
-In this section we discuss several issues related to laughter in
-spoken dialogue systems, but only merely touching the main subject of
-the paper.
+In the following subsections we discuss several issues related to
+laughter in spoken dialogue systems, but only merely touching the main
+subject of the paper.
 
 # JP: Usually this is not the purpose of a discussion section.?? This sounds more like "random thoughts we couldn't fit anywhere". 
 
@@ -1037,10 +1066,13 @@ citep:mazzocconi2019phd. The pleasant incongruity is due the fact that
 phonetic spelling of "U" as in "under" is incongruous with the
 preceding ones: a preposition vs. proper nouns. The way to spell
 things phonetically is typically culturally specific, with the most
-typical cases of cities or countries.
-
-- TODO: topos (and also borrowed topos) of how things are spelled.
-
+typical cases of cities or countries. Stereotypes and conversational
+conventions can be expressed with the formal notions of /enthymemes/ and
+/topoi/, following the work of citet:breitholtz2020 on reasoning in
+conversation. citet:breitholtz-maraev-2019-put used these notions to
+analyse conversational humour as well as canned jokes, and we find it
+potentially helpful to be integrated our framework in order to account
+for humour in dialogue systems.
 
 ** Surprise
 Intuitively, laughter is related to events that are unexpected,
@@ -1078,13 +1110,17 @@ system’s reply can laugh (Section ref:sec:negative-and-rejection). But
 here surprise is taken in isolation, as a measure on its own right.
 
 ** Awkwardness and time-saving
-In ref:ex:under, "under" is produced after a long pause (l.25) and therefore
-indicates awkwardness in producing the phonetic spelling made the
-operator wait---therefore making the situation uncomfortable to the
-caller, so laughter was used for smoothing it. 
+In ref:ex:under, "under" is produced after a long pause (l.25) and
+therefore indicates awkwardness in producing the phonetic spelling
+made the operator wait---therefore making the situation uncomfortable
+to the caller, so laughter was used for smoothing it.
 
-- TODO: describe the follow-up with similar awkwardness
-- TODO: empirical study? 
+In the follow-up excerpt ref:ex:king from the same dialogue, user's
+awkwardness continues and she accompanies it with laughter. Firstly,
+she laughs (l.139) demonstrating that she has given up finding any
+phonetic spelling for "K", releasing the turn and giving the
+opportunity to an operator to carry on. Her second laugh smooths her
+slight embarrassment after the situation was resolved by the operator.
 
 #+BEGIN_lingex
 \item\label{ex:king} DEC:28_NM_loc2 \\
@@ -1103,20 +1139,31 @@ caller, so laughter was used for smoothing it.
 | 145 | Caller   | that's it                    |
 #+END_lingex
 
+We can hypothesise that in dialogue system these examples can be
+handled as follows. For a system, there are operations which the
+developer knows are going to take time due to technical constraints,
+but are expected to be immediate by the user. In this case system can
+produce a similar behaviour to the one in ref:ex:under (l.25--27):
+"er... (pause) [comes up with an answer] <laugh>". System can detect
+the patterns of filled pause + <laugh> from the user and treat them as
+a turn-release cues. It can be a signal of either that there is
+something that confused the user, or that she genuinely could not come
+up with an answer due to certain difficulties. The downplayer dialogue
+act (e.g. "don’t worry") or laughter in response also can be
+appropriate as a system feedback in such situation. We consider these
+ideas as subject for further empirical investigations.
 
-Issues related to difficulties in retrieval of by the user and
-# JP: fu fu fu (very high perplexity per word in this sentence)
-laughter related to smoothing theses difficulties can be
+
+Laughter related to smoothing retrieval difficulties can be
 indicative. Consider the case of language tutoring. In the Anki
 "flashcard" app, the system provides users with a word in one language
 on the front side of the card and the user should provide a
-translation. The user then gets the correct response from the back
-of the card and evaluates her own response (was this card
-Hard, Good or Easy to recall).  If we consider making a similar
-conversational app, indications of retrieval issues --- filled pauses
-("er em...") and follow-up smoothing by laughter --- can lead to the
-decision to flag this card as "Hard" and provide corresponding
-feedback ref:ex:anki.
+translation. The user then gets the correct response from the back of
+the card and evaluates her own response (was this card Hard, Good or
+Easy to recall).  If we consider making a similar conversational app,
+indications of retrieval issues---filled pauses ("er em...") and
+follow-up smoothing by laughter---can lead to the decision to flag
+this card as "Hard" and provide corresponding feedback ref:ex:anki.
 #+BEGIN_lingex
 \item\label{ex:anki} 
   | S | What is the Swedish for donkey?         |
@@ -1124,7 +1171,23 @@ feedback ref:ex:anki.
   | S | Yes, that was tough, but it is correct! |
   |   | (system marks the card as "Hard")       |
 #+END_lingex
-** TODO ? evaluation
+** Approaches to evaluation
+Each of the aforementioned improvements has to be a subject for
+evaluation within the dialogue system. We expect to see that these
+improvements will be reflected in the following evaluation criteria.
+
+Some of the improvements would fall into a objective checklist-style
+criteria, like being able to understand laughter as negative
+feedback, or as a signal of surprise. The same goes for system's
+laughter as an appropriate reaction to conversational humour.
+
+Another portion of the features can be evaluated only subjectively,
+for example, it is a question of user preference whether it is okay
+for a system to accompany asking for favour (e.g. "Let's start over!")
+with laughter. For this purpose, subjective evaluation methods like
+SASSI citep:hone2000towards can be used. We optimistically expect that
+characteristics such as naturality and likeability would increase and
+annoyance would decrease.
 
 bibliography:lacatoda.bib
 bibliographystyle:named
