@@ -79,15 +79,14 @@ potential to build rapport and establish a para-social bond between
 the user and artificial agent.
 
 There have been attempts to produce laughs as a way to mimic human
-behaviour and align with it, as well as laughing avatars mainly
-focussed on laughter as a reaction to jokes
+behaviour and align with it
+citep:urbain2010avlaughtercycle,el2019smile, as well as laughing
+avatars mainly focussed on laughter as a reaction to jokes
 citep:Ochs_2013,ding2014laughter. In this paper we take a rather
-different approach.
-# JP: is it novel to your knowledge? How do you push state of the art?
-We start from examples of usage of
-laughter in real task-oriented dialogue and then propose ways how
-these behaviours can be reproduced in a dialogue system, and, more
-specifically, in its dialogue management component.
+different approach. We start from examples of usage of laughter in
+real task-oriented dialogue and then propose ways how these behaviours
+can be reproduced in a dialogue system, and, more specifically, in its
+dialogue management component.
 
 The example ref:ex:hear-poorly below is an excerpt from a role-play
 dialogue collected by citet:howes-etal-2019-good for their Directory
@@ -274,9 +273,9 @@ citep:glenn2003laughter,jefferson1984organization,mazzocconi2019phd,petitjean201
 
 There have been several approaches to classify types of laughter
 [[citep:poyatos1993paralanguage,vettin2004laughter,mazzocconi2019phd][e.g.,::]]. citet:mazzocconi2019phd
-claims that the most problematic issue with existing taxonomies it
+claims that the most problematic issue with existing taxonomies is
 that they mix types of laughter functions with types of laughter
-triggers, so her proposal is based on the function of laughter and the
+triggers, so she roots her proposal on the function of laughter and the
 propositional content of /laughable/---the argument the laughter
 predicates about, an event or state referred to by an utterance or
 exophorically citep:glenn2003laughter.  In this paper we look at
@@ -284,7 +283,7 @@ laughter not exclusively from a perspective of a taxonomy that can be
 used as a theoretical framework, but from the utilitarian perspective,
 looking at which kinds of laughs can be relevant for dialogue systems.
 
-
+ 
 - TODO: laughter in dialogue agents (ILHAIRE, etc.)
   - joining in partner's laugh
   - synthesis -- difficult, typically we select from range of laugh recordings
@@ -487,7 +486,7 @@ framework:
    the agent)
 
 2. a set of rules which function as a core framework for dialogue
-   management (in the style of KoS cite:ginzburg2012interactive)
+   management (in the style of KoS citep:ginzburg2012interactive)
 
 3. several examples which use the above to construct potential
    applications of the system.
