@@ -300,8 +300,8 @@ behaviour. citet:urbain2010avlaughtercycle takes similar perspective,
 equipping ECAs with a capability to join its conversational partner's
 laugh. In this work we take a contrasting approach, looking at
 pragmatic functions of some types of laughter, namely providing
-feedback and answering questions, and giving a formal account for such
-behaviour withing a dialogue management framework.
+feedback and answering questions, and provide a formal account for
+such behaviour within a dialogue management framework.
 
 
 * Types of laughter
@@ -1081,15 +1081,14 @@ potentially helpful to be integrated our framework in order to account
 for humour in dialogue systems.
 
 ** Surprise
-Intuitively, laughter is related to events that are unexpected,
-usually[fn::TODO ref] in a pleasant way. One of the ways to establish
-some degree of natural behaviour for a dialogue system would be to
-react sincerely to these kinds of events. A possible measure for a
-system’s surprisal is how confused it is by the user input. A natural
-measure for this from information theory is /perplexity/, a
-probability-based metric. For $N$ words in an evaluation set $W = w_1
-w_2 \dots w_N$, the average perplexity per word is computed as
-follows:
+Intuitively, laughter is related to events that are not expected in
+interaction. One of the ways to establish some degree of natural
+behaviour for a dialogue system would be to react sincerely to these
+kind of surprising events. A possible measure for a system’s surprisal
+is how confused it is by the user input. A natural measure for this
+from information theory is /perplexity/, a probability-based metric. For
+$N$ words in an evaluation set $W = w_1 w_2 \dots w_N$, the average
+perplexity per word is computed as follows:
 
 \begin{equation}
 PP(W) = \sqrt[N]{\prod_{i=1}^{N}\frac{1}{P(w_i \mid w_1\dots w_{i-1})}}
