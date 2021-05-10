@@ -283,18 +283,25 @@ laughter not exclusively from a perspective of a taxonomy that can be
 used as a theoretical framework, but from the utilitarian perspective,
 looking at which kinds of laughs can be relevant for dialogue systems.
 
- 
-- TODO: laughter in dialogue agents (ILHAIRE, etc.)
-  - joining in partner's laugh
-  - synthesis -- difficult, typically we select from range of laugh recordings
-  - recognition
-  - 2, 7, 19
-  - basically, three approaches
-    - affective computing: evaluate the role of laughter -- and proven the role of linguistic content
-    - with humour (appraisal of humour and displaying appreciation)
-    - joining
-  - TODO: we believe.... 
-
+Laughter as a way for an embodied conversational agent (ECA) to
+provide emotional response has gained some attention from the
+Affective Computing and other research
+communities. citet:becker2009laughter evaluated the role of laughter
+in perception of social robots and indicated that the situational
+context, determined by linguistic and non-verbal cues (such as gaze)
+played an important role. Citet:nijholt2002embodied discusses the
+challenges of integrating humour into ECAs, and existing integration
+of smiling and laughter in embodied conversational agents (ECA) is
+typically is triggered by a joke told by a user or an agent
+citep:ding2014laughter,Ochs_2013. Citet:el2019smile looked at the
+mimicry of smiles and laughs between the interlocutors, which also
+might used as the basis for ECA's
+behaviour. citet:urbain2010avlaughtercycle takes similar perspective,
+equipping ECAs with a capability to join its conversational partner's
+laugh. In this work we take a contrasting approach, looking at
+pragmatic functions of some types of laughter, namely providing
+feedback and answering questions, and giving a formal account for such
+behaviour withing a dialogue management framework.
 
 
 * Types of laughter
