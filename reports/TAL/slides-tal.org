@@ -1,11 +1,13 @@
-#+LANGUAGE: british
-#+OPTIONS: H:2 toc:nil *:t ':t ’:t ":t
+#+OPTIONS: H:2 toc:nil ":t ':t
 #+LATEX_CLASS: beamer
+# #+LATEX_CLASS_OPTIONS: [12pt] 
 #+startup: beamer
 #+LATEX_HEADER: \usepackage{mathspec}
-#+LATEX_HEADER:\setallmainfonts[Path=fonts/,BoldFont={PT-Serif_Bold.ttf}, ItalicFont={PT-Serif_Italic.ttf}]{PT-Serif_Regular.ttf}
+#+LATEX_HEADER: \defaultfontfeatures{Path={/Users/lich/.local/share/polytextum/fonts/}}
+#+LATEX_HEADER: \setmainfont[UprightFont=*-Regular, ItalicFont=*-Italic,  BoldFont=*-Bold,]{KeplerStd}
+# #+LATEX_HEADER:\setallmainfonts[Path=fonts/,BoldFont={PT-Serif_Bold.ttf}, ItalicFont={PT-Serif_Italic.ttf}]{PT-Serif_Regular.ttf}
 #+LATEX_HEADER:\setsansfont[Path=fonts/]{Golos-Text_DemiBold.ttf}
-#+LATEX_HEADER: \setmonofont[Path=fonts/]{PT-Mono_Regular.ttf}
+#+LATEX_HEADER: \setmonofont[Path=fonts/]{Golos-Text_Regular.ttf}
 #+LATEX_HEADER: %include polycode.fmt
 #+LATEX_HEADER: %format -* = "\rightarrowtriangle"
 # alternative:                 -{\kern -1.3ex}*
@@ -16,12 +18,17 @@
 #+LATEX_HEADER: %let operator = "."
 #+LATEX_HEADER: \usepackage{soul}
 #+LATEX_HEADER: \usepackage{url}
+#+LATEX_HEADER: \usepackage{tikz}
+#+LATEX_HEADER: \usetikzlibrary{shapes,arrows,positioning,fit}
+#+LATEX_HEADER: \tikzstyle{block} = [draw, rectangle, minimum height=3em, minimum width=3em]
+#+LATEX_HEADER: \tikzstyle{virtual} = [coordinate]
 #+LATEX_HEADER: \usepackage{newunicodechar}
 #+LATEX_HEADER: \input{newunicodedefs}
 #+LATEX_HEADER: \usepackage{natbib}
 #+LATEX_HEADER: \usefonttheme{serif}
 #+LATEX_HEADER: \input{beamer-template}
 #+LATEX_HEADER: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Next...}\tableofcontents[currentsection]\end{frame}}
+#+LATEX_HEADER: \AtBeginEnvironment{tabbing}{\color{redred}}
 
 
 #+TITLE: Dialogue management with linear logic: the role of metavariables in questions and clarifications
@@ -39,6 +46,7 @@ S: Okay.
 U: 2pm or 5pm? Just to confirm.
 S: Okay.
 #+end_example
+
 ** Dialogue manager
 *Dialogue manager (DM)* selects /appropriate/ system actions depending on
 the current state and the external context.
@@ -48,15 +56,14 @@ Types:
 - /statistical models/ citep:rieser2011reinforcement,young2010hidden
 - /end2end (no DM)/ citep:huang2020challenges,gao2020robust
 ** Theoretical models of dialogue
-Only few DM approaches reflect advancements in dialogue theory. 
-
-Phenomena: 
+*Only few DM approaches reflect advancements in dialogue theory*.
+*** 
 - non-sentential utterances
   #+begin_example
   A: Does John live in Paris?
   B: from January. 
   #+end_example
-- clarification requests
+- clarification requests and insertion sequences
   #+begin_example
   U: When is there a bus from Valand? 
   S: Which number?
@@ -64,29 +71,49 @@ Phenomena:
   S: It is in 15 minutes.
   #+end_example
 ** What we did
-1. Proof-search engine based on linear logic and use of metavariables.
-2. A set of rules for dialogue management (in the style of KoS).
-3. Several examples of potential applications, using dialogue-general
-   and domain-specific rules.
+- modular system with *domain-general rules*
+- dialogue manager that goes hand in hand with the theory (KoS)
+- rich information state, *ISU approach*
+- a proof-search engine based on *linear logic*
+
 * Background
-** KoS
-- Dialogue Game Board (DGB)
-- Moves
-- QUD
-** ISU
-UPDATE
+** KoS: domain-general conversational relevance
+In KoS citep:ginzburg2012interactive language is compared to a game,
+containing players (interlocutors), goals and rules. KoS represents
+language interaction by a dynamically changing context. The meaning of
+an utterance is then how it changes the context.
+*** 
+- *Dialogue Game Board (DGB)* for each dialogue participant
+  - Moves
+  - QUD
+  - ...
+- based on Type Theory with Records (TTR) citep:Cooper2005
+- our previous implementation was based on intuitionistic version of
+  TTR citep:maraev_kosttr-based_2018.
+** Information-state update approach (ISU)
+- *Rich* information-state which includes a hierarchy of facts:
+  thought to be shared and not yet publicised.
+- Information-state update approach
+  citep:larsson2002issue,ginzburg2012interactive
+- Example: /QUD-incrementation/, update current set of |QUD| if the
+  latest utterance is a question.
+- Supports wide range of CRs and follow-ups, and also contextually
+  relevant contributions, such as over-answering.
 ** Proof search
 - axioms: |Leave 55 Valand 11.50|
 - rules of inference: |Leave x Valand y -> Arrive x CentralStationen (y+45 min)|
 - metavariables (lowercase letters)
-- proof-search as means to represent possible dialogue moves
-** Linear logic
-- one feature: hypotheses may be used only once: |IsAt x Valand y -o IsAt x CentralStationen (y+45 min)|
-- unrestricted implication (|->|) still remains, for immutable facts
 
-#+BEGIN_code
-Hungry Vlad -> Eat Vlad IceCream -o Happy Vlad
-#+END_code
+** Linear logic
+- hypotheses may be used only once: |IsAt x Valand y ⊸ IsAt x CentralStationen (y+45 min)|
+- unrestricted implication (|->|) still remains, for immutable facts
+  #+BEGIN_code
+  Hungry Vlad -> Eat Vlad IceCream ⊸ Happy Vlad
+  #+END_code
+
+To our knowledge citet:dixon2009plans were the first to advocate the
+use of linear logic for dialogue management and planning (but no
+domain-generality and ISU).
 
 ** Linear logic as DM framework 
 - linear rule corresponds to an action of an agent
@@ -94,37 +121,344 @@ Hungry Vlad -> Eat Vlad IceCream -o Happy Vlad
   - sending message to the outside world (speech, movement etc.)
   - perceptory subsystem (events in the outside world lead to updates
     in IS)
-- multiset of linear hypotheses represent the current
+- multiset of linear hypotheses represents the current
   information-state of the agent
 
 Note: hypotheses have no hierarchy (unlike in TTR), but can be wrapped
 in constructors, e.g. |Unsure P| or |QUD Q|.
 
+* Demo
+
+** 
+@@latex:\huge@@
+/Demo/
 * Questions
 ** Question type
-\begin{tabular}{cccc}
-   & |A  : Type|   & \quad \quad\quad \quad \quad    &                    |P  : A  -> Prop|
-\end{tabular}
+#+BEGIN_code
+A : Type
+P : A -> Prop
+#+END_code
 
-The intent of the question is to find out about the value |x| of type |A| which makes |P x| true. 
+- |(P x)| is the interpretation of short answer |x| as a proposition.
+- The intent of the question is to find out about the value |x| of
+  type |A| which makes |(P x)| true.
+- Question can be represented as |Q A x (P x)|
+\pause
+*** 
+Example
+#+begin_example
+A: Where does John live?
+#+end_example
+
+#+BEGIN_code
+A        = Location
+P x      = \x.Live John x
+⟦Paris⟧  = ShortAnswer Location Paris
+#+END_code
+
+
 ** Wh-questions
+#+begin_example
+A: Where does John live?
+B: in London
+#+end_example
+#+BEGIN_code
+QUD (Q Location x (Live John x))
+ShortAnswer Location London
+#+END_code
+#+BEGIN_code
+processShort :  (a : Type) -> (x : a) -> (p : Prop) -> 
+                ShortAnswer a x ⊸ QUD (Q a x p) ⊸ p
+#+END_code
+- *metavariables* are declared via Π type binders, can be read as ∀a, ∀x
+  etc.
+- *relevance*: we demand that types in the answer and in the question
+  match
+- *unification*: |x| occurs in |p| and can be unified with |London|
 ** Polar questions
+#+begin_example
+A: Does John live in Paris
+B: yes / no
+#+end_example
+
+#+BEGIN_code
+A      = Bool
+P x    = \x.if x  then (Live John Paris) 
+                  else Not (Live John Paris)
+⟦yes⟧  = ShortAnswer Bool True 
+#+END_code
+
+\pause
+- What about answers like "possibly", "probably", "since
+  yesterday" etc.?
 ** Polar questions: refined
+Short answers can be adverbs (A = |Prop -> Prop|).
+#+BEGIN_code
+A      = Prop -> Prop
+P      = \m. m (Live John Paris)
+⟦yes⟧  = ShortAnswer (Prop->Prop) (\p. p)
+⟦no⟧   = ShortAnswer (Prop->Prop) (\p. Not p)
+⟦from January⟧  = ShortAnswer  (Prop->Prop) 
+                              (\p. FromJanuary p)
+#+END_code
+
+** Bonus: laughing at questions
+from citet:ginzburg2020laughter:
+| Journalist: (smile) | Dreierkette auch ‘ne Option?               |
+|                     | (Is the three-in-the-back also an option?) |
+| Manuel Neuer:       | fuh fuh fuh                                |
+|                     | (brief laugh)                              |
+
+#+BEGIN_code
+A      = Prop -> Prop
+P      = \m. m IsOptionDreierkette
+⟦fuh fuh fuh⟧ = ShortAnswer (Prop->Prop) (\x.Laughable x)
+#+END_code
 ** Negative polar questions
+#+begin_example
+A: Doesn’t John like Bananas?
+B: no / no he doesn’t / yes / qualifier, e.g. "after tennis"
+#+end_example
+
+#+begin_code
+Q Multi ( \x. case x of  AmbiguousNo  -> Trivial
+                         DefiniteNo   -> not (Like John Bananas)
+                         DefiniteYes  -> Like John Bananas
+                         Qualifier m  -> m (Like John Bananas))
+#+end_code
+
+*The meaning of short answers always depends on the context*
 * Clarification requests and follow-up questions
-** Unique values
-'|Eat Mouse x|
-'|Eat Mouse Spaghetti|
+** Metavariables in the information-state
+:PROPERTIES:
+:BEAMER_opt: allowframebreaks,label=
+:END:  
+- "The mouse eats something"@@latex:\\@@|Eat Mouse x|
+  #+ATTR_LaTeX: :width 0.6\textwidth
+  [[./img/mouse-blur.png]]
+- "The mouse eats spaghetti"@@latex:\\@@|Eat Mouse Spaghetti|
+  #+ATTR_LaTeX: :width 0.6\textwidth
+  [[./img/mouse-full.png]]
+** Answering the question
+#+BEGIN_code
+(a : Type) -> (x : a) -> (p : Prop) -> 
+  QUD (Q a x p) -> p -* ShortAnswer a x
+#+END_code
+- Note: |A -* B| is a syntactic sugar for |A ⊸ (A ⊗ B)|.
+
+*Intuition*: we might not want to answer the question if |x| not known, or
+if |x| is ambiguous (otherwise the answer would be non-resolving).
+
+** Unique and concrete type-former: |(x : A) !-> B|
+
+The rule |(x : A) !-> B| introduces the metavariable |x|, but can only
+fire when:
+- |x| is *made ground* (it is bound to a term which does not contain any
+  metavariable)
+- |x| is *unique*
+\pause
+*** 
+Thus, we can produce and answer only in such case:
+#+BEGIN_code
+produceAnswer : (a : Type) -> (x : a) !-> (p : Prop) -> 
+              QUD (Q a x p) -> p -* ShortAnswer a x
+#+END_code
+
 ** Clarification requests
-** CRs via extra arguments
-** CRs via named contextual parameters
+Consider the question "What is being eaten?"
+represented as |Q x (Eat y x))|,  with the state:
+#+BEGIN_code
+Eat John Mars
+Eat Mary Mars
+#+END_code
+#+begin_example
+Mars!
+#+end_example
+\pause
+#+BEGIN_code
+Eat John Mars
+Eat Mary Twix
+#+END_code
+#+begin_example
+By whom?
+#+end_example
+
+** Issuing CR
+#+BEGIN_code
+[a : Type; x : a; p : Prop; qud :: QUD (Q x p); proof :: p] ?-> CR
+#+END_code
+
+- we leave the exact form of CR unspecified (can be domain-specific)
+- |?->| operator test left-hand side to be non-unique or not fully
+  ground
+
+** Implementing CR
+#+BEGIN_code
+Eat John Mars
+Eat Mary Twix
+ori  ::  QUD (Q Food x (Eat y x))
+cr   ::  QUD (Q Person z (z=y))
+a    ::  ShortAnswer Person Mary
+#+END_code
+after applying |processShort|:
+#+BEGIN_code
+Eat John Mars
+Eat Mary Twix
+ori  :: QUD (Q Food x (Eat y x))
+r    ::  Mary=y
+#+END_code
+The original question becomes (by unification) |Q Food
+x (Eat Mary x)|, and then can be unambiguously answered.
+** Further notes
+1. The logical form of the question (|z| such that |z=y|) is typically realised in a complicated way.
+2. In practice, the form of clarification questions will greatly vary depending on the context citep:purver2004theory.
+3. Answers could simply be exhaustive ("Mars or Twix"). In practice there can be an ambiguity threshold (e.g. answer is longer than |n|) after which clarification requests are preferred. 
+** Paris, Denmark
+[[./img/paris.jpg]]
+** Solution 1: extra arguments
+#+BEGIN_code
+Q City x (Live John x y)
+#+END_code
+
+Metavariable |y| can remain free for the duration of the dialogue. If
+answering the question demands clarification, this can be done using
+the mechanisms described above.
+
+#+BEGIN_code
+Live John Paris y
+#+END_code
+
+#+begin_example
+...but which Paris do you mean?
+#+end_example
+
+** COMMENT Solution 2: named contextual parameters
+For another variant of the implementation we can look at polar questions (simplified to Booleans).
+#+BEGIN_code
+\x. (Live John y -> Name y x)
+#+END_code
+
+#+begin_code
+Name X Paris
+Name Y Paris
+Live John X
+Not (Live John Y)
+Country France X
+Not (Country France Y)
+#+end_code
+
+#+BEGIN_code
+Q Bool (\x. if x then Country France y else Not (Country France y))
+#+END_code
+
 ** Summary
+In sum, we leverage a feature of linear-logic proof search: *at any
+point in the scenario, the context can refer to metavariables*. In a
+dialogue application, metavariables represent a certain amount of
+flexibility in the scenario: /so far/ the scenario works for any value
+which could be assigned to the metavariable. This means that at a
+further point the metavariable can be instantiated to some other
+value.
 * KoS-inspired dialogue management
-* Demo
+** Architecture
+\begin{figure}
+\small
+\centering
+\begin{tikzpicture}[auto, node distance=2cm]
+
+    \node [block]                 (input)     {Knowledge Base};
+    \node [block, above of=input]   (tc)      {Type Checker};
+    \node [block] (appl) [right=2cm of tc]    {Rule application};
+    \node [block, below of=appl, align=center] (sub)    {Information-state:\\ \emph{linear propositions}};
+    
+    \node [block, fit={(appl) (sub)}, align=left,
+           rounded corners, inner sep=8pt] (dm) {DM};
+           
+	\node [block, rounded corners] (nlu) [right=2cm of appl] {NLU and ASR};
+    \node [block, rounded corners, below of=nlu] (nlg) {NLG and TTS};
+    % \node at (8cm, -5.5cm) [inner sep=5pt, align=center] (user) {\Huge\smiley\normalsize\\user};
+    % Connect nodes
+    \draw [->] (input) -- node {rules} (tc);
+    \draw [->] (tc) -- node {verified rules} (appl);
+    \draw [<->] (appl) -- node {} (sub);
+    \draw [->] (nlu) -- node {user moves} (dm);
+    \draw [->] (dm) -- node {agent moves} (nlg);
+%    \draw [->] (user) -- node {} (nlu);
+%    \draw [<-] (user) -- node {} (nlg);
+    %\draw [->] (model) -- node [name=y] {$y$}(output);
+    %\draw [->] (y) |- (feedback);
+\end{tikzpicture}
+\caption{Architecture of a spoken dialogue system with a dialogue manager based on a linear logic framework.}
+\label{fig:ds}
+\end{figure}
+
+** Preliminaries I
+*** 5 types of *moves*:
+#+BEGIN_code
+Greet         spkr  addr
+CounterGreet  spkr  addr
+Ask           question  spkr  addr
+ShortAnswer   vtype v spkr  addr
+Assert        p  spkr  addr
+#+END_code
+
+*** I/O:
+- *Hearing*, e.g. |Heard (Greet S A)|, comes from external source (no
+  rule needs to be fired)
+- *Uttering*, e.g. |Agenda (CounterGreet A S)| can be placed in
+  information-state by some rule.
+
+** Preliminaries II
+*** Pending and Moves
+All the moves are recorded in |Moves| stack after they have been
+processed. We use hypothesis |(Pending m)| for move |m| which one has yet to
+actively react to.
+*** Initial state
+(domain-specific example)
+#+BEGIN_code
+_ :: QUD Nil; _ :: Agenda Nil; _ :: Moves Nil;
+#+END_code
+** 
+@@latex:\huge@@
+/Back to demo/
 * Evaluation and summary
+** Caveats and future work
+1. Correction moves
+2. Clarification of predicates
+3. Semantic dependency between questions
+4. Clarification of the /type/ of metavariable
+5. Probabilistic rules and probabilistic meanings
+6. Incremental processing
+7. Grounding
+** Benchmark
+In evaluation we rely on the work by citet:ginzburg-nlphandbook, who
+proposed a series of benchmarks for comparing different approaches to
+developing dialogue systems. See our paper for the results.
+** 
+@@latex:\huge@@
+#+BEGIN_code
+ThatsIt ⊸ (Thanking ⊗ QA)
+#+END_code
+** COMMENT Acknowledgements
+#+begin_quote
+This research was supported by a grant from the Swedish Research
+Council for the establishment of the Centre for Linguistic Theory and
+Studies in Probability (CLASP) at the University of Gothenburg. We
+also acknowledge support by a public grant overseen by the French
+National Research Agency (ANR) as part of the program “Investissements
+d’Avenir” (reference: ANR-10-LABX-0083). It contributes to the IdEx
+Université de Paris --- ANR-18-IDEX-0001. We also acknowledge a senior
+fellowship from the Institut Universitaire de France to Ginzburg.  In
+addition, we would like to thank our anonymous reviewers for their
+useful comments.
+#+end_quote
 * References
 :PROPERTIES:
 :UNNUMBERED: t
 :END:
+** References
+:PROPERTIES:
+:BEAMER_opt: allowframebreaks,label=
+:END:  
 bibliographystyle:apalike
 bibliography:tal.bib
