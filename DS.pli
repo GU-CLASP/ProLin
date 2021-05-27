@@ -1,0 +1,90 @@
+start :: N0 (REQ (Ty T));
+_ :: Pointer N0;
+
+-- simulating the input
+_ :: Got Hilary;
+next0 : (n: Id) -> n (Fo Hilary) -* Got Upset;
+next1 : (n: Id) -> n (Fo Upset) -* Got Joan;
+
+--- for intro and pred fire just once
+_ :: NoIntro;
+_ :: NoPred;
+
+-- Up/Down S1/S0/Star === ⟨↓₁⟩
+-- MyArg === ⟨↓ₒ⟩
+-- MyMother0 === ⟨↑ₒ⟩
+-- MyMother1 === ⟨↑₁⟩
+introduction : (n : Id) -> n (REQ (Ty T)) -o Pointer n -* NoIntro -o
+      [ _ ::  n (REQ (Ty T));
+        _ ::  n (REQ (Down S0 (Ty E)));
+        _ ::  n (REQ (Down S1 (Ty EtoT)));];
+       
+prediction : NoPred -o
+      N0 (REQ (Down S0 (Ty E))) -*
+      N0 (REQ (Down S1 (Ty EtoT))) -*
+      Pointer N0 -o
+      [ _ :: (Up S0 N0) (REQ (Ty E));
+        _ :: Pointer (Up S0 N0);
+	_ :: (Up S1 N0) (REQ (Ty EtoT));];
+
+thinning : 
+      (n : Id) ->
+      (f : Any) ->
+      Pointer n -*
+      n f -*
+      n (REQ f) -o
+      Fulfilled;
+
+completion :
+     (n : Id) -> (n1 : Id) -> (s : Step) -> (x : Type) -> (f: Any) ->
+     Fulfilled -o   ---- this is added to prevent a cycle!
+     Pointer (Up s n) -o
+     (Up s n) (Ty x) -*
+     [ _ :: Pointer n ;
+       _ :: n (Down s (Ty x)) ; ];
+       
+anticipation :
+     (n : Id) -> (f : Any) -> (s : Step) ->
+     Pointer n -o
+     (Up s n) (REQ f) -*
+     Pointer (Up s n);
+
+
+--- LEXICAL RULES ---
+      
+hilary : (n : Id) ->
+       Got Hilary -o
+       n (REQ (Ty E)) -* 
+       Pointer n -*
+       [ _ :: n (Ty E);
+         _ :: n (Fo (Hilary));
+         _ :: n Bottom;];
+--- same 
+joan : (n : Id) ->
+       Got Joan -o
+       n (REQ (Ty E)) -* 
+       Pointer n -*
+       [ _ :: n (Ty E);
+         _ :: n (Fo (Joan));
+         _ :: n Bottom; ];
+
+
+
+danced : (n : Id) ->
+       Got Danced -o
+       Pointer n -*
+       n (REQ (Ty EtoT)) -*
+       [ _ :: (Down S1 n) (Tns PAST) ;
+         _ :: n (Ty EtoT) ;
+         _ :: n (Fo Dance) ;
+         _ :: n Bottom; ];
+
+upset : (n : Id) ->
+       Got Upset -o
+       Pointer n -*
+       n (REQ (Ty EtoT)) -*
+       [ _ :: (Down S1 n) (Tns PAST);
+         _ :: (Up S1 n) (Fo Upset);
+         _ :: (Up S1 n) (Ty EtoEtoT);
+	 _ :: (Up S1 n) Bottom;
+	 _ :: (Up S0 n) (REQ (Ty E)); ];
