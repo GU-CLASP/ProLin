@@ -27,17 +27,8 @@ prediction : NoPred -o
         _ :: Pointer (Up S0 N0);
 	_ :: (Up S1 N0) (REQ (Ty EtoT));];
 
-thinning : 
-      (n : Id) ->
-      (f : Any) ->
-      Pointer n -*
-      n f -*
-      n (REQ f) -o
-      Fulfilled;
-
 completion :
      (n : Id) -> (n1 : Id) -> (s : Step) -> (x : Type) -> (f: Any) ->
-     Fulfilled -o   ---- this is added to prevent a cycle!
      Pointer (Up s n) -o
      (Up s n) (Ty x) -*
      [ _ :: Pointer n ;
@@ -48,6 +39,15 @@ anticipation :
      Pointer n -o
      (Up s n) (REQ f) -*
      Pointer (Up s n);
+
+thinning : 
+      (n : Id) ->
+      (f : Any) ->
+      Pointer n -*
+      n f -*
+      n (REQ f) -o
+      Fulfilled (n f);
+
 
 
 --- LEXICAL RULES ---
