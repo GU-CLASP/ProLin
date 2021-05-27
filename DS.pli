@@ -46,7 +46,7 @@ thinning :
       Pointer n -*
       n f -*
       n (REQ f) -o
-      Fulfilled (n f);
+      Fulfilled (n f);  -- not in DS, required by linear rule convention
 
 
 
