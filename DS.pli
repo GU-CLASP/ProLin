@@ -10,10 +10,8 @@ next1 : (n: Id) -> n (Fo Upset) -* Got Joan;
 _ :: NoIntro;
 _ :: NoPred;
 
--- Up/Down S1/S0/Star === ⟨↓₁⟩
--- MyArg === ⟨↓ₒ⟩
--- MyMother0 === ⟨↑ₒ⟩
--- MyMother1 === ⟨↑₁⟩
+-- Up/Down S1/S0/Star === ⟨↑/↓  ₁/ₒ/⋆⟩
+
 introduction : (n : Id) -> n (REQ (Ty T)) -o Pointer n -* NoIntro -o
       [ _ ::  n (REQ (Ty T));
         _ ::  n (REQ (Down S0 (Ty E)));
@@ -28,7 +26,7 @@ prediction : NoPred -o
 	_ :: (Up S1 N0) (REQ (Ty EtoT));];
 
 completion :
-     (n : Id) -> (n1 : Id) -> (s : Step) -> (x : Type) -> (f: Any) ->
+     (n : Id) -> (n1 : Id) -> (s : Step) -> (x : Type) -> 
      Pointer (Up s n) -o
      (Up s n) (Ty x) -*
      [ _ :: Pointer n ;
