@@ -1,0 +1,304 @@
+#+OPTIONS: toc:nil ':t ":t author:nil ^:nil
+#+LATEX_CLASS: article
+#+LATEX_HEADER: \usepackage[small]{caption}
+#+LATEX_HEADER: \pdfpagewidth=8.5in
+#+LATEX_HEADER: \pdfpageheight=11in
+#+LATEX_HEADER: \usepackage{ijcai21}
+#+LATEX_HEADER: %include polycode.fmt
+#+LATEX_HEADER: %format -* = "\rightarrowtriangle"
+# alternative:                 -{\kern -1.3ex}*
+#+LATEX_HEADER: %format !-> = "\rightarrow_{!}"
+#+LATEX_HEADER: %format ?-> = "\rightarrow_{?}"
+#+LATEX_HEADER: %format . = "."
+#+LATEX_HEADER: %format \_ = "\_"
+#+LATEX_HEADER: %let operator = "."
+#+LATEX_HEADER: \usepackage{soul}
+#+LATEX_HEADER: \usepackage{url}
+#+LATEX_HEADER: \usepackage{times}
+#+LATEX_HEADER: \renewcommand*\ttdefault{txtt}
+#+LATEX_HEADER: \usepackage{graphicx}
+#+LATEX_HEADER: \urlstyle{same}
+#+LATEX_HEADER: \usepackage{newunicodechar}
+#+LATEX_HEADER: \input{newunicodedefs}
+#+LATEX_HEADER: \usepackage{natbib}
+#+LATEX_HEADER: \usepackage[utf8]{inputenc}
+#+LATEX_HEADER: \usepackage{amsmath}
+#+LATEX_HEADER: \usepackage{amsthm}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{xcolor}
+#+LATEX_HEADER: \urlstyle{same}
+#+LATEX_HEADER: \usepackage{makecell}
+#+LATEX_HEADER: \usepackage{multirow}
+#+LATEX_HEADER: \usepackage{rotating}
+#+LATEX_HEADER: \usepackage{tabulary}
+#+LATEX_HEADER: \usepackage{enumitem}
+#+LATEX_HEADER: \newlist{lingex}{enumerate}{3} % easy numbering of examples
+#+LATEX_HEADER: \setlist[lingex,1]{parsep=0pt,itemsep=1pt,label=(\arabic*),resume=lingexcount}
+#+LATEX_HEADER: \newcommand\onelingex[1]{\begin{lingex}\item #1 \end{lingex}}
+
+#+LATEX_HEADER: \usepackage{mathtools}
+#+LATEX_HEADER: \newcommand{\ttr}[1]{\left[\begin{array}{lcl}#1\end{array}\right]}
+#+LATEX_HEADER: \newcommand{\tf}[2]{\mathrm{#1} & : & \mathit{#2}\\}
+#+LATEX_HEADER: \newcommand{\rf}[2]{\mathrm{#1} & = & \mathit{#2}\\}
+#+LATEX_HEADER: \newcommand{\mf}[3]{\mathrm{#1=#2} & : & \mathit{#3}\\}
+#+LATEX_HEADER: \newcommand{\type}[1]{$\mathit{#1}$}
+#+LATEX_HEADER: \newcommand{\jg}[1]{\noindent \textcolor{blue}{\textbf{\emph{[jg:  #1]}}}}
+#+LATEX_HEADER: \usepackage{tikz}
+#+LATEX_HEADER: \usetikzlibrary{shapes,arrows,positioning,fit}
+#+LATEX_HEADER: \tikzstyle{block} = [draw, rectangle, minimum height=3em, minimum width=3em]
+#+LATEX_HEADER: \tikzstyle{virtual} = [coordinate]
+#+LATEX_HEADER: \usepackage{wasysym}
+
+* Dialogue manager architecture  
+label:sec:dm
+
+We believe that it is crucial to use formal tools which are most
+appropriate for the task: one should be able to express the rules of
+various genres of dialogue in a concise way, free, to any possible
+extent, of irrelevant technical details.  In the view of
+citet:dixon2009plans this is best done by representing the
+information-state of the agents as updatable sets of
+propositions. Very often, dialogue-managument rules update subsets
+(propositions) of the information state independently from the rest. A
+suitable and flexible way to represent such updates are as function
+types in linear logic. The domain of the function is the subset of
+propositions to update, and the co-domain is the (new) set of
+propositions which it replaces.
+
+By using well-known techniques which correspond well with the
+intuition of information-state based dialogue management, we are able
+to provide a fully working prototype of the components of our
+framework:
+
+1. a proof-search engine based on linear logic, modified to support
+   inputs from external systems (representing inputs and outputs of
+   the agent)
+
+2. a set of rules which function as a core framework for dialogue
+   management (in the style of KoS citep:ginzburg2012interactive)
+
+3. several examples which use the above to construct potential
+   applications of the system.
+** Linear rules and proof search
+Typically, and in particular in the archetypal logic programming
+language prolog citep:bratko2001prolog, axioms and rules are expressed
+within the general framework of first order logic. However, several
+authors citep:dixon2009plans,martens2015programming have proposed
+using linear logic citep:girard1995linear instead. For our purpose,
+the crucial feature of linear logic is that hypotheses may be used
+/only once/.
+
+# For example, one could have a rule |IsAt x Gotaplatsen y ⊸ IsAt
+# x CentralStationen (y+0.75)|. Consequently, after firing the above
+# rule, the premiss |(Is x Gotaplatsen y)| becomes unavailable for any
+# other rule.  Thereby the linear arrow |⊸| can be used to conveniently
+# model that a bus cannot be at two places simultaneously.
+
+In general, the linear arrow corresponds to /destructive state
+updates/. Thus, the hypotheses available for proof search correspond
+to the /state/ of the system. In our application they will correspond
+to the /information state/ of the dialogue participant.
+
+In linear logic, normally firing a linear rule corresponds to
+triggering an /action/ of an agent, and a complete proof corresponds to
+a /scenario/, i.e. a sequence of actions, possibly involving action from
+several agents.  However, the information state (typically in the
+literature and in this paper as well), corresponds to the state of a
+/single/ agent. Thus, a scenario is conceived as a sequence of actions
+and updates of the information state of a single agent $a$, even
+though such actions can be attributed to any other dialogue
+participant $b$. (That is, they are $a$'s representation of actions of
+$b$.)  Scenarios can be realised as a sequence of actual actions and
+updates. That is, an action can result in sending a message to the
+outside world (in the form of speech, movement, etc.). Conversely,
+events happening in the outside world can result in extra-logical
+updates of the information state (through a model of the perceptory
+subsystem).
+
+In our work we are employing an information-state update (ISU)
+approach, following several authors, including citet:larsson2002issue
+and citet:ginzburg2012interactive. We treat the information state as a
+multiset of /linear hypotheses/ that can be queried. Because they are
+linear, these hypotheses can also be removed from the state.  In
+particular, we have a fixed set of rules (they remain available even
+after being used). Each such rule manipulates a part of the
+information state (captured by its premises) and leaves everything
+else in the state alone.
+
+# It is important to note that we will not forego the unrestricted
+# (i.e. non-linear) implication (|->|). Rather, both implications will
+# co-exist in our implementation, thus we can represent simultaneously
+# transient facts, or states, (introduced by the linear arrow) and
+# immutable facts (introduced by the unrestricted arrow).
+
+** Questions and answers
+label:sec:qa 
+
+The essential components of the representation of a
+question are a type |A|, and a predicate |P| over |A|. Using
+a typed intuitionistic logic, we write:
+
+\begin{tabular}{cccc}
+   & |A  : Type|   & \quad \quad\quad \quad \quad    &                    |P  : A  -> Prop|
+\end{tabular}
+
+The intent of the question is to find out about a value |x| of
+type |A| which makes |P x| true, or at least entertained by the other
+participant. 
+
+We make use of metavariables to represent what is being asked, as the
+unknown in a proposition.  Within the state of the agent, if the value
+of the requested answer is represented as a metavariable |x|, then the
+question can be represented as: |Q A x (P x)|.  That is, the pending
+question (|Q| denotes a question constructor) is a triple of a type, a
+metavariable |x|, and a proposition where |x| occurs. We stress
+that |P x| is /not/ part of the information state of the agent yet,
+rather the fact that the above question is /under discussion/ is a
+fact. For example, after asking "Where does John live?", we have a
+fact (we use the double colon for information-state facts and we
+assume that agent's questions under discussion are stacked in
+the |Cons|-list):
+
+#+BEGIN_code
+_ :: QUD  (Cons 
+            (Q  Location x (Live John x)) 
+                qs)
+#+END_code
+
+Resolving a question can be done by communicating an answer. An answer
+to a question |(A : Type; P : A -> Prop)| can be of either of the two
+following forms: i) A *ShortAnswer*, which is a pair of an element |X:A| and
+its type |A|, represented as |ShortAnswer A X| or ii) An *Assertion* which is
+a proposition |R : Prop|, represented as |Assert R|.
+
+For more detailed description we refer our reader to the original
+paper citep:maraev2020tal.
+
+** Dialogue management
+label:sec:dm-rules 
+
+Our DM models the information-state of only one
+participant. Regardless, this participant can record its own beliefs
+about the state of other participants. In general, the core of DM is
+comprised of a set of linear-logic rules which depend on the domain of
+application. However, many rules will be domain-independent (such as
+generic processing of answers). Here we will provide a few examples of
+the rules which are implemented in our system, and we refer our reader
+to citep:maraev2020tal for more detailed description.
+
+The following rule accounts for pushing the content (a question) of
+any received |Ask| move on top of the stack of questions under
+discussion (|QUD|).
+
+#+BEGIN_code
+pushQUD :   (x y : DP) ->
+  (q : Question) ->
+  (qs : List Question) -> 
+  Pending (Ask q x y) ⊸ 
+  QUD qs ⊸ QUD (Cons q qs)
+#+END_code
+
+After the question has been integrated, if the system has a fact |p|
+in its database it can produce an answer.[fn::or, possibly, a domain-specific
+clarification request depending on whether the fact is unique and
+concrete, see \citep{maraev2020tal} for further details]
+#+BEGIN_code
+produceAnswer :
+   (a : Type) ->   (x : a) -> (p : Prop) -> 
+   (qs : List Question)  ->	
+   QUD (Cons (Q USER a x p) qs)  ⊸ 
+   p  -*
+   [  _ :: Agenda (  ShortAnswer 
+                     a x SYSTEM USER); 
+      _ :: QUD qs;
+      _ :: Answered (Q USER a x p)]
+#+END_code
+Note: taking a linear argument and producing it again is a common
+pattern, which can be spelled out |A ⊸ [_ :: A; _ :: P]|. It is so
+common that from here on we use the syntactic sugar |A -* P| for it.
+* Extending the framework with enthymematic reasoning 
+label:sec:dm-enthymeme
+
+In this section we will describe a rudimentary support for
+enthymematic reasoning within the framework described above. It appears
+to be easier to discuss the extension of the system with a simple
+example, adapted from citet:breitholtz2020.
+
+#+begin_lingex
+\item\label{ex:bypass} 
+#+ATTR_LaTeX: :environment tabulary :width \linewidth :center nil :align lll
+| 1 | U: | How can I get home?                |
+| 2 | S: | Via the bypass.                    |
+| 3 | U: | Why the bypass?                    |
+| 4 | S: | Because the route is the shortest. |
+#+end_lingex
+
+For dealing with lines 1--2 of example ref:ex:bypass, let's assume
+that system has an access to the following facts from the knowledge
+base which represent three possible routes to home, via three
+different roads.
+#+BEGIN_code
+_ :: Route Bypass Home;
+_ :: Route ParkLane Home;
+_ :: Route BridgeRoute Home;
+#+END_code
+Assuming that the question under discussion is |(Q USER Road x (Route
+x Home))|, and the choice of hypothesis is pseudo-random, we can see
+that |x| unifies with any of three fact, therefore using
+the |produceAnswer| rule, system can produce a short
+answer |(ShortAnswer Road Bypass SYSTEM USER)|, which can be realised
+as "Via the bypass".
+
+Now let us turn to argumentative part of the dialogue. We would need
+to modify a domain specific representation of a question a little bit,
+adding additional predicate: |(Q USER Road x (Pick (Route x
+Home)))|. The knowledge base can also be extended with some additional
+facts about the qualities of the routes.
+#+BEGIN_code
+_ :: Shortest (Route Bypass Home) ;
+_ :: Cheapest (Route ParkLane Home) ;
+_ :: Prettiest (Route BridgeRoute Home);
+#+END_code
+
+To represent enthymematic reasoning (lines 3--4 of ref:ex:bypass), we
+will introduce the reasoning pattern represented by following rule:
+#+BEGIN_code
+toposShortest : (x: Road) -> (y: To) -> 
+   (qs : List Question) ->
+   QUD (Cons (Q USER Road x 
+        (Pick (Route x y))) qs) -*
+   Route x y ⊸
+   Shortest (Route x y)  -*
+     [  _ :: Pick (Route x y);
+        _ :: Topos (Shortest (Route x y));];
+#+END_code
+This can be read as follows: "In the context of a question under
+discussion, involving picking a route, pick the shortest one, and
+remember why it was picked". The latter is represented in the last
+line and alludes to the salient /topos/ used for this choice. Note, that
+here we leave destination underspecified, and further
+underspecifications are possible: not only shortest routes might be
+preferred but also shortest times or sentences.
+
+Following citet:breitholtz2020 we treat why-questions as questions
+asking for a topos, which becomes the question under discussion |(Q
+USER Reason t (Topos t))| where |t| is a metavariable representing the
+reason for choosing the bypass. With a local topos produced
+by |toposShortest| rule at hand we can apply the
+standard |produceAnswer| rule, which would elicit a short answer:
+#+begin_code
+ShortAnswer Reason 
+   (Shortest (Route Bypass Home)) 
+     SYSTEM USER
+#+end_code
+It can be realised as an utterance "Because it is shorter",
+concluding our example ref:ex:bypass.
+
+Our system allows the system to have several competing topoi, for
+instance we can analogously add |toposPrettiest| and |toposCheapest|
+rules.  Assuming random selection of an applicable rule, the system
+will be able to offer a justification for whichever of the routes it
+chooses, based on the underlying topos.
+
+bibliography:../LACATODA2021/lacatoda.bib
+bibliographystyle:named

@@ -1,0 +1,667 @@
+% Created 2021-08-19 Thu 21:12
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\PassOptionsToPackage{hidelinks}{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage[small]{caption}
+\pdfpagewidth=8.5in
+\pdfpageheight=11in
+\usepackage{ijcai21}
+%% ODER: format ==         = "\mathrel{==}"
+%% ODER: format /=         = "\neq "
+%
+%
+\makeatletter
+\@ifundefined{lhs2tex.lhs2tex.sty.read}%
+  {\@namedef{lhs2tex.lhs2tex.sty.read}{}%
+   \newcommand\SkipToFmtEnd{}%
+   \newcommand\EndFmtInput{}%
+   \long\def\SkipToFmtEnd#1\EndFmtInput{}%
+  }\SkipToFmtEnd
+
+\newcommand\ReadOnlyOnce[1]{\@ifundefined{#1}{\@namedef{#1}{}}\SkipToFmtEnd}
+\usepackage{amstext}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\DeclareFontFamily{OT1}{cmtex}{}
+\DeclareFontShape{OT1}{cmtex}{m}{n}
+  {<5><6><7><8>cmtex8
+   <9>cmtex9
+   <10><10.95><12><14.4><17.28><20.74><24.88>cmtex10}{}
+\DeclareFontShape{OT1}{cmtex}{m}{it}
+  {<-> ssub * cmtt/m/it}{}
+\newcommand{\texfamily}{\fontfamily{cmtex}\selectfont}
+\DeclareFontShape{OT1}{cmtt}{bx}{n}
+  {<5><6><7><8>cmtt8
+   <9>cmbtt9
+   <10><10.95><12><14.4><17.28><20.74><24.88>cmbtt10}{}
+\DeclareFontShape{OT1}{cmtex}{bx}{n}
+  {<-> ssub * cmtt/bx/n}{}
+\newcommand{\tex}[1]{\text{\texfamily#1}}	% NEU
+
+\newcommand{\Sp}{\hskip.33334em\relax}
+
+
+\newcommand{\Conid}[1]{\mathit{#1}}
+\newcommand{\Varid}[1]{\mathit{#1}}
+\newcommand{\anonymous}{\kern0.06em \vbox{\hrule\@width.5em}}
+\newcommand{\plus}{\mathbin{+\!\!\!+}}
+\newcommand{\bind}{\mathbin{>\!\!\!>\mkern-6.7mu=}}
+\newcommand{\rbind}{\mathbin{=\mkern-6.7mu<\!\!\!<}}% suggested by Neil Mitchell
+\newcommand{\sequ}{\mathbin{>\!\!\!>}}
+\renewcommand{\leq}{\leqslant}
+\renewcommand{\geq}{\geqslant}
+\usepackage{polytable}
+
+%mathindent has to be defined
+\@ifundefined{mathindent}%
+  {\newdimen\mathindent\mathindent\leftmargini}%
+  {}%
+
+\def\resethooks{%
+  \global\let\SaveRestoreHook\empty
+  \global\let\ColumnHook\empty}
+\newcommand*{\savecolumns}[1][default]%
+  {\g@addto@macro\SaveRestoreHook{\savecolumns[#1]}}
+\newcommand*{\restorecolumns}[1][default]%
+  {\g@addto@macro\SaveRestoreHook{\restorecolumns[#1]}}
+\newcommand*{\aligncolumn}[2]%
+  {\g@addto@macro\ColumnHook{\column{#1}{#2}}}
+
+\resethooks
+
+\newcommand{\onelinecommentchars}{\quad-{}- }
+\newcommand{\commentbeginchars}{\enskip\{-}
+\newcommand{\commentendchars}{-\}\enskip}
+
+\newcommand{\visiblecomments}{%
+  \let\onelinecomment=\onelinecommentchars
+  \let\commentbegin=\commentbeginchars
+  \let\commentend=\commentendchars}
+
+\newcommand{\invisiblecomments}{%
+  \let\onelinecomment=\empty
+  \let\commentbegin=\empty
+  \let\commentend=\empty}
+
+\visiblecomments
+
+\newlength{\blanklineskip}
+\setlength{\blanklineskip}{0.66084ex}
+
+\newcommand{\hsindent}[1]{\quad}% default is fixed indentation
+\let\hspre\empty
+\let\hspost\empty
+\newcommand{\NB}{\textbf{NB}}
+\newcommand{\Todo}[1]{$\langle$\textbf{To do:}~#1$\rangle$}
+
+\EndFmtInput
+\makeatother
+%
+%
+%
+%
+%
+%
+% This package provides two environments suitable to take the place
+% of hscode, called "plainhscode" and "arrayhscode". 
+%
+% The plain environment surrounds each code block by vertical space,
+% and it uses \abovedisplayskip and \belowdisplayskip to get spacing
+% similar to formulas. Note that if these dimensions are changed,
+% the spacing around displayed math formulas changes as well.
+% All code is indented using \leftskip.
+%
+% Changed 19.08.2004 to reflect changes in colorcode. Should work with
+% CodeGroup.sty.
+%
+\ReadOnlyOnce{polycode.fmt}%
+\makeatletter
+
+\newcommand{\hsnewpar}[1]%
+  {{\parskip=0pt\parindent=0pt\par\vskip #1\noindent}}
+
+% can be used, for instance, to redefine the code size, by setting the
+% command to \small or something alike
+\newcommand{\hscodestyle}{}
+
+% The command \sethscode can be used to switch the code formatting
+% behaviour by mapping the hscode environment in the subst directive
+% to a new LaTeX environment.
+
+\newcommand{\sethscode}[1]%
+  {\expandafter\let\expandafter\hscode\csname #1\endcsname
+   \expandafter\let\expandafter\endhscode\csname end#1\endcsname}
+
+% "compatibility" mode restores the non-polycode.fmt layout.
+
+\newenvironment{compathscode}%
+  {\par\noindent
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\\=\@normalcr
+   \let\hspre\(\let\hspost\)%
+   \pboxed}%
+  {\endpboxed\)%
+   \par\noindent
+   \ignorespacesafterend}
+
+\newcommand{\compaths}{\sethscode{compathscode}}
+
+% "plain" mode is the proposed default.
+% It should now work with \centering.
+% This required some changes. The old version
+% is still available for reference as oldplainhscode.
+
+\newenvironment{plainhscode}%
+  {\hsnewpar\abovedisplayskip
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\hspre\(\let\hspost\)%
+   \pboxed}%
+  {\endpboxed%
+   \hsnewpar\belowdisplayskip
+   \ignorespacesafterend}
+
+\newenvironment{oldplainhscode}%
+  {\hsnewpar\abovedisplayskip
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\\=\@normalcr
+   \(\pboxed}%
+  {\endpboxed\)%
+   \hsnewpar\belowdisplayskip
+   \ignorespacesafterend}
+
+% Here, we make plainhscode the default environment.
+
+\newcommand{\plainhs}{\sethscode{plainhscode}}
+\newcommand{\oldplainhs}{\sethscode{oldplainhscode}}
+\plainhs
+
+% The arrayhscode is like plain, but makes use of polytable's
+% parray environment which disallows page breaks in code blocks.
+
+\newenvironment{arrayhscode}%
+  {\hsnewpar\abovedisplayskip
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\\=\@normalcr
+   \(\parray}%
+  {\endparray\)%
+   \hsnewpar\belowdisplayskip
+   \ignorespacesafterend}
+
+\newcommand{\arrayhs}{\sethscode{arrayhscode}}
+
+% The mathhscode environment also makes use of polytable's parray 
+% environment. It is supposed to be used only inside math mode 
+% (I used it to typeset the type rules in my thesis).
+
+\newenvironment{mathhscode}%
+  {\parray}{\endparray}
+
+\newcommand{\mathhs}{\sethscode{mathhscode}}
+
+% texths is similar to mathhs, but works in text mode.
+
+\newenvironment{texthscode}%
+  {\(\parray}{\endparray\)}
+
+\newcommand{\texths}{\sethscode{texthscode}}
+
+% The framed environment places code in a framed box.
+
+\def\codeframewidth{\arrayrulewidth}
+\RequirePackage{calc}
+
+\newenvironment{framedhscode}%
+  {\parskip=\abovedisplayskip\par\noindent
+   \hscodestyle
+   \arrayrulewidth=\codeframewidth
+   \tabular{@{}|p{\linewidth-2\arraycolsep-2\arrayrulewidth-2pt}|@{}}%
+   \hline\framedhslinecorrect\\{-1.5ex}%
+   \let\endoflinesave=\\
+   \let\\=\@normalcr
+   \(\pboxed}%
+  {\endpboxed\)%
+   \framedhslinecorrect\endoflinesave{.5ex}\hline
+   \endtabular
+   \parskip=\belowdisplayskip\par\noindent
+   \ignorespacesafterend}
+
+\newcommand{\framedhslinecorrect}[2]%
+  {#1[#2]}
+
+\newcommand{\framedhs}{\sethscode{framedhscode}}
+
+% The inlinehscode environment is an experimental environment
+% that can be used to typeset displayed code inline.
+
+\newenvironment{inlinehscode}%
+  {\(\def\column##1##2{}%
+   \let\>\undefined\let\<\undefined\let\\\undefined
+   \newcommand\>[1][]{}\newcommand\<[1][]{}\newcommand\\[1][]{}%
+   \def\fromto##1##2##3{##3}%
+   \def\nextline{}}{\) }%
+
+\newcommand{\inlinehs}{\sethscode{inlinehscode}}
+
+% The joincode environment is a separate environment that
+% can be used to surround and thereby connect multiple code
+% blocks.
+
+\newenvironment{joincode}%
+  {\let\orighscode=\hscode
+   \let\origendhscode=\endhscode
+   \def\endhscode{\def\hscode{\endgroup\def\@currenvir{hscode}\\}\begingroup}
+   %\let\SaveRestoreHook=\empty
+   %\let\ColumnHook=\empty
+   %\let\resethooks=\empty
+   \orighscode\def\hscode{\endgroup\def\@currenvir{hscode}}}%
+  {\origendhscode
+   \global\let\hscode=\orighscode
+   \global\let\endhscode=\origendhscode}%
+
+\makeatother
+\EndFmtInput
+%
+\usepackage{soul}
+\usepackage{url}
+\usepackage{times}
+\renewcommand*\ttdefault{txtt}
+\usepackage{graphicx}
+\urlstyle{same}
+\usepackage{newunicodechar}
+\input{newunicodedefs}
+\usepackage{natbib}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\urlstyle{same}
+\usepackage{makecell}
+\usepackage{multirow}
+\usepackage{rotating}
+\usepackage{tabulary}
+\usepackage{enumitem}
+\newlist{lingex}{enumerate}{3} % easy numbering of examples
+\setlist[lingex,1]{parsep=0pt,itemsep=1pt,label=(\arabic*),resume=lingexcount}
+\newcommand\onelingex[1]{\begin{lingex}\item #1 \end{lingex}}
+\usepackage{mathtools}
+\newcommand{\ttr}[1]{\left[\begin{array}{lcl}#1\end{array}\right]}
+\newcommand{\tf}[2]{\mathrm{#1} & : & \mathit{#2}\\}
+\newcommand{\rf}[2]{\mathrm{#1} & = & \mathit{#2}\\}
+\newcommand{\mf}[3]{\mathrm{#1=#2} & : & \mathit{#3}\\}
+\newcommand{\type}[1]{$\mathit{#1}$}
+\newcommand{\jg}[1]{\noindent \textcolor{blue}{\textbf{\emph{[jg:  #1]}}}}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,positioning,fit}
+\tikzstyle{block} = [draw, rectangle, minimum height=3em, minimum width=3em]
+\tikzstyle{virtual} = [coordinate]
+\usepackage{wasysym}
+\date{\today}
+\title{}
+\begin{document}
+
+
+\section{Dialogue manager architecture}
+\label{sec:orge902f13}
+\label{sec:dm}
+
+We believe that it is crucial to use formal tools which are most
+appropriate for the task: one should be able to express the rules of
+various genres of dialogue in a concise way, free, to any possible
+extent, of irrelevant technical details.  In the view of
+\citet{dixon2009plans} this is best done by representing the
+information-state of the agents as updatable sets of
+propositions. Very often, dialogue-managument rules update subsets
+(propositions) of the information state independently from the rest. A
+suitable and flexible way to represent such updates are as function
+types in linear logic. The domain of the function is the subset of
+propositions to update, and the co-domain is the (new) set of
+propositions which it replaces.
+
+By using well-known techniques which correspond well with the
+intuition of information-state based dialogue management, we are able
+to provide a fully working prototype of the components of our
+framework:
+
+\begin{enumerate}
+\item a proof-search engine based on linear logic, modified to support
+inputs from external systems (representing inputs and outputs of
+the agent)
+
+\item a set of rules which function as a core framework for dialogue
+management (in the style of KoS \citep{ginzburg2012interactive})
+
+\item several examples which use the above to construct potential
+applications of the system.
+\end{enumerate}
+\subsection{Linear rules and proof search}
+\label{sec:org5492034}
+Typically, and in particular in the archetypal logic programming
+language prolog \citep{bratko2001prolog}, axioms and rules are expressed
+within the general framework of first order logic. However, several
+authors \citep{dixon2009plans,martens2015programming} have proposed
+using linear logic \citep{girard1995linear} instead. For our purpose,
+the crucial feature of linear logic is that hypotheses may be used
+\emph{only once}.
+
+In general, the linear arrow corresponds to \emph{destructive state
+updates}. Thus, the hypotheses available for proof search correspond
+to the \emph{state} of the system. In our application they will correspond
+to the \emph{information state} of the dialogue participant.
+
+In linear logic, normally firing a linear rule corresponds to
+triggering an \emph{action} of an agent, and a complete proof corresponds to
+a \emph{scenario}, i.e. a sequence of actions, possibly involving action from
+several agents.  However, the information state (typically in the
+literature and in this paper as well), corresponds to the state of a
+\emph{single} agent. Thus, a scenario is conceived as a sequence of actions
+and updates of the information state of a single agent \(a\), even
+though such actions can be attributed to any other dialogue
+participant \(b\). (That is, they are \(a\)'s representation of actions of
+\(b\).)  Scenarios can be realised as a sequence of actual actions and
+updates. That is, an action can result in sending a message to the
+outside world (in the form of speech, movement, etc.). Conversely,
+events happening in the outside world can result in extra-logical
+updates of the information state (through a model of the perceptory
+subsystem).
+
+In our work we are employing an information-state update (ISU)
+approach, following several authors, including \citet{larsson2002issue}
+and \citet{ginzburg2012interactive}. We treat the information state as a
+multiset of \emph{linear hypotheses} that can be queried. Because they are
+linear, these hypotheses can also be removed from the state.  In
+particular, we have a fixed set of rules (they remain available even
+after being used). Each such rule manipulates a part of the
+information state (captured by its premisses) and leaves everything
+else in the state alone.
+
+\subsection{Questions and answers}
+\label{sec:org5c9f5c8}
+\label{sec:qa} 
+
+The essential components of the representation of a
+question are a type \ensuremath{\Conid{A}}, and a predicate \ensuremath{\Conid{P}} over \ensuremath{\Conid{A}}. Using
+a typed intuitionistic logic, we write:
+
+\begin{tabular}{cccc}
+   & \ensuremath{\Conid{A}\mathbin{:}\Conid{Type}}   & \quad \quad\quad \quad \quad    &                    \ensuremath{\Conid{P}\mathbin{:}\Conid{A}\to \Conid{Prop}}
+\end{tabular}
+
+The intent of the question is to find out about a value \ensuremath{\Varid{x}} of
+type \ensuremath{\Conid{A}} which makes \ensuremath{\Conid{P}\;\Varid{x}} true, or at least entertained by the other
+participant. 
+
+We make use of metavariables to represent what is being asked, as the
+unknown in a proposition.  Within the state of the agent, if the value
+of the requested answer is represented as a metavariable \ensuremath{\Varid{x}}, then the
+question can be represented as: \ensuremath{\Conid{Q}\;\Conid{A}\;\Varid{x}\;(\Conid{P}\;\Varid{x})}.  That is, the pending
+question (\ensuremath{\Conid{Q}} denotes a question constructor) is a triple of a type, a
+metavariable \ensuremath{\Varid{x}}, and a proposition where \ensuremath{\Varid{x}} occurs. We stress
+that \ensuremath{\Conid{P}\;\Varid{x}} is \emph{not} part of the information state of the agent yet,
+rather the fact that the above question is \emph{under discussion} is a
+fact. For example, after asking ``Where does John live?'', we have a
+fact (we use the double colon for information-state facts and we
+assume that agent's questions under discussion are stacked in
+the \ensuremath{\Conid{Cons}}-list):
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{12}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{13}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{17}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\_\mathbin{::}\Conid{QUD}\;{}\<[12]%
+\>[12]{}(\Conid{Cons}{}\<[E]%
+\\
+\>[12]{}\hsindent{1}{}\<[13]%
+\>[13]{}(\Conid{Q}\;{}\<[17]%
+\>[17]{}\Conid{Location}\;\Varid{x}\;(\Conid{Live}\;\Conid{John}\;\Varid{x}))\;{}\<[E]%
+\\
+\>[17]{}\Varid{qs}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Resolving a question can be done by communicating an answer. An answer
+to a question \ensuremath{(\Conid{A}\mathbin{:}\Conid{Type};\Conid{P}\mathbin{:}\Conid{A}\to \Conid{Prop})} can be of either of the two
+following forms: i) A \textbf{ShortAnswer}, which is a pair of an element \ensuremath{\Conid{X}\mathbin{:}\Conid{A}} and
+its type \ensuremath{\Conid{A}}, represented as \ensuremath{\Conid{ShortAnswer}\;\Conid{A}\;\Conid{X}} or ii) An \textbf{Assertion} which is
+a proposition \ensuremath{\Conid{R}\mathbin{:}\Conid{Prop}}, represented as \ensuremath{\Conid{Assert}\;\Conid{R}}.
+
+For more detailed description we refer our reader to the original
+paper \citep{maraev2020tal}.
+
+\subsection{Dialogue management}
+\label{sec:org8989cb7}
+\label{sec:dm-rules} 
+
+Our DM models the information-state of only one
+participant. Regardless, this participant can record its own beliefs
+about the state of other participants.In general, the core of DM is
+comprised of a set of linear-logic rules which depend on the domain of
+application. However, many rules will be domain-independent (such as
+generic processing of answers). Here we will provide a few examples of
+the rules which are implemented in our system, and we refer our reader
+to \citep{maraev2020tal} for more detailed description.
+
+The following rule accounts for pushing the content (a question) of
+any received \ensuremath{\Conid{Ask}} move on top of the stack of questions under
+discussion (\ensuremath{\Conid{QUD}}).
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{13}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{pushQUD}\mathbin{:}{}\<[13]%
+\>[13]{}(\Varid{x}\;\Varid{y}\mathbin{:}\Conid{DP})\to {}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}(\Varid{q}\mathbin{:}\Conid{Question})\to {}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}(\Varid{qs}\mathbin{:}\Conid{List}\;\Conid{Question})\to {}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Conid{Pending}\;(\Conid{Ask}\;\Varid{q}\;\Varid{x}\;\Varid{y})\mathbin{⊸}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Conid{QUD}\;\Varid{qs}\mathbin{⊸}\Conid{QUD}\;(\Conid{Cons}\;\Varid{q}\;\Varid{qs}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+After the question has been integrated, if the system has a fact \ensuremath{\Varid{p}}
+in its database it can produce an answer.\footnote{or, possibly, a domain-specific
+clarification request depending on whether the fact is unique and
+concrete, see \citep{maraev2020tal} for further details}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{4}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{7}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{20}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{22}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{23}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{26}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{26E}{@{}l@{}}%
+\column{34}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{34E}{@{}l@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{produceAnswer}\mathbin{:}{}\<[E]%
+\\
+\>[B]{}\hsindent{4}{}\<[4]%
+\>[4]{}(\Varid{a}\mathbin{:}\Conid{Type})\to {}\<[20]%
+\>[20]{}(\Varid{x}\mathbin{:}\Varid{a})\to (\Varid{p}\mathbin{:}\Conid{Prop})\to {}\<[E]%
+\\
+\>[B]{}\hsindent{4}{}\<[4]%
+\>[4]{}(\Varid{qs}\mathbin{:}\Conid{List}\;\Conid{Question}){}\<[26]%
+\>[26]{}\to {}\<[26E]%
+\\
+\>[B]{}\hsindent{4}{}\<[4]%
+\>[4]{}\Conid{QUD}\;(\Conid{Cons}\;(\Conid{Q}\;\Conid{USER}\;\Varid{a}\;\Varid{x}\;\Varid{p})\;\Varid{qs}){}\<[34]%
+\>[34]{}\mathbin{⊸}{}\<[34E]%
+\\
+\>[B]{}\hsindent{4}{}\<[4]%
+\>[4]{}\Varid{p}{}\<[7]%
+\>[7]{}\rightarrowtriangle{}\<[E]%
+\\
+\>[B]{}\hsindent{4}{}\<[4]%
+\>[4]{}[\mskip1.5mu {}\<[7]%
+\>[7]{}\_\mathbin{::}\Conid{Agenda}\;({}\<[23]%
+\>[23]{}\Conid{ShortAnswer}{}\<[E]%
+\\
+\>[7]{}\hsindent{15}{}\<[22]%
+\>[22]{}\Varid{a}\;\Varid{x}\;\Conid{SYSTEM}\;\Conid{USER});{}\<[E]%
+\\
+\>[7]{}\_\mathbin{::}\Conid{QUD}\;\Varid{qs};{}\<[E]%
+\\
+\>[7]{}\_\mathbin{::}\Conid{Answered}\;(\Conid{Q}\;\Conid{USER}\;\Varid{a}\;\Varid{x}\;\Varid{p})\mskip1.5mu]{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+Note: taking a linear argument and producing it again is a common
+pattern, which can be spelled out \ensuremath{\Conid{A}\mathbin{⊸}[\mskip1.5mu \_\mathbin{::}\Conid{A};\_\mathbin{::}\Conid{P}\mskip1.5mu]}. It is so
+common that from here on we use the syntactic sugar \ensuremath{\Conid{A}\rightarrowtriangle\Conid{P}} for it.
+\section{Extending the framework with enthymematic reasoning}
+\label{sec:org4ece00e}
+\label{sec:dm-enthymeme}
+
+In this section we will describe a rudimentary support for
+enthymematic reasonin within the framework described above. It appears
+to be easier to discuss the extension of the system with a simple
+example which alludes to \citet{breitholtz2020}.
+
+\begin{lingex}
+\item\label{ex:bypass} 
+\begin{tabulary}{\linewidth}{lll}
+1 & U: & How can I get home?\\
+2 & S: & Via the bypass.\\
+3 & U: & Why the bypass?\\
+4 & S: & Because the route is the shortest.\\
+\end{tabulary}
+\end{lingex}
+
+For dealing with lines 1--2 of example \ref{ex:bypass}, let's assume
+that system has an access to the following facts from the knowledge
+base which represent three possible routes to home, via three
+different roads.
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\_\mathbin{::}\Conid{Route}\;\Conid{Bypass}\;\Conid{Home};{}\<[E]%
+\\
+\>[B]{}\_\mathbin{::}\Conid{Route}\;\Conid{ParkLane}\;\Conid{Home};{}\<[E]%
+\\
+\>[B]{}\_\mathbin{::}\Conid{Route}\;\Conid{BridgeRoute}\;\Conid{Home};{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+Assuming that the question under discussion is \ensuremath{(\Conid{Q}\;\Conid{USER}\;\Conid{Road}\;\Varid{x}\;(\Conid{Route}\;\Varid{x}\;\Conid{Home}))}, and the choice of hypothesis is pseudo-random, we can see
+that \ensuremath{\Varid{x}} unifies with any of three fact, therefore using
+the \ensuremath{\Varid{produceAnswer}} rule, system can produce a short
+answer \ensuremath{(\Conid{ShortAnswer}\;\Conid{Road}\;\Conid{Bypass}\;\Conid{SYSTEM}\;\Conid{USER})}, which can be realised
+as ``Via the bypass''.
+
+Now let us turn to argumentative part of the dialogue. We would need
+to modify a domain specific representation of a question a little bit,
+adding additional predicate: \ensuremath{(\Conid{Q}\;\Conid{USER}\;\Conid{Road}\;\Varid{x}\;(\Conid{Pick}\;(\Conid{Route}\;\Varid{x}\;\Conid{Home})))}. Also, knowledge base can be extended with some additional
+facts about the qualities of the routes.
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\_\mathbin{::}\Conid{Shortest}\;(\Conid{Route}\;\Conid{Bypass}\;\Conid{Home});{}\<[E]%
+\\
+\>[B]{}\_\mathbin{::}\Conid{Cheapest}\;(\Conid{Route}\;\Conid{ParkLane}\;\Conid{Home});{}\<[E]%
+\\
+\>[B]{}\_\mathbin{::}\Conid{Prettiest}\;(\Conid{Route}\;\Conid{BridgeRoute}\;\Conid{Home});{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+To represent enthymematic reasoning (lines 3--4 of \ref{ex:bypass}), we
+will introduce the reasoning pattern represented by following rule:
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{4}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{6}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{6E}{@{}l@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{26}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{26E}{@{}l@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{toposShortest}\mathbin{:}(\Varid{x}\mathbin{:}\Conid{Road})\to (\Varid{y}\mathbin{:}\Conid{To})\to {}\<[E]%
+\\
+\>[B]{}\hsindent{4}{}\<[4]%
+\>[4]{}(\Varid{qs}\mathbin{:}\Conid{List}\;\Conid{Question})\to {}\<[E]%
+\\
+\>[B]{}\hsindent{4}{}\<[4]%
+\>[4]{}\Conid{QUD}\;(\Conid{Cons}\;(\Conid{Q}\;\Conid{USER}\;\Conid{Road}\;\Varid{x}{}\<[E]%
+\\
+\>[4]{}\hsindent{5}{}\<[9]%
+\>[9]{}(\Conid{Pick}\;(\Conid{Route}\;\Varid{x}\;\Varid{y})))\;\Varid{qs})\rightarrowtriangle{}\<[E]%
+\\
+\>[B]{}\hsindent{4}{}\<[4]%
+\>[4]{}\Conid{Route}\;\Varid{x}\;\Varid{y}\mathbin{⊸}{}\<[E]%
+\\
+\>[B]{}\hsindent{4}{}\<[4]%
+\>[4]{}\Conid{Shortest}\;(\Conid{Route}\;\Varid{x}\;\Varid{y}){}\<[26]%
+\>[26]{}\rightarrowtriangle{}\<[26E]%
+\\
+\>[4]{}\hsindent{2}{}\<[6]%
+\>[6]{}[\mskip1.5mu {}\<[6E]%
+\>[9]{}\_\mathbin{::}\Conid{Pick}\;(\Conid{Route}\;\Varid{x}\;\Varid{y});{}\<[E]%
+\\
+\>[9]{}\_\mathbin{::}\Conid{Topos}\;(\Conid{Shortest}\;(\Conid{Route}\;\Varid{x}\;\Varid{y}));\mskip1.5mu];{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+This can be read as follows: ``In the context of a question under
+discussion, involving picking a route, pick the shortest one, and
+remember why it was picked''. The latter is represented in the last
+line and alludes to the salient \emph{topos} used for this choice. Note, that
+here we leave destination underspecified, and further
+underspecifications are possible: not only shortest routes might be
+preferred but also shortest times or sentences.
+
+Following \citet{breitholtz2020} we treat why-questions as questions
+asking for a topos, which becomes the question under discussion \ensuremath{(\Conid{Q}\;\Conid{USER}\;\Conid{Reason}\;\Varid{t}\;(\Conid{Topos}\;\Varid{t}))} where \ensuremath{\Varid{t}} is a metavariable representing the
+reason for choosing the bypass. With a local topos produced
+by \ensuremath{\Varid{toposShortest}} rule at hand we can apply the
+standard \ensuremath{\Varid{produceAnswer}} rule, which would elicit a short answer:
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{4}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{6}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Conid{ShortAnswer}\;\Conid{Reason}\;{}\<[E]%
+\\
+\>[B]{}\hsindent{4}{}\<[4]%
+\>[4]{}(\Conid{Shortest}\;(\Conid{Route}\;\Conid{Bypass}\;\Conid{Home}))\;{}\<[E]%
+\\
+\>[4]{}\hsindent{2}{}\<[6]%
+\>[6]{}\Conid{SYSTEM}\;\Conid{USER}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+It can be realised as an utterance ``Because it is shorter'',
+concluding our example \ref{ex:bypass}.
+
+Our system allows having several competing topoi, for instance we can
+as well analogously add \ensuremath{\Varid{toposPrettiest}} and \ensuremath{\Varid{toposCheapest}}
+rules. Assuming pseudo-random selection of an applicable rule system
+will pick a pseudo-random route, but still be able to justify such
+decision.
+
+\bibliography{../LACATODA2021/lacatoda}
+\bibliographystyle{named}
+\end{document}
