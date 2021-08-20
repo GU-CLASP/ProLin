@@ -1,0 +1,168 @@
+-- hardcoding user moves.
+-- start :: Heard (Greet USER SYSTEM);
+-- q1    : (t : Time) -> (n : Bus) -> (d : Location) ->
+--         Utter (CounterGreet SYSTEM USER) -o 
+-- 	Heard (Ask (Question USER Time t (TT n t Gotaplatsen d)) USER SYSTEM);
+
+-- q2a : (n0 : Bus) -> Utter (Ask (Question SYSTEM Bus n0 (WantBus n0)) SYSTEM USER) -o
+--      Heard ((ShortAnswer Bus B55) USER SYSTEM);
+
+-- q2b : (n0 : Bus) -> Utter (Ask (Question SYSTEM Bus n0 (WantBus n0)) SYSTEM USER) -o
+--      Heard (Assert (WantBus B55) USER SYSTEM);
+
+_ :: Start;
+start : (r : Road) -> Start -o
+      Heard (Ask (Question USER Road r (Pick (Route r Home))) USER SYSTEM);
+why :  (r : Road) -> (t : Topos) -> Utter (Assert (Pick (Route r Home)) SYSTEM USER) -o Heard (Ask (Question USER Reason t (Topos t)) USER SYSTEM);
+whyShort :  (r : Road) -> (t : Topos) -> Utter (ShortAnswer Road Bypass SYSTEM USER) -o Heard (Ask (Question USER Reason t (Topos t)) USER SYSTEM);
+
+
+-- initial state
+ready :: HasTurn USER;
+noMoves :: Moves Nil;
+noQud :: QUD Nil;
+noEud :: EUD Nil;
+
+
+utterAndRemember :
+  (m : DP -> DP -> Move) ->
+  (ms : List Move) ->
+  (x y : DP) ->
+  Agenda (m x y) -o
+  Moves ms -o
+  HasTurn x -o
+  [_ :: Utter (m x y);
+   _ :: Moves (Cons (m x y) ms);
+   _ :: HasTurn y];
+
+hearAndRemember  :
+  (m : DP -> DP -> Move) ->
+  (x y : DP) ->
+  (ms : List Move) ->
+  Heard (m x y) -o
+  Moves ms -o
+  HasTurn x       -o
+  [_ :: Moves (Cons (m x y) ms);
+   _ :: Pending (m x y) ;
+   _ :: HasTurn y ];
+
+greeting : (x y : DP) ->
+           HasTurn x -o
+           WishToOpenDialogueWith y -o
+           Agenda Nil -o
+           [_ :: Agenda (Greet x y)
+           ];
+
+counterGreeting : (x y : DP) -> 
+                  HasTurn x -*
+                  Pending (Greet y x)  -o
+                  [_ :: Agenda (CounterGreet x y)];
+
+processShort : (a : Type) -> (x : a) ->  (p : Prop) -> 
+  (qs : List Question) -> (dp dp1 : DP) ->
+  Pending (ShortAnswer a x dp1 dp) -o QUD (Cons (Question dp a x p) qs) -o
+  [ _ :: UserFact p;
+    _ :: QUD qs];
+
+processAssert : (a : Type) -> (x : a) ->  (p : Prop) -> 
+  (qs : List Question) -> (dp dp1 : DP) ->
+  Pending (Assert p dp1 dp) -o QUD (Cons (Question dp a x p) qs) -o
+  [ _ :: UserFact p;
+    _ :: QUD qs];
+
+-- JG2012: (4.30)
+pushQUD :
+   (q : Question) -> (qs : List Question) ->
+   (x y : DP) -> 
+   Pending (Ask q x y) -o QUD qs -o 
+   [_ :: QUD (Cons q qs)
+   ];
+
+produceAnswer :
+   (a : Type) ->
+   (x : a) ->
+   (p : Prop) ->
+   (qs : List Question) ->	
+   QUD (Cons (Question USER a x p) qs) -o
+   p -*
+   [_ :: Agenda (Assert p SYSTEM USER);
+    _ :: QUD qs;
+    _ :: Answered (Question USER a x p)];
+
+produceAnswerShort :
+   (a : Type) ->
+   (x : a) ->
+   (p : Prop) ->
+   (qs : List Question) ->	
+   QUD (Cons (Question USER a x p) qs) -o
+   p -*
+   [_ :: Agenda (ShortAnswer a x SYSTEM USER);
+    _ :: QUD qs;
+    _ :: Answered (Question USER a x p)];
+
+-- produceAnswerBecause :
+--    (a : Type) ->
+--    (x : a) ->
+--    (p : Prop) ->
+--    (r : Reason) ->
+--    (qs : List Question) ->
+--    (es : List Enthymeme) ->
+--    (d : EnthymemeDomain) -> 
+--    QUD (Cons (Question USER a x (Why p r)) qs) -o
+--    EUD es -o
+--    (Why p r) -* 
+--    Enthymeme r d -*
+--    [_ :: Agenda (ShortAnswer a x SYSTEM USER);
+--     _ :: QUD qs;
+--     _ :: Answered (Question USER a x p);
+--     _ :: EUD (Cons (Enthymeme r d) es)];
+
+
+-- produceCR :
+--    [a : Type
+--    ;x : a
+--    ;p : Prop
+--    ;qs : List Question
+--    ;_ :: QUD (Cons (Question USER a x p) qs)
+--    ;_ :: p
+--    ] ?->
+--    CR;
+
+-- === DOMAIN KNOWLEDGE ===
+
+-- knowledge base	
+d1 :: Route Bypass Home;
+d2 :: Route ParkLane Home;
+d3 :: Route BridgeRoute Home;
+r1 :: Shortest (Route Bypass Home) ;
+r2 :: Cheapest (Route ParkLane Home) ;
+r3 :: Prettiest (Route BridgeRoute Home);
+
+toposShorter : (x: Road) -> (y: To) -> (qs : List Question) ->
+   QUD (Cons (Question USER Road x (Pick (Route x y))) qs) -* 
+   Route x y -o
+   Shortest (Route x y)  -*
+   [_ :: Pick (Route x y);
+    _ :: Topos (Shortest (Route x y)); 
+    -- _ :: Enthymeme Shortest (PickRoute x y); 
+    ];
+
+-- toposPrettiest : (x: Road) -> (y: To) -> (qs : List Question) ->
+--    QUD (Cons (Question USER Road x (PickRoute x Home)) qs) -* --- x:Road.pickroute(x, Home)
+--    Route x y -o
+--    Prettiest x   -*
+--    [_ :: PickRoute x y;
+--     _ :: Topos x Prettiest;    -- (topos)
+--     _ :: Enthymeme Prettiest (PickRoute x y);  -- enthymeme (for x)
+--     ];
+
+
+specificCR :
+  (t : Time) -> (n : Bus) -> (s d : Location) ->
+  (qs : List Question) ->
+  CR -o
+  QUD (Cons (Question USER Time t  (TT n  t  s           d))  qs) -o
+  [_ :: QUD (Cons (Question SYSTEM Bus n (WantBus n)) 
+            (Cons (Question USER Time t (TT n t s d)) qs));
+   _ :: Agenda (Ask (Question SYSTEM Bus n (WantBus n)) SYSTEM USER) ];
+   
