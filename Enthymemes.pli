@@ -10,15 +10,19 @@
 -- q2b : (n0 : Bus) -> Utter (Ask (Question SYSTEM Bus n0 (WantBus n0)) SYSTEM USER) -o
 --      Heard (Assert (WantBus B55) USER SYSTEM);
 
+
 _ :: Start;
-start : (r : Road) -> Start -o
-      Heard (Ask (Question USER Road r (Pick (Route r Home))) USER SYSTEM);
-why :  (r : Road) -> (t : Topos) -> Utter (Assert (Pick (Route r Home)) SYSTEM USER) -o Heard (Ask (Question USER Reason t (Topos t)) USER SYSTEM);
-whyShort :  (r : Road) -> (t : Topos) -> Utter (ShortAnswer Road Bypass SYSTEM USER) -o Heard (Ask (Question USER Reason t (Topos t)) USER SYSTEM);
+start : (m : Fun) -> Start -o
+      [_ :: Heard (Ask (Question BOB Fun m (m DoctorAtHome)) BOB ALICE);
+       _ :: Heard (Request (Question BOB Fun m (m GetHelp)) BOB ALICE);
+       _ :: Heard (Request (Question BOB Fun m (m HaveAffair)) BOB ALICE);]
+
+-- why :  (r : Road) -> (t : Topos) -> Utter (Assert (Pick (Route r Home)) SYSTEM USER) -o Heard (Ask (Question USER Reason t (Topos t)) USER SYSTEM);
+-- whyShort :  (r : Road) -> (t : Topos) -> Utter (ShortAnswer Road Bypass SYSTEM USER) -o Heard (Ask (Question USER Reason t (Topos t)) USER SYSTEM);
 
 
 -- initial state
-ready :: HasTurn USER;
+ready :: HasTurn BOB;
 noMoves :: Moves Nil;
 noQud :: QUD Nil;
 noEud :: EUD Nil;
@@ -78,6 +82,13 @@ pushQUD :
    [_ :: QUD (Cons q qs)
    ];
 
+pushRUD :
+   (q : Question) -> (qs : List Question) ->
+   (x y : DP) -> 
+   Pending (Request q x y) -o RUD qs -o 
+   [_ :: RUD (Cons q qs)
+   ];
+
 produceAnswer :
    (a : Type) ->
    (x : a) ->
@@ -131,21 +142,55 @@ produceAnswerShort :
 -- === DOMAIN KNOWLEDGE ===
 
 -- knowledge base	
-d1 :: Route Bypass Home;
-d2 :: Route ParkLane Home;
-d3 :: Route BridgeRoute Home;
-r1 :: Shortest (Route Bypass Home) ;
-r2 :: Cheapest (Route ParkLane Home) ;
-r3 :: Prettiest (Route BridgeRoute Home);
+-- d1 :: Route Bypass Home;
+-- d2 :: Route ParkLane Home;
+-- d3 :: Route BridgeRoute Home;
+-- r1 :: Shortest (Route Bypass Home) ;
+-- r2 :: Cheapest (Route ParkLane Home) ;
+-- r3 :: Prettiest (Route BridgeRoute Home);
 
-toposShorter : (x: Road) -> (y: To) -> (qs : List Question) ->
-   QUD (Cons (Question USER Road x (Pick (Route x y))) qs) -* 
-   Route x y -o
-   Shortest (Route x y)  -*
-   [_ :: Pick (Route x y);
-    _ :: Topos (Shortest (Route x y)); 
-    -- _ :: Enthymeme Shortest (PickRoute x y); 
+toposCantHelp : (qs : List Question) ->
+  RUD (Cons (Question DP Fun m m(CanHelp Doctor)) qs) -*
+  Not (AtHome Doctor) -*
+   [
+    _ :: Not  (CanHelp Doctor); 
     ];
+
+toposCantHelp : (qs : List Question) ->
+   RUD (Cons (Question DP Fun m (m (CanHelp Doctor))) qs) -*
+   AtHome Doctor -*
+   [
+    _ :: CanHelp Doctor; 
+    ];
+
+toposAffair : (qs : List Question) ->
+   RUD (Cons (Question DP Fun m (m Affair)) qs) -*
+   Not (AtHome Doctor) -*
+   [
+    _ :: HaveAffair 
+    ];
+
+produceConfirm : 
+   (a : Type) ->
+   (x : a) ->
+   (p : Prop) ->
+   (qs : List Question) ->	
+   RUD (Cons (Question DP a x p) qs) -o
+   p -*
+   [_ :: Agenda (Confirm p SYSTEM USER);
+    _ :: RUD qs;
+    _ :: Confirmed (Question USER a x p)];
+
+produceReject : 
+   (a : Type) ->
+   (x : a) ->
+   (p : Prop) ->
+   (qs : List Question) ->	
+   RUD (Cons (Question DP a x p) qs) -o
+   Not p -*
+   [_ :: Agenda (Reject p SYSTEM USER);
+    _ :: RUD qs;
+    _ :: Confirmed (Question USER a x p)];
 
 -- toposPrettiest : (x: Road) -> (y: To) -> (qs : List Question) ->
 --    QUD (Cons (Question USER Road x (PickRoute x Home)) qs) -* --- x:Road.pickroute(x, Home)
@@ -166,3 +211,30 @@ specificCR :
             (Cons (Question USER Time t (TT n t s d)) qs));
    _ :: Agenda (Ask (Question SYSTEM Bus n (WantBus n)) SYSTEM USER) ];
    
+
+-- COVERAGE
+
+-- B> Is the doctor at home?	[= Ask (Q Fun m (m DoctorAtHome)) & Request (Q Fun m (m HaveAffair))]
+-- A> No.			[= ShortAnswer Fun λm.Not m]
+-- A> Come right in.		[= ShortAnswer Fun λm.m] or [= Accept HaveAffair]
+
+-- B> Is the doctor at home?	[= Ask (Q Fun m (m DoctorAtHome)) & Request (Q Fun m (m HaveAffair)) & Request (Q Fun m (m DoctorsHelp))]
+-- A> No.			[= ShortAnswer Fun λm.Not m]
+-- A> So he can't help you.	[= Assert (Not DoctorsHelp)] or [= Reject DoctorsHelp]
+-- A> Come right in.		[= ShortAnswer Fun λm.m] or [= Accept HaveAffair]
+
+-- B> Is the doctor at home?	[= Ask (Q Fun m (m DoctorAtHome)) & Request (Q Fun m (m DoctorsHelp))]
+-- A> Yes.			[= ShortAnswer Fun λm.m]
+-- A> Come right in.		[= ShortAnswer Fun λm.m] or [= Accept DoctorsHelp]
+
+-- B> Is the doctor at home?    [= Ask (Q Fun m (m DoctorAtHome)) & Request (Q Fun m (m DoctorsHelp))]
+-- A> Come right in.            [= ShortAnswer Fun λm.m] or [= Accept DoctorsHelp] 
+
+-- B> Is the doctor at home?		[= Ask (Q Fun m (m DoctorAtHome)) & Request (Q Fun m (m DoctorsHelp)) & Request (Q Fun m (m HaveAffair))]
+-- A> No.				[= ShortAnswer Fun λm.m]
+-- A> So he can't help you.		[= Assert (Not DoctorsHelp)] or [= Reject DoctorsHelp]
+-- A> And we are not having an affair.	[= Assert (Not HaveAffair)] or [= Reject HaveAffair]
+
+-- B> Is the doctor at home?		[= Ask (Q Fun m (m DoctorAtHome)) & Request (Q Fun m (m DoctorsHelp))]
+-- A> Yes				[= ShortAnswer Fun λm.m]
+-- A> but (!) he can't help you.	[= Assert (Not DoctorsHelp)] or [= Reject DoctorsHelp]
