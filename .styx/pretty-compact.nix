@@ -1,14 +1,14 @@
 { mkDerivation, aeson, base, base-compat, bytestring, containers
-, criterion, deepseq, fetchgit, pretty, stdenv, text
+, criterion, deepseq, fetchgit, lib, pretty, text
 , unordered-containers, wl-pprint
 }:
 mkDerivation {
   pname = "pretty-compact";
-  version = "3.0";
+  version = "3.1";
   src = fetchgit {
     url = "https://github.com/jyp/prettiest.git";
-    sha256 = "04lwkh21m7kjrf3bsra29a11qhyhs124h9w692xlzzbzdz4g1sws";
-    rev = "0fb7f1b2209d6763b9467c5aae2f952f8a929aed";
+    sha256 = "1ix9hpvqpvhsmr1l6lygwhb11izwndmpsm1sgjigvmc8y86m6jny";
+    rev = "71fe5b4a88154b9d70e7053a330ad29f03b51d94";
     fetchSubmodules = true;
   };
   libraryHaskellDepends = [ base base-compat containers ];
@@ -17,5 +17,5 @@ mkDerivation {
     unordered-containers wl-pprint
   ];
   description = "Pretty-printing library";
-  license = "GPL";
+  license = lib.licenses.lgpl3Only;
 }

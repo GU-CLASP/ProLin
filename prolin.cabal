@@ -32,4 +32,4 @@ executable pli
   build-tool-depends:  happy:happy
   default-language:    Haskell98
   hs-source-dirs:      .
-  other-modules:       Unify2, Pretty, Context, Options
+  other-modules:       Unify2, Pretty, Options
