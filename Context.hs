@@ -259,5 +259,8 @@ doesRuleApply rule r = case applyRule "rule_hardcoded" rule r of
   (R wN metas a@((_pullTerm,returned):avails):_) ->
     Just (R wN metas avails,prettyTerm (R0 wN metas a) returned)
 
-haveConstructor :: String -> R -> (Maybe (R, D))
+-- | Match a unique fact with the given constructor c. If such thing
+-- exists it is returned (type D) together with the new state,
+-- otherwise you get Nothing.
+haveConstructor :: String -> R -> Maybe (R, D)
 haveConstructor c = doesRuleApply (foral "m" $ \msg -> (Symb c @@ msg) ⊸ msg)

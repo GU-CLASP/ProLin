@@ -17,6 +17,9 @@ extractOutput r =
     Just (r',outMsg) -> (Just (show outMsg),r')
     Nothing -> (Nothing,r)
 
+-- | @clientLoop h r rs@
+-- r is the current state
+-- rs are the active rules
 clientLoop :: Handle -> R -> [(String, AnyRule)] -> IO ()
 clientLoop h r rs = do
    putStrLn "WAITING FOR CLIENT..."

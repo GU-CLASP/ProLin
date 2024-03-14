@@ -95,7 +95,7 @@ message = (Req <$> request) <|>
           (pure Thanks <* thanks) <|>
           (Clarify <$> (anything *> clarification) <* anything)
 
-parseTop :: [Char] -> ParseResult Char Message
+parseTop :: String -> ParseResult Char Message
 parseTop msg = bests <$> parse message allResults (map toLower msg) 
 
 

@@ -171,8 +171,8 @@ following forms: i) A *ShortAnswer*, which is a pair of an element |X:A| and
 its type |A|, represented as |ShortAnswer A X| or ii) An *Assertion* which is
 a proposition |R : Prop|, represented as |Assert R|.
 
-For more detailed description we refer our reader to the original
-paper citep:maraev2020tal.
+For more detailed description we refer our reader to
+citet:maraev2020tal.
 
 ** Dialogue management
 label:sec:dm-rules 

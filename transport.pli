@@ -11,14 +11,14 @@ crSource : Started -o Source Nothing -o [msg :: Output "Where do you want to sta
 crMeans : Started -o Means Nothing -o [msg :: Output "What bus or tram are you interested in?"; d' :: Means Nothing];
 
 gogogo : (to from with : String) ->
-         Destination (Just to) -o Source (Just from) -o Means (Just with) -o Output "I know exactly what you want. But I won't tell youuuu!"
+         Destination (Just to) -o Source (Just from) -o Means (Just with) -o Output "I know exactly what you want. But I won't tell youuuu!";
 
 goMissingWith :
   (minutes : String) ->
   (with : String) ->
   (to from : String) -> Destination (Just to) -o Source (Just from) -o Means Nothing -o
    Unique (BusTable from to with minutes) ->
-   Output ("You should take " ++ show with)
+   Output ("You should take ...");
 
 -- initial state
 
