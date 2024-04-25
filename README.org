@@ -15,11 +15,14 @@ To try the implementation:
    #+begin_src sh
    nix-shell
    #+end_src
-3. Build:
+3. Update cabal and build:
    #+begin_src sh
-   cabal v2-build
+     cabal v2-build
+     cabal update
    #+end_src
 4. Test example:
    #+begin_src sh
    cabal v2-exec -- pli -p -f 20 OneInstancePerParticipant.pli 
    #+end_src
+** Troubleshooting
+=rm -rf dist-newstyle= and rebuild.

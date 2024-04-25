@@ -1,0 +1,54 @@
+-- _ :: Start;
+-- start : (m : Fun) -> Start -o
+--       [_ :: Heard (Ask (Question BOB Fun m (m DoctorAtHome)) BOB ALICE);
+--        _ :: Heard (Request (Question BOB Fun m (m GetHelp)) BOB ALICE);
+--        _ :: Heard (Request (Question BOB Fun m (m HaveAffair)) BOB ALICE);]
+
+-- toposCantHelp : (qs : List Question) ->
+--   RUD (Cons (Question DP Fun m m(CanHelp Doctor)) qs) -*
+--   Not (AtHome Doctor) -*
+--    [
+--     _ :: Not  (CanHelp Doctor); 
+--     ];
+
+-- toposCantHelp : (qs : List Question) ->
+--    RUD (Cons (Question DP Fun m (m (CanHelp Doctor))) qs) -*
+--    AtHome Doctor -*
+--    [
+--     _ :: CanHelp Doctor; 
+--     ];
+
+-- toposAffair : (qs : List Question) ->
+--    RUD (Cons (Question DP Fun m (m Affair)) qs) -*
+--    Not (AtHome Doctor) -*
+--    [
+--     _ :: HaveAffair 
+--     ];
+
+
+-- COVERAGE
+
+-- B> Is the doctor at home?	[= Ask (Q Fun m (m DoctorAtHome)) & Request (Q Fun m (m HaveAffair))]
+-- A> No.			[= ShortAnswer Fun λm.Not m]
+-- A> Come right in.		[= ShortAnswer Fun λm.m] or [= Accept HaveAffair]
+
+-- B> Is the doctor at home?	[= Ask (Q Fun m (m DoctorAtHome)) & Request (Q Fun m (m HaveAffair)) & Request (Q Fun m (m DoctorsHelp))]
+-- A> No.			[= ShortAnswer Fun λm.Not m]
+-- A> So he can't help you.	[= Assert (Not DoctorsHelp)] or [= Reject DoctorsHelp]
+-- A> Come right in.		[= ShortAnswer Fun λm.m] or [= Accept HaveAffair]
+
+-- B> Is the doctor at home?	[= Ask (Q Fun m (m DoctorAtHome)) & Request (Q Fun m (m DoctorsHelp))]
+-- A> Yes.			[= ShortAnswer Fun λm.m]
+-- A> Come right in.		[= ShortAnswer Fun λm.m] or [= Accept DoctorsHelp]
+
+-- B> Is the doctor at home?    [= Ask (Q Fun m (m DoctorAtHome)) & Request (Q Fun m (m DoctorsHelp))]
+-- A> Come right in.            [= ShortAnswer Fun λm.m] or [= Accept DoctorsHelp] 
+
+-- B> Is the doctor at home?		[= Ask (Q Fun m (m DoctorAtHome)) & Request (Q Fun m (m DoctorsHelp)) & Request (Q Fun m (m HaveAffair))]
+-- A> No.				[= ShortAnswer Fun λm.m]
+-- A> So he can't help you.		[= Assert (Not DoctorsHelp)] or [= Reject DoctorsHelp]
+-- A> And we are not having an affair.	[= Assert (Not HaveAffair)] or [= Reject HaveAffair]
+
+-- B> Is the doctor at home?		[= Ask (Q Fun m (m DoctorAtHome)) & Request (Q Fun m (m DoctorsHelp))]
+-- A> Yes				[= ShortAnswer Fun λm.m]
+-- A> but (!) he can't help you.	[= Assert (Not DoctorsHelp)] or [= Reject DoctorsHelp]
