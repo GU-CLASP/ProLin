@@ -83,19 +83,22 @@ findFreshName n x xs | candidate `elem` xs = findFreshName (n+1) x xs
 isGround :: Exp (v+w) -> Bool
 isGround = getAll . foldMap (All . isRight)
 
+data RuleResult = RuleResult { ruleConcreteArgs :: [(Unicity,Maybe (Exp Zero))], ruleConcreteReturned :: Maybe (Exp Zero), resultCtx :: R}
 
 -- v is the set of free variables introduced by the matching process.
 -- w are the variables of the context.
 -- metaTypes: types of the meta variables.
+-- returns a list of results. Each result is a triple of:
+   
 ruleApplies :: Eq w => Enumerable v => Show v
   => (w -> String) -- | user-friendly names for w
   -> Bool -- | was there anything consumed at all?
-  -> [(Unicity,Exp (v+w))]  -- | arguments passed to the rule (so far)
-  -> Exp (v+w) -- | constructed expression
+  -> [(Unicity,Exp (v+w))]  -- | arguments passed to the rule (so far) (will be ruleConcreteArgs)
+  -> Exp (v+w) -- | constructed expression (will be ruleConcreteReturned)
   -> Rule (v+w) -- | rule considered
   -> Metas v w -- | metas
   -> Avail v w -- | context
-  -> [([(Unicity,Maybe (Exp Zero))],Maybe (Exp Zero),R)]
+  -> [RuleResult]
 ruleApplies wN consumed args e (Pi ("_",Zero _) (EQUAL ty1 ty2) body) metaTypes ctx =
   case nextNoOccur body of
     Here -> fail "equality variable occurs"
@@ -151,9 +154,16 @@ ruleApplies wN _consumed args e (Pi (_v,One keep) dom body) metaTypes ctx = do
               [(nm,v,t >>= s'') | (nm,o -> There v,t) <- metaTypes]
               ([(t0 >>= s'', ty0 >>= s'') | keep == Release] ++
                [(w >>= s'',t >>= s'') | (w,t) <- ctx'] )
-ruleApplies wN True args e (Rec fs) metaTypes ctx = return $ (collapseArgs args,Nothing,applyRec wN e fs metaTypes ctx) -- a record: put all the components in the context
+ruleApplies wN True args e (Rec fs) metaTypes ctx = return
+  (RuleResult
+    (collapseArgs args)
+    Nothing
+    (applyRec wN e fs metaTypes ctx)) -- a record: put all the components in the context
 ruleApplies wN consumed args e r metaTypes ctx
-  | consumed = return $ (collapseArgs args,isClosed r,R wN metaTypes ((e,r):ctx))   -- not a Pi, we have a new thing to put in the context.
+  | consumed = return (RuleResult
+                        (collapseArgs args)
+                        (isClosed r)
+                        (R wN metaTypes ((e,r):ctx)))   -- not a Pi, we have a new thing to put in the context.
   | otherwise = []
 
 
@@ -188,7 +198,11 @@ applyRule ruleName r state@(R wN metas avail) =
   if unicityCheck ass
   then results
   else []
-  where (ass,simpleResults,results) = unzip3 (ruleApplies wN False [] (Symb ruleName) (\case <$> r) metas avail)
+  where (ass,simpleResults,results) =
+           unzip3 $ fmap ruleResultComponents $
+           (ruleApplies wN False [] (Symb ruleName) (\case <$> r) metas avail)
+
+ruleResultComponents (RuleResult a b c) = (a,b,c)
 
 unicityCheck :: Eq a => [[(Unicity, Maybe a)]] -> Bool
 unicityCheck [] = True
